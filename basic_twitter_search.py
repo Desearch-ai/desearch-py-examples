@@ -36,6 +36,8 @@ Attributes:
     min_replies (int): The minimum number of replies a tweet must have to be included in the search results.
     
     min_likes (int): The minimum number of likes a tweet must have to be included in the search results.
+    
+    count (int): The maximum number of search results to return.
 """
 
 # Perform an Web links search using the Datura client
@@ -54,6 +56,7 @@ result = datura.basic_twitter_search(
     min_retweets=1,
     min_replies=1,
     min_likes=1,
+    count=10,
 )
 
 # Print the search results
