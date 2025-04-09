@@ -12,13 +12,13 @@ Attributes:
     prompt (str): The search query to be used in the AI search.
 
     tools (list of str): A list of tools available for conducting the search. These include:
-        - "Web Search"
-        - "Hacker News Search"
-        - "Reddit Search"
-        - "Wikipedia Search"
-        - "Youtube Search"
-        - "Twitter Search"
-        - "ArXiv Search"
+        - "web Search"
+        - "hackernews"
+        - "reddit"
+        - "wikipedia"
+        - "youtube"
+        - "twitter"
+        - "arxiv"
 
     models (str): The models available for the search. Options include:
         - "NOVA"
@@ -36,23 +36,32 @@ Attributes:
         - "PAST_2_YEARS"
 
     streaming (bool): A flag indicating whether to stream the search results.
+    
+    result_type (str): The type of search results to return. Options include:
+        - "ONLY_LINKS"
+        - "LINKS_WITH_SUMMARIES"
+        - "LINKS_WITH_FINAL_SUMMARY"
+
+    system_message (str): The system message to be used for the AI search.
 """
 
 # Perform an AI search using the Datura client
 result = datura.ai_search(
     prompt="Bittensor",  # The search query
     tools=[
-        "Web Search",
-        "Hacker News Search",
-        "Reddit Search",
-        "Wikipedia Search",
-        "Youtube Search",
-        "Twitter Search",
-        "ArXiv Search",
+        "web",
+        "hackernews",
+        "reddit",
+        "wikipedia",
+        "youtube",
+        "twitter",
+        "arxiv",
     ],  # List of tools to use for the search
     model="NOVA",  # The model to use for the search
     date_filter="PAST_24_HOURS",  # Filter results from the past 24 hours
     streaming=False,  # Whether to stream results
+    result_type="LINKS_WITH_SUMMARIES",
+    system_message="You are a helpful assistant.",
 )
 
 # Print the search results
