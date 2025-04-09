@@ -12,13 +12,12 @@ Attributes:
     prompt (str): The search query to be used in the Web links search.
 
     tools (list of str): A list of tools available for conducting the search. These include:
-        - "Web Search"
-        - "Hacker News Search"
-        - "Reddit Search"
-        - "Wikipedia Search"
-        - "Youtube Search"
-        - "Twitter Search"
-        - "ArXiv Search"
+        - "web Search"
+        - "hackernews"
+        - "reddit"
+        - "wikipedia"
+        - "youtube"
+        - "arxiv"
 
     models (str): The models available for the search. Options include:
         - "NOVA"
@@ -32,13 +31,12 @@ Attributes:
 result = datura.web_links_search(
     prompt="Bittensor",
     tools=[
-        "Web Search",
-        "Hacker News Search",
-        "Reddit Search",
-        "Wikipedia Search",
-        "Youtube Search",
-        "Twitter Search",
-        "ArXiv Search",
+        "web",
+        "hackernews",
+        "reddit",
+        "wikipedia",
+        "youtube",
+        "arxiv",
     ],
     model="NOVA",
 )
