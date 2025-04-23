@@ -1,12 +1,12 @@
-# Import the Datura library
-from datura_py import Datura
+# Import the Desearch library
+from desearch_py import Desearch
 
-# Initialize the Datura client with your API key
+# Initialize the Desearch client with your API key
 # Replace 'your-api-key' with your actual API key
-datura = Datura(api_key="your-api-key")
+desearch = Desearch(api_key="your-api-key")
 
 """
-This section of the code defines the configuration options for performing a Web links search using the Datura client.
+This section of the code defines the configuration options for performing a Web links search using the Desearch client.
 
 Attributes:
     query (str): The search query to be used in the Web links search.
@@ -16,8 +16,8 @@ Attributes:
     start (int): The starting index for the search results.
 """
 
-# Perform an Web links search using the Datura client
-result = datura.basic_web_search(query="latest news on AI", num=10, start=0)
+# Perform an Web links search using the Desearch client
+result = desearch.basic_web_search(query="latest news on AI", num=10, start=0)
 
 # Print the search results
 print(result)

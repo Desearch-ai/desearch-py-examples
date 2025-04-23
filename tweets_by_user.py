@@ -1,12 +1,12 @@
-# Import the Datura library
-from datura_py import Datura
+# Import the Desearch library
+from desearch_py import Desearch
 
-# Initialize the Datura client with your API key
+# Initialize the Desearch client with your API key
 # Replace 'your-api-key' with your actual API key
-datura = Datura(api_key="your-api-key")
+desearch = Desearch(api_key="your-api-key")
 
 """
-This section of the code defines the configuration options for performing a Tweets by ID using the Datura client.
+This section of the code defines the configuration options for performing a Tweets by ID using the Desearch client.
 
 Attributes:
     user (str): The search query to be used in the Tweets by ID.
@@ -17,8 +17,8 @@ Attributes:
     
 """
 
-# Perform an Tweets by User using the Datura client
-result = datura.tweets_by_user(user="elonmusk", query="Bittensor", count=10)
+# Perform an Tweets by User using the Desearch client
+result = desearch.tweets_by_user(user="elonmusk", query="Bittensor", count=10)
 
 # Print the search results
 print(result)

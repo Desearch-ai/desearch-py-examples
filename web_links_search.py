@@ -1,12 +1,12 @@
-# Import the Datura library
-from datura_py import Datura
+# Import the Desearch library
+from desearch_py import Desearch
 
-# Initialize the Datura client with your API key
+# Initialize the Desearch client with your API key
 # Replace 'your-api-key' with your actual API key
-datura = Datura(api_key="your-api-key")
+desearch = Desearch(api_key="your-api-key")
 
 """
-This section of the code defines the configuration options for the Web links search using the Datura client.
+This section of the code defines the configuration options for the Web links search using the Desearch client.
 
 Attributes:
     prompt (str): The search query to be used in the Web links search.
@@ -27,8 +27,8 @@ Attributes:
     streaming (bool): A flag indicating whether to stream the search results.
 """
 
-# Perform an Web links search using the Datura client
-result = datura.web_links_search(
+# Perform an Web links search using the Desearch client
+result = desearch.web_links_search(
     prompt="Bittensor",
     tools=[
         "web",
@@ -48,7 +48,7 @@ print(result)
 """
 Example Result Structure for AI Search
 
-This dictionary represents the structure of the result returned by the AI search using the Datura client. It contains search results from various platforms, including YouTube, Hacker News, Reddit, arXiv, Wikipedia, and general search results.
+This dictionary represents the structure of the result returned by the AI search using the Desearch client. It contains search results from various platforms, including YouTube, Hacker News, Reddit, arXiv, Wikipedia, and general search results.
 
 Attributes:
     youtube_search_results (list): Contains YouTube search results.

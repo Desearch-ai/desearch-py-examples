@@ -1,12 +1,12 @@
-# Import the Datura library
-from datura_py import Datura
+# Import the Desearch library
+from desearch_py import Desearch
 
-# Initialize the Datura client with your API key
+# Initialize the Desearch client with your API key
 # Replace 'your-api-key' with your actual API key
-datura = Datura(api_key="your-api-key")
+desearch = Desearch(api_key="your-api-key")
 
 """
-This section of the code defines the configuration options for the AI search using the Datura client.
+This section of the code defines the configuration options for the AI search using the Desearch client.
 
 Attributes:
     prompt (str): The search query to be used in the AI search.
@@ -45,8 +45,8 @@ Attributes:
     system_message (str): The system message to be used for the AI search.
 """
 
-# Perform an AI search using the Datura client
-result = datura.ai_search(
+# Perform an AI search using the Desearch client
+result = desearch.ai_search(
     prompt="Bittensor",  # The search query
     tools=[
         "web",
@@ -70,7 +70,7 @@ print(result)
 """
 Example Result Structure for AI Search
 
-This dictionary represents the structure of the result returned by the AI search using the Datura client. It contains search results from various platforms and a completion section with summarized information.
+This dictionary represents the structure of the result returned by the AI search using the Desearch client. It contains search results from various platforms and a completion section with summarized information.
 
 Attributes:
     youtube_search_results (dict): Contains YouTube search results.

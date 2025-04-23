@@ -1,4 +1,4 @@
-# Python Datura SDK Examples
+# Python Desearch SDK Examples
 
 
 **Create and activate a virtual environment**:
@@ -11,5 +11,5 @@
 **Install dependencies**:
 
    ```bash
-    pip3 install datura-py
+    pip3 install desearch-py
    ```

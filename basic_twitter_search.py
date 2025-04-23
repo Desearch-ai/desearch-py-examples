@@ -1,12 +1,12 @@
-# Import the Datura library
-from datura_py import Datura
+# Import the Desearch library
+from desearch_py import Desearch
 
-# Initialize the Datura client with your API key
+# Initialize the Desearch client with your API key
 # Replace 'your-api-key' with your actual API key
-datura = Datura(api_key="your-api-key")
+desearch = Desearch(api_key="your-api-key")
 
 """
-This section of the code defines the configuration options for performing a Twitter search using the Datura client.
+This section of the code defines the configuration options for performing a Twitter search using the Desearch client.
 
 Attributes:
     query (str): The search query to be used in the Twitter search.
@@ -40,8 +40,8 @@ Attributes:
     count (int): The maximum number of search results to return.
 """
 
-# Perform an Web links search using the Datura client
-result = datura.basic_twitter_search(
+# Perform an Web links search using the Desearch client
+result = desearch.basic_twitter_search(
     query="Whats going on with Bittensor",
     sort="Top",
     user="elonmusk",
