@@ -19,12 +19,7 @@ Attributes:
         - "youtube"
         - "arxiv"
 
-    # models (str): The models available for the search. Options include:
-    #     - "NOVA"
-    #     - "ORBIT"
-    #     - "HORIZON"
-
-    streaming (bool): A flag indicating whether to stream the search results.
+    count (int): The maximum number of search results to return.
 """
 
 # Perform an Web links search using the Desearch client
@@ -38,7 +33,7 @@ result = desearch.web_links_search(
         "youtube",
         "arxiv",
     ],
-    # model="NOVA",
+    count=10,
 )
 
 # Print the search results

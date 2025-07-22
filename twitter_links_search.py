@@ -9,19 +9,13 @@ desearch = Desearch(api_key="your-api-key")
 This section of the code defines the configuration options for the Twitter post search using the Desearch client.
 
 Attributes:
-    prompt (str): The search query to be used in the Twitter post search.
+    prompt (str): The search query to be used in the Twitter post search.  
 
-    # models (str): The models available for the search. Options include:
-    #     - "NOVA"
-    #     - "ORBIT"
-    #     - "HORIZON"
+    count (int): The maximum number of search results to return.
 """
 
 # Perform an Twitter post search using the Desearch client
-result = desearch.twitter_links_search(
-    prompt="Bittensor"
-    # model="NOVA",
-)
+result = desearch.twitter_links_search(prompt="Bittensor", count=10)
 
 # Print the search results
 print(result)
