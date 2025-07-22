@@ -20,10 +20,10 @@ Attributes:
         - "twitter"
         - "arxiv"
 
-    models (str): The models available for the search. Options include:
-        - "NOVA"
-        - "ORBIT"
-        - "HORIZON"
+    # models (str): The models available for the search. Options include:
+    #     - "NOVA"
+    #     - "ORBIT"
+    #     - "HORIZON"
 
     date_filter (str): The time range for filtering search results. Options include:
         - "PAST_24_HOURS"
@@ -57,7 +57,7 @@ result = desearch.ai_search(
         "twitter",
         "arxiv",
     ],  # List of tools to use for the search
-    model="NOVA",  # The model to use for the search
+    # model="NOVA",  # The model to use for the search
     date_filter="PAST_24_HOURS",  # Filter results from the past 24 hours
     streaming=False,  # Whether to stream results
     result_type="LINKS_WITH_SUMMARIES",

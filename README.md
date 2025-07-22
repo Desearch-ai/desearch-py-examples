@@ -33,7 +33,6 @@ desearch = Desearch(api_key="your-api-key")
 result = desearch.web_links_search(
     prompt="Bittensor",
     tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "arxiv"],
-    model="NOVA"
 )
 
 # Print the search results
@@ -54,7 +53,6 @@ desearch = Desearch(api_key="your-api-key")
 result = desearch.ai_search(
     prompt="Bittensor",
     tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "twitter", "arxiv"],
-    model="NOVA",
     date_filter="PAST_24_HOURS",
     streaming=False,
     result_type="LINKS_WITH_SUMMARIES",

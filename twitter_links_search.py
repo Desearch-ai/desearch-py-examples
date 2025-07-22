@@ -11,16 +11,16 @@ This section of the code defines the configuration options for the Twitter post 
 Attributes:
     prompt (str): The search query to be used in the Twitter post search.
 
-    models (str): The models available for the search. Options include:
-        - "NOVA"
-        - "ORBIT"
-        - "HORIZON"
+    # models (str): The models available for the search. Options include:
+    #     - "NOVA"
+    #     - "ORBIT"
+    #     - "HORIZON"
 """
 
 # Perform an Twitter post search using the Desearch client
 result = desearch.twitter_links_search(
-    prompt="Bittensor",
-    model="NOVA",
+    prompt="Bittensor"
+    # model="NOVA",
 )
 
 # Print the search results

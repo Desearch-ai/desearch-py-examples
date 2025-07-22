@@ -19,10 +19,10 @@ Attributes:
         - "youtube"
         - "arxiv"
 
-    models (str): The models available for the search. Options include:
-        - "NOVA"
-        - "ORBIT"
-        - "HORIZON"
+    # models (str): The models available for the search. Options include:
+    #     - "NOVA"
+    #     - "ORBIT"
+    #     - "HORIZON"
 
     streaming (bool): A flag indicating whether to stream the search results.
 """
@@ -38,7 +38,7 @@ result = desearch.web_links_search(
         "youtube",
         "arxiv",
     ],
-    model="NOVA",
+    # model="NOVA",
 )
 
 # Print the search results
