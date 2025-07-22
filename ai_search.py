@@ -1,4 +1,5 @@
 # Import the Desearch library
+from itertools import count
 from desearch_py import Desearch
 
 # Initialize the Desearch client with your API key
@@ -43,6 +44,8 @@ Attributes:
         - "LINKS_WITH_FINAL_SUMMARY"
 
     system_message (str): The system message to be used for the AI search.
+
+    count (int): The maximum number of search results to return.
 """
 
 # Perform an AI search using the Desearch client
@@ -62,6 +65,7 @@ result = desearch.ai_search(
     streaming=False,  # Whether to stream results
     result_type="LINKS_WITH_SUMMARIES",
     system_message="You are a helpful assistant.",
+    count=10,
 )
 
 # Print the search results
