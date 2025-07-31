@@ -136,4 +136,25 @@ result = desearch.web_crawl("https://docs.desearch.ai/docs/desearch-api")
 print(result)
 ```
 
+### 6. Deep reearch
+
+```python
+from desearch_py import Desearch
+
+# Initialize the Desearch client with your API key
+desearch = Desearch(api_key="your-api-key")
+
+# Perform an AI search
+result = desearch.deep_research(
+    prompt="Bittensor",
+    tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "twitter", "arxiv"],
+    date_filter="PAST_24_HOURS",
+    streaming=False,
+    system_message=""
+)
+
+# Print the search results
+print(result)
+```
+
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
