@@ -120,3 +120,7 @@ print(result)
 ```
 
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
+
+## Example apps
+
+- [Token Narrative Pulse](token-narrative-pulse/README.md): Python CLI that tracks X narrative and mention volume for crypto tokens with the Desearch API.
