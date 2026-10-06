@@ -128,3 +128,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Comment Voice-of-Customer Report](comment-voc-report/README.md): Python CLI that pulls public comments from a brand's recent Instagram and TikTok posts and sorts them into questions, complaints, requests, praise and other.
 - [Ad Library Angle Log](ad-library-angle-log/README.md): Python CLI that logs public Ad Library angles for a store and diffs them over time with the Desearch API.
 - [City Trends Pulse](city-trends-pulse/README.md): Python CLI that compares X trends across cities and countries, pulls the top posts per trend and checks their relevance, freshness and language with the Desearch API.
+- [TikTok Trend Board](tiktok-trend-board/README.md): Python CLI that builds a daily board of TikTok trending posts and hashtags per region, with hashtag drill-downs and top-post comments, with the Desearch API.
