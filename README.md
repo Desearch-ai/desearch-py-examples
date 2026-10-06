@@ -125,4 +125,6 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 
 - [Morning Topic Brief](morning-topic-brief/README.md): Python CLI that builds a morning brief on chosen topics with the Desearch API.
 - [Token Narrative Pulse](token-narrative-pulse/README.md): Python CLI that tracks X narrative and mention volume for crypto tokens with the Desearch API.
+- [Comment Voice-of-Customer Report](comment-voc-report/README.md): Python CLI that pulls public comments from a brand's recent Instagram and TikTok posts and sorts them into questions, complaints, requests, praise and other.
+- [Ad Library Angle Log](ad-library-angle-log/README.md): Python CLI that logs public Ad Library angles for a store and diffs them over time with the Desearch API.
 - [City Trends Pulse](city-trends-pulse/README.md): Python CLI that compares X trends across cities and countries, pulls the top posts per trend and checks their relevance, freshness and language with the Desearch API.
