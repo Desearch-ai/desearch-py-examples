@@ -1,0 +1,17 @@
+# Morning Topic Brief: one AI Search call per topic, last 24 hours.
+topics:
+  - Bittensor
+  - AI agents
+  - open source LLMs
+
+# Sources passed to Desearch AI Search as "tools".
+tools: [web, twitter, reddit, hackernews]
+date_filter: PAST_24_HOURS
+result_type: LINKS_WITH_FINAL_SUMMARY
+# Results per source (API min 10, max 200).
+count: 10
+# Max links listed per topic in the digest.
+max_links: 8
+# Drop results whose own date (published_date / created_at) is clearly older than 24h.
+# Undated results are kept and tagged "(date unknown)".
+drop_stale: true
