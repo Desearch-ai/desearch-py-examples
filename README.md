@@ -125,3 +125,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 
 - [Morning Topic Brief](morning-topic-brief/README.md): Python CLI that builds a morning brief on chosen topics with the Desearch API.
 - [Token Narrative Pulse](token-narrative-pulse/README.md): Python CLI that tracks X narrative and mention volume for crypto tokens with the Desearch API.
+- [Instagram Creator Shortlist](instagram-creator-shortlist/README.md): Python CLI that turns a niche keyword into a ranked shortlist of Instagram creators by follower tier, engagement rate and posting cadence with the Desearch API.
