@@ -125,3 +125,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 
 - [Morning Topic Brief](morning-topic-brief/README.md): Python CLI that builds a morning brief on chosen topics with the Desearch API.
 - [Token Narrative Pulse](token-narrative-pulse/README.md): Python CLI that tracks X narrative and mention volume for crypto tokens with the Desearch API.
+- [City Trends Pulse](city-trends-pulse/README.md): Python CLI that compares X trends across cities and countries, pulls the top posts per trend and checks their relevance, freshness and language with the Desearch API.
