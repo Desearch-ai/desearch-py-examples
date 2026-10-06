@@ -120,3 +120,7 @@ print(result)
 ```
 
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
+
+## Example apps
+
+- [Morning Topic Brief](morning-topic-brief/README.md): Python CLI that builds a morning brief on chosen topics with the Desearch API.
