@@ -70,8 +70,6 @@ From the run at 2026-10-04 09:28 Asia/Tbilisi. Full output for all three niches:
 ```markdown
 # YouTube angles: Bittensor subnet mining for beginners
 
-Desearch calls: 3 (HTTP 422, 200, 200; 0.05 s, 8.91 s, 8.13 s). Cost: $0.008 (sum of X-Desearch-Cost-Usd).
-
 ## Angles already covered
 - Basic tutorials on how to start mining Bittensor subnets [2](https://www.youtube.com/watch?v=MydbEmhqiis), [3](https://www.youtube.com/watch?v=zPEfcCLt6DA) ...
 - Testing and improving Bittensor miners [5](https://www.youtube.com/watch?v=OqDa6JdIsdc)
@@ -90,15 +88,14 @@ Desearch calls: 3 (HTTP 422, 200, 200; 0.05 s, 8.91 s, 8.13 s). Cost: $0.008 (su
 Measured on 2026-10-04 09:22 to 09:30 Asia/Tbilisi from the `X-Desearch-Cost-Usd` response header and `time.perf_counter()` around each request:
 
 - Every successful `POST /desearch/ai/search` call cost **$0.004** (`X-Desearch-Usage-Count: 10`), for both `result_type: "ONLY_LINKS"` and `result_type: "LINKS_WITH_FINAL_SUMMARY"`. `POST /desearch/ai/search/links/web` also cost $0.004 per call that day.
-- HTTP 422 responses in those runs had no cost header.
-- One angles report on the fallback path was one HTTP 422 plus two HTTP 200 calls, and the header sum was **$0.008**. `--links-only` summed to **$0.004**.
+- One angles report (the links call plus the summary call) summed to **$0.008** in the headers. `--links-only` summed to **$0.004**.
 - Latency of successful calls: 6.1 s to 10.9 s, median 8.8 s (24 calls).
 
 These figures were measured on 2026-10-04.
 
 ## Billing
 
-On 2026-10-05 Desearch changed billing. Results are billed only per unique item actually returned. Empty results cost $0. Calls that return HTTP 422, 404, or 5xx are refunded.
+On 2026-10-05 Desearch changed billing. Results are billed only per unique item actually returned. Empty results cost $0. Rejected calls, HTTP 404 calls, and 5xx calls are refunded.
 
 ## What the data includes
 
@@ -110,7 +107,7 @@ On 2026-10-05 Desearch changed billing. Results are billed only per unique item 
 
 Limits that were still open in the 2026-10-04 runs:
 
-- The app also tries `POST /desearch/ai/search` with `tools: ["youtube"]`, `result_type: "LINKS_WITH_FINAL_SUMMARY"`, `streaming: false`, and `count: 10` first, and falls back when that call is rejected. On 2026-10-04, from 09:22 to 09:31 Asia/Tbilisi, every attempt returned HTTP 422 (`No supported tools requested`).
+- The app also tries `POST /desearch/ai/search` with `tools: ["youtube"]`, `result_type: "LINKS_WITH_FINAL_SUMMARY"`, `streaming: false`, and `count: 10` first, and falls back when that call is rejected. On 2026-10-04, from 09:22 to 09:31 Asia/Tbilisi, every attempt returned HTTP 422 (`No supported tools requested`). The rejected call returned no cost header and added about 0.05 s per run.
 - `--links-web` is a re-test flag, not part of a normal run. It calls `POST /desearch/ai/search/links/web` with `tools: ["youtube"]`, which returned HTTP 422 on 2026-10-04.
 - `POST /desearch/ai/search` with `tools: ["web"]`, `streaming: false`, `count: 10`, and prompt `site:youtube.com <question>` sometimes returned off-topic pages (fewer than half of the links were YouTube videos). That happened twice on 2026-10-04. The same prompt sometimes returned generic technology pages. The app retries once.
 - `date_filter: "PAST_WEEK"` passed through to `POST /desearch/ai/search` was not a reliable freshness filter for this job on 2026-10-04. Do not use it as proof that the videos are from that window.
