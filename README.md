@@ -129,3 +129,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Ad Library Angle Log](ad-library-angle-log/README.md): Python CLI that logs public Ad Library angles for a store and diffs them over time with the Desearch API.
 - [City Trends Pulse](city-trends-pulse/README.md): Python CLI that compares X trends across cities and countries, pulls the top posts per trend and checks their relevance, freshness and language with the Desearch API.
 - [TikTok Trend Board](tiktok-trend-board/README.md): Python CLI that builds a daily board of TikTok trending posts and hashtags per region, with hashtag drill-downs and top-post comments, with the Desearch API.
+- [Instagram Creator Shortlist](instagram-creator-shortlist/README.md): Python CLI that turns a niche keyword into a ranked shortlist of Instagram creators by follower tier, engagement rate and posting cadence with the Desearch API.
