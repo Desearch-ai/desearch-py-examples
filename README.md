@@ -138,3 +138,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Forum Intent Board](forum-intent-board/README.md): Python CLI that lists public Hacker News and Reddit threads asking for a tool with the Desearch API.
 - [Hashtag Shortlist](hashtag-shortlist/README.md): Python CLI that ranks candidate TikTok and Instagram hashtags for a niche by median likes, freshness and creator spread with the Desearch API.
 - [Hiring Signal Radar](hiring-signal-radar/README.md): Python CLI that finds companies hiring for a role from public posts and job pages with the Desearch API.
+- [Holiday Promo Watch](holiday-promo-watch/README.md): Python CLI that snapshots Black Friday promo wording on brand sites and social posts with the Desearch API.
