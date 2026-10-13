@@ -1,0 +1,17 @@
+{
+  "_note": "Public brand accounts only. Leave a field empty (\"\") to skip that channel. sale_urls is a list; the script reads each one.",
+  "brands": [
+    {"brand": "Gymshark", "domain": "gymshark.com", "home": "https://www.gymshark.com/", "sale_urls": [],
+     "x": "Gymshark", "instagram": "gymshark", "tiktok": "gymshark"},
+    {"brand": "Glossier", "domain": "glossier.com", "home": "https://www.glossier.com/", "sale_urls": [],
+     "instagram": "glossier", "tiktok": "glossier"},
+    {"brand": "Warby Parker", "domain": "warbyparker.com", "home": "https://www.warbyparker.com/",
+     "sale_urls": ["https://www.warbyparker.com/contacts-new-customer-offer"],
+     "x": "WarbyParker", "instagram": "warbyparker", "tiktok": "warbyparker"},
+    {"brand": "SKIMS", "domain": "skims.com", "home": "https://skims.com/", "sale_urls": ["https://skims.com/collections/skims-sale"],
+     "x": "skims", "instagram": "skims", "tiktok": "skims"},
+    {"brand": "Allbirds", "domain": "allbirds.com", "home": "https://www.allbirds.com/",
+     "sale_urls": ["https://www.allbirds.com/collections/sale-womens-shoes", "https://www.allbirds.com/collections/sale-mens"],
+     "x": "Allbirds", "instagram": "allbirds", "tiktok": ""}
+  ]
+}
