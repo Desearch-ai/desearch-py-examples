@@ -1,0 +1,4 @@
+{"topic": "AI agents",
+ "query": "(\"AI agents\" OR \"AI agent\" OR agentic)",
+ "topic_terms": ["ai agent", "agentic", "agents"],
+ "handles": ["a16z", "sequoia", "ycombinator", "lightspeedvp", "Greylock", "Accel", "IndexVentures", "generalcatalyst", "foundersfund", "kleinerperkins", "insightpartners", "BessemerVP"]}
