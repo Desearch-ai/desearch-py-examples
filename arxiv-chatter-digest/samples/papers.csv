@@ -1,0 +1,16 @@
+rank,arxiv_id,title,abs_url,published,in_window,title_match,x_mention_count,x_posts_out_of_window,sample_post_urls,extract_status,fetched_at
+1,2609.31466,Scaffold: Support Graph Theory Based Sparsification for Graph Neural Networks,https://arxiv.org/abs/2609.31466,2026-09-25,True,1.0,1,0,https://x.com/i/status/2105664332759499156,ok_try1,2026-10-12T09:38+04:00
+2,2609.35620,Attention Graphons: A Graph Limit Perspective on Graph Transformers,https://arxiv.org/abs/2609.35620,2026-09-28,True,1.0,1,0,https://x.com/i/status/2106527055689011609,ok_try1,2026-10-12T09:38+04:00
+3,2610.04033,Gated Graph Neural Networks for Learning Hidden Independent Cascade Dynamics,https://arxiv.org/abs/2610.04033,2026-10-02,True,1.0,1,0,https://x.com/i/status/2107352378806501707,ok_try1,2026-10-12T09:38+04:00
+4,2610.06054,A graph neural network for deep learning-based full event interpretation at FCC-ee,https://arxiv.org/abs/2610.06054,2026-10-05,True,1.0,1,0,https://x.com/i/status/2107432612461514995,ok_try1,2026-10-12T09:38+04:00
+5,2610.13724,Amortized Counterfactual Prediction with Graph Neural Networks,https://arxiv.org/abs/2610.13724,2026-10-09,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+6,2610.13220,Multi-Modal Graph Neural Network-Inspired Vessel Identification and Tracking for UAV-Based Maritime Surveillance,https://arxiv.org/abs/2610.13220,2026-10-09,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+7,2610.13418,VN-GraphGG: von Neumann--Mullins--based graph grain growth simulation,https://arxiv.org/abs/2610.13418,2026-10-09,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+8,2610.13689,VQIL: Visible Quantum Interference Learning for Perturbation Response Ranking on Graphs,https://arxiv.org/abs/2610.13689,2026-10-09,True,0.994,0,0,,ok_try1,2026-10-12T09:38+04:00
+9,2610.12809,The Expressive Power of Random-Feature MPNNs Across Graph Sizes,https://arxiv.org/abs/2610.12809,2026-10-08,True,0.158,0,0,,ok_try1,2026-10-12T09:38+04:00
+10,2610.09297,Node-level Graph Neural Architecture Search Framework,https://arxiv.org/abs/2610.09297,2026-10-07,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+11,2610.10423,GraphRectify: Graph-Based Transfer of Adversarial Example Detectors Across Neural Networks,https://arxiv.org/abs/2610.10423,2026-10-07,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+12,2610.02439,A Generative Model of Complex Networks Using Graphons and Neural Inverse Operators,https://arxiv.org/abs/2610.02439,2026-10-01,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+13,2609.34499,Scalable GNN-based Knowledge Graph Representation Learning with Efficient Message Passing,https://arxiv.org/abs/2609.34499,2026-09-28,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+14,2609.32641,Extremely Fast and Compact Binary Graph Representations via Randomized Operator Sketching,https://arxiv.org/abs/2609.32641,2026-09-26,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
+15,2609.30079,Reachability-Based Formal Verification of Graph Neural Networks with Node and Edge Features,https://arxiv.org/abs/2609.30079,2026-09-24,True,1.0,0,0,,ok_try1,2026-10-12T09:38+04:00
