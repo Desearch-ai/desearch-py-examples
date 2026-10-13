@@ -133,3 +133,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [YouTube Angle Finder](youtube-angle-finder/README.md): Python CLI that finds YouTube videos on a niche and writes an angles and gaps brief with the Desearch API.
 - [AI Answer Check](ai-answer-check/README.md): Python CLI that checks whether an AI answer names your brand on buyer questions with the Desearch API.
 - [Agent Search Toolbelt](agent-search-toolbelt/README.md): Python research agent that answers a question with four Desearch MCP tools and writes a run log of each call.
+- [Arxiv Chatter Digest](arxiv-chatter-digest/README.md): Python CLI that digests recent arXiv papers on a topic and the public X posts that named them with the Desearch API.
