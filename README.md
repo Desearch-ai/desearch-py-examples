@@ -131,3 +131,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [TikTok Trend Board](tiktok-trend-board/README.md): Python CLI that builds a daily board of TikTok trending posts and hashtags per region, with hashtag drill-downs and top-post comments, with the Desearch API.
 - [Instagram Creator Shortlist](instagram-creator-shortlist/README.md): Python CLI that turns a niche keyword into a ranked shortlist of Instagram creators by follower tier, engagement rate and posting cadence with the Desearch API.
 - [YouTube Angle Finder](youtube-angle-finder/README.md): Python CLI that finds YouTube videos on a niche and writes an angles and gaps brief with the Desearch API.
+- [AI Answer Check](ai-answer-check/README.md): Python CLI that checks whether an AI answer names your brand on buyer questions with the Desearch API.

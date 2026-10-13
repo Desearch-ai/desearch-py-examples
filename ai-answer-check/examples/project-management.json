@@ -1,0 +1,34 @@
+{
+  "brand": {"name": "Asana", "aliases": []},
+  "competitors": [
+    {"name": "Trello", "aliases": []},
+    {"name": "monday.com", "aliases": ["monday work management", "Monday.com"]},
+    {"name": "ClickUp", "aliases": ["Click Up"]},
+    {"name": "Jira", "aliases": ["Jira Software"]},
+    {"name": "Basecamp", "aliases": []},
+    {"name": "Wrike", "aliases": []},
+    {"name": "Notion", "aliases": [], "case_sensitive": true},
+    {"name": "Smartsheet", "aliases": []},
+    {"name": "Teamwork.com", "aliases": []}
+  ],
+  "questions": [
+    "best project management tool for a 5-person remote team",
+    "best free project management software for small teams",
+    "Asana alternatives",
+    "Trello alternatives",
+    "monday.com alternatives",
+    "ClickUp alternatives",
+    "is Asana good for marketing teams",
+    "is Asana worth it for a small agency",
+    "best project management tool for software development teams",
+    "best project management app for freelancers",
+    "Asana vs Trello, which is better",
+    "Asana vs monday.com for a growing startup",
+    "best project management tool with Gantt charts",
+    "best task management app for nonprofits",
+    "easiest project management tool for non-technical teams",
+    "best project management software for agencies managing client work",
+    "which project management tool has the best mobile app",
+    "best project management tool for a team of 50 people"
+  ]
+}
