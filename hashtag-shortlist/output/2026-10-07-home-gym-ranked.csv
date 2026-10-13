@@ -1,0 +1,17 @@
+platform,tag,posts,median_likes,median_plays,share_last_30d,newest_days,median_age_days,oldest_days,creators,creator_share,score
+tiktok,homeworkout,15,398291.0,7935326.0,0.2,10,73.0,233,12,0.8,0.719
+tiktok,garagegym,15,13648.0,204078.0,0.07,8,295.0,2046,15,1.0,0.688
+tiktok,homegym,15,11210.0,351416.0,0.07,26,390.0,2074,15,1.0,0.625
+tiktok,workoutfromhome,15,1039570.0,8938995.0,0.0,59,1248.0,2391,13,0.87,0.612
+tiktok,homefitness,15,1852237.0,17883695.0,0.0,840,2370.0,2391,11,0.73,0.6
+tiktok,powerrack,15,855.0,91871.0,0.07,9,581.0,1718,14,0.93,0.45
+tiktok,garagegymlife,15,69.0,6423.0,0.2,7,269.0,2415,12,0.8,0.406
+tiktok,homegymsetup,15,1324.0,64288.0,0.0,56,645.0,1484,14,0.93,0.4
+instagram,homeworkout,10,2023.0,,0.4,1,60.5,194,6,0.6,0.8
+instagram,garagegym,9,369.0,,0.67,0,4.0,505,9,1.0,0.725
+instagram,homegymsetup,10,675.0,,0.1,7,285.0,1146,10,1.0,0.688
+instagram,homefitness,10,565.5,,0.3,0,81.0,432,6,0.6,0.638
+instagram,garagegymlife,9,145.0,,0.22,1,210.0,2037,7,0.78,0.5
+instagram,workoutfromhome,10,403.0,,0.1,3,224.5,800,7,0.7,0.475
+instagram,homegym,10,138.5,,0.2,0,113.5,363,10,1.0,0.45
+instagram,powerrack,10,22.0,,0.1,10,103.0,483,7,0.7,0.225

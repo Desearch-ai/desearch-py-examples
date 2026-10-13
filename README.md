@@ -136,3 +136,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Arxiv Chatter Digest](arxiv-chatter-digest/README.md): Python CLI that digests recent arXiv papers on a topic and the public X posts that named them with the Desearch API.
 - [Complaint Radar](complaint-radar/README.md): Python CLI that sorts recent public X complaint posts about a brand into themes with the Desearch API.
 - [Forum Intent Board](forum-intent-board/README.md): Python CLI that lists public Hacker News and Reddit threads asking for a tool with the Desearch API.
+- [Hashtag Shortlist](hashtag-shortlist/README.md): Python CLI that ranks candidate TikTok and Instagram hashtags for a niche by median likes, freshness and creator spread with the Desearch API.
