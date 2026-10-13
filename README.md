@@ -140,3 +140,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Hiring Signal Radar](hiring-signal-radar/README.md): Python CLI that finds companies hiring for a role from public posts and job pages with the Desearch API.
 - [Holiday Promo Watch](holiday-promo-watch/README.md): Python CLI that snapshots Black Friday promo wording on brand sites and social posts with the Desearch API.
 - [Reply Ledger](reply-ledger/README.md): Python CLI that turns a public X account's recent posts and replies into a reply ledger with the Desearch API.
+- [Investor Topic Tracker](investor-topic-tracker/README.md): Python CLI that builds a reading list of public investor posts on a topic with the Desearch API.

@@ -1,0 +1,13 @@
+handle,status,count_requested,posts_returned,posts_with_topic_term,latest_topic_post_utc,latest_topic_post_url,last_30_days,median_likes,returned_newest_first,cost_usd,usage_count,fetched_at,shortlist_label
+a16z,200,20,20,20,2026-10-12 17:45,https://x.com/i/status/2109702031661465899,True,350.5,False,0.0029999999999999996,20,2026-10-13T09:32:40+04:00,Investor A
+sequoia,200,20,8,7,2025-05-08 13:45,https://x.com/i/status/1920475021270516128,False,21,False,0.0014999999999999998,10,2026-10-13T09:32:42+04:00,Investor J
+ycombinator,200,20,20,20,2026-10-08 14:32,https://x.com/i/status/2108203880555414002,True,554.0,False,0.0029999999999999996,20,2026-10-13T09:32:48+04:00,Investor E
+lightspeedvp,200,20,20,20,2026-10-09 17:33,https://x.com/i/status/2108611842478096750,True,28.0,False,0.0029999999999999996,20,2026-10-13T09:32:51+04:00,Investor C
+Greylock,200,20,0,0,,,False,,True,0.0014999999999999998,10,2026-10-13T09:32:55+04:00,
+Accel,200,20,9,8,2026-05-12 20:42,https://x.com/i/status/2054301306408583263,False,4.5,False,0.0014999999999999998,10,2026-10-13T09:33:25+04:00,Investor I
+IndexVentures,200,20,10,9,2026-10-08 16:31,https://x.com/i/status/2108233799532237281,True,10,False,0.0014999999999999998,10,2026-10-13T09:33:29+04:00,Investor D
+generalcatalyst,200,20,16,16,2026-08-26 16:08,https://x.com/i/status/2092645270685421708,False,8.5,False,0.0024,16,2026-10-13T09:33:34+04:00,Investor G
+foundersfund,200,20,0,0,,,False,,True,0.0014999999999999998,10,2026-10-13T09:33:40+04:00,
+kleinerperkins,200,20,7,7,2026-09-30 15:53,https://x.com/i/status/2105325271440388272,True,19,False,0.0014999999999999998,10,2026-10-13T09:34:11+04:00,Investor F
+insightpartners,200,20,11,11,2026-06-11 18:59,https://x.com/i/status/2065146824936050897,False,4,False,0.00165,11,2026-10-13T09:34:16+04:00,Investor H
+BessemerVP,200,20,20,14,2026-10-12 16:08,https://x.com/i/status/2109677473902330324,True,14.0,False,0.0029999999999999996,20,2026-10-13T09:34:25+04:00,Investor B
