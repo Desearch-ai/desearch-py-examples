@@ -142,3 +142,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Reply Ledger](reply-ledger/README.md): Python CLI that turns a public X account's recent posts and replies into a reply ledger with the Desearch API.
 - [Investor Topic Tracker](investor-topic-tracker/README.md): Python CLI that builds a reading list of public investor posts on a topic with the Desearch API.
 - [Listicle Gap Finder](listicle-gap-finder/README.md): Python CLI that finds roundup pages naming competitors but not your brand with the Desearch API.
+- [Posting Time Check](posting-time-check/README.md): Python CLI that scores posting time by weekday and hour for TikTok, Instagram and Facebook accounts with the Desearch API.

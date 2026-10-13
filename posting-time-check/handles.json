@@ -1,0 +1,70 @@
+{
+  "_note": "Example set: public crypto news, research and brand accounts. main = the account you want to check; peers = accounts in the same niche. Per-platform names where they differ; null = no brand account found under that name, so the platform is skipped for that peer.",
+  "main": {
+    "tiktok": "coindesk",
+    "instagram": "coindesk",
+    "facebook": "coindesk"
+  },
+  "peers": [
+    {
+      "tiktok": "decryptmedia",
+      "instagram": "decryptmedia",
+      "facebook": "decryptmedia"
+    },
+    {
+      "tiktok": "coinbureau",
+      "instagram": "coinbureau",
+      "facebook": null
+    },
+    {
+      "tiktok": "beincrypto",
+      "instagram": "beincrypto",
+      "facebook": "beincrypto"
+    },
+    {
+      "tiktok": "cryptoslate",
+      "instagram": "cryptoslate",
+      "facebook": "cryptoslate"
+    },
+    {
+      "tiktok": "cryptonews",
+      "instagram": "cryptonews",
+      "facebook": "cryptonews"
+    },
+    {
+      "tiktok": "watcherguru",
+      "instagram": "watcherguru",
+      "facebook": "watcherguru"
+    },
+    {
+      "tiktok": null,
+      "instagram": "bitcoinist",
+      "facebook": "bitcoinist"
+    },
+    {
+      "tiktok": null,
+      "instagram": "ambcrypto",
+      "facebook": "ambcrypto"
+    },
+    {
+      "tiktok": "coinbase",
+      "instagram": "coinbase",
+      "facebook": "coinbase"
+    },
+    {
+      "tiktok": null,
+      "instagram": null,
+      "facebook": "CryptoComOfficial"
+    },
+    {
+      "tiktok": "binance",
+      "instagram": "binance",
+      "facebook": "binance"
+    },
+    {
+      "tiktok": null,
+      "instagram": "bybit_official",
+      "facebook": "Bybit"
+    }
+  ]
+}
