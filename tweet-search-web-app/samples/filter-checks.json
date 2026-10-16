@@ -1,0 +1,303 @@
+{
+ "latest": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 3.04,
+  "violations": {},
+  "langs": [
+   "en",
+   "es",
+   "ja",
+   "pt",
+   "vi"
+  ]
+ },
+ "top": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Top",
+   "count": 20
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 2.88,
+  "violations": {},
+  "langs": [
+   "en"
+  ]
+ },
+ "lang-es": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "lang": "es"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.66,
+  "violations": {
+   "lang": 0
+  },
+  "langs": [
+   "es"
+  ]
+ },
+ "min-likes-100": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Top",
+   "count": 20,
+   "min_likes": 100
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 19,
+  "latency_s": 5.77,
+  "violations": {
+   "min_likes": 0
+  },
+  "langs": [
+   "en",
+   "und"
+  ]
+ },
+ "min-replies-20": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Top",
+   "count": 20,
+   "min_replies": 20
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.97,
+  "violations": {
+   "min_replies": 0
+  },
+  "langs": [
+   "en"
+  ]
+ },
+ "min-retweets-50": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Top",
+   "count": 20,
+   "min_retweets": 50
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.8,
+  "violations": {
+   "min_retweets": 0
+  },
+  "langs": [
+   "en",
+   "fr",
+   "und"
+  ]
+ },
+ "verified": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "verified": "true"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 6.4,
+  "violations": {
+   "verified": 20
+  },
+  "langs": [
+   "en",
+   "es",
+   "fr",
+   "pt",
+   "tr",
+   "vi",
+   "zxx"
+  ]
+ },
+ "blue": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "blue_verified": "true"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.61,
+  "violations": {
+   "blue_verified": 0
+  },
+  "langs": [
+   "en",
+   "es",
+   "fr",
+   "pt",
+   "tr",
+   "vi"
+  ]
+ },
+ "video": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "is_video": "true"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.75,
+  "violations": {
+   "is_video": 0
+  },
+  "langs": [
+   "en",
+   "es",
+   "ro",
+   "zxx"
+  ]
+ },
+ "image": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "is_image": "true"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 3.42,
+  "violations": {
+   "is_image": 1
+  },
+  "langs": [
+   "de",
+   "en",
+   "nl",
+   "pt",
+   "tr"
+  ]
+ },
+ "quote": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "is_quote": "true"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.92,
+  "violations": {},
+  "langs": [
+   "de",
+   "en",
+   "fr",
+   "qht",
+   "tr",
+   "zh"
+  ]
+ },
+ "dates": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 20,
+   "start_date": "2026-10-10",
+   "end_date": "2026-10-12"
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.47,
+  "violations": {
+   "date": 0
+  },
+  "langs": [
+   "en",
+   "es",
+   "ja",
+   "pt",
+   "zh"
+  ]
+ },
+ "or-terms": {
+  "params": {
+   "query": "desearch (bittensor OR subnet)",
+   "sort": "Latest",
+   "count": 20
+  },
+  "status": 200,
+  "requested": 20,
+  "returned": 20,
+  "latency_s": 1.61,
+  "violations": {},
+  "langs": [
+   "en",
+   "tr",
+   "zxx"
+  ]
+ },
+ "top-count-100": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Top",
+   "count": 100
+  },
+  "status": 200,
+  "requested": 100,
+  "returned": 48,
+  "latency_s": 16.23,
+  "violations": {},
+  "langs": [
+   "en",
+   "ja"
+  ]
+ },
+ "latest-count-100": {
+  "params": {
+   "query": "bitcoin",
+   "sort": "Latest",
+   "count": 100
+  },
+  "status": 200,
+  "requested": 100,
+  "returned": 100,
+  "latency_s": 27.58,
+  "violations": {},
+  "langs": [
+   "en",
+   "es",
+   "fr",
+   "ja",
+   "pt",
+   "th",
+   "vi",
+   "zh",
+   "zxx"
+  ]
+ },
+ "header_total_usd": 0.06255,
+ "calls": 16
+}

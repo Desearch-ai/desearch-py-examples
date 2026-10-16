@@ -158,3 +158,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [X Keyword Monitor](x-keyword-monitor/README.md): Saved prompt and Python CLI that lists new public X posts for a few keywords since the last check with the Desearch API.
 - [Podcast Guest Shortlist](podcast-guest-shortlist/README.md): Saved prompt and Python CLI that builds a podcast guest shortlist from public X posts and web pages with the Desearch API.
 - [TikTok Comments Export](tiktok-comments-export/README.md): export public comments from TikTok videos to one clean CSV.
+- [Tweet Search Web App](tweet-search-web-app/): one-page web app to search X posts with filters and export CSV.
