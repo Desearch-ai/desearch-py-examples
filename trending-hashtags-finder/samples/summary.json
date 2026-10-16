@@ -1,0 +1,333 @@
+{
+ "generated": "2026-10-16 14:35 +04",
+ "counts": {
+  "US": [
+   5,
+   50
+  ],
+  "GB": [
+   5,
+   50
+  ],
+  "IN": [
+   5,
+   50
+  ],
+  "JP": [
+   5,
+   50
+  ],
+  "Worldwide": [
+   5,
+   50
+  ]
+ },
+ "rows": [
+  {
+   "hashtag": "#それスノ",
+   "countries": {
+    "JP": 1,
+    "Worldwide": 1
+   },
+   "best_rank": 1
+  },
+  {
+   "hashtag": "#NayyiNavellionDistrict",
+   "countries": {
+    "IN": 1
+   },
+   "best_rank": 1
+  },
+  {
+   "hashtag": "#DIESELxJENO",
+   "countries": {
+    "Worldwide": 2
+   },
+   "best_rank": 2
+  },
+  {
+   "hashtag": "#Whalefall",
+   "countries": {
+    "IN": 2
+   },
+   "best_rank": 2
+  },
+  {
+   "hashtag": "#[political-tag]",
+   "countries": {
+    "IN": 3
+   },
+   "best_rank": 3
+  },
+  {
+   "hashtag": "#MCIPSG",
+   "countries": {
+    "GB": 5
+   },
+   "best_rank": 5
+  },
+  {
+   "hashtag": "#Tesla",
+   "countries": {
+    "IN": 5
+   },
+   "best_rank": 5
+  },
+  {
+   "hashtag": "#毎週金曜はおつピザ",
+   "countries": {
+    "JP": 5
+   },
+   "best_rank": 5
+  },
+  {
+   "hashtag": "#รับได้ใช่ไหมByAuAu",
+   "countries": {
+    "Worldwide": 6
+   },
+   "best_rank": 6
+  },
+  {
+   "hashtag": "#يوم_الجمعه",
+   "countries": {
+    "Worldwide": 8
+   },
+   "best_rank": 8
+  },
+  {
+   "hashtag": "#日向坂ちゃんねる",
+   "countries": {
+    "JP": 8
+   },
+   "best_rank": 8
+  },
+  {
+   "hashtag": "#AytaçDikmenPBLKögren",
+   "countries": {
+    "Worldwide": 9
+   },
+   "best_rank": 9
+  },
+  {
+   "hashtag": "#君島みお",
+   "countries": {
+    "JP": 9
+   },
+   "best_rank": 9
+  },
+  {
+   "hashtag": "#FourthConcertD1",
+   "countries": {
+    "US": 10
+   },
+   "best_rank": 10
+  },
+  {
+   "hashtag": "#CelebrityTraitors",
+   "countries": {
+    "GB": 12
+   },
+   "best_rank": 12
+  },
+  {
+   "hashtag": "#OlandriaxWWW20",
+   "countries": {
+    "US": 12
+   },
+   "best_rank": 12
+  },
+  {
+   "hashtag": "#Ranabaali",
+   "countries": {
+    "IN": 12
+   },
+   "best_rank": 12
+  },
+  {
+   "hashtag": "#アニポケ",
+   "countries": {
+    "JP": 15
+   },
+   "best_rank": 15
+  },
+  {
+   "hashtag": "#lovestruck",
+   "countries": {
+    "GB": 28
+   },
+   "best_rank": 28
+  },
+  {
+   "hashtag": "#ThisIsMyCrew",
+   "countries": {
+    "US": 30
+   },
+   "best_rank": 30
+  },
+  {
+   "hashtag": "#FridayFeeling",
+   "countries": {
+    "GB": 31
+   },
+   "best_rank": 31
+  },
+  {
+   "hashtag": "#ASongOrMovieForLeading",
+   "countries": {
+    "GB": 32
+   },
+   "best_rank": 32
+  },
+  {
+   "hashtag": "#WinOurWay",
+   "countries": {
+    "US": 32
+   },
+   "best_rank": 32
+  },
+  {
+   "hashtag": "#LaGranjaSalvación",
+   "countries": {
+    "US": 36
+   },
+   "best_rank": 36
+  }
+ ],
+ "stats": {
+  "#それスノ": {
+   "hashtag": "#それスノ",
+   "sample": 20,
+   "authors": 20,
+   "newest_min": 0,
+   "oldest_min": 0,
+   "posts_per_hour": 6545.5,
+   "median_likes": 0.0,
+   "top_lang": "ja",
+   "lang_share": 1.0,
+   "co_hashtags": [
+    "#恋とき",
+    "#mentor",
+    "#竹財輝之助"
+   ],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111042984158560513",
+    "https://x.com/i/status/2111042980979311045"
+   ],
+   "dropped_old": 0
+  },
+  "#nayyinavelliondistrict": {
+   "hashtag": "#NayyiNavellionDistrict",
+   "sample": 18,
+   "authors": 18,
+   "newest_min": 0,
+   "oldest_min": 2,
+   "posts_per_hour": 568.4,
+   "median_likes": 0.0,
+   "top_lang": "en",
+   "lang_share": 1.0,
+   "co_hashtags": [],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111042865262719363",
+    "https://x.com/i/status/2111042787378700702"
+   ],
+   "dropped_old": 0
+  },
+  "#dieselxjeno": {
+   "hashtag": "#DIESELxJENO",
+   "sample": 8,
+   "authors": 8,
+   "newest_min": 0,
+   "oldest_min": 0,
+   "posts_per_hour": 1371.4,
+   "median_likes": 0.0,
+   "top_lang": "en",
+   "lang_share": 0.5,
+   "co_hashtags": [
+    "#JAEMINxLeeJeans",
+    "#JAEMIN_LeeAPACAmbassador"
+   ],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111042984578097538",
+    "https://x.com/i/status/2111042961773605207"
+   ],
+   "dropped_old": 0
+  },
+  "#whalefall": {
+   "hashtag": "#Whalefall",
+   "sample": 19,
+   "authors": 17,
+   "newest_min": 0,
+   "oldest_min": 22,
+   "posts_per_hour": 53.7,
+   "median_likes": 1,
+   "top_lang": "en",
+   "lang_share": 0.42,
+   "co_hashtags": [
+    "#Tesla",
+    "#Ranabaali",
+    "#WorldFoodDay"
+   ],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111042895298109760",
+    "https://x.com/i/status/2111042855577977081"
+   ],
+   "dropped_old": 1
+  },
+  "#[political-tag]": {
+   "hashtag": "#[political-tag]",
+   "sample": 17,
+   "authors": 15,
+   "newest_min": 0,
+   "oldest_min": 10,
+   "posts_per_hour": 104.3,
+   "median_likes": 0,
+   "top_lang": "hi",
+   "lang_share": 0.76,
+   "co_hashtags": [
+    "#AbhijeetDipke",
+    "#Ranabaali",
+    "#WhaleFallMovie"
+   ],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111042918794559949",
+    "https://x.com/i/status/2111042877983957216"
+   ],
+   "dropped_old": 0
+  },
+  "#mcipsg": {
+   "hashtag": "#MCIPSG",
+   "sample": 7,
+   "authors": 7,
+   "newest_min": 9,
+   "oldest_min": 317,
+   "posts_per_hour": 1.4,
+   "median_likes": 0,
+   "top_lang": "fr",
+   "lang_share": 0.43,
+   "co_hashtags": [
+    "#Akliouche",
+    "#yağmur",
+    "#BuenosDíasATodos"
+   ],
+   "spam_hits": 0,
+   "retweets": 0,
+   "examples": [
+    "https://x.com/i/status/2111040614145851728",
+    "https://x.com/i/status/2111030823503683632"
+   ],
+   "dropped_old": 8
+  }
+ },
+ "calls": 12,
+ "header_total_usd": 0.05385
+}
