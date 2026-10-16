@@ -1,0 +1,25 @@
+keyword,rank,title,url,domain,page_start
+web search api,1,[tool] result 1,https://[tool]-1.example/,[tool],0
+web search api,2,[tool] result 2,https://[tool]-2.example/,[tool],0
+web search api,3,[tool] result 3,https://[tool]-3.example/,[tool],0
+web search api,4,[tool] result 4,https://[tool]-4.example/,[tool],0
+web search api,5,[tool] result 5,https://[tool]-5.example/,[tool],0
+web search api,6,[tool] result 6,https://[tool]-6.example/,[tool],0
+web search api,7,[tool] result 7,https://[tool]-7.example/,[tool],0
+web search api,8,[tool] result 8,https://[tool]-8.example/,[tool],0
+web search api,9,[tool] result 9,https://[tool]-9.example/,[tool],0
+web search api,10,[tool] result 10,https://[tool]-10.example/,[tool],0
+web search api,11,[tool] result 11,https://[tool]-11.example/,[tool],0
+web search api,12,Web Search API with Structured JSON Results - Desearch,https://www.desearch.ai/web-search-api,desearch.ai,0
+json search results api,1,[tool] result 12,https://[tool]-12.example/,[tool],0
+json search results api,2,[tool] result 13,https://[tool]-13.example/,[tool],0
+json search results api,3,[tool] result 14,https://[tool]-14.example/,[tool],0
+json search results api,4,Web Search API with Structured JSON Results - Desearch,https://www.desearch.ai/web-search-api,desearch.ai,0
+json search results api,5,[tool] result 15,https://[tool]-15.example/,[tool],0
+json search results api,6,[tool] result 16,https://[tool]-16.example/,[tool],0
+json search results api,7,[tool] result 17,https://[tool]-17.example/,[tool],0
+json search results api,8,[tool] result 18,https://[tool]-18.example/,[tool],0
+json search results api,9,[tool] result 19,https://[tool]-19.example/,[tool],0
+json search results api,10,[tool] result 20,https://[tool]-20.example/,[tool],0
+json search results api,11,[tool] result 21,https://[tool]-21.example/,[tool],0
+json search results api,12,[tool] result 22,https://[tool]-22.example/,[tool],0

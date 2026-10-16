@@ -1,0 +1,2 @@
+# runtime: standard library only
+pytest>=8

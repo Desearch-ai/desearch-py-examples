@@ -147,3 +147,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [RAG Corpus Builder](rag-corpus-builder/README.md): Python CLI that builds a starter corpus from ranked web pages on a topic with the Desearch API.
 - [Tweet Scraper to CSV](tweet-scraper-csv/README.md): Python CLI that writes public X posts for a query to a clean CSV with the Desearch API.
 - [Page to Markdown](page-to-markdown-api/README.md): Python CLI that turns a list of URLs into clean Markdown files with the Desearch API.
+- [SERP API Rank Checker](serp-api-rank-checker/README.md): Python CLI that reports the best rank a domain got for each keyword in the web results Desearch returned with the Desearch API.
