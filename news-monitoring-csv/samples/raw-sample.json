@@ -1,0 +1,151 @@
+{
+ "started": "2026-10-16T15:13:39+04:00",
+ "note": "Trimmed sample from a live run on 2026-10-16; post authors removed.",
+ "calls": [
+  {
+   "label": "web",
+   "topic": "ai chip export controls",
+   "path": "/web",
+   "params": {
+    "query": "ai chip export controls",
+    "start": 0
+   },
+   "at": "2026-10-16T15:13:49+04:00",
+   "seconds": 3.92,
+   "status": 200,
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "Understanding U.S. Allies\u2019 Current Legal Authority to Implement AI and Semiconductor Export Controls | CSIS",
+      "link": "https://www.csis.org/analysis/understanding-us-allies-current-legal-authority-implement-ai-and-semiconductor-export",
+      "snippet": "This paper provides an in-depth analysis of U.S. allies\u2019 export control authorities related to AI and semiconductor technologies and does the same analysis for China. It demonstrates that U.S. allies often do not have equivalents to U.S. export control authorities and tools like the FDPR and Entity List, but that they generally do have the capability to introduce some controls on advanced semiconductor chips and related equipment not covered by multilateral export control regimes."
+     },
+     {
+      "title": "Department of Commerce Announces Rescission of Biden- ...",
+      "link": "https://www.bis.gov/press-release/department-commerce-rescinds-biden-era-artificial-intelligence-diffusion-rule-strengthens-chip-related",
+      "snippet": "WASHINGTON, D.C.\u2014 Today, the Department of Commerce (DOC) initiated a rescission of the Biden Administration\u2019s AI Diffusion Rule, while announcing additional steps to strengthen export controls on semiconductors worldwide."
+     },
+     {
+      "title": "United States export controls on AI chips and semiconductors",
+      "link": "https://en.wikipedia.org/wiki/United_States_export_controls_on_AI_chips_and_semiconductors",
+      "snippet": "Export controls on AI chips and semiconductors are imposed by the United States, restricting the export of technology and equipment related to artificial intelligence to other countries, primarily targeting China. In January 2026, BIS formalized a flexible license review policy for these\u00a0..."
+     },
+     {
+      "title": "Strengthening America\u2019s AI Chip Export Controls - American Compass",
+      "link": "https://americancompass.org/strengthening-americas-ai-chip-export-controls/",
+      "snippet": "Congress should close these gaps by mandating the use of location verification technology to combat illegal smuggling, ensuring partners\u2019 export controls are aligned with American controls, codifying existing restrictions into law, and guaranteeing that no chip sales to adversaries harm American national security or constrain supply for American industry. The United States and its partners hold a commanding lead over China in the design and manufacture of advanced AI semiconductors and semiconductor manufacturing equipment (SME)."
+     },
+     {
+      "title": "Understanding the Artificial Intelligence Diffusion Framework: Can Export Controls Create a U.S.-Led Global Artificial Intelligence Ecosystem? | RAND",
+      "link": "https://www.rand.org/pubs/perspectives/PEA3776-1.html",
+      "snippet": "This is the first comprehensive framework for managing global AI technology diffusion through export controls. The framework extends controls on advanced AI chips to more countries and introduces controls on closed AI model weights \u2014 the parameters containing an AI model's learned capabilities \u2014 that are not made publicly available in an effort to safeguard national security while managing global AI diffusion."
+     },
+     {
+      "title": "AI export controls are not the best bargaining chip | Chatham House \u2013 International Affairs Think Tank",
+      "link": "https://www.chathamhouse.org/2026/04/ai-export-controls-are-not-best-bargaining-chip",
+      "snippet": "The act seeks to prevent US chips from being illegally shipped or diverted to foreign adversaries, especially China, by requiring companies to verify that semiconductors used in AI remain in authorized locations."
+     },
+     {
+      "title": "U.S. Export Controls and China: Advanced Semiconductors | Congress.gov | Library of Congress",
+      "link": "https://www.congress.gov/crs-product/R48642",
+      "snippet": "On January 15, 2025, BIS issued a global AI Diffusion Rule to curtail PRC access to advanced chips and AI computing power through third countries and in an effort to create a secure global ecosystem for AI data centers.20 The rule proposed a\u00a0..."
+     },
+     {
+      "title": "How US Export Controls Have (and Haven't) Curbed Chinese AI | AI Frontiers",
+      "link": "https://ai-frontiers.org/articles/us-chip-export-controls-china-ai",
+      "snippet": "For over half a decade, the United States has imposed significant semiconductor export controls on China, aiming to slow China\u2019s chip industry and to retain US leadership in the computing capabilities that undergird AI advances. Have these controls achieved their goals?"
+     },
+     {
+      "title": "AI Chip Export Control Initiative - Institute for Security and Technology",
+      "link": "https://securityandtechnology.org/ai-chip-export-control-initiative/",
+      "snippet": "January 2026 was, in many ways, an inflection point for export controls. From the resumption of Nvidia H200 sales to China to congressional discussion on restricting remote cloud access, IST's AI Chip Export Control Initiative team unpacks what these developments mean for the future."
+     },
+     {
+      "title": "Federal Register :: Framework for Artificial Intelligence Diffusion",
+      "link": "https://www.federalregister.gov/documents/2025/01/15/2025-00636/framework-for-artificial-intelligence-diffusion",
+      "snippet": "With this interim final rule, the Commerce Department's Bureau of Industry and Security (BIS) revises the Export Administration Regulations' (EAR) controls on advanced computing integrated circuits (ICs) and adds a new control on artificial intelligence (AI) model weights for certain advanced closed-weight dual-use AI models."
+     },
+     {
+      "title": "United States New Export Controls on Advanced Computing and Semiconductors to China - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/United_States_New_Export_Controls_on_Advanced_Computing_and_Semiconductors_to_China",
+      "snippet": "The cutting edge of the semiconductor ... make chips.\" The United States' new export controls have fully leveraged the fragile nature of the industry. This announcement, the most expansive export control action in decades, represents a fundamental shift in the traditional strategy underlying the U.S. and allied export control regime. Intended restrictions of the export controls include limiting AI chip access,\u00a0..."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "x latest",
+   "topic": "ai chip export controls",
+   "path": "/twitter",
+   "params": {
+    "query": "ai chip export controls",
+    "sort": "Latest",
+    "start_date": "2026-10-15",
+    "count": 30
+   },
+   "at": "2026-10-16T15:13:53+04:00",
+   "seconds": 4.42,
+   "status": 200,
+   "cost_usd": "0.0045",
+   "usage_count": "30",
+   "body": [
+    {
+     "text": "China is considering adding 23 AI technologies to its export control list, including LLMs and chip designs, to keep closer control over homegrown advancements\n\nsource: \n\n\ud83e\udd9e every source, every angle: ",
+     "url": "https://x.com/i/web/status/2111050018463375512",
+     "created_at": "Fri Oct 16 11:02:00 +0000 2026"
+    },
+    {
+     "text": "\u26a1 \ud835\udc14\ud835\udc0f\ud835\udc03\ud835\udc00\ud835\udc13\ud835\udc04: Taiwan Plans Tougher AI Chip Export Restrictions on China Under U.S. Trade Deal - Bloomberg - $AMD $NVDA \n\n\ud83d\udc49 \ud835\uddde\ud835\uddf2\ud835\ude06 \ud835\udddb\ud835\uddf6\ud835\uddf4\ud835\uddf5\ud835\uddf9\ud835\uddf6\ud835\uddf4\ud835\uddf5\ud835\ude01\ud835\ude00:\n\n\u27a4  \ud835\udde7\ud835\uddee\ud835\uddf6\ud835\ude04\ud835\uddee\ud835\uddfb plans stricter \ud835\uddd4\ud835\udddc \ud835\uddf0\ud835\uddf5\ud835\uddf6\ud835\uddfd export controls targeting China.\n\n\u27a4  New restrictions will cover \ud835\uddd4\ud835\udddc \ud835\ude00\ud835\uddf2\ud835\uddff\ud835\ude03\ud835\uddf2\ud835\uddff\ud835\ude00 and advanced semiconductors.\n\n\u27a4  Unauthorized exports of restricted AI hardware could become \ud835\uddf0\ud835\uddff\ud835\uddf6\ud835\uddfa\ud835\uddf6\ud835\uddfb\ud835\uddee\ud835\uddf9 \ud835\uddfc\ud835\uddf3\ud835\uddf3\ud835\uddf2\ud835\uddfb\ud835\ude00\ud835\uddf2\ud835\ude00.\n\n\u27a4  Taiwan will align certain export controls with \ud835\udde8.\ud835\udde6. \ud835\uddff\ud835\uddf2\ud835\ude00\ud835\ude01\ud835\uddff\ud835\uddf6\ud835\uddf0\ud835\ude01\ud835\uddf6\ud835\uddfc\ud835\uddfb\ud835\ude00.\n\n\u27a4  Measures follow commitments under the \ud835\udfee\ud835\udfec\ud835\udfee\ud835\udff2 \ud835\udde8.\ud835\udde6.\u2013\ud835\udde7\ud835\uddee\ud835\uddf6\ud835\ude04\ud835\uddee\ud835\uddfb \ud835\ude01\ud835\uddff\ud835\uddee\ud835\uddf1\ud835\uddf2 \ud835\uddee\ud835\uddf4\ud835\uddff\ud835\uddf2\ud835\uddf2\ud835\uddfa\ud835\uddf2\ud835\uddfb\ud835\ude01.\n\n\u27a4  U.S. officials allege \ud835\uddef\ud835\uddf6\ud835\uddf9\ud835\uddf9\ud835\uddf6\ud835\uddfc\ud835\uddfb\ud835\ude00 \ud835\uddfc\ud835\uddf3 \ud835\uddf1\ud835\uddfc\ud835\uddf9\ud835\uddf9\ud835\uddee\ud835\uddff\ud835\ude00 in NVIDIA chips reached China.\n\n\u27a4  Restrictions could further limit China's access to \ud835\udde1\ud835\udde9\ud835\udddc\ud835\uddd7\ud835\udddc\ud835\uddd4 and \ud835\uddd4\ud835\udde0\ud835\uddd7 accelerators.\n\n\u27a4  Taiwan currently lacks specific criminal penalties for unauthorized \ud835\uddd4\ud835\udddc \ud835\uddf0\ud835\uddf5\ud835\uddf6\ud835\uddfd \ud835\uddf2\ud835\ude05\ud835\uddfd\ud835\uddfc\ud835\uddff\ud835\ude01\ud835\ude00.\n\n\u27a4  Implementation timeline remains \ud835\ude02\ud835\uddfb\ud835\uddf0\ud835\uddfc\ud835\uddfb\ud835\uddf3\ud835\uddf6\ud835\uddff\ud835\uddfa\ud835\uddf2\ud835\uddf1 by Taiwanese authorities.\n\n\u27a4  Taiwan also plans multibillion-dollar \ud835\udde8.\ud835\udde6. \ud835\uddf6\ud835\uddfb\ud835\uddf1\ud835\ude02\ud835\ude00\ud835\ude01\ud835\uddff\ud835\uddf6\ud835\uddee\ud835\uddf9 \ud835\uddfd\ud835\uddee\ud835\uddff\ud835\uddf8 investments.\n\n\ud83d\udc49 \ud835\uddea\ud835\uddf5\ud835\ude06 \ud835\udde7\ud835\uddf5\ud835\uddf6\ud835\ude00 \ud835\udde0\ud835\uddee\ud835\ude01\ud835\ude01\ud835\uddf2\ud835\uddff\ud835\ude00:\n\n\u27a4  Could tighten enforcement against \ud835\uddd4\ud835\udddc \ud835\uddf0\ud835\uddf5\ud835\uddf6\ud835\uddfd \ud835\ude00\ud835\uddfa\ud835\ude02\ud835\uddf4\ud835\uddf4\ud835\uddf9\ud835\uddf6\ud835\uddfb\ud835\uddf4 into China.\n\n\u27a4  May restrict Chinese companies' access to \ud835\uddee\ud835\uddf1\ud835\ude03\ud835\uddee\ud835\uddfb\ud835\uddf0\ud835\uddf2\ud835\uddf1 \ud835\uddd4\ud835\udddc \ud835\uddf0\ud835\uddfc\ud835\uddfa\ud835\uddfd\ud835\ude02\ud835\ude01\ud835\uddf6\ud835\uddfb\ud835\uddf4 \ud835\uddfd\ud835\uddfc\ud835\ude04\ud835\uddf2\ud835\uddff.\n\n\u27a4  Raises compliance risks for \ud835\udde1\ud835\udde9\ud835\udddc\ud835\uddd7\ud835\udddc\ud835\uddd4, \ud835\uddd4\ud835\udde0\ud835\uddd7, and semiconductor supply chains.\n\n\u27a4  Strengthens \ud835\udde8.\ud835\udde6.\u2013\ud835\udde7\ud835\uddee\ud835\uddf6\ud835\ude04\ud835\uddee\ud835\uddfb technology cooperation amid growing geopolitical competition.\n\n\u27a4  Could accelerate \ud835\uddd4\ud835\udddc \ud835\ude00\ud835\ude02\ud835\uddfd\ud835\uddfd\ud835\uddf9\ud835\ude06 \ud835\uddf0\ud835\uddf5\ud835\uddee\ud835\uddf6\ud835\uddfb diversification toward U.S. manufacturing.\n\n\ud83d\udc49 \ud835\uddd8\ud835\ude05\ud835\uddfd\ud835\uddf2\ud835\uddff\ud835\ude01 \ud835\udde6\ud835\ude01\ud835\uddee\ud835\ude01\ud835\uddf2\ud835\uddfa\ud835\uddf2\ud835\uddfb\ud835\ude01:\n\n\ud835\uddde\ud835\ude02\ud835\uddfb\ud835\uddf4 \ud835\udde0\ud835\uddf6\ud835\uddfb\ud835\uddf4-\ud835\uddf5\ud835\ude00\ud835\uddf6\ud835\uddfb, Taiwan's Minister of Economic Affairs:\n\n\u201cGoing forward, some of our measures on controlled items will correspond to American ones because we have made quite some commitments in the Agreement on Reciprocal Trade,\u201d",
+     "url": "https://x.com/i/web/status/2111047303272210729",
+     "created_at": "Fri Oct 16 10:51:13 +0000 2026"
+    },
+    {
+     "text": "NEW: \ud83c\udde8\ud83c\uddf3 #China has proposed sweeping export controls on AI models, chips, and agents, according to Bloomberg. The draft proposal targets 23 AI technologies, including large language models, agents, chip designs, and computing clusters. Under the plan, restricted technol\u2026 ",
+     "url": "https://x.com/i/web/status/2111039972694237460",
+     "created_at": "Fri Oct 16 10:22:05 +0000 2026"
+    },
+    {
+     "text": "\ud83c\udde8\ud83c\uddf3 China Now Proposes Export Controls on AI Models, Chips and Agents \u2014 Bloomberg \n\nDraft proposal covers 23 AI technologies, including large language models, agents, chip designs and computing clusters. Restricted technologies would include model weights and source code for products exceeding certain performance thresholds.",
+     "url": "https://x.com/i/web/status/2111039165953388867",
+     "created_at": "Fri Oct 16 10:18:53 +0000 2026"
+    },
+    {
+     "text": "BREAKING: China just moved to put export controls on its own AI. The Commerce and Science ministries proposed adding 23 AI technologies, including large models, AI agents and computing clusters, to the country's restricted-export list (MOFCOM-MOST Notice No. 48, Oct 16; Reuters; Bloomberg).\n\n- Model weights and source code above certain performance thresholds would be covered, along with chip designs, Bloomberg reports\n- Tech already released as open source or published in academic papers is excluded, per the ministry notice\n- Pre-export registration starts now: selling or licensing covered tech abroad, or a foreign entity taking control of its owner, must be registered with MOFCOM first\n- Public comments run through Nov 15. The package also adds 5 biomedicine and 12 solar technologies\n- The ministry calls it routine and says it targets no specific country\n\nDoes this ever reach DeepSeek, Qwen or Kimi releases? Drop your take.\n\n#AI #China #ExportControls #DeepSeek #Qwen #Kimi #OpenSource #LLM #AIAgents #AIPolicy #TechWar",
+     "url": "https://x.com/i/web/status/2111037716037005603",
+     "created_at": "Fri Oct 16 10:13:07 +0000 2026"
+    },
+    {
+     "text": "\ud83d\udea8 Breaking news on AI policy\n\nChina has proposed export controls on 23 AI technologies, including advanced model weights, agents and chip-design technology. Temporary pre-export registration for covered technology transfers takes effect immediately.\n\nThe draft covers specified technologies under technical, capability and data-related criteria. Model controls include weights, key checkpoints, source code, training optimization and inference acceleration.\n\u2192 AI technology already made public through open-source releases or academic papers is excluded\n\u2192 The commerce ministry says overseas API calls, app/web access and SaaS use fall outside the model-technology export scope\n\u2192 Overseas local deployment of restricted technology falls within scope; deployment on a company's own overseas cloud can qualify for automatic licensing\n\nPublic consultation on the revised export-control list runs through November 15.\n\nOfficial notice\n\nMinistry Q&A\n",
+     "url": "https://x.com/i/web/status/2111033664528404521",
+     "created_at": "Fri Oct 16 09:57:01 +0000 2026"
+    },
+    {
+     "text": "MARKET INTELLIGENCE: Fri 16 Oct\n\nOVERNIGHT\n\u2022 Warsh offers no guidance on October rates; the dollar hits a two-week low and gold approaches $4,200.\n\u2022 Taiwan plans tighter controls on AI chip exports to China, including criminal penalties for unauthorized shipments.\n\u2022 US-Mexico tariff talks reportedly stall as Lutnick opposes sizable cuts to auto, steel and aluminum duties.\n\u2022 Bailey sees limited spillover from energy costs into broader UK prices, tempering the case for an immediate rate increase.\n\nPREMARKET\nS&P 500 (SPY) +0.2%  Nasdaq 100 (QQQ) +0.0%\n  Russell 2000 (IWM) +0.4%\nWTI futures (USO) -0.5%  Spot gold (GLD) +0.1%\n  Dollar index (UUP) -0.2%  20y+ UST (TLT) -0.0%\nChina 50 (FXI) -1.1%  Bitcoin (IBIT) -0.3%\n\nECONOMICS\n08:30 Import and Export Price Indexes, 09:15 Industrial Production\n\nFor informational purposes only. Not a recommendation to buy or sell any security.",
+     "url": "https://x.com/i/web/status/2111031674754453631",
+     "created_at": "Fri Oct 16 09:49:06 +0000 2026"
+    },
+    {
+     "text": "Taiwan plans to tighten export controls on AI chips to further align with US restrictions and curb smuggling to China ",
+     "url": "https://x.com/i/web/status/2111030623486034383",
+     "created_at": "Fri Oct 16 09:44:56 +0000 2026"
+    },
+    {
+     "text": "China is tightening its grip on AI. \ud83c\udde8\ud83c\uddf3\n\nBeijing plans export controls on 23 AI technologies, including advanced models, AI agents, and chip design.\n\nThe global AI race is heating up. ",
+     "url": "https://x.com/i/web/status/2111030356895813898",
+     "created_at": "Fri Oct 16 09:43:52 +0000 2026"
+    },
+    {
+     "text": "Rakesh Kumar says the controls spurred China to build its own chip ecosystem\u2014and that Chinese AI models are now \"very, very close\" to America's. ",
+     "url": "https://x.com/i/web/status/2111028445518115049",
+     "created_at": "Fri Oct 16 09:36:17 +0000 2026"
+    }
+   ]
+  }
+ ]
+}
