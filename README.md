@@ -164,3 +164,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [X User Lookup App](x-user-lookup-app/): look up an X account's recent posts in a small web app or CLI and export CSV.
 - [Web Search API Quickstart](web-search-api-quickstart/): a tiny search endpoint and page on top of the Desearch web search API, with curl, Python and JS snippets.
 - [Find X Influencers (MCP)](find-x-influencers-mcp/README.md): Saved prompt and Python CLI that finds active X voices on a topic through the Desearch MCP x-search tool, ranked by posts and likes with follower counts.
+- [News Monitoring to CSV](news-monitoring-csv/README.md): track topics across the web and X and append only new items to one CSV.
