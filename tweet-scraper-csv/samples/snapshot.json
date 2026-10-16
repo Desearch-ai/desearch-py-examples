@@ -1,0 +1,15 @@
+{
+ "query": "(\"home espresso\" OR \"espresso machine\")",
+ "sort": "Latest",
+ "start_date": "2026-10-08",
+ "end_date": null,
+ "count": 50,
+ "lang": "en",
+ "status": 200,
+ "returned": 50,
+ "kept": 50,
+ "dropped_outside_window": [],
+ "generated": "2026-10-15 18:28 +04",
+ "calls": 1,
+ "cost_usd_total": 0.0075
+}
