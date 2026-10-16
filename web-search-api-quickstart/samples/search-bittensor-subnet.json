@@ -1,0 +1,275 @@
+{
+ "query": "bittensor subnet",
+ "pages": 2,
+ "count": 37,
+ "new_per_page": [
+  19,
+  18
+ ],
+ "repeats_dropped": 2,
+ "cost_usd": 0.002,
+ "latency_s": 8.87,
+ "results": [
+  {
+   "title": "Subnets · taostats · Official Block Explorer & Gateway to Bittensor",
+   "url": "https://taostats.io/subnets",
+   "snippet": "Bittensor subnets, emissions, ownership, registration date, immunity and recycle volume data.",
+   "domain": "taostats.io",
+   "rank": 1
+  },
+  {
+   "title": "Top Bittensor Subnets Coins by Market Cap | CoinGecko",
+   "url": "https://www.coingecko.com/en/categories/bittensor-subnets",
+   "snippet": "The Bittensor Subnets market cap today is $1.24 Billion, a 0.3% change in the last 24 hours.",
+   "domain": "coingecko.com",
+   "rank": 2
+  },
+  {
+   "title": "Running a subnet - Bittensor Docs",
+   "url": "https://www.bittensor.com/docs/guides/subnets",
+   "snippet": "A subnet owner defines an incentive mechanism: what miners must produce and how validators must score it. The chain side - creating the subnet, tuning its hyperparameters, publishing its identity - is all reachable through the SDK.",
+   "domain": "bittensor.com",
+   "rank": 3
+  },
+  {
+   "title": "Subnet Alpha - Subnet Alpha",
+   "url": "https://subnetalpha.ai/",
+   "snippet": "Manifold’s subnet enhances AI by integrating text, images, and audio for improved multimodal processing and predictions ... Decentralized Bittensor subnet pioneering hierarchical AI model training to reach human-level AGI reasoning.",
+   "domain": "subnetalpha.ai",
+   "rank": 4
+  },
+  {
+   "title": "Subnet Configuration (Hyperparameters) | Bittensor",
+   "url": "https://docs.learnbittensor.org/subnets/subnet-hyperparameters",
+   "snippet": "Bittensor subnets are configured with a set of state variables (known as hyperparameters) that are recorded on the blockchain. Many of these can be accessed (viewed and set) using the Bittensor CLI btcli, but some of them must be checked or ...",
+   "domain": "docs.learnbittensor.org",
+   "rank": 5
+  },
+  {
+   "title": "Working with Subnets | Bittensor",
+   "url": "https://docs.learnbittensor.org/subnets/working-with-subnets",
+   "snippet": "The below code prints stake S on the subnet and the weights W set by the subnet validators in the subnet. import bittensor as bt subnet = bt.Metagraph( netuid = 1, lite = False) print ('subnet 1 validator stake', subnet.S ) print ('subnet 1 validator weights', subnet.W )",
+   "domain": "docs.learnbittensor.org",
+   "rank": 6
+  },
+  {
+   "title": "Bittensor Subnets & Validators | TaoMarketCap",
+   "url": "https://taomarketcap.com/",
+   "snippet": "Track all Bittensor subnets, validators, and TAO prices. Live analytics, portfolio tracking, and comprehensive on-chain data.",
+   "domain": "taomarketcap.com",
+   "rank": 7
+  },
+  {
+   "title": "Bittensor",
+   "url": "https://www.bittensor.com/content/subnets-dive",
+   "snippet": "Internet-scale machine learning",
+   "domain": "bittensor.com",
+   "rank": 8
+  },
+  {
+   "title": "Bittensor Subnets - dTAO Prices & Emissions | Bittensor.ai",
+   "url": "https://bittensor.ai/subnets",
+   "snippet": "Compare dTAO prices, trading volume, emissions, market cap, and developer activity across all 129 Bittensor subnets.",
+   "domain": "bittensor.ai",
+   "rank": 9
+  },
+  {
+   "title": "GitHub - latent-to/bittensor-subnet-template: Template Design for a Bittensor subnetwork · GitHub",
+   "url": "https://github.com/latent-to/bittensor-subnet-template",
+   "snippet": "A protocol using which the subnet miners and subnet validators interact with one another. This protocol is part of the incentive mechanism. The Bittensor API using which the subnet miners and subnet validators interact with Bittensor's onchain ...",
+   "domain": "github.com",
+   "rank": 10
+  },
+  {
+   "title": "GitHub - omegalabsinc/omegalabs-bittensor-subnet: The World's Largest Decentralized AGI Multimodal Dataset · GitHub",
+   "url": "https://github.com/omegalabsinc/omegalabs-bittensor-subnet/",
+   "snippet": "Welcome to the OMEGA Labs Bittensor subnet, a groundbreaking initiative that aims to create the world's largest decentralized multimodal dataset for accelerating Artificial General Intelligence (AGI) research and development.",
+   "domain": "github.com",
+   "rank": 11
+  },
+  {
+   "title": "Bittensor Documentation - Bittensor Docs",
+   "url": "https://docs.learnbittensor.org/subnets/understanding-subnets",
+   "snippet": "Bittensor is an open network where independent subnets produce digital commodities - compute, inference, storage, prediction - and the chain pays participants in its token, TAO, in proportion to the value they contribute.",
+   "domain": "docs.learnbittensor.org",
+   "rank": 12
+  },
+  {
+   "title": "GitHub - NousResearch/finetuning-subnet · GitHub",
+   "url": "https://github.com/NousResearch/finetuning-subnet",
+   "snippet": "Each incentive mechanism in Bittensor is called a 'subnet'. Weights and the amount of TAO held by the validators become inputs to Bittensor's consensus mechanism called Yuma Consensus.",
+   "domain": "github.com",
+   "rank": 13
+  },
+  {
+   "title": "bittensor-subnet-template/docs/running_on_mainnet.md at main · latent-to/bittensor-subnet-template",
+   "url": "https://github.com/latent-to/bittensor-subnet-template/blob/main/docs/running_on_mainnet.md",
+   "snippet": "This tutorial shows how to use the bittensor btcli to create a subnetwork and connect your incentive mechanism to it.",
+   "domain": "github.com",
+   "rank": 14
+  },
+  {
+   "title": "Bittensor - decentralized machine intelligence network",
+   "url": "https://www.bittensor.com/",
+   "snippet": "Bittensor is an open, decentralized network where independent subnets produce digital commodities - compute, inference, storage, prediction - and the chain pays contributors in TAO.",
+   "domain": "bittensor.com",
+   "rank": 15
+  },
+  {
+   "title": "Create a Subnet (Locally) | Bittensor",
+   "url": "https://docs.learnbittensor.org/local-build/create-subnet",
+   "snippet": "Subnets Network: custom ┃ ┃ Price ┃ Market Cap ┃ ┃ P (τ_in, ┃ Stake ┃ ┃ Netuid ┃ Name ┃ (τ_in/α_in) ┃ (α * Price) ┃ Emission (τ) ┃ α_in) ┃ (α_out) ┃ Supply (α) ┃ Tempo (k/n) ━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━ 0 │ τ root │ 1.0000 τ/Τ │ τ 0.00 │ τ 0.0000 │ -, - │ Τ 0.00 │ 0.00 Τ /21M │ -/- 2 │ β │ 0.0000 τ/β │ τ 1.00k │ τ 0.0000 │ τ 1.00k, │ 0.00 β │ 1.00k β │ 29/360 │ awesome-fi…",
+   "domain": "docs.learnbittensor.org",
+   "rank": 16
+  },
+  {
+   "title": "Bittensor subnets: The best opportunities for investing in TAO | OAK Research",
+   "url": "https://oakresearch.io/en/analyses/innovations/bittensor-subnets-best-opportunities-investing-tao",
+   "snippet": "This reform transformed the network's ... subnets. Historically, Bittensor's governance was centralized around the Root Subnet (Subnet 0), with only 64 validators responsible for distributing rewards....",
+   "domain": "oakresearch.io",
+   "rank": 17
+  },
+  {
+   "title": "bittensor-subnet-template/docs/running_on_testnet.md at main · latent-to/bittensor-subnet-template",
+   "url": "https://github.com/latent-to/bittensor-subnet-template/blob/main/docs/running_on_testnet.md",
+   "snippet": "This tutorial shows how to use the Bittensor testnet to create a subnet and run your incentive mechanism on it.",
+   "domain": "github.com",
+   "rank": 18
+  },
+  {
+   "title": "Bittensor subnet tokens are coming to Kraken - Kraken Blog Kraken Blog",
+   "url": "https://blog.kraken.com/product/new-features/bittensor-subnet-tokens",
+   "snippet": "Bittensor is a decentralized network of independent subnets, each operating as its own market for a specific digital commodity such as machine intelligence, model training, data, or compute.",
+   "domain": "blog.kraken.com",
+   "rank": 19
+  },
+  {
+   "title": "Top 5 Bittensor Subnets: A Deep Dive into the dTAO Ecosystem | CoinGecko",
+   "url": "https://www.coingecko.com/learn/top-bittensor-subnets-dtao",
+   "snippet": "Discover the top Bittensor subnets by market cap in 2026, and learn how Dynamic TAO works and how to buy subnet Alpha tokens like SN64 and SN3.",
+   "domain": "coingecko.com",
+   "rank": 20
+  },
+  {
+   "title": "Exploring Bittensor's New Subnets: A Deep Dive - Flagship.FYI",
+   "url": "https://flagship.fyi/outposts/ai-crypto/exploring-bittensors-new-subnets-a-deep-dive/",
+   "snippet": "The Bittensor network, with its variety of subnets catering to different domains of machine intelligence, is a new era of collaborative AI research and development. By bridging the gap between machine intelligence producers and consumers, Bittensor can play a pivotal role in advancing the field ...",
+   "domain": "flagship.fyi",
+   "rank": 21
+  },
+  {
+   "title": "Bittensor Documentation - Bittensor Docs",
+   "url": "https://www.bittensor.com/docs",
+   "snippet": "Bittensor is an open network where independent subnets produce digital commodities - compute, inference, storage, prediction - and the chain pays participants in its token, TAO, in proportion to the value they contribute.",
+   "domain": "bittensor.com",
+   "rank": 22
+  },
+  {
+   "title": "Subnets Bittensor: La Lista Completa (2026) - Bittensor ES",
+   "url": "https://bittensor.es/subnets/",
+   "snippet": "SN8 - Subnet de negociación propia (prop trading) descentralizada que recopila estrategias basadas… ... SN10 - DEX cross-chain de un solo clic que conecta activos de Base/Ethereum con tokens nativos de… ... SN11 - Los mineros compiten por diseñar los prompts de agentes de IA más económicos posibles que… ... SN12 - Red de computación GPU descentralizada y fiable para Bittensor...",
+   "domain": "bittensor.es",
+   "rank": 23
+  },
+  {
+   "title": "Top 10 Bittensor Subnets to Watch as TAO Surges 90%",
+   "url": "https://coinpedia.org/news/top-10-bittensor-subnets-to-watch-as-tao-surges-90/",
+   "snippet": "Bittensor is recording massive growth, led by both TAO and its subnet ecosystem. The token has jumped nearly 90% in March, rising from around $180 to",
+   "domain": "coinpedia.org",
+   "rank": 24
+  },
+  {
+   "title": "Bittensor Subnets Explained: The AI Markets Inside Bittensor",
+   "url": "https://discoverbittensor.com/subnets/",
+   "snippet": "Explore the specialized AI, compute, cybersecurity, storage, video, forecasting and agent markets being built on Bittensor. A beginner-friendly guide to the subnets that make Bittensor more than just an AI token.",
+   "domain": "discoverbittensor.com",
+   "rank": 25
+  },
+  {
+   "title": "5 Cool Bittensor Subnets to Test Out on Bankless",
+   "url": "https://www.bankless.com/bittensor-subnets-to-watch",
+   "snippet": "TAO has had a big year, but there's more to the Bittensor network than gains.",
+   "domain": "bankless.com",
+   "rank": 26
+  },
+  {
+   "title": "Bittensor Subnets Explained: The 10 You Need to Know in 2026 - Grey Area Labs",
+   "url": "https://greyarealabs.co/2026/03/23/bittensor-subnets-explained/",
+   "snippet": "A deep dive into Bittensor's subnet architecture - how subnets work, how they compete, and the 10 most important subnets in 2026.",
+   "domain": "greyarealabs.co",
+   "rank": 27
+  },
+  {
+   "title": "Subnet architecture · taostats · Official Block Explorer & Gateway to Bittensor",
+   "url": "https://docs.taostats.io/docs/subnet",
+   "snippet": "The Bittensor network's primary division is into a group of subnets.",
+   "domain": "docs.taostats.io",
+   "rank": 28
+  },
+  {
+   "title": "Basic Subnet Tutorials | Bittensor",
+   "url": "https://docs.learnbittensor.org/tutorials/basic-subnet-tutorials",
+   "snippet": "If you are new to subnets, start with these beginner tutorials with Bittensor Subnet Template:",
+   "domain": "docs.learnbittensor.org",
+   "rank": 29
+  },
+  {
+   "title": "bittensor-subnet-template/docs/running_on_staging.md at main · latent-to/bittensor-subnet-template",
+   "url": "https://github.com/latent-to/bittensor-subnet-template/blob/main/docs/running_on_staging.md",
+   "snippet": "Template Design for a Bittensor subnetwork. Contribute to latent-to/bittensor-subnet-template development by creating an account on GitHub.",
+   "domain": "github.com",
+   "rank": 30
+  },
+  {
+   "title": "Bittensor Explained: Subnets, Incentives, and Decentralized Intelligence | by Abdullah Muhammad | Stackademic",
+   "url": "https://blog.stackademic.com/bittensor-explained-subnets-incentives-and-decentralized-intelligence-d8e8c93ebbd8?gi=0fd1a731aa05",
+   "snippet": "Bittensor Explained: Subnets, Incentives, and Decentralized Intelligence Basic understanding of cryptocurrencies, AI, and compute resources will be sufficient for working through the contents of this …",
+   "domain": "blog.stackademic.com",
+   "rank": 31
+  },
+  {
+   "title": "Every Bittensor subnet, explained | SubnetRadar",
+   "url": "https://subnetradar.com/research/subnets",
+   "snippet": "The subnet encyclopedia - what every Bittensor subnet does, in plain language: mission, category, key numbers and links, for all 128 subnets.",
+   "domain": "subnetradar.com",
+   "rank": 32
+  },
+  {
+   "title": "Launching a Bittensor Subnet: The Basics - Sami’s Notes",
+   "url": "https://samikassab.substack.com/p/launching-a-bittensor-subnet-the",
+   "snippet": "In essence, Bittensor is a decentralized platform for launching specialized networks, each designed for a specific machine learning use case or digital resource provision. Currently, Bittensor hosts over 36 subnets, each delivering unique services such as text and image generation, AI model ...",
+   "domain": "samikassab.substack.com",
+   "rank": 33
+  },
+  {
+   "title": "Bittensor Subnet Tokens Surge as TAO Rally Boosts Ecosystem | The Defiant",
+   "url": "https://thedefiant.io/news/markets/bittensor-subnet-tokens-surge-as-tao-rally-boosts-ecosystem",
+   "snippet": "Bittensor subnet tokens' cumulative valuation has climbed to $1.5 billion as nearly every token in the ecosystem posts double- or triple-digit 30-day gains.",
+   "domain": "thedefiant.io",
+   "rank": 34
+  },
+  {
+   "title": "The Bittensor Paradigm - Bittensor",
+   "url": "https://www.bittensor.com/about",
+   "snippet": "What Bittensor is and why it exists: an open network of subnets producing digital commodities, priced and rewarded in TAO by decentralized consensus.",
+   "domain": "bittensor.com",
+   "rank": 35
+  },
+  {
+   "title": "The network - Bittensor Docs",
+   "url": "https://www.bittensor.com/docs/concepts/network",
+   "snippet": "Subnets, miners, validators, stakers, TAO and alpha, emissions, and epochs. ... Bittensor is a blockchain (the subtensor chain) that coordinates and pays for useful work. The work itself happens off-chain, inside subnets; the chain records who participates, measures agreement about who is doing ...",
+   "domain": "bittensor.com",
+   "rank": 36
+  },
+  {
+   "title": "Bittensor Ecosystem Defies Market Trends With Increasing Subnet and Network Activity",
+   "url": "https://beincrypto.com/bittensor-subnet-growth-market-instability/",
+   "snippet": "Bittensor’s subnet ecosystem shows impressive growth, with market cap surging amid broader AI token challenges, signaling long-term potential.",
+   "domain": "beincrypto.com",
+   "rank": 37
+  }
+ ],
+ "cached": false,
+ "calls": 2
+}
