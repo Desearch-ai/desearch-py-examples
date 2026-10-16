@@ -167,3 +167,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [News Monitoring to CSV](news-monitoring-csv/README.md): track topics across the web and X and append only new items to one CSV.
 - [Launch Video Swipe File](launch-video-swipe-file/): collect product launch video posts from X into a CSV and Markdown swipe file.
 - [Directory Finder](directory-finder/README.md): type a category and get the directories that accept submissions, with a CSV and a shortlist.
+- [Who's Asking For It (MCP)](whos-asking-for-it/README.md): Saved prompt and Python CLI that finds recent public X posts where people ask for a tool like yours, through the Desearch MCP x-search tool, with a first-pass intent label.
