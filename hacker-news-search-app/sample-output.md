@@ -2,29 +2,29 @@
 
 Made by Desearch, https://desearch.ai
 
-Run on 2026-10-16:
+Saved response from a run on 2026-10-16 (`count` 10), shown in the CLI format:
 ```
-$ python3 app.py --cli "rust async runtime" --count 10 --csv samples/rust-async-runtime.csv --json samples/rust-async-runtime.json
+$ python3 app.py --cli "sqlite in production" --count 10 --json samples/sqlite-in-production.json --csv samples/sqlite-in-production.csv
 10 HN items of 10 links, cost $0.004
- 1. Who Runs Your Rust Future? Hands-On Intro to Async Rust
-    https://news.ycombinator.com/item?id=48445702
- 2. Async-std: an async port of the Rust standard library
-    https://news.ycombinator.com/item?id=20719095
- 3. Tokio 1.0 – async runtime for Rust
-    https://news.ycombinator.com/item?id=25520353
- 4. Async Rust: What is a runtime? how Tokio works under the hood
-    https://news.ycombinator.com/item?id=32119002
- 5. The State of Async Rust: Runtimes
-    https://news.ycombinator.com/item?id=37639896
- 6. Async Rust doesn't have to be hard
-    https://news.ycombinator.com/item?id=31611456
- 7. I don't see how rust will manage to fix async await, unless making a v2 of the l...
-    https://news.ycombinator.com/item?id=32091614
- 8. Async Rust never left the MVP state
-    https://news.ycombinator.com/item?id=48019163
- 9. Writing an Async Runtime in Rust
-    https://news.ycombinator.com/item?id=46867887
-10. Stop worrying about blocking: the new async-std runtime for Rust, inspired by Go
-    https://news.ycombinator.com/item?id=21803021
+ 1. How (and why) to run SQLite in production
+    https://news.ycombinator.com/item?id=39835496
+ 2. Ask HN: Who uses SQLite database in production?
+    https://news.ycombinator.com/item?id=20367679
+ 3. Ask HN: SQLite in Production?
+    https://news.ycombinator.com/item?id=39955288
+ 4. Here's an all-time great post about why you might consider SQLite in production ...
+    https://news.ycombinator.com/item?id=31153130
+ 5. SQLite in Production: Lessons from Running a Store on a Single File
+    https://news.ycombinator.com/item?id=47637353
+ 6. Things that surprised me while running SQLite in production
+    https://news.ycombinator.com/item?id=36579347
+ 7. Running SQLite in production for our mid-six figure SaaS for a year now. We use ...
+    https://news.ycombinator.com/item?id=39957351
+ 8. Ask HN: Deploying SQLite on a Production Website
+    https://news.ycombinator.com/item?id=26765118
+ 9. > sqLite - This is described as being unsuitable for > production by it's makers...
+    https://news.ycombinator.com/item?id=24259514
+10. Why does SQLite (in production) have such a bad rep?
+    https://news.ycombinator.com/item?id=40728751
 ```
-Files: `samples/rust-async-runtime.json`, `samples/rust-async-runtime.csv`, and `samples/page.html` (the HTML page for "sqlite in production"). Third-party comment text in the samples was lightly edited for punctuation.
+Files: `samples/sqlite-in-production.json`, `samples/sqlite-in-production.csv` and `samples/page.html` (the HTML page for the same search). Titles, snippets and highlights are third-party Hacker News text, quoted as returned by the API.

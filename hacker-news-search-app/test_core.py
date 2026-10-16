@@ -155,9 +155,11 @@ def test_api_key_prefers_file(tmp_path, monkeypatch):
 BANNED = re.compile(r"\u2014|real-time|unreliable|every mention|viral", re.I)
 
 
-@pytest.mark.parametrize("name", ["README.md", "sample-output.md", "samples/rust-async-runtime.json",
-                                  "samples/rust-async-runtime.csv", "samples/page.html"])
+def own_prose(text):
+    """Our own words only: drops fenced blocks (quoted API output) from a markdown file."""
+    return re.sub(r"```.*?```", "", text, flags=re.S)
+
+
+@pytest.mark.parametrize("name", ["README.md", "sample-output.md"])
 def test_public_copy_rules(name):
-    p = HERE / name
-    if p.exists():
-        assert not BANNED.search(p.read_text())
+    assert not BANNED.search(own_prose((HERE / name).read_text()))
