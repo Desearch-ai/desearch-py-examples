@@ -1,0 +1,281 @@
+{
+ "domain": "desearch.ai",
+ "pages": 2,
+ "step": 20,
+ "calls": 20,
+ "header_total_usd": 0.02,
+ "keywords": [
+  {
+   "keyword": "serp api",
+   "best_rank": null,
+   "label": "not in top 37",
+   "best_url": "",
+   "depth": 37,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 21,
+     "new": 21,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 16,
+     "dupes": 4
+    }
+   ]
+  },
+  {
+   "keyword": "web search api",
+   "best_rank": 12,
+   "label": "12",
+   "best_url": "https://www.desearch.ai/web-search-api",
+   "depth": 40,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 21,
+     "new": 20,
+     "dupes": 1
+    }
+   ]
+  },
+  {
+   "keyword": "search api for ai agents",
+   "best_rank": null,
+   "label": "not in top 39",
+   "best_url": "",
+   "depth": 39,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 21,
+     "new": 21,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 18,
+     "dupes": 2
+    }
+   ]
+  },
+  {
+   "keyword": "twitter search api",
+   "best_rank": 11,
+   "label": "11",
+   "best_url": "https://www.desearch.ai/twitter-api",
+   "depth": 30,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 14,
+     "new": 14,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 16,
+     "new": 16,
+     "dupes": 0
+    }
+   ]
+  },
+  {
+   "keyword": "ai search engine api",
+   "best_rank": null,
+   "label": "not in top 40",
+   "best_url": "",
+   "depth": 40,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    }
+   ]
+  },
+  {
+   "keyword": "bittensor subnet 22",
+   "best_rank": null,
+   "label": "not in top 38",
+   "best_url": "",
+   "depth": 38,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 18,
+     "new": 18,
+     "dupes": 0
+    }
+   ]
+  },
+  {
+   "keyword": "decentralized search engine",
+   "best_rank": 16,
+   "label": "16",
+   "best_url": "https://www.desearch.ai/blog/decentralized-search-engine-desearch-bittensor",
+   "depth": 36,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 16,
+     "dupes": 4
+    }
+   ]
+  },
+  {
+   "keyword": "x posts search api",
+   "best_rank": null,
+   "label": "not in top 14",
+   "best_url": "",
+   "depth": 14,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 6,
+     "new": 6,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 9,
+     "new": 8,
+     "dupes": 1
+    }
+   ]
+  },
+  {
+   "keyword": "json search results api",
+   "best_rank": 4,
+   "label": "4",
+   "best_url": "https://www.desearch.ai/web-search-api",
+   "depth": 40,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    }
+   ]
+  },
+  {
+   "keyword": "search api for llm",
+   "best_rank": null,
+   "label": "not in top 40",
+   "best_url": "",
+   "depth": 40,
+   "page_stats": [
+    {
+     "start": 0,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    },
+    {
+     "start": 20,
+     "returned": 20,
+     "new": 20,
+     "dupes": 0
+    }
+   ]
+  }
+ ],
+ "diff": [
+  {
+   "keyword": "ai search engine api",
+   "before": null,
+   "after": null,
+   "change": "same"
+  },
+  {
+   "keyword": "bittensor subnet 22",
+   "before": null,
+   "after": null,
+   "change": "same"
+  },
+  {
+   "keyword": "decentralized search engine",
+   "before": 16,
+   "after": 16,
+   "change": "same"
+  },
+  {
+   "keyword": "json search results api",
+   "before": 4,
+   "after": 4,
+   "change": "same"
+  },
+  {
+   "keyword": "search api for ai agents",
+   "before": null,
+   "after": null,
+   "change": "same"
+  },
+  {
+   "keyword": "search api for llm",
+   "before": null,
+   "after": null,
+   "change": "same"
+  },
+  {
+   "keyword": "serp api",
+   "before": null,
+   "after": null,
+   "change": "same"
+  },
+  {
+   "keyword": "twitter search api",
+   "before": 11,
+   "after": 11,
+   "change": "same"
+  },
+  {
+   "keyword": "web search api",
+   "before": 12,
+   "after": 12,
+   "change": "same"
+  },
+  {
+   "keyword": "x posts search api",
+   "before": 4,
+   "after": null,
+   "change": "dropped out"
+  }
+ ]
+}
