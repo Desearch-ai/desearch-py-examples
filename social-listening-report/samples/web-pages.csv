@@ -1,0 +1,4 @@
+start,status,returned,new_urls,seconds,cost_usd
+0,200,13,13,1.92,0.001
+10,200,16,7,1.43,0.001
+20,200,19,18,0.85,0.001

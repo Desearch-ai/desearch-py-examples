@@ -1,0 +1,8 @@
+{"brand": "Duolingo",
+ "terms": ["duolingo", "duo owl"],
+ "on_topic_words": ["duolingo", "duo"],
+ "x_query": "(duolingo OR \"duo owl\") lang:en",
+ "x_count": 50,
+ "web_query": "duolingo",
+ "web_starts": [0, 10, 20],
+ "empty_query": "zqxv qqjw plorn 88213 vvkz"}
