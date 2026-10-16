@@ -1,0 +1,11 @@
+{
+  "topic_terms": ["sourdough", "levain", "bread baking"],
+  "topic_name": "sourdough",
+  "today": "2026-10-14",
+  "days": 30,
+  "min_likes": 20,
+  "count": 50,
+  "max_people": 15,
+  "per_user": 10,
+  "brand_words": ["recipe", "recipes", "shop"]
+}
