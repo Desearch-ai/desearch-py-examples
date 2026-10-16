@@ -103,22 +103,20 @@ print(result)
 You can also retrieve retweets and replies for a specific tweet using its ID:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        # Users who reposted a post. desearch-py 1.2.1: x_post_retweeters(id, cursor).
+        result = await desearch.x_post_retweeters(id="123456789")
+        print(result)
 
-# Perform a search for retweets of a specific tweet
-result = desearch.twitter_retweets_post(post_id="123456789", count=10, query="Bittensor")
+        # Replies to a post. See twitter_replies_post.py.
+        result = await desearch.x_post_replies(post_id="123456789", count=10, query="Bittensor")
+        print(result)
 
-# Print the search results
-print(result)
-
-# Perform a search for replies to a specific tweet
-result = desearch.twitter_replies_post(post_id="123456789", count=10, query="Bittensor")
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
