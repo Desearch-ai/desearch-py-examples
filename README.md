@@ -145,3 +145,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Posting Time Check](posting-time-check/README.md): Python CLI that scores posting time by weekday and hour for TikTok, Instagram and Facebook accounts with the Desearch API.
 - [Repo Buzz Tracker](repo-buzz-tracker/README.md): Python CLI that tracks public X posts and web pages mentioning a GitHub repo with the Desearch API.
 - [RAG Corpus Builder](rag-corpus-builder/README.md): Python CLI that builds a starter corpus from ranked web pages on a topic with the Desearch API.
+- [Tweet Scraper to CSV](tweet-scraper-csv/README.md): Python CLI that writes public X posts for a query to a clean CSV with the Desearch API.
