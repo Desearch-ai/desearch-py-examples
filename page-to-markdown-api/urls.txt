@@ -1,0 +1,15 @@
+# static
+https://example.com
+https://www.gnu.org/philosophy/free-sw.en.html
+https://en.wikipedia.org/wiki/Markdown
+# docs
+https://docs.python.org/3/tutorial/introduction.html
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+https://requests.readthedocs.io/en/latest/user/quickstart/
+# news
+https://www.bbc.com/news/technology
+https://apnews.com/technology
+# JS-heavy (body built in the browser)
+https://app.element.io/
+# 404
+https://www.gnu.org/page-that-does-not-exist-404
