@@ -14,7 +14,7 @@ source venv/bin/activate
 **Install dependencies**:
 
 ```bash
-pip3 install desearch-py
+pip3 install desearch-py==1.2.1
 ```
 
 ## Examples
@@ -24,19 +24,19 @@ pip3 install desearch-py
 The Web Links Search allows you to search for web links using a specific query. Here's how you can perform a web links search:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        result = await desearch.ai_web_links_search(
+            prompt="Bittensor",
+            tools=["web"],
+            count=10,
+        )
+        print(result)
 
-# Perform a web links search
-result = desearch.web_links_search(
-    prompt="Bittensor",
-    tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "arxiv"],
-)
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 ### 2. AI Search
@@ -44,23 +44,25 @@ print(result)
 The AI Search provides a more comprehensive search experience by utilizing AI models to gather and summarize information from various sources:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        result = await desearch.ai_search(
+            prompt="Bittensor",
+            tools=[
+                "web",
+                "twitter",
+            ],
+            date_filter=None,
+            result_type="LINKS_WITH_FINAL_SUMMARY",
+            system_message="You are a helpful assistant.",
+            count=10,
+        )
+        print(result)
 
-# Perform an AI search
-result = desearch.ai_search(
-    prompt="Bittensor",
-    tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "twitter", "arxiv"],
-    date_filter="PAST_24_HOURS",
-    streaming=False,
-    result_type="LINKS_WITH_SUMMARIES",
-    system_message="You are a helpful assistant."
-)
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 ### 3. Basic Twitter Search
