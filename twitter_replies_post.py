@@ -17,7 +17,7 @@ Attributes:
 """
 
 # Perform an twitter_replies_post using the Desearch client
-result = desearch.twitter_replies_post(post_id="123456789", count=10, query="Bittensor")
+result = desearch.twitter_replies_post(post_id="1276418907968925696", count=10, query="Bittensor")
 
 # Print the search results
 print(result)

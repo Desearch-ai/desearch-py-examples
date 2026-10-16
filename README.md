@@ -119,6 +119,8 @@ result = desearch.twitter_replies_post(post_id="123456789", count=10, query="Bit
 print(result)
 ```
 
+`twitter_replies_post` returns up to `count` replies; older posts may return fewer.
+
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
 
 ## Example apps
