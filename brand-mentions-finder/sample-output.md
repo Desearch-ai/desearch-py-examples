@@ -29,7 +29,7 @@ Public pages and posts Desearch returned for Raycast (the Mac launcher app), 202
 | 10-03 | Raycast on a list of Mac apps they can't live without (Thai) | positive | a user |
 | 10-02 | a podcast conversation about Raycast, shortcuts and notes | neutral | a user |
 | 10-01 | not a fan of an update that removed a feature | negative | a user |
-| 09-21 | a keyboard maker asks owners of its Raycast edition to share photos | neutral | a keyboard brand |
+| 09-21 | a keyboard maker asks owners of its Raycast edition to share photos | neutral | a user |
 | 09-20 | a new native launcher compared with Raycast on memory use | negative | a user |
 | 09-15 | "I'm uninstalling Raycast" after years of heavy use | negative | a user |
 | 09-15 | worth paying for Raycast if you pay for AI tools | positive | a user |
