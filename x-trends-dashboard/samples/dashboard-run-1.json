@@ -1,0 +1,133 @@
+{
+  "snapshot": "2026-10-16T11:51:43+04:00",
+  "places": {
+    "Worldwide": 30,
+    "United States": 30,
+    "United Kingdom": 30,
+    "India": 30,
+    "Brazil": 30
+  },
+  "woeid_mismatch": [],
+  "tweet_volume_filled": 0,
+  "trend_rows": 150,
+  "shared": [
+    {
+      "trend": "Tesla",
+      "places": [
+        "Brazil",
+        "India",
+        "United Kingdom",
+        "United States",
+        "Worldwide"
+      ]
+    },
+    {
+      "trend": "LETS SHOUT OH MY FOURTH",
+      "places": [
+        "India",
+        "United States",
+        "Worldwide"
+      ]
+    },
+    {
+      "trend": "#FourthConcertD1",
+      "places": [
+        "United States",
+        "Worldwide"
+      ]
+    },
+    {
+      "trend": "Bo Nix",
+      "places": [
+        "Brazil",
+        "United States"
+      ]
+    },
+    {
+      "trend": "Sam Darnold",
+      "places": [
+        "Brazil",
+        "United States"
+      ]
+    },
+    {
+      "trend": "Elon",
+      "places": [
+        "United Kingdom",
+        "United States"
+      ]
+    }
+  ],
+  "unique_counts": {
+    "Worldwide": 27,
+    "United States": 24,
+    "United Kingdom": 28,
+    "India": 28,
+    "Brazil": 27
+  },
+  "sample_posts": [
+    {
+      "trend": "Tesla",
+      "created_at": "Fri Oct 16 07:51:39 +0000 2026",
+      "author": "Account A",
+      "likes": 0,
+      "text": "[account] Yes, the car above is gorgeous, but this active aero is sick. [link]"
+    },
+    {
+      "trend": "Tesla",
+      "created_at": "Fri Oct 16 07:51:35 +0000 2026",
+      "author": "Account B",
+      "likes": 0,
+      "text": "This is honestly next level. Elon is on another level  Full feature of tesla New product   SpaceX is definitely going to hit $4 Trillion valuation in the future [link]"
+    },
+    {
+      "trend": "Tesla",
+      "created_at": "Fri Oct 16 07:51:35 +0000 2026",
+      "author": "Account C",
+      "likes": 0,
+      "text": "[account] Wow"
+    },
+    {
+      "trend": "LETS SHOUT OH MY FOURTH",
+      "created_at": "Fri Oct 16 07:51:42 +0000 2026",
+      "author": "Account D",
+      "likes": 0,
+      "text": "[account] LETS SHOUT OH MY FOURTH #FourthConcertD1 [account] #Fourthnattawat #โฟร์ทณัฐวรรธน์"
+    },
+    {
+      "trend": "LETS SHOUT OH MY FOURTH",
+      "created_at": "Fri Oct 16 07:51:41 +0000 2026",
+      "author": "Account E",
+      "likes": 0,
+      "text": "fourth is always pretty tho i prat for the zodiac guy neck its gonna be hard not looking at fou  LETS SHOUT OH MY FOURTH  #FourthConcertD1"
+    },
+    {
+      "trend": "LETS SHOUT OH MY FOURTH",
+      "created_at": "Fri Oct 16 07:51:35 +0000 2026",
+      "author": "Account F",
+      "likes": 0,
+      "text": "Susu na baby   LETS SHOUT OH MY FOURTH  #FourthConcertD1 [link]"
+    },
+    {
+      "trend": "#FourthConcertD1",
+      "created_at": "Fri Oct 16 07:51:42 +0000 2026",
+      "author": "Account G",
+      "likes": 0,
+      "text": "[account] LETS SHOUT OH MY FOURTH #FourthConcertD1 [account] #Fourthnattawat #โฟร์ทณัฐวรรธน์"
+    },
+    {
+      "trend": "#FourthConcertD1",
+      "created_at": "Fri Oct 16 07:51:41 +0000 2026",
+      "author": "Account H",
+      "likes": 0,
+      "text": "fourth is always pretty tho i prat for the zodiac guy neck its gonna be hard not looking at fou  LETS SHOUT OH MY FOURTH  #FourthConcertD1"
+    },
+    {
+      "trend": "#FourthConcertD1",
+      "created_at": "Fri Oct 16 07:51:35 +0000 2026",
+      "author": "Account I",
+      "likes": 0,
+      "text": "Susu na baby   LETS SHOUT OH MY FOURTH  #FourthConcertD1 [link]"
+    }
+  ]
+}

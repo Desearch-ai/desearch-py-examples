@@ -1,0 +1,9 @@
+{
+  "places": {"1": "Worldwide", "23424977": "United States", "23424975": "United Kingdom", "23424848": "India", "23424768": "Brazil"},
+  "count": 30,
+  "sample_top_shared": 3,
+  "x_count": 10,
+  "empty_query": "\"zqxjvbw kplmrtz qqfvnhd\"",
+  "bad_count": 29,
+  "fallback_woeid": 999999999
+}
