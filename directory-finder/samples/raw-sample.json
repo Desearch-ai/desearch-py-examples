@@ -1,0 +1,597 @@
+{
+ "run_date": "2026-10-14",
+ "run_started": "2026-10-14T09:29:04+04:00",
+ "category": "AI tools",
+ "queries": [
+  "submit your AI tool directory",
+  "AI tools directory submit tool",
+  "list your AI startup directory free submission",
+  "add your AI product to directory"
+ ],
+ "max_extracts": 6,
+ "kinds": {
+  "aitoolsdirectory.com": "directory",
+  "submitatool.com": "submission service",
+  "toolscout.ai": "directory",
+  "github.com": "list or article",
+  "gptbot.io": "directory",
+  "bestofai.io": "directory",
+  "insidr.ai": "directory",
+  "directory.aibusinesstool.com": "unknown",
+  "aiso.blog": "list or article",
+  "aitoolcurator.com": "directory",
+  "awesomeaitools.com": "submission service",
+  "reddit.com": "list or article",
+  "themexpert.com": "submission service",
+  "submittool.ai": "submission service",
+  "submitai.vercel.app": "submission service",
+  "hyzenpro.com": "directory",
+  "aitool.paperform.co": "directory",
+  "freeaidirectories.com": "submission service",
+  "aitoptools.com": "list or article"
+ },
+ "searches": [
+  {
+   "label": "web start=0",
+   "path": "/web",
+   "params": {
+    "query": "submit your AI tool directory",
+    "start": 0
+   },
+   "at": "2026-10-14T09:29:04+04:00",
+   "seconds": 3.1,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "Submit Tool to the AI Tools Directory",
+      "link": "https://aitoolsdirectory.com/submit-tool",
+      "snippet": "If regular people can\u2019t figure it out in 5 seconds, it\u2019s not going on the directory. ... \ud83d\udc49 Write unique descriptions. If the descriptions are copied from another website, your tool will go to the bottom of the list (or discarded) and you\u2019ll be waiting longer while I write a description. \ud83d\udc49 Content written using AI tools or copied content will be detected and discarded. Display transparent pricing without any hidden fees. If we need to call you to get the pricing, it won\u2019t be included. Please do not submit a tool that has a waiting list or hidden pricing."
+     },
+     {
+      "title": "Submit a Tool - Submit Your AI Tool to 270+ Top Directories",
+      "link": "https://submitatool.com/",
+      "snippet": "The easiest way to submit your tool to top AI and SaaS directories. Track your submission progress with our free interactive checklist and maximize your visibility."
+     },
+     {
+      "title": "Submit Your AI Tool \u2014 Free AI Tool Directory Listing | ToolScout.ai",
+      "link": "https://toolscout.ai/submit",
+      "snippet": "Submit your AI tool to ToolScout for free. Human-reviewed, live in ~24 hours, with a tool page and an embeddable badge. List your AI tool in front of..."
+     },
+     {
+      "title": "GitHub - best-of-ai/ai-directories: An awesome list of best top AI directories to submit your ai tools \u00b7 GitHub",
+      "link": "https://github.com/best-of-ai/ai-directories",
+      "snippet": "... [AI Journey] (https://aijourney.so) - offers expert reviews and insights on AI tools to help individuals and businesses succeed by leveraging the best AI technology. AiToolzFind useful AI tools. AI Toolz Dir - Submit your AI Tool to aitoolzdir\u00a0..."
+     },
+     {
+      "title": "Submit Your AI Tool - GPTBot | Add Your AI Tool to Our Directory",
+      "link": "https://gptbot.io/submit-ai-tool",
+      "snippet": "Share your AI tool with our community. Submit your AI product or service for review and get featured in our comprehensive directory of AI tools."
+     },
+     {
+      "title": "Directory Submission for AI Tool",
+      "link": "https://launchdirectories.com/directory-submission/ai-tool",
+      "snippet": "... Include specific use cases ... 30 seconds' beats 'AI writing assistant' every time. ... Submit to AI-specific directories first, then general startup directories...."
+     },
+     {
+      "title": "GitHub - submitaitools/Free-AI-Directories: A curated collection of free AI directories with Domain Authority (DA) scores, direct links, and descriptions. Perfect for researchers, developers, and SEO specialists looking to discover, compare, and submit AI tools across multiple platforms. \u00b7 GitHub",
+      "link": "https://github.com/submitaitools/Free-AI-Directories",
+      "snippet": "A curated collection of free AI directories with Domain Authority (DA) scores, direct links, and descriptions. Perfect for researchers, developers, and SEO specialists looking to discover, compare, and submit AI tools across multiple platforms. - submitaitools/Free-AI-Directories"
+     },
+     {
+      "title": "Submit Your AI Tool \u2014 Free AI Tool Directory Submission | Best of AI",
+      "link": "https://bestofai.io/submit/",
+      "snippet": "DevTools Code Assistant Writing ... Learning Tools Social Media Tools All categories \u2192 ... Open the submission form at submit.bestofai.io and fill in your tool's name, website, and a short description...."
+     },
+     {
+      "title": "Submit AI Tools - Insidr.ai",
+      "link": "https://www.insidr.ai/submit-tools/",
+      "snippet": "Submit new AI tools that we should include. If approved, we will add it to our AI Tools directory."
+     },
+     {
+      "title": "Submit Your Ai Tool Directory",
+      "link": "https://directory.aibusinesstool.com/submit-your-ai-tool-directory",
+      "snippet": "Boost Your Visibility - Submit Your AI Tool Directory with Us Today! Reach a Wider Audience and Grow Your Presence in the AI Industry."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "web start=10",
+   "path": "/web",
+   "params": {
+    "query": "submit your AI tool directory",
+    "start": 10
+   },
+   "at": "2026-10-14T09:29:07+04:00",
+   "seconds": 0.85,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "Submit Tool to the AI Tools Directory",
+      "link": "https://aitoolsdirectory.com/submit-tool",
+      "snippet": "If regular people can\u2019t figure it out in 5 seconds, it\u2019s not going on the directory. ... \ud83d\udc49 Write unique descriptions. If the descriptions are copied from another website, your tool will go to the bottom of the list (or discarded) and you\u2019ll be waiting longer while I write a description. \ud83d\udc49 Content written using AI tools or copied content will be detected and discarded. Display transparent pricing without any hidden fees. If we need to call you to get the pricing, it won\u2019t be included. Please do not submit a tool that has a waiting list or hidden pricing."
+     },
+     {
+      "title": "Submit a Tool - Submit Your AI Tool to 270+ Top Directories",
+      "link": "https://submitatool.com/",
+      "snippet": "The easiest way to submit your tool to top AI and SaaS directories. Track your submission progress with our free interactive checklist and maximize your visibility."
+     },
+     {
+      "title": "Submit Your AI Tool \u2014 Free AI Tool Directory Listing | ToolScout.ai",
+      "link": "https://toolscout.ai/submit",
+      "snippet": "Submit your AI tool to ToolScout for free. Human-reviewed, live in ~24 hours, with a tool page and an embeddable badge. List your AI tool in front of..."
+     },
+     {
+      "title": "GitHub - best-of-ai/ai-directories: An awesome list of best top AI directories to submit your ai tools \u00b7 GitHub",
+      "link": "https://github.com/best-of-ai/ai-directories",
+      "snippet": "... [AI Journey] (https://aijourney.so) - offers expert reviews and insights on AI tools to help individuals and businesses succeed by leveraging the best AI technology. AiToolzFind useful AI tools. AI Toolz Dir - Submit your AI Tool to aitoolzdir\u00a0..."
+     },
+     {
+      "title": "Submit Your AI Tool - GPTBot | Add Your AI Tool to Our Directory",
+      "link": "https://gptbot.io/submit-ai-tool",
+      "snippet": "Share your AI tool with our community. Submit your AI product or service for review and get featured in our comprehensive directory of AI tools."
+     },
+     {
+      "title": "Directory Submission for AI Tool",
+      "link": "https://launchdirectories.com/directory-submission/ai-tool",
+      "snippet": "... Include specific use cases ... 30 seconds' beats 'AI writing assistant' every time. ... Submit to AI-specific directories first, then general startup directories...."
+     },
+     {
+      "title": "GitHub - submitaitools/Free-AI-Directories: A curated collection of free AI directories with Domain Authority (DA) scores, direct links, and descriptions. Perfect for researchers, developers, and SEO specialists looking to discover, compare, and submit AI tools across multiple platforms. \u00b7 GitHub",
+      "link": "https://github.com/submitaitools/Free-AI-Directories",
+      "snippet": "A curated collection of free AI directories with Domain Authority (DA) scores, direct links, and descriptions. Perfect for researchers, developers, and SEO specialists looking to discover, compare, and submit AI tools across multiple platforms. - submitaitools/Free-AI-Directories"
+     },
+     {
+      "title": "Submit Your AI Tool \u2014 Free AI Tool Directory Submission | Best of AI",
+      "link": "https://bestofai.io/submit/",
+      "snippet": "DevTools Code Assistant Writing ... Learning Tools Social Media Tools All categories \u2192 ... Open the submission form at submit.bestofai.io and fill in your tool's name, website, and a short description...."
+     },
+     {
+      "title": "Submit AI Tools - Insidr.ai",
+      "link": "https://www.insidr.ai/submit-tools/",
+      "snippet": "Submit new AI tools that we should include. If approved, we will add it to our AI Tools directory."
+     },
+     {
+      "title": "Submit Your Ai Tool Directory",
+      "link": "https://directory.aibusinesstool.com/submit-your-ai-tool-directory",
+      "snippet": "Boost Your Visibility - Submit Your AI Tool Directory with Us Today! Reach a Wider Audience and Grow Your Presence in the AI Industry."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "web start=20",
+   "path": "/web",
+   "params": {
+    "query": "submit your AI tool directory",
+    "start": 20
+   },
+   "at": "2026-10-14T09:29:08+04:00",
+   "seconds": 1.32,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "15 Best AI Tools Directories to Submit Your SaaS & Startup (2026 List)",
+      "link": "https://aiso.blog/best-directories-ai-tools/",
+      "snippet": "Uneed is a directory-style discovery ... SaaS tools, and online resources. ... Trust MRR is a directory of verified startup revenues. Browse verified startup revenues and real startups. Submit your website and publicly prove your revenue. ... ListingBott is an automated directory submission platform designed to help SaaS founders, AI start-ups,\u00a0..."
+     },
+     {
+      "title": "Submit your AI tool - AI Tool Curator",
+      "link": "https://www.aitoolcurator.com/submit-a-tool/",
+      "snippet": "To get started, submit a brief overview of your tool, including its core functionality and use case. Each submission undergoes a manual review. You\u2019ll receive feedback within 3\u20135 working days, and if approved, you\u2019ll be invited to proceed with the full listing. Reach a targeted audience actively searching for AI tools \u00b7 Increase your tool\u2019s visibility with SEO-optimized listings \u00b7 Showcase your tool in a curated, quality-first AI directory..."
+     },
+     {
+      "title": "Submit AI Tool in 1 Minute with AI",
+      "link": "https://awesomeaitools.com/submit-your-tool",
+      "snippet": "Submit your AI tool to Awesome AI Tools directory. Get discovered by thousands of users looking for AI solutions."
+     },
+     {
+      "title": "r/SaaS on Reddit: We listed the best AI tool directories to submit your tool to",
+      "link": "https://www.reddit.com/r/SaaS/comments/1es3m92/we_listed_the_best_ai_tool_directories_to_submit/",
+      "snippet": ""
+     },
+     {
+      "title": "Submit Your AI Tool to 100+ Directories | ThemeXpert",
+      "link": "https://www.themexpert.com/ai/submit/directories/",
+      "snippet": "Looking for a listing on this directory instead? See /ai/submit/. ... General AI tool directories, SaaS and startup aggregators, no-code and automation directories, and directories matching your tool's specific category."
+     },
+     {
+      "title": "Submit AI Tool | Exclusive Directories | Just $60",
+      "link": "https://submittool.ai/",
+      "snippet": "A real human editor submits your tool by hand. Go live within 48\u201372 hours, with lifetime do-follow backlinks and a report of every listing. ... Buy directly from us. Get the best price, with no middleman. ... Compare reach, organic traffic and AI visibility. Pick your directories, or get them\u00a0..."
+     },
+     {
+      "title": "25,000+ AI Tools Directory 2026 | PoweredByAI",
+      "link": "https://poweredbyai.app/",
+      "snippet": "Click the Submit Tool link in the navigation bar and fill out the submission form with your tool's name, category, description, and pricing. Submissions are reviewed within 24\u201348 hours. Featured and promoted placement options are also available for additional visibility. Our community and staff are here to help! Your feedback will help Alice AI\u00a0..."
+     },
+     {
+      "title": "Submit AI Hub Online | Hub of AI Directories To Submit AI Product",
+      "link": "https://submitai.vercel.app/",
+      "snippet": "A hub of AI directories where you can submit your AI products to increase exposure, drive traffic, and build SEO backlinks for your website. ... Tap4 AI collects over 2000+ AIs and 230+ categories. Discover your favorite AI tools 2024 with Tap4 AI Tools Directory!"
+     },
+     {
+      "title": "Submit AI Tool | HyzenPro | HyzenPro",
+      "link": "https://hyzenpro.com/submit-ai-tool/",
+      "snippet": "Close the tab and come back \u2014 your progress is kept locally. ... HyzenPro is a growing AI tools directory covering 124+ AI tools across 18+ categories, built for creators, marketers, developers, and lean teams comparing software before they buy."
+     },
+     {
+      "title": "Submit a tool to AI Tools Directory (Google Sheets)",
+      "link": "https://aitool.paperform.co/",
+      "snippet": "Got a cool AI tool that\u2019s not listed on our site? Or do you love an AI-related product that you would like to share with others? Here\u2019s how you can submit your creation. Fill out the form below with all the necessary details, and I\u2019ll review your submission according to the guidelines\u00a0..."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "web start=0",
+   "path": "/web",
+   "params": {
+    "query": "AI tools directory submit tool",
+    "start": 0
+   },
+   "at": "2026-10-14T09:29:09+04:00",
+   "seconds": 1.61,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "Submit Tool to the AI Tools Directory",
+      "link": "https://aitoolsdirectory.com/submit-tool",
+      "snippet": "If regular people can\u2019t figure it out in 5 seconds, it\u2019s not going on the directory. ... \ud83d\udc49 Write unique descriptions. If the descriptions are copied from another website, your tool will go to the bottom of the list (or discarded) and you\u2019ll be waiting longer while I write a description. \ud83d\udc49 Content written using AI tools or copied content will be detected and discarded. Display transparent pricing without any hidden fees. If we need to call you to get the pricing, it won\u2019t be included. Please do not submit a tool that has a waiting list or hidden pricing."
+     },
+     {
+      "title": "Submit a Tool - Submit Your AI Tool to 270+ Top Directories",
+      "link": "https://submitatool.com/",
+      "snippet": "Prioritize reputable AI and SaaS directories that match the audience for your product. Work from a catalog reviewed for active listings, clear submission paths, and useful context. Put your tool in front of the focused communities that discover products through directories. Export remaining targets as CSV when you want to review, share, or continue the work elsewhere. ... Statistics that highlight the benefits of using Submit\u00a0..."
+     },
+     {
+      "title": "GitHub - best-of-ai/ai-directories: An awesome list of best top AI directories to submit your ai tools \u00b7 GitHub",
+      "link": "https://github.com/best-of-ai/ai-directories",
+      "snippet": "ALL AI TOOLS .TECH DIRECTORY - Best AI Tools Directory, Find and Compare Tools, Powered by AI Recommendation System ... AiToolex - Explore Best AI Tools on AiToolex. Submit your tool."
+     },
+     {
+      "title": "Submit Your AI Tool \u2014 Free AI Tool Directory Listing | ToolScout.ai",
+      "link": "https://toolscout.ai/submit",
+      "snippet": "Yes. Submitting your AI tool to ToolScout is completely free, and a free listing stays in the directory at no cost."
+     },
+     {
+      "title": "GitHub - submitaitools/Free-AI-Directories: A curated collection of free AI directories with Domain Authority (DA) scores, direct links, and descriptions. Perfect for researchers, developers, and SEO specialists looking to discover, compare, and submit AI tools across multiple platforms. \u00b7 GitHub",
+      "link": "https://github.com/submitaitools/Free-AI-Directories",
+      "snippet": "Welcome to \u201cAI Directories Collection,\u201d A carefully curated list of free AI tool directories created to make discovering and submitting AI products easier than ever."
+     },
+     {
+      "title": "Submit Your AI Tool - GPTBot | Add Your AI Tool to Our Directory",
+      "link": "https://gptbot.io/submit-ai-tool",
+      "snippet": "Share your AI tool with our community. Submit your AI product or service for review and get featured in our comprehensive directory of AI tools."
+     },
+     {
+      "title": "Best Free AI Directories List (450+) | Submit Your AI Tool",
+      "link": "https://freeaidirectories.com/",
+      "snippet": "Advertise your AI tool to founders browsing the directory ... Browse our completely free, fully transparent list of 450+ curated AI directories. Or skip the work entirely. Our team submits your tool by hand, starting at just $99."
+     },
+     {
+      "title": "AITopTools | AI Tools Directory | AI Tools Updated Daily",
+      "link": "https://aitoptools.com/",
+      "snippet": "Search, compare, and discover the right AI tool for any task.Search, compare, and discover curated AI tools for business, creativity, development, and everyday tasks. ... Submit your website and we'll create your AITopTools listing in seconds."
+     },
+     {
+      "title": "Submit Your AI Tool | AI Tools",
+      "link": "https://aitools.inc/submit",
+      "snippet": "Submit your tool and get listed on the fastest growing directory of AI Tools."
+     },
+     {
+      "title": "15 Best AI Tools Directories to Submit Your SaaS & Startup (2026 List)",
+      "link": "https://aiso.blog/best-directories-ai-tools/",
+      "snippet": "Uneed is a directory-style discovery ... SaaS tools, and online resources. ... Trust MRR is a directory of verified startup revenues. Browse verified startup revenues and real startups. Submit your website and publicly prove your revenue. ... ListingBott is an automated directory submission platform designed to help SaaS founders, AI start-ups,\u00a0..."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  }
+ ],
+ "probes": [
+  {
+   "label": "probe web start=100",
+   "path": "/web",
+   "params": {
+    "query": "submit your AI tool directory",
+    "start": 100
+   },
+   "at": "2026-10-14T09:29:33+04:00",
+   "seconds": 1.25,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "submitdirectories/AI.md at main \u00b7 submitdirectories/submitdirectories",
+      "link": "https://github.com/submitdirectories/submitdirectories/blob/main/AI.md",
+      "snippet": "This document contains a curated list of directories where you can submit your AI-related website. These directories are valuable for increasing visibility, improving SEO, and connecting with a relevant audience."
+     },
+     {
+      "title": "AI Tools Saver: Submit Your AI Tool",
+      "link": "https://www.aitoolsaver.com/submit-ai-tool",
+      "snippet": "Submit your AI tool and reach thousands of AI users with AI Tools Saver. We offer a 50% OFF for the first 1000 companies. Start getting organic traffic!"
+     },
+     {
+      "title": "Submit AI Tool & Reach More Buyers | Top AI Tools",
+      "link": "https://topaitools.com/submit",
+      "snippet": "Expand your reach, establish trust, and drive conversions by listing your AI tool on Top AI Tools. Engage with a tech-savvy audience eager for AI solutions. Submit your AI tool today!"
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "probe web empty-result",
+   "path": "/web",
+   "params": {
+    "query": "zqxv qqjw vvkz plorn directory 88213",
+    "start": 0
+   },
+   "at": "2026-10-14T09:29:35+04:00",
+   "seconds": 2.13,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.001",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Search",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.001",
+   "usage_count": "1",
+   "body": {
+    "data": [
+     {
+      "title": "ZQXv.html - Gentoo Forums - Gentoo Linux",
+      "link": "https://forums.gentoo.org/magik/ZQXv.html",
+      "snippet": "including orphaned /lib32 and install those plugin to such as: LiveGUI \u00b7 USB stick or This module have flags"
+     },
+     {
+      "title": "GitHub - scoroslee/zqxv: content \u00b7 GitHub",
+      "link": "https://github.com/scoroslee/zqxv",
+      "snippet": "content. Contribute to scoroslee/zqxv development by creating an account on GitHub."
+     },
+     {
+      "title": "GitHub - u0cwd204wu/zqxv: content \u00b7 GitHub",
+      "link": "https://github.com/u0cwd204wu/zqxv",
+      "snippet": "content. Contribute to u0cwd204wu/zqxv development by creating an account on GitHub."
+     }
+    ],
+    "cost_usd": 0.001,
+    "usage_count": 1,
+    "service": "Web Search",
+    "currency": "USD"
+   }
+  },
+  {
+   "label": "probe extract bad-url",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://this-domain-does-not-exist-zqxv8812.com/submit",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:32:36+04:00",
+   "seconds": 3.17,
+   "status": 404,
+   "headers": {
+    "x-desearch-cost-usd": "0",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "0"
+   },
+   "cost_usd": "0",
+   "usage_count": "0",
+   "body": {
+    "detail": "No content found.",
+    "cost_usd": 0.0,
+    "usage_count": 0,
+    "service": "Web Crawl",
+    "currency": "USD"
+   }
+  }
+ ],
+ "extracts": [
+  {
+   "label": "extract aitoolsdirectory.com",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://aitoolsdirectory.com/submit-tool",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:21+04:00",
+   "seconds": 1.33,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "Got a cool AI tool that\u2019s not listed on our site? Or do you love an AI-related product that you would like to share with others? Here\u2019s how you can submit your creation. Fill out the form below with all the necessary details, and I\u2019ll review your submission according to the guidelines (read below).\n\nOnce everything checks out, we\u2019ll publish your tool as soon as possible.\nNote: every tool is manually reviewed. Submitting a tool is not a guarantee that it will be published on the AI Tools Directory website.\n\n\u2705 Fast Track Option\n\nWe receive dozens of new AI tools every single day. Each one is manually reviewed, tested, and given a unique description written by our team. This process takes time, but it ensures every tool gets a fair shot. If you\u2019d rather not wait, you can skip the line with Fast Track. In many cases, your tool can be reviewed and published the same day.\n\nPlease note: we only list AI-related tools. Non-AI submissions won\u2019t be approved, so don\u2019t order Fast Track unless your product clearly qualifies.\n\nSkip the queue and get your tool listed on AI Tools Directory in 3 days or less\n\n\u2705 Fast Track\n\nHow to get your tool placed on the list:\n\nIt must be clear what your product or services does. If regular people can\u2019t figure it out in 5 seconds, it\u2019s not going on the directory.\nPLEASE READ:\n\n\ud83d\udc49 Write unique descriptions. If the descriptions are copied from another website, your tool will go to the bottom of the list (or discarded) and you\u2019ll be waiting longer while I write"
+   }
+  },
+  {
+   "label": "extract submitatool.com",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://submitatool.com/",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:23+04:00",
+   "seconds": 2.72,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "Boost Your Visibility\n\nSubmit once. Get listed everywhere.\n\n270+ hand-curated AI and SaaS directories, ranked by authority and re-checked every month \u2014 tracked from one free checklist.\n\nPlatform introduction\n\nOne ordered route from launch to listing.\n\nMove through hand-curated AI and SaaS directories with the context, priority, and progress cues you need to keep every submission moving.\n\nStreamlined Submission\n\nWork through directory targets from one ordered checklist instead of rebuilding the same plan for every launch.\n\nTargeted Audience\n\nFocus on directories built for AI and SaaS buyers, with each destination grouped by the audience it reaches.\n\nReal-Time Analytics\n\nSee completed and remaining targets at a glance, then export what is left when you are ready to keep moving.\n\nQuality Directories\n\nStart with a hand-curated catalog that is re-checked regularly for relevance, authority, and active listings.\n\nCore benefits\n\nMaximize your tool's impact\n\nPlan, prioritize, and track directory submissions without losing the context that makes each listing worthwhile.\n\nEfficiency\n\nSave time by keeping directory research and submission progress in one repeatable workflow.\n\nCost-free Features\n\nUse the complete directory catalog and progress checklist without an additional platform fee.\n\nBroad Accessibility\n\nReach audiences across established global platforms and focused niche communities.\n\nSeamless Submission\n\nKeep the details and next steps for every directory together as you work thr"
+   }
+  },
+  {
+   "label": "extract toolscout.ai",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://toolscout.ai/submit",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:25+04:00",
+   "seconds": 3.21,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "List your AI tool on ToolScout and get it in front of thousands of people discovering AI every day. Submitting is free, and every listing is reviewed by a human before it goes live.\n\nSign in to continue\n\nTakes about a minute. Submitting an open-source project? Submit a GitHub repo.\n\nFree to list\n\nA standard listing never costs anything.\n\nHuman-reviewed\n\nReal moderation, no spam \u2014 quality stays high.\n\nFast-track available\n\nBoost or Featured tools are reviewed within 24\u201348 hours.\n\nGet a backlink badge\n\nEmbed a \u201cFeatured on ToolScout\u201d badge on your site.\n\nSubmitting your AI tool \u2014 FAQ\nIs it free to submit an AI tool?+\n\nYes. Submitting your AI tool to ToolScout is completely free, and a free listing stays in the directory at no cost. Optional paid Boost and Featured placements are available if you want extra visibility, but they are never required.\nHow long does it take to get listed?+\n\nEvery submission is reviewed by a human. Free listings take a week or more to review; Boost and Featured submissions are fast-tracked and reviewed within 24 to 48 hours. You'll get an email the moment your tool is approved and live on the site.\nWhat do I get when my AI tool is listed?+\n\nA dedicated tool page with your description, category tags, pricing, and a screenshot; placement in the matching category and pricing feeds; and an embeddable \"Featured on ToolScout\" badge you can add to your own site.\nWhat kinds of AI tools can I submit?+\n\nAny live, publicly accessible AI-powered product \u2014 writing"
+   }
+  },
+  {
+   "label": "extract github.com",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://github.com/best-of-ai/ai-directories",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:28+04:00",
+   "seconds": 6.01,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "Welcome to 'Top AI Directories', a curated compilation of AI tool directories designed to simplify the process of discovering and submitting AI products. Whether you're an AI developer or a product team, this resource is your one-stop destination to explore a variety of directories that can help boost the visibility of your AI innovations. We've meticulously gathered and organized these directories, making it easier than ever to connect with platforms that showcase cutting-edge AI solutions. Join us in fostering collaboration and recognition within the AI community by leveraging this comprehensive list.\n\nWant a More Complete List + Done-For-You Submissions?\n\nIf you want a more complete list and also done-for-you submission to hundreds of AI directories, visit Top AI Directories\n\nSponsors: Altern AI, Productivity Directory\n\nTable of Content\n\nBase on start letter:\n\nA\nB\nC\nD\nE\nF\nG\nH\nI\nL\nM\nN\nO\nP\nS\nT\nV\nW\nY\nZ\n\nFeatured Directories\n\nProductivity Directory - Find, Search & Review AI Productivity Tools\n\nA\n\nAltern - Find almost anything related to AI\nAI Tools Submit - Submit your AI tools\nAwesome AI Tools - A curated list of Artificial Intelligence Top Tools\nAI Directory - Curated collection of AI-powered tools for productivity, creativity, and business.\nAI Corner - AI Tools Directory\nAiDirs - Discover and Share the Best AI Tools\nAI For Developers - A curated list of AI DevTools\nAIMiracle MAG - Daily AI news, tool discoveries & tutorials\nainave - Navigate the world of AI with ease!\nAI A"
+   }
+  },
+  {
+   "label": "extract gptbot.io",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://gptbot.io/submit-ai-tool",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:34+04:00",
+   "seconds": 1.92,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "Reach thousands of businesses actively searching for AI tools.\n\nReview in 48 hours\n\nFast Track\n\n$39\n\nPrice increases soon\n\nDo-follow backlink\nVerified tool badge\nOngoing listing while eligible\nHigher visibility in the directory\n\nHow it works\n\n1Submit your tool\n2We review it within 48 hours\n3Your listing goes live with a do-follow backlink\n\nNot approved? You get a full refund.\n\nWebsite Name *\n\nWebsite URL *\n\nEmail *\n\nWe only use your email for updates about this submission.\n\nTool Description *\n\nPricing *\n\nFree\n\nFreemium\n\nPaid\n\nFree Trial\n\nAdditional Information (Optional)\n\nI understand the $39 pays for an expedited review against our , publication is not guaranteed, and rejected tools get a full refund.\n\nSecure checkout via Dodo Payments \u00b7 Tax may apply\n\nHow it works\n\n1Submit your tool\n2We review it within 48 hours\n3Your listing goes live with a do-follow backlink\n\nNot approved? You get a full refund."
+   }
+  },
+  {
+   "label": "extract bestofai.io",
+   "path": "/web/extract",
+   "params": {
+    "url": "https://bestofai.io/submit/",
+    "format": "text",
+    "js": "false"
+   },
+   "at": "2026-10-14T09:31:36+04:00",
+   "seconds": 4.15,
+   "status": 200,
+   "headers": {
+    "x-desearch-cost-usd": "0.0005",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "Web Crawl",
+    "x-desearch-usage-count": "1"
+   },
+   "cost_usd": "0.0005",
+   "usage_count": "1",
+   "body": {
+    "_text": "// get listed\n\nOne approval gets you listed everywhere people actually look for AI tools: your category page, the profession pages that fit, the alternative pages where people compare tools like yours, and more.\n\n1000+ tools listed\n\n143 categories\n\n350 professions\n\n// where you'll show up\n\nEverywhere people look for AI tools\n\nA directory listing is just the start. Once your tool is approved, it gets pulled into the rest of Best of AI on its own. You don't have to do anything else.\n\nListed under Professionals\n\nShown on /professionals, where people browse tools by the job they're doing, not just a category name.\n\nOn competitors' alternative pages\n\nMost major tools in your space already have an alternatives page here. Once you're listed, your tool becomes one of the options people see while comparing.\n\nOn the homepage and your category New\n\nNew approvals show up in Recently Added on the homepage, then stay on your category page for good.\n\nIn the newsletter\n\nApproved tools get a mention in our newsletter, sent to more than 10,000 people who signed up specifically to hear about new AI tools.\n\nOn our GitHub awesome list\n\nbest-of-ai/best-of-ai is a widely starred awesome list on GitHub. Listed tools get added there too, in front of developers who browse it directly.\n\nEligible for the leaderboard\n\nOnce you're listed, your tool can climb the leaderboard and compete for one of the most visible spots on the site.\n\nA real, direct-follow backlink\n\nEvery listing links straight to your site"
+   }
+  }
+ ],
+ "note": "Trimmed sample of a 2026-10-14 run: 4 searches (10 results each), 6 page reads, text cut to 1500 chars."
+}
