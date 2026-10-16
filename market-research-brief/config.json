@@ -1,0 +1,11 @@
+{"market": "home espresso machines",
+ "web_query": "best home espresso machine",
+ "web_starts": [0, 10, 20, 30],
+ "brands": ["breville", "sage", "delonghi", "de'longhi", "gaggia", "rancilio", "lelit", "profitec", "rocket", "nespresso", "philips", "jura", "lamarzocco", "la marzocco", "ninja", "smeg", "casabrews", "krups", "bambino", "flair", "ecm", "sowtech", "kitchenaid", "cuisinart", "meraki", "ascaso"],
+ "brand_domains": ["breville", "sageappliances", "delonghi", "gaggia", "rancilio", "lelit", "profitec", "rocket-espresso", "nespresso", "philips", "jura", "lamarzocco", "ninjakitchen", "smeg", "casabrews", "krups", "flairespresso", "kitchenaid", "cuisinart", "ascaso", "amazon", "walmart", "bestbuy", "target", "williams-sonoma", "crateandbarrel", "costco"],
+ "complaint_words": ["leak", "broke", "noisy", "loud", "steam wand", "learning curve", "clean", "descal", "inconsistent", "expensive", "warranty", "grinder", "temperature", "plastic", "slow", "heat up", "pressure"],
+ "x_query": "(\"espresso machine\" OR \"espresso maker\") lang:en",
+ "x_count": 20,
+ "max_extract": 12,
+ "bad_url": "not a url",
+ "empty_query": ""}

@@ -150,3 +150,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [SERP API Rank Checker](serp-api-rank-checker/README.md): Python CLI that reports the best rank a domain got for each keyword in the web results Desearch returned with the Desearch API.
 - [Launch Quote Ledger](launch-quote-ledger/README.md): Python CLI that collects quote posts of a product launch on X and notes disclosure wording with the Desearch API.
 - [Social Listening Report](social-listening-report/README.md): Python CLI that pulls recent public X posts and web pages for a brand into a listening sheet with the Desearch API.
+- [Market Research Brief](market-research-brief/README.md): Python CLI that drafts a short market brief from web pages and recent posts with the Desearch API.
