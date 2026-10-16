@@ -1,0 +1,13 @@
+launch,variant,status,requested,returned,is_quote_flag,quote_this_launch,blue,seconds,cost_usd
+Launch A,url_quote,200,20,0,0,0,0,30.04,0.0014999999999999998
+Launch A,handle_quote,200,20,20,20,4,17,1.69,0.0029999999999999996
+Launch A,handle_quote_blue,200,20,20,20,3,20,2.74,0.0029999999999999996
+Launch A,quoted_id_quote,200,20,20,20,20,16,1.29,0.0029999999999999996
+Launch B,url_quote,200,20,0,0,0,0,30.02,0.0014999999999999998
+Launch B,handle_quote,200,20,20,20,0,9,1.82,0.0029999999999999996
+Launch B,handle_quote_blue,200,20,20,20,0,19,3.06,0.0029999999999999996
+Launch B,quoted_id_quote,200,20,20,20,20,15,3.55,0.0029999999999999996
+Launch C,url_quote,200,20,0,0,0,0,30.03,0.0014999999999999998
+Launch C,handle_quote,200,20,1,1,0,1,4.84,0.0014999999999999998
+Launch C,handle_quote_blue,200,20,1,1,0,1,4.77,0.0014999999999999998
+Launch C,quoted_id_quote,200,20,20,20,20,20,1.61,0.0029999999999999996
