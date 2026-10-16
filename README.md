@@ -153,3 +153,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Market Research Brief](market-research-brief/README.md): Python CLI that drafts a short market brief from web pages and recent posts with the Desearch API.
 - [X Trends Dashboard](x-trends-dashboard/README.md): Python CLI that compares X trends across places and writes a static HTML dashboard with the Desearch API.
 - [Trending Hashtags Finder](trending-hashtags-finder/README.md): Python CLI that pulls X trend lists by location, keeps hashtags only, merges them across countries, checks activity on the latest posts and writes a use, cooling or skip verdict with the Desearch API.
+- [TikTok Scraper to CSV](tiktok-scraper-csv/README.md): export public TikToks for a keyword and hashtag to one clean CSV.
