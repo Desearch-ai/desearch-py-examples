@@ -159,3 +159,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Podcast Guest Shortlist](podcast-guest-shortlist/README.md): Saved prompt and Python CLI that builds a podcast guest shortlist from public X posts and web pages with the Desearch API.
 - [TikTok Comments Export](tiktok-comments-export/README.md): export public comments from TikTok videos to one clean CSV.
 - [Tweet Search Web App](tweet-search-web-app/): one-page web app to search X posts with filters and export CSV.
+- [Reddit Search (MCP)](reddit-search-mcp/README.md): Saved prompt and Python CLI that searches Reddit threads on a topic through the Desearch MCP ai-search tool and prints links, a short summary and the cost.
