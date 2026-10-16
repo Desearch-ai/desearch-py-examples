@@ -160,3 +160,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [TikTok Comments Export](tiktok-comments-export/README.md): export public comments from TikTok videos to one clean CSV.
 - [Tweet Search Web App](tweet-search-web-app/): one-page web app to search X posts with filters and export CSV.
 - [Reddit Search (MCP)](reddit-search-mcp/README.md): Saved prompt and Python CLI that searches Reddit threads on a topic through the Desearch MCP ai-search tool and prints links, a short summary and the cost.
+- [arXiv Paper Search to CSV](arxiv-paper-search-csv/README.md): search arXiv papers by topic and export one clean, deduplicated CSV.
