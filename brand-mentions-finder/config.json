@@ -1,0 +1,13 @@
+{
+  "brand": "Raycast",
+  "what_it_is": "the Mac launcher app",
+  "brand_terms": ["Raycast", "raycast app"],
+  "own_account": "raycast",
+  "own_domains": ["raycast.com"],
+  "product_words": ["mac", "launcher", "app"],
+  "other_meaning_words": ["unity", "godot"],
+  "today": "2026-10-15",
+  "days": 30,
+  "min_likes": 5,
+  "x_count": 20
+}
