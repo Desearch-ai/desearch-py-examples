@@ -14,7 +14,7 @@ source venv/bin/activate
 **Install dependencies**:
 
 ```bash
-pip3 install desearch-py
+pip3 install desearch-py==1.2.1
 ```
 
 ## Examples
@@ -24,19 +24,19 @@ pip3 install desearch-py
 The Web Links Search allows you to search for web links using a specific query. Here's how you can perform a web links search:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        result = await desearch.ai_web_links_search(
+            prompt="Bittensor",
+            tools=["web"],
+            count=10,
+        )
+        print(result)
 
-# Perform a web links search
-result = desearch.web_links_search(
-    prompt="Bittensor",
-    tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "arxiv"],
-)
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 ### 2. AI Search
@@ -44,23 +44,25 @@ print(result)
 The AI Search provides a more comprehensive search experience by utilizing AI models to gather and summarize information from various sources:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        result = await desearch.ai_search(
+            prompt="Bittensor",
+            tools=[
+                "web",
+                "twitter",
+            ],
+            date_filter=None,
+            result_type="LINKS_WITH_FINAL_SUMMARY",
+            system_message="You are a helpful assistant.",
+            count=10,
+        )
+        print(result)
 
-# Perform an AI search
-result = desearch.ai_search(
-    prompt="Bittensor",
-    tools=["web", "hackernews", "reddit", "wikipedia", "youtube", "twitter", "arxiv"],
-    date_filter="PAST_24_HOURS",
-    streaming=False,
-    result_type="LINKS_WITH_SUMMARIES",
-    system_message="You are a helpful assistant."
-)
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 ### 3. Basic Twitter Search
@@ -101,25 +103,23 @@ print(result)
 You can also retrieve retweets and replies for a specific tweet using its ID:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        # Users who reposted a post. desearch-py 1.2.1: x_post_retweeters(id, cursor).
+        result = await desearch.x_post_retweeters(id="123456789")
+        print(result)
 
-# Perform a search for retweets of a specific tweet
-result = desearch.twitter_retweets_post(post_id="123456789", count=10, query="Bittensor")
+        # Replies to a post. See twitter_replies_post.py.
+        result = await desearch.x_post_replies(post_id="1276418907968925696", count=10)
+        print(result)
 
-# Print the search results
-print(result)
-
-# Perform a search for replies to a specific tweet
-result = desearch.twitter_replies_post(post_id="123456789", count=10, query="Bittensor")
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
-`twitter_replies_post` returns up to `count` replies; older posts may return fewer.
+`x_post_replies` returns up to `count` replies; older posts may return fewer.
 
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
 
