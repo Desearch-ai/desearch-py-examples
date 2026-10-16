@@ -1,0 +1,39 @@
+{
+ "category": "AI tools",
+ "queries": [
+  "submit your AI tool directory",
+  "AI tools directory submit tool",
+  "list your AI startup directory free submission",
+  "add your AI product to directory"
+ ],
+ "empty_query": "zqxv qqjw vvkz plorn directory 88213",
+ "bad_url": "https://this-domain-does-not-exist-zqxv8812.com/submit",
+ "kinds_checked": "2026-10-14, by reading each extracted page",
+ "kinds": {
+  "aitoolsdirectory.com": "directory",
+  "toolscout.ai": "directory",
+  "gptbot.io": "directory",
+  "bestofai.io": "directory",
+  "insidr.ai": "directory",
+  "aisuperhub.io": "directory",
+  "aitoolcurator.com": "directory",
+  "hyzenpro.com": "directory",
+  "aiparabellum.com": "directory",
+  "aitool.paperform.co": "directory",
+  "github.com": "list or article",
+  "stork.ai": "list or article",
+  "theaisurf.com": "list or article",
+  "aitoptools.com": "list or article",
+  "aiso.blog": "list or article",
+  "appscribed.com": "list or article",
+  "backlinkbot.ai": "list or article",
+  "reddit.com": "list or article",
+  "directory.aibusinesstool.com": "unknown",
+  "submitatool.com": "submission service",
+  "freeaidirectories.com": "submission service",
+  "themexpert.com": "submission service",
+  "awesomeaitools.com": "submission service",
+  "submittool.ai": "submission service",
+  "submitai.vercel.app": "submission service"
+ }
+}
