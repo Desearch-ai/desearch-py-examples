@@ -11,9 +11,8 @@ async def main():
     # calls GET /twitter/replies/post. Replace the sample post id with a public id.
     async with Desearch(api_key=API_KEY) as desearch:
         result = await desearch.x_post_replies(
-            post_id="123456789",
+            post_id="1276418907968925696",
             count=10,
-            query="Bittensor",
         )
         print(result)
 

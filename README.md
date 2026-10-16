@@ -113,11 +113,13 @@ async def main():
         print(result)
 
         # Replies to a post. See twitter_replies_post.py.
-        result = await desearch.x_post_replies(post_id="123456789", count=10, query="Bittensor")
+        result = await desearch.x_post_replies(post_id="1276418907968925696", count=10)
         print(result)
 
 asyncio.run(main())
 ```
+
+`x_post_replies` returns up to `count` replies; older posts may return fewer.
 
 These examples demonstrate how to use the Desearch SDK to perform various types of searches. You can customize the queries and parameters to suit your specific needs. Make sure to replace `"your-api-key"` with your actual API key to authenticate your requests.
 
