@@ -168,3 +168,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Launch Video Swipe File](launch-video-swipe-file/): collect product launch video posts from X into a CSV and Markdown swipe file.
 - [Directory Finder](directory-finder/README.md): type a category and get the directories that accept submissions, with a CSV and a shortlist.
 - [Hacker News Search App](hacker-news-search-app/): search Hacker News discussions with Desearch AI search (hackernews tool), export JSON or CSV.
+- [Pricing Page Snapshot (MCP)](pricing-page-snapshot/README.md): Saved prompts and Python CLI that read pricing pages through the Desearch MCP extract tool, build a plan and price table from the page text, and compare it with an earlier snapshot.
