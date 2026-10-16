@@ -1,0 +1,46 @@
+{
+ "desearch_ai": {
+  "status": 200,
+  "profile_found": true,
+  "stats": {
+   "posts": 48,
+   "per_day": 2.29,
+   "median_likes": 4.0,
+   "first": "2026-09-24 16:04",
+   "last": "2026-10-15 16:07"
+  },
+  "info": {
+   "status": 200,
+   "pages": 3,
+   "per_page": [
+    17,
+    16,
+    18
+   ],
+   "repeats": 3,
+   "out_of_order": 7
+  }
+ },
+ "nonexistent_user": {
+  "status": 404,
+  "items": 0,
+  "cost": {
+   "x-desearch-cost-usd": "0",
+   "x-desearch-currency": "USD",
+   "x-desearch-service": "X User Posts",
+   "x-desearch-usage-count": "0"
+  },
+  "latency_s": 1.05,
+  "body": "{'detail': 'User not found or unavailable', 'cost_usd': 0.0, 'usage_count': 0, 'service': 'X User Posts', 'currency': 'USD'}"
+ },
+ "bad_cursor": {
+  "status": 200,
+  "items": 17,
+  "cost": {
+   "x-desearch-cost-usd": "0.0025499999999999997",
+   "x-desearch-currency": "USD",
+   "x-desearch-service": "X User Posts",
+   "x-desearch-usage-count": "17"
+  }
+ }
+}
