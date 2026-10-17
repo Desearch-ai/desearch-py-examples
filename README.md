@@ -168,3 +168,4 @@ These examples demonstrate how to use the Desearch SDK to perform various types 
 - [Directory Finder](directory-finder/README.md): type a category and get the directories that accept submissions, with a CSV and a shortlist.
 - [Hacker News Search App](hacker-news-search-app/): search Hacker News discussions with Desearch AI search (hackernews tool), export JSON or CSV.
 - [Instagram Engagement Rate Calculator](instagram-engagement-rate-calculator/README.md): Python CLI that computes the engagement rate of a public Instagram account from its latest posts, with the formula shown and a split by format (image, carousel, video/reel), using the Desearch API.
+- [Content Ideas Finder (MCP)](content-ideas-finder-mcp/README.md): Saved prompt and Python CLI that turns questions from Reddit, Hacker News and X into a content plan with a source link per idea, through the Desearch MCP ai-search and x-search tools.
