@@ -70,32 +70,29 @@ asyncio.run(main())
 The Basic Twitter Search allows you to search for tweets based on specific criteria:
 
 ```python
+import asyncio
 from desearch_py import Desearch
 
-# Initialize the Desearch client with your API key
-desearch = Desearch(api_key="your-api-key")
+async def main():
+    async with Desearch(api_key="your-api-key") as desearch:
+        # desearch-py 1.2.1: x_search calls GET /twitter.
+        # Pass boolean filters as "true" / "false" strings. See basic_twitter_search.py.
+        result = await desearch.x_search(
+            query="Bittensor",
+            sort="Top",
+            start_date="2026-01-01",
+            end_date="2026-10-01",
+            lang="en",
+            blue_verified="true",
+            is_video="true",
+            min_retweets=1,
+            min_replies=1,
+            min_likes=1,
+            count=10,
+        )
+        print(result)
 
-# Perform a basic Twitter search
-result = desearch.basic_twitter_search(
-    query="Whats going on with Bittensor",
-    sort="Top",
-    user="elonmusk",
-    start_date="2024-12-01",
-    end_date="2025-02-25",
-    lang="en",
-    verified=True,
-    blue_verified=True,
-    is_quote=True,
-    is_video=True,
-    is_image=True,
-    min_retweets=1,
-    min_replies=1,
-    min_likes=1,
-    count=10
-)
-
-# Print the search results
-print(result)
+asyncio.run(main())
 ```
 
 ### 4. Twitter Retweets and Replies

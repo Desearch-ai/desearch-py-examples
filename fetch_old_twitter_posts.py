@@ -1,8 +1,10 @@
+import asyncio
 from datetime import datetime
 
 from desearch_py import Desearch
 
-desearch = Desearch("API_KEY")
+# Placeholder only. Use a key from the Desearch console. Do not commit a real key.
+API_KEY = "your-api-key"
 
 TOTAL_TWEETS_TO_FETCH = 100
 
@@ -17,7 +19,9 @@ def format_end_date(dt: datetime) -> str:
     return dt.strftime("%Y-%m-%d_%H:%M:%S_UTC")
 
 
-def fetch_tweets(query: str, total: int = TOTAL_TWEETS_TO_FETCH) -> list:
+async def fetch_tweets(
+    desearch: Desearch, query: str, total: int = TOTAL_TWEETS_TO_FETCH
+) -> list:
     """Fetch tweets with pagination using end_date cursor."""
     all_tweets = []
     end_date = None
@@ -28,7 +32,9 @@ def fetch_tweets(query: str, total: int = TOTAL_TWEETS_TO_FETCH) -> list:
         if end_date:
             query_with_filter += f" until:{end_date}"
 
-        result = desearch.basic_twitter_search(
+        # desearch-py 1.2.1: x_search(query, sort, count) calls GET /twitter
+        # and returns TwitterScraperTweet objects.
+        result = await desearch.x_search(
             query=query_with_filter,
             sort="Latest",
             count=20,
@@ -40,15 +46,15 @@ def fetch_tweets(query: str, total: int = TOTAL_TWEETS_TO_FETCH) -> list:
 
         print("\n--- Batch dates (UTC) ---")
         for tweet in result:
-            dt = parse_twitter_date(tweet["created_at"])
+            dt = parse_twitter_date(tweet.created_at)
             print(dt.strftime("%Y-%m-%d %H:%M:%S UTC"))
 
         all_tweets.extend(result)
         print(f"Fetched {len(result)} tweets, total: {len(all_tweets)}")
 
         # Find the oldest tweet in this batch
-        oldest_tweet = min(result, key=lambda t: parse_twitter_date(t["created_at"]))
-        oldest_date = parse_twitter_date(oldest_tweet["created_at"])
+        oldest_tweet = min(result, key=lambda t: parse_twitter_date(t.created_at))
+        oldest_date = parse_twitter_date(oldest_tweet.created_at)
 
         # Use oldest date as next end_date
         end_date = format_end_date(oldest_date)
@@ -57,6 +63,11 @@ def fetch_tweets(query: str, total: int = TOTAL_TWEETS_TO_FETCH) -> list:
     return all_tweets
 
 
+async def main():
+    async with Desearch(api_key=API_KEY) as desearch:
+        tweets = await fetch_tweets(desearch, "bittensor")
+        print(f"\nFetched {len(tweets)} tweets total")
+
+
 if __name__ == "__main__":
-    tweets = fetch_tweets("bittensor")
-    print(f"\nFetched {len(tweets)} tweets total")
+    asyncio.run(main())
