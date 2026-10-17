@@ -1,0 +1,4 @@
+account,followers,posts_returned,posts_used,skipped_pinned,skipped_under_24h,skipped_hidden_likes,first_post_utc,last_post_utc,avg_likes,avg_comments,engagement_rate_pct,median_engagement_rate_pct,min_post_rate_pct,max_post_rate_pct,best_format,formula
+brand_a,268356497,12,6,3,3,0,2026-09-10,2026-10-16,149530.7,305.7,0.0558,0.0423,0.0014,0.1699,"carousel (0.0858 %, n=3)","engagement rate % = (likes + comments) / followers x 100, per post; account rate = mean of the post rates"
+brand_b,104375766,12,8,3,1,0,2026-10-02,2026-10-16,470387.6,1948,0.4525,0.2474,0.0527,1.8016,"carousel (0.8143 %, n=3)","engagement rate % = (likes + comments) / followers x 100, per post; account rate = mean of the post rates"
+brand_c,17566964,12,12,0,0,0,2026-09-15,2026-10-15,68558.2,709.8,0.3943,0.2972,0.0973,1.0892,"video/reel (0.4657 %, n=8)","engagement rate % = (likes + comments) / followers x 100, per post; account rate = mean of the post rates"
