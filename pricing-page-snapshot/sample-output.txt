@@ -1,0 +1,7 @@
+# Sample run from saved extract results (2026-10-05, js false)
+# python pricing_snapshot.py https://linear.app/pricing
+Page | Plan | Price as written | Billing | Snapshot date
+https://linear.app/pricing | Free | $0 | not shown | 2026-10-05
+https://linear.app/pricing | Basic | $10 per user/month | Billed yearly | 2026-10-05
+https://linear.app/pricing | Business | $16 per user/month | Billed yearly | 2026-10-05
+https://linear.app/pricing | Enterprise | Custom | Annual billing only | 2026-10-05
