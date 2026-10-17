@@ -1,0 +1,10 @@
+account,format,posts,share_of_posts_pct,avg_likes,avg_comments,avg_views,engagement_rate_pct,median_engagement_rate_pct
+brand_a,carousel,3,50.0,229951.3,341,,0.0858,0.0636
+brand_a,image,1,16.7,162007,637,,0.0606,0.0606
+brand_a,video/reel,2,33.3,22661.5,87,,0.0085,0.0085
+brand_b,carousel,3,37.5,847052,2884.7,,0.8143,0.5454
+brand_b,image,4,50.0,291893,1585,,0.2812,0.2474
+brand_b,video/reel,1,12.5,54373,590,3250761,0.0527,0.0527
+brand_c,carousel,2,16.7,29873,282.5,,0.1716,0.1716
+brand_c,image,2,16.7,57538,656,,0.3313,0.3313
+brand_c,video/reel,8,66.7,80984.6,830,,0.4657,0.3393

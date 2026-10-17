@@ -1,0 +1,782 @@
+{
+ "started": "2026-10-17T09:27:12+04:00",
+ "count": 12,
+ "note": "Masked sample of a live run on 2026-10-17. Metrics are as returned; names, ids, captions and links are replaced.",
+ "calls": [
+  {
+   "label": "brand_a profile",
+   "path": "/desearch/instagram/profile/brand_a",
+   "params": {},
+   "at": "2026-10-17T09:27:12+04:00",
+   "seconds": 9.57,
+   "status": 200,
+   "account": "brand_a",
+   "kind": "profile",
+   "body": {
+    "username": "brand_a",
+    "fullName": "Brand A",
+    "verified": true,
+    "private": false,
+    "followers": 268356497,
+    "following": 195,
+    "postsCount": 32082
+   }
+  },
+  {
+   "label": "brand_a posts p1",
+   "path": "/desearch/instagram/profile/brand_a/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-17T09:27:22+04:00",
+   "seconds": 11.87,
+   "status": 200,
+   "account": "brand_a",
+   "kind": "posts",
+   "body": [
+    {
+     "id": "A01",
+     "shortcode": "A01",
+     "createTime": 1792090802,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 44771,
+      "commentCount": 319
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A02",
+     "shortcode": "A02",
+     "createTime": 1791909008,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 20555,
+      "commentCount": 101
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A03",
+     "shortcode": "A03",
+     "createTime": 1789045214,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 79990,
+      "commentCount": 584
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A04",
+     "shortcode": "A04",
+     "createTime": 1792179302,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 17453,
+      "commentCount": 50
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "A05",
+     "shortcode": "A05",
+     "createTime": 1792170289,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 20632,
+      "commentCount": 225
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A06",
+     "shortcode": "A06",
+     "createTime": 1792155600,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 29973,
+      "commentCount": 70
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A07",
+     "shortcode": "A07",
+     "createTime": 1792101601,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 64208,
+      "commentCount": 89
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "A08",
+     "shortcode": "A08",
+     "createTime": 1792079955,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 170318,
+      "commentCount": 255
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "A09",
+     "shortcode": "A09",
+     "createTime": 1792076403,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 3693,
+      "commentCount": 24
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A10",
+     "shortcode": "A10",
+     "createTime": 1792026578,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 455328,
+      "commentCount": 679
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "A11",
+     "shortcode": "A11",
+     "createTime": 1792015486,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 162007,
+      "commentCount": 637
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "A12",
+     "shortcode": "A12",
+     "createTime": 1792004449,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_a"
+     },
+     "stats": {
+      "likeCount": 41630,
+      "commentCount": 150
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    }
+   ]
+  },
+  {
+   "label": "brand_b profile",
+   "path": "/desearch/instagram/profile/brand_b",
+   "params": {},
+   "at": "2026-10-17T09:27:33+04:00",
+   "seconds": 6.64,
+   "status": 200,
+   "account": "brand_b",
+   "kind": "profile",
+   "body": {
+    "username": "brand_b",
+    "fullName": "Brand B",
+    "verified": true,
+    "private": false,
+    "followers": 104375766,
+    "following": 90,
+    "postsCount": 4967
+   }
+  },
+  {
+   "label": "brand_b posts p1",
+   "path": "/desearch/instagram/profile/brand_b/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-17T09:27:40+04:00",
+   "seconds": 11.25,
+   "status": 200,
+   "account": "brand_b",
+   "kind": "posts",
+   "body": [
+    {
+     "id": "B01",
+     "shortcode": "B01",
+     "createTime": 1791645302,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 691494,
+      "commentCount": 6846,
+      "playCount": 9987629
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B02",
+     "shortcode": "B02",
+     "createTime": 1791292211,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 258856,
+      "commentCount": 794
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B03",
+     "shortcode": "B03",
+     "createTime": 1790974365,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 1245825,
+      "commentCount": 4912
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "B04",
+     "shortcode": "B04",
+     "createTime": 1792161712,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 202051,
+      "commentCount": 614
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B05",
+     "shortcode": "B05",
+     "createTime": 1792079344,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 156793,
+      "commentCount": 538
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B06",
+     "shortcode": "B06",
+     "createTime": 1791987818,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 172466,
+      "commentCount": 954
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B07",
+     "shortcode": "B07",
+     "createTime": 1791920477,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 1874532,
+      "commentCount": 5950
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "B08",
+     "shortcode": "B08",
+     "createTime": 1791840404,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 99423,
+      "commentCount": 588
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "B09",
+     "shortcode": "B09",
+     "createTime": 1791736201,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 496574,
+      "commentCount": 3509
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B10",
+     "shortcode": "B10",
+     "createTime": 1791572576,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 54373,
+      "commentCount": 590,
+      "playCount": 3250761
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B11",
+     "shortcode": "B11",
+     "createTime": 1791561440,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 341739,
+      "commentCount": 1339
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "B12",
+     "shortcode": "B12",
+     "createTime": 1791492977,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_b"
+     },
+     "stats": {
+      "likeCount": 567201,
+      "commentCount": 2116
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {},
+      {},
+      {},
+      {}
+     ]
+    }
+   ]
+  },
+  {
+   "label": "brand_c profile",
+   "path": "/desearch/instagram/profile/brand_c",
+   "params": {},
+   "at": "2026-10-17T09:27:51+04:00",
+   "seconds": 5.81,
+   "status": 200,
+   "account": "brand_c",
+   "kind": "profile",
+   "body": {
+    "username": "brand_c",
+    "fullName": "Brand C",
+    "verified": true,
+    "private": false,
+    "followers": 17566964,
+    "following": 5337,
+    "postsCount": 1289
+   }
+  },
+  {
+   "label": "brand_c posts p1",
+   "path": "/desearch/instagram/profile/brand_c/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-17T09:27:57+04:00",
+   "seconds": 11.63,
+   "status": 200,
+   "account": "brand_c",
+   "kind": "posts",
+   "body": [
+    {
+     "id": "C01",
+     "shortcode": "C01",
+     "createTime": 1792075308,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 41109,
+      "commentCount": 222
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "C02",
+     "shortcode": "C02",
+     "createTime": 1791989836,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 30031,
+      "commentCount": 88
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C03",
+     "shortcode": "C03",
+     "createTime": 1791920525,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 62025,
+      "commentCount": 149
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C04",
+     "shortcode": "C04",
+     "createTime": 1791911676,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 190762,
+      "commentCount": 581
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C05",
+     "shortcode": "C05",
+     "createTime": 1791205275,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 70233,
+      "commentCount": 2863
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C06",
+     "shortcode": "C06",
+     "createTime": 1790694837,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 91200,
+      "commentCount": 951
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C07",
+     "shortcode": "C07",
+     "createTime": 1790686698,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 46912,
+      "commentCount": 429
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C08",
+     "shortcode": "C08",
+     "createTime": 1790604286,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 16874,
+      "commentCount": 212
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C09",
+     "shortcode": "C09",
+     "createTime": 1790600389,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 56843,
+      "commentCount": 216
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C10",
+     "shortcode": "C10",
+     "createTime": 1790312321,
+     "mediaType": "image",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 23876,
+      "commentCount": 361
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    },
+    {
+     "id": "C11",
+     "shortcode": "C11",
+     "createTime": 1790011774,
+     "mediaType": "carousel",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 18637,
+      "commentCount": 343
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": [
+      {},
+      {}
+     ]
+    },
+    {
+     "id": "C12",
+     "shortcode": "C12",
+     "createTime": 1789477282,
+     "mediaType": "video",
+     "author": {
+      "username": "brand_c"
+     },
+     "stats": {
+      "likeCount": 174197,
+      "commentCount": 2102
+     },
+     "caption": "",
+     "hashtags": [],
+     "mentions": [],
+     "children": []
+    }
+   ]
+  }
+ ]
+}
