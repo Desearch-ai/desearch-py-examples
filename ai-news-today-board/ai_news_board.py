@@ -1,4 +1,5 @@
-"""AI News Today Board: a once-a-day list of AI posts and pages Desearch returned today, with links.
+"""AI News Today Board: a once-a-day list of AI posts from the last 24 hours plus recent coverage
+from tech news sites, as Desearch returned them, with links.
 
 Made by Desearch (https://desearch.ai).
 
@@ -24,6 +25,8 @@ QUERY_PLAN = {  # tag: search text used for both sources
     "ai regulation": "AI regulation",
     "ai agents": "AI agents launch",
 }
+# NEWS_SITES: the news sites the web search is limited to (sent as include_domains).
+# Edit this list to use your own sites, or override it per run with --sites.
 NEWS_SITES = ["techcrunch.com", "theverge.com", "venturebeat.com", "wired.com", "arstechnica.com"]
 AI_TERMS = re.compile(r"\b(ai|a\.i\.|llms?|gpt\w*|models?|openai|anthropic|claude|gemini|llama|mistral|deepseek|agents?|"
                       r"chatbots?|neural|machine learning|genai|generative|artificial intelligence|inference|"
@@ -236,13 +239,13 @@ def build(raw, out_dir, seen_file=None, update_seen=False, max_age_hours=24, pag
     md = [f"# AI News Today Board, {day}", "",
           f"AI posts and pages Desearch returned for this run ({raw.get('started')}), from {len(QUERY_PLAN)} fixed sub-queries. "
           f"X posts are the latest ones with at least {raw.get('min_likes')} likes from the last {max_age_hours} hours; "
-          f"pages come from a short list of tech news sites, dated in the last {page_days} days (or undated). "
+          f"recent coverage comes from a short list of tech news sites, dated in the last {page_days} days (or undated). "
           "Text is quoted in full as returned (line breaks shown as spaces here; the CSV keeps them). Authors are shown as \"a user\". \"new\" means not in your seen-URL file.", "",
           f"## Top {len(posts)} posts by engagement (likes + reposts + replies)", ""]
     for i, r in enumerate(posts, 1):
         md.append(f"{i}. [{r['tag']}] a user: \"{' '.join(r['title_or_text'].split())}\" ({r['engagement']} engagements, "
                   f"{r['published_utc']} UTC){' new' if r['new_today'] else ''} {r['url']}")
-    md += ["", f"## News pages ({len(pages)})", ""]
+    md += ["", f"## Recent coverage from news sites ({len(pages)})", ""]
     for r in pages:
         md.append(f"- [{r['tag']}] {r['title_or_text'] or '(no title)'} ({r['site']}, {r['published_utc'] or 'no date'}){' new' if r['new_today'] else ''} {r['url']}")
     md += ["", "## Run", "", f"- calls: {stats['calls']}",

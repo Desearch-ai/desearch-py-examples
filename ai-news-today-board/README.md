@@ -9,7 +9,7 @@ The board shows the AI posts and pages Desearch returned for that run. It is not
 ## What you get
 
 - `ai-news-YYYY-MM-DD.csv`: one row per item (source, sub-query tag, text or title as returned, link, site, time, likes, reposts, replies, engagement, new or seen, a rough keyword on-topic flag)
-- `ai-news-YYYY-MM-DD.md`: the top 15 X posts by engagement (likes + reposts + replies) and the news pages, newest first
+- `ai-news-YYYY-MM-DD.md`: the top 15 X posts by engagement (likes + reposts + replies) and recent coverage from the news sites, newest first
 - `seen-urls.txt`: links already shown; a live run adds the new ones, so tomorrow's board marks only fresh items as new
 - the raw responses as JSON, so you can rebuild the board offline
 
@@ -37,7 +37,11 @@ Offline, from the saved sample (no key, no cost):
 python ai_news_board.py --from-raw samples/sample-raw.json --out output/sample
 ```
 
-Options: `--count` X posts per sub-query (default 30), `--min-likes` (default 20), `--max-age-hours` (default 24), `--web-count` pages per sub-query (default 10), `--page-days` (default 7), `--sites` the news sites for the web search, `--seen-file`, `--raw-out`. Edit `QUERY_PLAN` in the script to change the sub-queries.
+Options: `--count` X posts per sub-query (default 30), `--min-likes` (default 20), `--max-age-hours` (default 24), `--web-count` pages per sub-query (default 10), `--page-days` (default 7), `--sites` to override the news sites for one run, `--seen-file`, `--raw-out`. Edit `QUERY_PLAN` in the script to change the sub-queries.
+
+## Choosing the news sites
+
+The web search is limited to the sites in `NEWS_SITES`, a list near the top of `ai_news_board.py`. Edit that list to use your own sites, or pass `--sites site-one.example site-two.example` to override it for one run.
 
 ## Endpoints
 

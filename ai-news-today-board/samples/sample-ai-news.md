@@ -1,6 +1,6 @@
 # AI News Today Board, 2026-10-18
 
-AI posts and pages Desearch returned for this run (2026-10-18T16:00:15+04:00), from 5 fixed sub-queries. X posts are the latest ones with at least 20 likes from the last 24 hours; pages come from a short list of tech news sites, dated in the last 7 days (or undated). Text is quoted in full as returned (line breaks shown as spaces here; the CSV keeps them). Authors are shown as "a user". "new" means not in your seen-URL file.
+AI posts and pages Desearch returned for this run (2026-10-18T16:00:15+04:00), from 5 fixed sub-queries. X posts are the latest ones with at least 20 likes from the last 24 hours; recent coverage comes from a short list of tech news sites, dated in the last 7 days (or undated). Text is quoted in full as returned (line breaks shown as spaces here; the CSV keeps them). Authors are shown as "a user". "new" means not in your seen-URL file.
 
 ## Top 15 posts by engagement (likes + reposts + replies)
 
@@ -20,7 +20,7 @@ AI posts and pages Desearch returned for this run (2026-10-18T16:00:15+04:00), f
 14. [model release] a user: "DeepSeek released an update to their 763B open model. Hours later the local AI community has already squeezed its 510GB checkpoint down to ~113.6GB, targeting 1x 128GB DGX Spark. Then on DeepSeek's own tests, the new 1017 version scores: 🧑‍💻 DeepSWE DeepSeek → 77.0 GPT-5.6 Sol → 73.0 🤖 Automation-Bench DeepSeek → 60.5 GPT-5.6 Sol → 45.8 🖥️ Terminal-Bench 4.0 DeepSeek → 42.3 GPT-5.6 Sol → 39.9 Stats 🧠 763B parameters 📚 1M context 🔓 MIT weights 💾 Official checkpoint → ~510GB Only hours after release, there's already a community VQ conversion ~510GB → ~113.6GB That's specifically sized to fit a single 128GB DGX Spark. ⚠️ The 1017 quant has not yet been benchmarked on Spark, and mainline llama.cpp doesn't support V4.1 yet. Link to HF in ALT" (82 engagements, 2026-10-17 20:00 UTC) new https://x.com/i/status/2111547801620394454
 15. [ai regulation] a user: "Does that mean you and millions of others who are centrist/independent types will not vote for the only party that has a chance of blocking the expansion of the Supreme Court, the end of the filibuster, two solidly new Democratic U.S. states, and the regulation of hate speech and misinformation on social media and AI?" (82 engagements, 2026-10-17 23:31 UTC) new https://x.com/i/status/2111600983373750692
 
-## News pages (18)
+## Recent coverage from news sites (18)
 
 - [ai funding] Ramp reaches $60B valuation as it pushes deeper into AI | TechCrunch (techcrunch.com, 2026-10-15) new https://techcrunch.com/2026/10/15/ramp-reaches-60b-valuation-as-it-pushes-deeper-into-ai/
 - [model release] AI News & Artificial Intelligence | TechCrunch (techcrunch.com, 2026-10-14) new https://techcrunch.com/category/artificial-intelligence/
