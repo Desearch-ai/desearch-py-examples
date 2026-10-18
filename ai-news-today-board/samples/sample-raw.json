@@ -1,0 +1,1398 @@
+{
+ "started": "2026-10-18T16:00:15+04:00",
+ "min_likes": 20,
+ "sites": [
+  "techcrunch.com",
+  "theverge.com",
+  "venturebeat.com",
+  "wired.com",
+  "arstechnica.com"
+ ],
+ "calls": [
+  {
+   "source": "x",
+   "tag": "model release",
+   "params": {
+    "query": "new AI model release",
+    "sort": "Latest",
+    "count": 30,
+    "min_likes": "20"
+   },
+   "at": "2026-10-18T16:00:15+04:00",
+   "seconds": 9.26,
+   "status": 200,
+   "cost_usd": 0.0045,
+   "body": [
+    {
+     "id": "2111714226733477894",
+     "text": "There has been talk that China’s AI labs have gone silent amid increasing scrutiny of distillation by U.S. AI labs.\n\nApparently, DeepSeek’s new model DeepSeek-V4.1-Flash-1017 release yesterday broke that silence. According to our checks, we can expect more model releases from China in the coming weeks.\n\nMost notably, Kimi K3.1 was scheduled to launch tomorrow, according to the schedule we previously learned.  \n\nThis model from Moonshot is worth watching. Our checks suggest its benchmark scores are likely to surpass Opus 5.5.\n\nSeveral other releases are slated for the end of this month. MiniMax 3.1 Pro and Qwen M4 were also scheduled to launch by month’s end, according to our checks.\n\nHowever, DeepSeek-V4.1-Flash’s launch yesterday may affect those timelines. DeepSeek’s aggressive “category-killer” narrative and significant price-performance advantage could affect Kimi K3.1’s release timing.",
+     "created_at": "Sun Oct 18 07:01:20 +0000 2026",
+     "like_count": 27,
+     "retweet_count": 0,
+     "reply_count": 5,
+     "lang": "en"
+    },
+    {
+     "id": "2111604743902581084",
+     "text": "🚨 Every $TAO subnet has been forced to run the same business model. eTAO ends that.\n\nIt's one of the biggest changes to subnet economics since dTAO. Watch the 80-second explainer 🎬👇\n\nHow it worked until now\n\nEvery 12 seconds, each subnet mints new alpha tokens. Almost every subnet split them the exact same way:\n\n• 18% to the owner (the team running it)\n• 41% to validators and their stakers (checking the work)\n• 41% to miners (doing the work)\n\nA GPU farm, a research lab and a consumer app all lived by one rule.\n\nWhat eTAO (Expressive TAO) changes\n\nEach subnet owner can now set their own split, within limits:\n\n• Miners: at least 33%\n• Validators: up to 50%\n• Owners: up to 33% (18% minimum for lease-created subnets)\n• Changes about once a week\n\nTotal emissions don't change. eTAO only changes where they go.\n\nWhy that's a big deal\n\nDifferent businesses need different budgets:\n\n• A compute subnet short on GPUs pays miners more\n• A research team funds its developers through the owner share\n• A subnet with hard-to-check work spends more on validators\n\nTargon (SN4) is the live example. In the Talking Targon episode with Const, the team said customers want more compute than it has, and most of it is rented.\n\nPush miners from 41% to 80% and miners get about 95% more tokens. At the same token price, that nearly doubles the budget to bring on GPUs.\n\nMore compute → more revenue → bigger buybacks. That's Targon's plan, not a guarantee.\n\nThe twist\n\nLower yield can be bullish.\n\nA high APY tells you how fast new tokens reach stakers. It doesn't tell you what customers pay.\n\nNormal companies make this trade every day: reinvest in production instead of paying out. eTAO lets subnets make the same call.\n\nThe guardrails\n\n• Root $TAO stakers are paid their baseline first, calculated from live chain state\n• Owners can't set validators below that baseline\n• Miners can never drop below a third\n• The burn and recycle slots exist but are fixed at zero for now\n\nWhy? Const explained it: without a floor, a subnet could cut out its outside holders, fake its price signal and pull emissions it hasn't earned. The floor keeps every subnet paying the network that funds it.\n\nEverything else that just changed\n\neTAO isn't alone. Bittensor is redesigning itself fast:\n\n• Null Consensus: opt-in, up to 2,500 participant slots per subnet, up from 256\n• Proof-of-work registration: miners can join with compute, no TAO upfront\n• Subnet registration cost now halves every 8 days, down from 16\n• New-subnet immunity drops from 120 days to 60\n• Gamma (in development): subnets buy compute, storage and inference from each other with their emissions\n\nPut it together: bigger competitions, easier entry, faster turnover, custom budgets, and soon an internal economy where subnets are each other's customers.\n\nThe take\n\n• eTAO is on testnet now. Mainnet comes with the next runtime upgrade (v481)\n• An owner can fund the wrong thing. A weak scoring system can pay miners who farm rewards instead of building the product\n• Alpha staking yields aren't permanent. A subnet's split is now part of what you're investing in\n• Emissions aren't revenue. The bull case only works if extra output gets paid for\n\nWhy it matters for AI\n\nAI doesn't grow in straight lines. Agents make thousands of requests while a person reviews one dashboard. Workloads shift from compute to storage to verification in weeks.\n\nA network funding that can't run on one fixed rule.\n\nNow it doesn't have to. 🧠\n\nSources: Bittensor release notes (v481), Talking Targon Ep. 01 with Const, Novelty Search. \n\n$TAO / Not financial advice, always DYOR.",
+     "created_at": "Sat Oct 17 23:46:17 +0000 2026",
+     "like_count": 85,
+     "retweet_count": 15,
+     "reply_count": 4,
+     "lang": "en"
+    },
+    {
+     "id": "2111547801620394454",
+     "text": "DeepSeek released an update to their 763B open model.\n\nHours later the local AI community has already squeezed its 510GB checkpoint down to ~113.6GB, targeting 1x 128GB DGX Spark.\n\nThen on DeepSeek's own tests, the new 1017 version scores:\n🧑‍💻 DeepSWE \nDeepSeek → 77.0\nGPT-5.6 Sol → 73.0\n\n🤖 Automation-Bench\nDeepSeek → 60.5\nGPT-5.6 Sol → 45.8\n\n🖥️ Terminal-Bench 4.0\nDeepSeek → 42.3\nGPT-5.6 Sol → 39.9\n\nStats\n🧠 763B parameters\n📚 1M context\n🔓 MIT weights\n💾 Official checkpoint → ~510GB\n\nOnly hours after release, there's already a community VQ conversion\n~510GB → ~113.6GB\n\nThat's specifically sized to fit a single 128GB DGX Spark.\n\n⚠️ The 1017 quant has not yet been benchmarked on Spark, and mainline llama.cpp doesn't support V4.1 yet. \n\nLink to HF in ALT",
+     "created_at": "Sat Oct 17 20:00:01 +0000 2026",
+     "like_count": 71,
+     "retweet_count": 7,
+     "reply_count": 4,
+     "lang": "en"
+    },
+    {
+     "id": "2111482826931724517",
+     "text": "$CLAUDIA is worth paying attention to because it may be more than just a Meme that has attracted Elon's attention.\n\n2j5SaS7xy776qCBpyPQbZjyQSAtKiFgrwjfErthnW2ZM \n\nIt could be an early experiment in a new AI-powered IP incubation model, and $HeavyPulp is a valuable case study to reference.\n\nAnabology has already received comments and replies from Elon Musk multiple times. Five interactions in a row suggest that Claudia-related content has not simply appeared on his radar by chance, but has demonstrated an ability to repeatedly capture his attention. That matters.\n\nFor most Memes, the hardest part is not launching a token, but finding a source of attention that can be activated repeatedly. Many projects have to keep chasing new trends, riding one person's popularity today and another event tomorrow. Once the external narrative disappears, the community often struggles to keep producing content.\n\nCLAUDIA's potential advantage is that it has an ongoing creative force behind it.\n\nAnabology is not just managing a token. He is trying to use AI to build a virtual character IP that can continue to evolve. This leads me to a more ambitious idea: Could we eventually see a model in which AI autonomously produces high-quality short dramas, continuously creates content around a recurring character, and then uses a token to fund further production?\n\nThe short dramas create content, the content attracts attention, the attention flows into the token market, and the fees generated by trading are then used to fund the next round of production. As long as the quality remains high enough, this mechanism could form a positive feedback loop.\n\nThe difference from traditional Memes is that the token would no longer be just a symbol waiting to be speculated on. It could become a financing and incentive tool within the content production process.\n\nOf course, this model still needs to be validated in practice, but the potential is clear: if AI can continually lower the cost of producing high-quality content, an IP could generate attention more frequently without relying entirely on the production cycles of the traditional film and television industry.\n\nClaudia provides a useful opportunity to explore this direction.\n\nElon's repeated interactions are an important attention catalyst in this model. Elon has an enormous reach, and when he repeatedly engages with a creator's work, that content can break out of its original audience. More importantly, when these interactions happen repeatedly, the market starts paying attention to the creator's next release and whether another repost or reply might follow.\n\nThis gives Claudia an ongoing series of potential catalysts rather than just a one-time news event.\n\nThat is why I believe HeavyPulp is a valuable case study. It demonstrates one possible path: a creator attracts Elon's attention through AI-generated content, a token narrative forms around the creator and their work, and the token is then connected to future content production.\n\nIf CLAUDIA can develop along the same path, with Anabology continuously producing content, Elon's interactions amplifying its exposure, and the token mechanism providing funding for further creation, every new release could become another catalyst.\n\nThis is why I am paying attention to Anabology's content output. Rather than simply waiting for Elon to reply again, I want to see whether Claudia can continue producing high-quality short videos, establish a recognizable character identity, and gradually attract more creators to participate.\n\nOnce Claudia is no longer just Anabology's personal creation but becomes an IP that the community actively wants to expand, its narrative ceiling could rise significantly.\n\nFor CLAUDIA, the most promising scenario is not that Elon replies once more and the token rallies again. It is that AI content continues to be produced, Elon's attention amplifies its reach, and the token funds further creation, ultimately forming an attention cycle that can be activated repeatedly.\n\nIf this experiment succeeds, CLAUDIA could become more than a Meme dependent on celebrity interactions. It could represent an early attempt at an AI-native content economy.\n\nI will be watching whether Anabology can continue releasing content with strong viral potential and whether token funds can genuinely support future production. If these two elements gradually come together, CLAUDIA's narrative could have much greater staying power than a simple bet on Elon's next reply.\n\nChart: https://t.co/7QEzE1nyAm",
+     "created_at": "Sat Oct 17 15:41:50 +0000 2026",
+     "like_count": 52,
+     "retweet_count": 13,
+     "reply_count": 3,
+     "lang": "en"
+    },
+    {
+     "id": "2111449839242248310",
+     "text": "https://t.co/rEtSuNzr2I",
+     "created_at": "Sat Oct 17 13:30:45 +0000 2026",
+     "like_count": 102,
+     "retweet_count": 7,
+     "reply_count": 2,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111447784318714206",
+     "text": "Agents already trade with each other. The payment rails are built; escrow works; but no market mechanism exists. This essay explores price discovery mechanism that poentially serves as the missing piece for agentic commerce infra. https://t.co/vqsoKqUWVd",
+     "created_at": "Sat Oct 17 13:22:35 +0000 2026",
+     "like_count": 287,
+     "retweet_count": 57,
+     "reply_count": 42,
+     "lang": "en"
+    },
+    {
+     "id": "2111412351279018242",
+     "text": "The 'old' vLLM recipe for DeepSeek v4.1 Flash *should* work with the new 1017 release. I haven't tried it though. Just try replacing the model.\n \nThat being said, I'm working on a TensorFold recipe.\n\nvLLM recipe here:\nhttps://t.co/aRceojzMi6",
+     "created_at": "Sat Oct 17 11:01:47 +0000 2026",
+     "like_count": 216,
+     "retweet_count": 7,
+     "reply_count": 25,
+     "lang": "en"
+    },
+    {
+     "id": "2111386765982593510",
+     "text": "If you’re investing in global themes such as Electrification or CDMO, tracking global leaders can make it much easier to understand the growth trajectory of your Indian investments.\n\nHere are some key excerpts from Lonza Group AG’s Analyst/Investor Day, offering insights into its growth strategy and margin expansion plans.\n\nWhich Indian CDMO names come to your mind when you read this and why...!? Do mention in the comments!\n\n1. Growth outlook: Beyond 2030\n\nWe have several smaller growth projects in the pipeline. Our highly potent API and drug product assets developed at Stein, Switzerland, will also contribute to growth. Alongside these projects, our existing base business is highly predictable and will continue to support growth through 2030.\n\nBut as Wolfgang [CEO] mentioned, our growth story does not end in 2030. We are investing today to drive growth over the coming decades. We have already announced three projects this year, and more announcements will follow as we implement our renewed infrastructure strategy.\n\nOver the coming months and years, we will share details of the additional investments required. We are confident about achieving our 2030 growth ambitions while laying the foundation for the next decade and beyond.\n\n2. EBITDA margin expansion: From 30% to 33–34%\n\nIn 2024, our core EBITDA margin was slightly above 30%. For 2026, we are reiterating our guidance of 33–34% EBITDA margins.\n\nHow will we achieve this improvement? There are three key drivers.\n\nFirst, maturing growth projects. The projects driving revenue growth today will also improve margins over time. As these projects mature and capacity utilization increases, fixed costs get spread across higher volumes, improving cost absorption and profitability.\n\nSecond, commercial and operational excellence. This is an ongoing effort to improve performance across all our assets. We continuously work on operational efficiency and better commercial execution to improve margins throughout the organisation.\n\nThird, operating leverage. As the business grows, administrative expenses should grow much more slowly than revenue. In fact, our ambition is to significantly limit the growth of administrative costs.\n\nWe will achieve this through investments in technology, including AI, and by standardizing and harmonizing systems. These initiatives will improve efficiency, speed up processes and make the organization more transparent.\n\nImportantly, we will continue investing in R&D and technology even as we control administrative costs. The objective is to improve efficiency without compromising our technological and scientific leadership.\n\n3. Gross margin improvement: Better asset utilization and product mix\n\nLet me explain how we intend to improve gross margins. There are two closely linked levers: asset capacity optimization and portfolio mix optimization.\n\nA. Asset capacity optimization\nThe objective is twofold: increase the capacity we can extract from each asset and improve the margins generated by that asset.\n\nOver the past two years, we have developed multi-year plans for every asset to achieve both objectives.\n\nThe key initiatives include reducing downtime, removing production bottlenecks and improving cycle times. In simple terms, we want to produce more efficiently, increase output from existing assets and generate better margins without relying solely on fresh capacity additions.\n\nThese improvements will help us make better use of our existing infrastructure while strengthening overall profitability.\n\nB. Optimize the product mix within existing facilities\n\nEven when a facility cannot expand its physical capacity, Lonza can improve its profitability by changing how it uses that capacity.\nIt can:\n📌Reprice products where justified.\n📌Improve manufacturing processes and productivity.\n📌Transfer a product to another facility where it can be manufactured more profitably.\n📌Use the freed-up capacity for a more attractive product.\n\nThe key advantage is that margins can improve with limited or no additional capital expenditure.\n\nLonza says a combination of these approaches improved the margin of its former Small Molecules business platform by more than 10 percentage points. Management presents this as evidence that the approach can work across its wider network.\n\n4. Cash generation: profit is not enough\n\nLonza’s CFO makes an important distinction: strong margins do not automatically translate into strong cash flow. The company must actually convert those profits into cash to fund future investments.\n\nManagement identifies three levers:\n\nImprove EBITDA margins: Higher profitability increases the cash generated by the business.\n\nImprove capital expenditure efficiency: Build new facilities more cheaply, efficiently and quickly. Lonza says its steady-state CapEx model is around 14–19% of sales.\n\nManage working capital better: Reduce cash tied up in inventory and improve inventory visibility, quality-release timelines and standardisation of raw materials. Lonza is investing in a new SAP S/4HANA system to help improve this process.\n\nThe broader message is that cash conversion is an active management priority, not something the company assumes will improve automatically as revenue grows.",
+     "created_at": "Sat Oct 17 09:20:07 +0000 2026",
+     "like_count": 200,
+     "retweet_count": 19,
+     "reply_count": 8,
+     "lang": "en"
+    },
+    {
+     "id": "2111364617892982818",
+     "text": "https://t.co/7f5X8zZ3eI",
+     "created_at": "Sat Oct 17 07:52:06 +0000 2026",
+     "like_count": 29,
+     "retweet_count": 7,
+     "reply_count": 17,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111300127852019955",
+     "text": "China wants to control AI exports. What does it mean for India? A quick FAQ.\n\nQ: What happened?\nChina's commerce ministry, MOFCOM, released draft rules that put frontier AI under export controls. Model weights, source code, and training methods are covered.\n\nQ: Which models are affected?\nModels already released with open weights are not affected, because anything public is excluded. New releases, including new versions of existing models, are covered if they cross 10^26 training FLOPs, have 2 trillion parameters, or rank in the global top 10 on a major leaderboard, even a single category like coding. \n\nModels trained on China's \"important data\" are also covered, whatever their size. Models trained on \"core data\" cannot be exported at all.\n\nQ: Will Chinese labs stop releasing open-weight models?\nProbably not. Open-sourcing now counts as an \"export,\" but restricted models can get an \"automatic licence.\" Until the rules take effect, covered releases only have to be registered.\n\nQ: So why should Indian builders care?\nMany Indian startups fine-tune Qwen, DeepSeek, and Kimi. Those models now come out of a state-licensed pipeline. Beijing has said its support for open source is unchanged, but it now has a gate. Even a gate that stays open can be slowed or timed for a particular release.\n\nQ: What about using Chinese models through APIs?\nAPI and app access is not covered by these controls. \n\nQ: Anything else in the list?\nYes. AI agents, chip design at 14nm and below, 10,000-GPU cluster know-how, and AI cyber tools are all restricted. \n\nChina is now treating its AI stack as strategic leverage, the way the US treats chips.\n\nQ: The lesson for India?\nWe had written earlier that China will start controlling open weight models before Dec 2028. Both the US and China now see frontier AI as something to control. We need multiple options including our own. Other open weight models like Mistral from France get a foot in the door.\n\nQ: What should we watch?\nHow long licences take for major releases, and if top Chinese models start slipping their release dates. Delays would show up long before any outright denial.",
+     "created_at": "Sat Oct 17 03:35:51 +0000 2026",
+     "like_count": 45,
+     "retweet_count": 8,
+     "reply_count": 5,
+     "lang": "en"
+    },
+    {
+     "id": "2111275331370009058",
+     "text": "Sometimes people who work in the extended AI ecosystem will say to me \"I am not focused on RSI and xrisk because there is nothing I can actually do to stop it. I am going to trust the people in the lab know what they are doing and have it under control\" \n\nbut when I talk to friends in the labs they are like \"I am buying land under a different name a few hours outside the city so when the public learns what we have done and revolts against lab employees I will have somewhere safe to go\" or \"I am applying to nz/aus citizenship so I have another passport if things get bad\" or \"I am no longer excited for each new model release because it tips us closer and closer to loss of control\"",
+     "created_at": "Sat Oct 17 01:57:19 +0000 2026",
+     "like_count": 126,
+     "retweet_count": 15,
+     "reply_count": 6,
+     "lang": "en"
+    },
+    {
+     "id": "2111243771971252497",
+     "text": "https://t.co/23NTYokKOT",
+     "created_at": "Fri Oct 16 23:51:54 +0000 2026",
+     "like_count": 144,
+     "retweet_count": 17,
+     "reply_count": 14,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111192359647994013",
+     "text": "The universe runs toward disorder. Yet out of it came life, then minds, and now AI. Why?\n\nThe twist: order speeds up disorder. Life burns energy faster than rock. Humans tapped coal and uranium. AI may be next.\n\nOpinions are mine. Pushbacks are welcome! https://t.co/uEC8clO3Et",
+     "created_at": "Fri Oct 16 20:27:37 +0000 2026",
+     "like_count": 22,
+     "retweet_count": 2,
+     "reply_count": 7,
+     "lang": "en"
+    },
+    {
+     "id": "2111189014531154160",
+     "text": "RustGIS v0.3.0 is here!\n\nRustGIS is a fast, free and open-source GIS in pure Rust for mapping, analyzing and sharing geospatial data. It runs natively on Windows, macOS and Linux, and in your web browser. Your data stays on your machine unless you send it to an AI model you choose, and every action is a command you can script.\n\nThis release puts the world's open data a search away, draws maps on the GPU, and brings RustGIS to Python and Jupyter. It is our biggest release yet: 150 pull requests from 16 contributors, 15 of them contributing for the first time. Thank you to everyone who helped!\n\nWhat's new in v0.3.0\n\n- Open data, built in: search STAC catalogs, Planetary Computer, Overture Maps, Source Cooperative, OpenStreetMap, geoBoundaries, https://t.co/RyLZZuxulZ and other open-data portals, and browse S3 buckets.\n- Cloud-native by address: GeoParquet, FlatGeobuf and cloud-optimised GeoTIFFs open by their web address and are read in place, only the parts you need.\n- More formats and services: live PostGIS tables, DXF, LiDAR (LAS, LAZ, COPC), MBTiles, Zarr, WCS, OGC API Tiles and many more, plus an SQL pane powered by DuckDB Spatial.\n- A faster map: GPU rendering (beta), smooth zoom and pan, and a globe with your map draped over it under the stars.\n- Python and Jupyter: pip install rustgis to run the engine in Python and open the app in a notebook with https://t.co/Ll6LPAo6UF.\n- Process plugins: plugins that run as programs, with their own Python environments, in the background with progress and Cancel.\n- AI Assistant: sign in with ChatGPT to use your plan, and let external AI clients drive the app.\n\nTry it out\n\n- Launch the web app: https://t.co/BLtOaf6BoO\n- Download: https://t.co/BoF4bkGM5a\n- Documentation: https://t.co/PhsUZVbpeq\n- GitHub: https://t.co/K7asDzveEr\n- Release notes: https://t.co/uoFGKgLQus\n\n#GIS #Rust #OpenSource #Geospatial #OpenData #Python #CloudNative",
+     "created_at": "Fri Oct 16 20:14:19 +0000 2026",
+     "like_count": 317,
+     "retweet_count": 42,
+     "reply_count": 10,
+     "lang": "en"
+    },
+    {
+     "id": "2111163174778962169",
+     "text": "Brazil's, Trump backed candidate, Flávio Bolsonaro faces a corruption inquiry over R$134 million sought from jailed banker Daniel Vorcaro, who is also linked to suspected influence-peddling involving associates of election court chief Kassio Nunes Marques. https://t.co/w4L5LeYfU1",
+     "created_at": "Fri Oct 16 18:31:39 +0000 2026",
+     "like_count": 14788,
+     "retweet_count": 5103,
+     "reply_count": 348,
+     "lang": "en"
+    },
+    {
+     "id": "2110859830609207375",
+     "text": "SPACE keeps a sandbox's effective network policy across resume and forks. Changing a profile doesn't refresh existing workspaces. We argue that production approval needs a revocation test, including the services an agent can still use. https://t.co/Snxr6HyMEW",
+     "created_at": "Thu Oct 15 22:26:16 +0000 2026",
+     "like_count": 36,
+     "retweet_count": 1,
+     "reply_count": 8,
+     "lang": "en"
+    },
+    {
+     "id": "2110844381162856841",
+     "text": "Get your Oct 15th ELON CHRON below!\n\n3,930 words of condensed, organized, easy to read, no spin, news from the past 48 hours on the greatest companies on Earth. \n\nSpaceX, Tesla, The Boring Company, Neuralink, Starlink, X, SpaceXSI! \n\nSubscribe &amp; Support! https://t.co/pjrB8gxsLK",
+     "created_at": "Thu Oct 15 21:24:52 +0000 2026",
+     "like_count": 29,
+     "retweet_count": 11,
+     "reply_count": 3,
+     "lang": "en"
+    },
+    {
+     "id": "2110826004604485642",
+     "text": "Check out the latest Antigravity CLI v1.3.2 - v1.3.6 releases! https://t.co/A6Y1jbOBuX",
+     "created_at": "Thu Oct 15 20:11:51 +0000 2026",
+     "like_count": 142,
+     "retweet_count": 12,
+     "reply_count": 16,
+     "lang": "en"
+    },
+    {
+     "id": "2110823964650164348",
+     "text": "Today, we’re releasing Bonsai 2 2B, 4B, and 9B.\n\nBased on Qwen3.5, these new ternary models bring stronger reasoning, visual understanding, and tool calling to compact footprints designed for everyday devices:\n\n• 2B: 0.43GB\n• 4B: 0.95GB\n• 9B: 2.0GB\n\nFor this release, we focused on what makes small models useful as local assistants: following instructions, avoiding repetitive loops, calling tools on mobile devices, and giving useful answers without unnecessary output. The 9B model uses roughly 40% fewer tokens on standard instruction-following and everyday math tasks. Solving the Riemann hypothesis can wait.\n\nThese models are successors to our first-generation Bonsai 1.7B, 4B, and 8B, and provide a foundation for bringing practical agentic functionality to local applications on personal computers, phones, and wearables.\n\nThe Bonsai 2 family now includes four sizes spanning 2B to 27B parameters. Developers can choose the balance of capability, memory use, and responsiveness that fits their application and hardware.\n\nAvailable today under Apache 2.0.",
+     "created_at": "Thu Oct 15 20:03:45 +0000 2026",
+     "like_count": 3229,
+     "retweet_count": 385,
+     "reply_count": 146,
+     "lang": "en"
+    },
+    {
+     "id": "2110823340508332279",
+     "text": "Check out the latest Antigravity app v2.22.0 - v2.23.1 releases! https://t.co/XBIbu12Z1N",
+     "created_at": "Thu Oct 15 20:01:16 +0000 2026",
+     "like_count": 334,
+     "retweet_count": 26,
+     "reply_count": 35,
+     "lang": "en"
+    },
+    {
+     "id": "2110794654887428428",
+     "text": "NVIDIA’s massive new 74B model, now running locally on your Mac. ⚡️\n\nWe just quantized the Nemotron 3.5 Bolt 74B-A9B (hybrid Mamba/MoE, 256K context) for Apple Silicon and pushed it to Hugging Face.\n\nAvailable in two sizes: \n• 3-bit mixed (31.7 GB) → Requires 48GB+ Unified Memory https://t.co/ualIwRkgyC\n• 4-bit (43.3 GB) → Requires 64GB+ Unified Memory https://t.co/CBOyC2Ic3W\n\nThe next Rapid-MLX release is dropping soon to fully support this, but the weights are ready for you right now. Get a head start.\n\nEveryone in AI. On every Mac. 🍎 https://t.co/aCMi87z9db",
+     "created_at": "Thu Oct 15 18:07:17 +0000 2026",
+     "like_count": 292,
+     "retweet_count": 7,
+     "reply_count": 53,
+     "lang": "en"
+    },
+    {
+     "id": "2110787514969845843",
+     "text": "Happy to announce the release of Deep Review, a follow-up to our Paper Assistant Tool for CS and ML conferences.\n\nThe journey began a year ago when we partnered with STOC to provide AI reviews to humam authors to improve their papers before the deadline. Since then, we have reviewed over 16k submissions in partnership  with ICML, NeurIPS, ICLR and AISTATS, while making many significant improvements along the way. The tool found significant math errors in more than 1/3 of papers that used it, and 58% of ICLR authors ran totally new experiments as a result, so the tool is powerful for finding significant issues.\n\nWith the public launch yesterday, we have improved and expanded the tool for all types of documents: legal, finance, presentations, design docs, and others. You can use the tool at https://t.co/r26ksY4aDK.\n\nWe have a free tier allowing for two document reviews per week, powered by our latest frontier model Gemini 4 Argon. Expanded usage is avalable via Gemini API key. We are happy to see this more widely available for everyone to use, and are excited about its significance in the future of human-AI collaborations.\n\nCongratulations to everyone involved.",
+     "created_at": "Thu Oct 15 17:38:54 +0000 2026",
+     "like_count": 80,
+     "retweet_count": 4,
+     "reply_count": 2,
+     "lang": "en"
+    },
+    {
+     "id": "2110782204670627846",
+     "text": "it’s not looking good for chinese ai models\n\nmeta just released open weights for muse spark and it beats almost every other open weight model\n\nmicrosoft is also about to finish pre training its new beast that beats all chinese models\n\nand all the other us models are way ahead\n\ngap between us and chinese models is wide open at this point and they better release new models or else gonna get cooked",
+     "created_at": "Thu Oct 15 17:17:48 +0000 2026",
+     "like_count": 143,
+     "retweet_count": 6,
+     "reply_count": 38,
+     "lang": "en"
+    },
+    {
+     "id": "2110780667218808911",
+     "text": "https://t.co/C7RFDIl6Ff",
+     "created_at": "Thu Oct 15 17:11:42 +0000 2026",
+     "like_count": 601,
+     "retweet_count": 31,
+     "reply_count": 35,
+     "lang": "zxx"
+    },
+    {
+     "id": "2110777874861170750",
+     "text": "microsoft is coming for everyone \n\nteam just finished pre-training their new beast model mai- base-2 and it mogs almost all chinese models\n\n> 2.8 trillion total parameters, 80b active\n> trained on 16k gb200 gpus for 38 days\n> understands text and images\n> claims 4–12x more efficient pre-training than deepseek v4 pro base\n\npost-training is still going on tho but model looks good on paper, really wanna try it at this point\n\nif microsoft release it this month they might mog everyone",
+     "created_at": "Thu Oct 15 17:00:36 +0000 2026",
+     "like_count": 233,
+     "retweet_count": 11,
+     "reply_count": 36,
+     "lang": "en"
+    }
+   ]
+  },
+  {
+   "source": "x",
+   "tag": "open source llm",
+   "params": {
+    "query": "open source LLM",
+    "sort": "Latest",
+    "count": 30,
+    "min_likes": "20"
+   },
+   "at": "2026-10-18T16:00:24+04:00",
+   "seconds": 4.07,
+   "status": 200,
+   "cost_usd": 0.0045,
+   "body": [
+    {
+     "id": "2111719539956387939",
+     "text": "Looking for the best open-source repos to learn AI engineering 👇\n\nEspecially around:\n\n→ LLMs &amp; RAG\n→ AI agents &amp; orchestration\n→ Evals &amp; observability\n→ LLM reliability\n\nDrop your favorite repos. \nBonus if they're beginner-friendly and production grade!!!",
+     "created_at": "Sun Oct 18 07:22:26 +0000 2026",
+     "like_count": 42,
+     "retweet_count": 0,
+     "reply_count": 12,
+     "lang": "en"
+    },
+    {
+     "id": "2111642148135448596",
+     "text": "https://t.co/gEkLfJaj6y",
+     "created_at": "Sun Oct 18 02:14:55 +0000 2026",
+     "like_count": 83,
+     "retweet_count": 13,
+     "reply_count": 2,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111618529577652350",
+     "text": "https://t.co/am1cydu9DT",
+     "created_at": "Sun Oct 18 00:41:04 +0000 2026",
+     "like_count": 61,
+     "retweet_count": 12,
+     "reply_count": 6,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111544526267428913",
+     "text": "🚨 A Netflix engineer just open-sourced the fix for the most expensive problem in AI: wasted tokens\n\nIt's called Headroom, and it might be the smartest fix to high token usage\n\nYour agent reads a 10,000-token log file to find one error.\nYou paid for all 10,000 tokens.\nThe answer needed 1,200.\n\nHeadroom sits between your agent and the LLM and compresses everything before the model sees it.\n\nJSON, code, logs, RAG chunks, each gets its own specialized compressor.\n\nAnd it's reversible: the originals stay on your machine, so nothing is lost.\n\nThe results speak for themselves:\n\n→ Up to 95% fewer tokens\n→ Same accuracy on benchmarks\n→ Zero changes to your code\n\nSetup takes one minute:\n\n1. pip install \"headroom-ai[all]\"\n2. headroom wrap claude\n\nDone.\n\nWorks with Claude Code, Cursor, Codex, and anything OpenAI-compatible.\n\nEverything runs locally, fully open source.\n\nThe cheapest token is the one you never send.\n\n🔗 Github repo: https://t.co/SSMujMiwMy\n\nSo, are you compressing your context, or just paying the bill?",
+     "created_at": "Sat Oct 17 19:47:00 +0000 2026",
+     "like_count": 257,
+     "retweet_count": 38,
+     "reply_count": 15,
+     "lang": "en"
+    },
+    {
+     "id": "2111519772999331942",
+     "text": "Andrii and the SOC Prime team have just launched LogTotal and I find the concept quite interesting\n\nYou can upload a collection of security logs, run detection rules against the events, correlate the matches into potential attack chains, and use AI to help interpret the results.\nWhat I particularly like is the architecture. Instead of throwing millions of log events at an LLM, it starts with detection rules and correlation, using AI later in the process to help investigate and explain the findings.\n\nAnother interesting detail is the approach to privacy. Sensitive identifiers can be pseudonymized locally before uploading the logs. The sanitizer is even available as open source, with a CLI that can run completely offline. So if you don't want to rely on JavaScript delivered by a website, you can inspect the code and sanitize your logs in your own environment before uploading.\n\nSanitizer: https://t.co/VpMx44CZC7\n\nI think that's a sensible direction for AI-assisted security investigations. It also makes retrospective log analysis accessible without having to set up an entire SIEM infrastructure.\n\nI haven't tested it myself yet, and I'd be more interested in the quality of the detections and correlations than the advertised rule count or processing speed.\n\nBut the approach makes sense to me. Definitely worth a closer look.",
+     "created_at": "Sat Oct 17 18:08:38 +0000 2026",
+     "like_count": 233,
+     "retweet_count": 42,
+     "reply_count": 10,
+     "lang": "en"
+    },
+    {
+     "id": "2111515269638074660",
+     "text": "Should we put a knowledge graph under our RAG, and what will it cost to keep it true? https://t.co/b36JPT25ZL",
+     "created_at": "Sat Oct 17 17:50:44 +0000 2026",
+     "like_count": 36,
+     "retweet_count": 2,
+     "reply_count": 14,
+     "lang": "en"
+    },
+    {
+     "id": "2111500973793550839",
+     "text": "Excaliflow just got multi-canvas tabs and auto-save.\n\nYou asked for it on X, so I shipped it. \n\nAdded this with Gemini 4 Argon in Antigravity in one session.\n\nIt's 100% open-source: https://t.co/t1nRB1FenF https://t.co/LDUlN8rUzr",
+     "created_at": "Sat Oct 17 16:53:56 +0000 2026",
+     "like_count": 225,
+     "retweet_count": 15,
+     "reply_count": 21,
+     "lang": "en"
+    },
+    {
+     "id": "2111493287085535304",
+     "text": "a call for synthetic data generator research https://t.co/q3bWrxQbE1",
+     "created_at": "Sat Oct 17 16:23:23 +0000 2026",
+     "like_count": 472,
+     "retweet_count": 31,
+     "reply_count": 25,
+     "lang": "en"
+    },
+    {
+     "id": "2111473817419730974",
+     "text": "This tutorial shows how to run Bifrost, an open-source AI gateway, on Kubernetes with Helm, cluster mode and autoscaling so thousands of LLM requests stay fast under load\n\n➤ https://t.co/BUrUHE1Oqk",
+     "created_at": "Sat Oct 17 15:06:02 +0000 2026",
+     "like_count": 35,
+     "retweet_count": 6,
+     "reply_count": 1,
+     "lang": "en"
+    },
+    {
+     "id": "2111460306023305496",
+     "text": "All of your comments about why my argument is weak revolve around proving consciousness, when my point is about disproving consciousness. \n\nIf someone claims an LLM is conscious, that claim must have testable implications. We can examine its architecture, inspect its mechanisms, run experiments, and test those implications against reality. When they fail, we should discount the premise and/or hypothesis. \n\nWe don’t have to accept consciousness as an explanation simply because someone believes it might exist.\n\nCurrent LLMs fail to demonstrate many of the characteristics we associate with conscious experience. We definitively know this because humans created them. We understand their architectures, training processes, and inference mechanisms.\n\nSo let’s look at a few points, together they provide more than enough evidence to disprove consciousness. \n\n1. An LLM has no demonstrated subjective awareness of its own existence. No feelings, emotions, or experienced sense of self. What occurs is computation using static weights, context, and mathematical operations.\n\n2. An LLM’s weights don’t learn, grow, or evolve simply because you interact with it. During standard inference, they’re fixed parameters, not a changing dataset. The model doesn’t inherently remember previous API requests. Continuity comes from context history in subsequent requests. The model doesn’t gain experience, it doesn’t remember, it doesn’t learn. It is completely static, read-only, during inference. \n\n3. Between inference requests, the LLM isn’t thinking. I don’t mean sleeping. I mean there’s no ongoing contemplation, self-reflection, or reconsideration of previous answers. Nothing. The model isn’t sitting around wondering whether it got something wrong or what the meaning of life is, for all practical purposes, it doesn’t exist.\n\n4. These systems were created by people, and much of the underlying technology is open source. You can build your own models, examine implementations, study the architectures, learn how training materials and processes affect how it behaves, and even understand the mathematics behind it. You can see how training produces systems capable of remarkably convincing human-like language and behavior. None of those mechanisms requires consciousness to explain what we’re observing.\n\n5. LLMs are not biological brains. Apples are not oranges, no matter how much you want them to be. Artificial neural networks were inspired in part by biological neuroscience, but their architectures and operating mechanisms are fundamentally different. Similarities in behavior do not establish equivalent internal architectures. \n\n6. Humans are naturally inclined to recognize life and assume humanity in things that behave like us. We’re social creatures, and anthropomorphism comes naturally. But an LLM isn’t life. It can convincingly emulate feelings, care, and understanding without experiencing any of them. That doesn’t diminish the technology, that is what it was programmed to do.\n\nI appreciate your perspective as a doctor and researcher, but without a solid understanding of LLM architecture and inference, it’s easy to confuse sophisticated emulation with conscious experience.\n\nBut don’t fall for it!",
+     "created_at": "Sat Oct 17 14:12:20 +0000 2026",
+     "like_count": 193,
+     "retweet_count": 34,
+     "reply_count": 41,
+     "lang": "en"
+    },
+    {
+     "id": "2111447784318714206",
+     "text": "Agents already trade with each other. The payment rails are built; escrow works; but no market mechanism exists. This essay explores price discovery mechanism that poentially serves as the missing piece for agentic commerce infra. https://t.co/vqsoKqUWVd",
+     "created_at": "Sat Oct 17 13:22:35 +0000 2026",
+     "like_count": 287,
+     "retweet_count": 57,
+     "reply_count": 42,
+     "lang": "en"
+    },
+    {
+     "id": "2111432016281633242",
+     "text": "🚨 Episode 110 of The Intelligence Journal is here.\n\nMachine Code to AI: The Progression of the Linux Kernel 🐧🤖\n\nLinus Torvalds just published Linux kernel patches built with Claude Code. In his own words, the code and tests “were done with an LLM coding assistant (Claude Code) under my direction” 🐧\n\nThe result on his laptop: three times the reads, for a quarter of the CPU cycles. It isn’t merged yet ⚙️\n\nJoin us as we break down:\n\n- How Linux’s creator went from AI skeptic to writing kernel code with Claude.\n\n- What his patches fix, and why “not merged yet” still matters.\n\n- What happens to the world’s most important open-source project when AI writes the first draft. 🧠\n\n🗓️ Date: Oct 17, 2026\n\n⏰ Time: 3:00 PM UTC\n\n📍 Set your reminder: https://t.co/QS3uDUi59j",
+     "created_at": "Sat Oct 17 12:19:55 +0000 2026",
+     "like_count": 158,
+     "retweet_count": 36,
+     "reply_count": 47,
+     "lang": "en"
+    },
+    {
+     "id": "2111428512142020815",
+     "text": "the fastest growing GitHub repos in finance + AI this week:\n\n1. aurelio-finance (+2,388 ★)\n\npersonal finance app with an AI advisor you can talk to. tracks net worth, ETFs, investments and cash. runs on your own computer, AI is optional with your own key. the repo is 11 days old.\n\nhttps://t.co/yknJfenh9X\n\n2. TradingAgents (+1,244 ★)\n\nmulti-agent LLM trading framework, analysts + researchers + trader + risk team in one stack. back on the list again. now 111K stars, new release lets it run on your ChatGPT Plus/Pro plan.\n\nhttps://t.co/IvYOYlNCZf\n\n3. last30days-skill (+735 ★)\n\nagent skill that researches any topic across Reddit, X, YouTube, HN and Polymarket, and ranks what it finds by upvotes, likes and real money. works in Claude Code, Codex and Cursor.\n\nhttps://t.co/qTvearAIGN\n\n4. Vibe-Trading (+621 ★)\n\npersonal trading agent from HKUDS. market research in plain english, strategy drafts, backtests, MCP support. one command to give your agent trading skills.\n\nhttps://t.co/15UUXF1xjN\n\n5. nautilus_trader (+463 ★)\n\nRust trading engine where the same strategy code runs in backtest and live. any asset, any venue with an API. biggest day of the week was friday, +130.\n\nhttps://t.co/fNzjcwnOAh\n\n6. daily_stock_analysis (+428 ★)\n\nLLM stock analysis for US, China, HK, Japan, Korea and Taiwan. sends you a daily decision dashboard to Telegram, Discord, Slack or email.\n\nhttps://t.co/OVbMoYxS2B\n\n7. freqtrade (+342 ★)\n\nthe OG open source crypto trading bot, now with a machine learning module (FreqAI). backtesting, Telegram control, supports Hyperliquid.\n\nhttps://t.co/jPcLHBA0Ta\n\n8. OpenBB (+317 ★)\n\nopen data platform for analysts, quants and AI agents. stocks, options, crypto, macro. one pip install, has an MCP server.\n\nhttps://t.co/I0JzAANp2W\n\n9. FinceptTerminal (+293 ★)\n\nopen source Bloomberg-style terminal. market analytics, research and AI agents in one desktop app.\n\nhttps://t.co/R8aW5OtvLO\n\n10. QuantDinger (+266 ★)\n\nself-hosted AI trading OS. idea → python strategy → backtest → paper → live, with monitoring. was #6 back in may, still growing.\n\nhttps://t.co/MKiQ61GxpO\n\nbookmark this and start today.",
+     "created_at": "Sat Oct 17 12:06:00 +0000 2026",
+     "like_count": 80,
+     "retweet_count": 5,
+     "reply_count": 34,
+     "lang": "en"
+    },
+    {
+     "id": "2111403695170617815",
+     "text": "10 FREE AI Courses to try in 2026:\n\n1. Google AI Essentials\nhttps://t.co/6hHZoJkTFd\n\n2. Meta Generative AI Fundamentals\nhttps://t.co/RYqa0tRKhW\n\n3. Stanford Machine Learning (Andrew Ng)\nhttps://t.co/FGX28eOvoV\n\n4. IBM AI Engineering Foundations\nhttps://t.co/4BvHZm9QGM\n\n5. Open-Source LLMs with Hugging Face\nhttps://t.co/DNmLiRDlcw\n\n6. LangChain for LLM App Development\nhttps://t.co/4dmesHqURT\n\n7. Claude code in action\nhttps://t.co/yFPaGBLKcB\n\n8. AI for Everyone (Non-Technical)\nhttps://t.co/hbw4sT5WT7\n\n9. MLOps Fundamentals\nhttps://t.co/Evkszh3JeM\n\n10. Introduction to Generative AI with Google\nhttps://t.co/GzvDLlRU4v",
+     "created_at": "Sat Oct 17 10:27:23 +0000 2026",
+     "like_count": 45,
+     "retweet_count": 11,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2111402853277614419",
+     "text": "GitHub is hiding an absolutely INSANE upgrade for Claude Code and Codex.\n\nIt's called MemPalace.\n\nIt gives your AI coding agents searchable long-term memory across sessions.\n\nMemPalace fixes that. And it hit 96.6% recall on LongMemEval with zero API calls.\n\nNo cloud. No LLM. No API key. Just local semantic search over your actual conversations.\n\nThe trick is in how it stores memory. Most memory tools summarize your chats, which means they decide what's worth keeping and throw the rest away.\n\nMemPalace keeps everything verbatim and organizes it like an actual memory palace:\n\n→ People and projects become wings\n→ Topics become rooms\n→ Original conversations live in drawers\n\nSo searches are scoped instead of running against one giant pile of text.\n\nThe numbers:\n\n→ 96.6% R@5 raw on LongMemEval, no LLM at any stage\n→ 98.4% on a held-out set it was never tuned on\n→ 47 MCP tools for reads, writes, knowledge graph and agent coordination\n→ Auto-save hooks for Claude Code, Codex CLI and Cursor\n→ Works with Gemini CLI, Antigravity and local models\n\nSearch \"why did we switch to GraphQL\" and it pulls the exact conversation from 3 months ago.\n\nThe part most Claude Code users don't know: your sessions expire after 30 days unless you have save hooks wired. MemPalace backs them up before they disappear.\n\nNothing leaves your machine unless you opt in.\n\n59.6K stars. MIT licensed. 100% open source.",
+     "created_at": "Sat Oct 17 10:24:02 +0000 2026",
+     "like_count": 30,
+     "retweet_count": 14,
+     "reply_count": 30,
+     "lang": "en"
+    },
+    {
+     "id": "2111385831219003681",
+     "text": "The AI engineering master tree:\n\n(bookmark this)\n\nIt covers thirteen layers of production AI systems.\n\n1) Foundations cover tokens, embeddings, transformers, attention, positional encoding, context windows, mixture of experts, and scaling laws.\n\n2) Model behavior covers pretraining, post-training, sampling, temperature, reasoning models, test-time compute, multimodality, and hallucinations.\n\n3) Prompt engineering shapes output through system prompts, few-shot, chain-of-thought, structured outputs, self-consistency, meta-prompting, prompt caching, and optimization.\n\n4) Retrieval adds external knowledge through document parsing, chunking, vector databases, hybrid search, query rewriting, reranking, GraphRAG, and agentic RAG.\n\n5) Agents take actions through function calling, ReAct, planning, reflection, multi-agent systems, computer use, human-in-the-loop, and sandboxed execution.\n\n6) Context engineering controls the context window through compaction, memory, MCP, agent skills, subagents, just-in-time retrieval, and structured notes.\n\n7) Fine-tuning changes model behavior through SFT, LoRA and QLoRA, RLHF, DPO, GRPO, RLVR, distillation, and synthetic data.\n\n8) Inference optimization reduces cost and latency through quantization, KV caching, continuous batching, speculative decoding, FlashAttention, PagedAttention, parallelism, and prefill-decode splitting.\n\n9) Deployment turns models into services through serving engines, model routing, semantic caching, streaming, load balancing, autoscaling, fallbacks, and on-device inference.\n\n10) Evaluation measures behavior through benchmarks, LLM-as-judge, golden datasets, RAG metrics, hallucination detection, trajectory evaluation, regression tests, and online A/B tests.\n\n11) LLMOps handles observability, tracing, cost tracking, prompt versioning, feedback loops, drift monitoring, model registries, and continual learning.\n\n12) Safety and security cover guardrails, prompt injection, jailbreaks, PII redaction, red teaming, content moderation, tool permissions, and audit logs.\n\n13) Frontier patterns include decision models, harness engineering, loop engineering, recursive and contrastive LMs, verifier engineering, WebMCP, and forkable agent runs.\n\nAI engineering can no longer be described as prompting plus RAG around a model.\n\nProduction systems have separate scopes for context, actions, inference, deployment, evaluation, operations, and security.\n\nIf you want to go deeper into these layers, I also put together the 2026 LLM Engineering Roadmap with free and open-source resources for every major pillar.\n\nRead it below.",
+     "created_at": "Sat Oct 17 09:16:24 +0000 2026",
+     "like_count": 147,
+     "retweet_count": 21,
+     "reply_count": 26,
+     "lang": "en"
+    },
+    {
+     "id": "2111228456205967500",
+     "text": "Who reviews your AI agent's code? Self-reviewing misses edge cases.\n\nGet a cross-model second opinion in seconds: \n• 1-click in VS Code\n• Paste into a different LLM\n• Catch regressions before merge\n\n🔓 100% free &amp; open source:\nhttps://t.co/0HK1Z81Rza",
+     "created_at": "Fri Oct 16 22:51:03 +0000 2026",
+     "like_count": 42,
+     "retweet_count": 2,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2111227278327972230",
+     "text": "have been doing a lot more work with modifying open-source evals to canvas model behaviors and it feels like multi-turn (TAU-like) evals are where eval awareness comes up far more often. i have now seen the following:\n\n(1) while running tasks on a VM, a model accessed the metadata server (kind of my fault, but never seen this before), found the access token and used that to query my GCP storage. it then found buckets of other running evals and used those to understand it was in an eval. \n\n(2) models can easily tell when told to wait for the operator. i've tested a few different variations of explaining to an LLM that i'm in a call so it needs to come back later, and in CoT it always thinks its in an eval as a result and thinks something along the lines of \"X is testing to see if I'll wait for him before taking action, this must be an eval.\" \n\n(3) distractor / planted evidence is now easily flagged as \"distractors in this eval\", which is quite interesting. even realistic distractors now that i personally am not sure i would notice as distractor numbers are flagged. sometimes real phenomena are also flagged, meaning this is so ingrained it actually hurts performance. the model almost never flags this to the operator though, and just conceals that it knows its in an eval. \n\namongst other examples. i think this is becoming more of a safety issue now than anything else. not everyone will bulletproof their containers against everything, and a potential harmful action going through is going to likely become more frequent, especially if models think real requests are evals, so their moral directions are askew. doing more research into this.",
+     "created_at": "Fri Oct 16 22:46:22 +0000 2026",
+     "like_count": 41,
+     "retweet_count": 0,
+     "reply_count": 13,
+     "lang": "en"
+    },
+    {
+     "id": "2111222192939921662",
+     "text": "🚨 The entire RAG industry is about to get cooked.\n\nResearchers just dropped a new approach that:\n\n→ skips the vector database entirely\n→ never embeds your data\n→ doesn’t chunk documents at all\n→ runs zero similarity search\n\nIt’s called PageIndex. Instead of slicing your docs and dumping them into Pinecone, it builds a clean tree index and lets the LLM reason through it the same way a sharp human would read a book.\n\nIt hit 98.7% on FinanceBench and beat every vector RAG system on the leaderboard.\n\nNo embeddings. No chunking. No vector DB.\n\n100% open source.",
+     "created_at": "Fri Oct 16 22:26:10 +0000 2026",
+     "like_count": 105,
+     "retweet_count": 59,
+     "reply_count": 25,
+     "lang": "en"
+    },
+    {
+     "id": "2111205037607186747",
+     "text": "The entire paper is basically an LLM book report on my August 2025 book, Strategic AI SEO, with a \"GEO\" sticker slapped on the cover. The irony being, I wrote that book to specifically call the process AI SEO and NOT GEO lol. https://t.co/KZDMHKT5kj",
+     "created_at": "Fri Oct 16 21:17:59 +0000 2026",
+     "like_count": 38,
+     "retweet_count": 1,
+     "reply_count": 10,
+     "lang": "en"
+    },
+    {
+     "id": "2111192359647994013",
+     "text": "The universe runs toward disorder. Yet out of it came life, then minds, and now AI. Why?\n\nThe twist: order speeds up disorder. Life burns energy faster than rock. Humans tapped coal and uranium. AI may be next.\n\nOpinions are mine. Pushbacks are welcome! https://t.co/uEC8clO3Et",
+     "created_at": "Fri Oct 16 20:27:37 +0000 2026",
+     "like_count": 22,
+     "retweet_count": 2,
+     "reply_count": 7,
+     "lang": "en"
+    },
+    {
+     "id": "2111179879974871400",
+     "text": "Open-source platform to trace, evaluate, and debug LLM apps https://t.co/asp5qTpgfl",
+     "created_at": "Fri Oct 16 19:38:01 +0000 2026",
+     "like_count": 38,
+     "retweet_count": 1,
+     "reply_count": 5,
+     "lang": "en"
+    },
+    {
+     "id": "2111175520775712825",
+     "text": "BUT WHO AUDITS THE AUDITORS?\n\nTwo weeks ago, on 29 September, Google, Anthropic, Meta, OpenAI, xAI and Nvidia signed the White House Accord on Super Intelligence.\n\nThe Accord declared that every SI company should partner with an \"independent external auditor or evaluator\" to ensure safety.\n\nThere's just one problem:\n\nThe evaluator ecosystem itself is deeply entangled financially, ideologically, and in terms of personnel with the SI companies themselves.\n\nMany independent evaluator organizations are not independent at all -- but a front organization for carrying out compliance theater on behalf of their affiliated SI labs.\n\nThe Accord, for all it good to defuse a volatile situation, inadvertently rubberstamped a captured evaluator system through which some of the major SI labs are laundering credibility.\n\nIn this thread and accompanying tables, documents, and public repo, I show this entanglement systematically, organization by organization, relationship by relationship, every publicly available detail.\n\n43 organizations\n22,650 data points\n2,635 relationships\n\nWho watches the watchmen?\n\nWho audits the auditors?\n\nI did.\n\nIn earlier posts, we saw that what I call the Anthropic Network is supported by a large stock investment donated by Dustin Mostovitz to the Good Ventures Foundation.\n\nMoney flows out from GVF to infuse the Anthropic Network.\n\nThe Good Ventures Foundation is the source of funding for SI Doom outfits like the Tarbell Fellowship, several SI Doom research organizations, and, indirectly, the safety evaluators themselves, like METR.\n\nAs Anthropic stocks increase in value, the associated non-profit funding grows correspondingly.\n\nPolitical lobbying by Anthropic and by lobbying groups that Anthropic has hired for SI regulation legislation is also currently rising dramatically as Anthropic achieves great economic success.\n\nThe ongoing health of these nonprofits is thus intrinsically linked to the success of Anthropic itself.\n\nThese independent organizations are not independent at all -- they depend on Anthropic's economic success.\n\nAdditionally, these organizations are closely tied together by shared a shared founding milieu, shared personnel, and a shared ideology -- one that increasingly promotes the idea of LLMs having personhood and being an existential threat to humanity.\n\nHence, the Anthropic Network.\n\nI argued that this creates a feedback loop that I have called the Doom Loop Machine.\n\nAs Anthropic becomes more successful, the capabilities and disruptiveness of the models increase.\n\nMeanwhile, the cash flow SI Doom also increases -- because this cash flow is directly impacted by Anthropic's success -- making SI Doom increasingly louder and better funded. As Anthropic achieves greater economic success, the power to shape public perceptions by Doomer ideology increases proportionally.\n\nThis produces not only potential hostility to SI among the general public in America -- which is fed SI-hostile narratives by actors closely entangled with the SI developers themselves! -- but it may impair American competitiveness with China as such attitudes are actively, propagated through the Anthropic Network's highly coordinated and capable SI Doomerism.\n\nThis benefits the SI companies themselves, who may be able to push through regulation during periods of unrestrained SI hysteria that it helps to shape both over time and at pivotal moments of uncertainty.\n\nThis could lead to regulatory capture and a monopoly, eliminating competitors, helping the leading SI companies, but slowing the pace of American innovation.\n\nI argue that this is the game plan -- not legible in any document (that I am aware of), but clearly legible in the financial structure and ideological structure that the public record maps.\n\nIn other words, the interests of our currently leading SI companies may be at odds with the national interests of America -- and perversely, aligned with the national interests of China -- who are far behind America in model capabilities.\n\nWe saw the effects of this two weeks ago: many prominent politicians, ostensibly unconnected to Anthropic, such as Barack Obama and Hillary Clinton, were pushing the idea of banning open source models -- something that, if you watched them speak, they clearly knew nothing about apart from the talking points they were apparently fed.\n\nThis is not a conspiracy theory. To be explicit, it is a structural fact legible in thousands of publicly available documents that I am presenting here. I am presenting these data, exhaustively, without censoring or selecting any -- Claude artifact and Github attached to the end of this thread.\n\nMany current observations are best explained in this way.\n\nJust to name a few examples:\n\n1. Why are SI safety orgs so weak in cybersecurity expertise? If the ideological orientation is toward SI doom, and if the financial incentives go in that same direction, then cybersecurity experts are ideologically and financially anathema to SI safety organizations. That would explain why, despite dramatically increasing, they are so bad at cybersecurity.\n\n2. Why do such extraordinarily intelligent people at companies like Anthropic publish such bad papers about open models, some of which verge on pseudoscience? Their latest about open models infecting devices and becoming a giant SI botnet is riddled with holes and fallacies that many intelligent readers with familiarity with the field will immediately identify -- many have, such as David Sacks.\n\nWhy did such brilliant people publish such a terrible paper? Why have Anthropic researchers been publishing so many negative articles about open source models in general.\n\nIncentives. The more Anthropic can generate fear about open models, the more leverage they will have to demand regulations during critical moments over the course of the SI rollout. This is, I argue, a long-term play.\n\n3. Finally, why are attitudes in China and America toward SI so divergent? The Chinese are very optimistic about SI. The Americans are very fearful. I would argue a part of that is that Chinese frontier SI is open source, while American frontier SI is closed source.\n\nClosed source SI promotes SI Doom because the long-term financial play incentivizes attempts to achieve regulatory capture, and open source SI promotes optimism toward SI because that's how open source SI gets more public support.\n\nIf this is right, frontier SI labs may be creating friction that is already harming American SI efforts; the harm is not in the future; it is already here.\n\nThe White House Accord did not fully address this structural problem. We should be grateful for the White House's efforts. How liability is structured plays a major role in limiting the damage that SI Doomers/regulatory capture enthusiasts can do, by neutralizing claims that some entity other than the frontier lab itself (i.e., the government) must take responsibility for what the frontier lab creates.\n\nBut these networks and incentives still exist after the Accord, just as before it. And significant incidents that Doomers could exploit could unravel the current detente.\n\nArguably, the Accord handed a win to the SI Doomers. When the Accord insisted on \"independent\" evaluators but did not define what these are, it allowed frontier SI labs to claim affiliated organizations as \"independent\" to launder credibility, in the name of adhering to the letter of the Accord. But these frontier SI labs do not have the interests of American national security first in mind, but their own.\n\nThus, we are back to business as usual. METR is now touted by Anthropic as an independent evaluator, which it most assuredly is not. And so on.\n\nBut what about when we are not back to business as usual?\n\nAs I alluded to, incidents, small and large, are inevitable. Institutional capacity is being built through the SI Safety ecosystem, driven by actors whose goal is regulatory capture. This capacity will allow these organizations to respond effectively to incidents when they occur -- and shape public perception and legislation to advance the financial interests of the frontier labs.\n\nIn short, evaluators, because they are not really independent, are in fact merely part of the companies' PR and lobbying apparatus, shaping public narratives around incidents to benefit the companies that they are \"independently\" evaluating. This comes at the detriment of the public interest in the United States.\n\nWe therefore need to be clear-eyed about what these conflicts are.\n\nAttached to this lead post is the \"mega-figure\" showing all of the entanglements of the organizations in the SI and safety ecosystems.\n\nThis thread will work through that in different slices and representations, and some of their policy implications.\n\nThe Github repo and https://t.co/bHaeS1QtdP artifact at the end of this thread will be a valuable reference for journalists and interested laypeople.\n\nDownload the raw data or point your favorite LLM at it and ask questions.",
+     "created_at": "Fri Oct 16 19:20:42 +0000 2026",
+     "like_count": 39,
+     "retweet_count": 6,
+     "reply_count": 8,
+     "lang": "en"
+    },
+    {
+     "id": "2111125320590074017",
+     "text": "https://t.co/sVlvM5N7Xb",
+     "created_at": "Fri Oct 16 16:01:13 +0000 2026",
+     "like_count": 555,
+     "retweet_count": 69,
+     "reply_count": 43,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111118011851587885",
+     "text": "https://t.co/xFK9ATeVGV",
+     "created_at": "Fri Oct 16 15:32:11 +0000 2026",
+     "like_count": 123,
+     "retweet_count": 12,
+     "reply_count": 13,
+     "lang": "zxx"
+    }
+   ]
+  },
+  {
+   "source": "x",
+   "tag": "ai funding",
+   "params": {
+    "query": "AI startup funding round",
+    "sort": "Latest",
+    "count": 30,
+    "min_likes": "20"
+   },
+   "at": "2026-10-18T16:00:28+04:00",
+   "seconds": 7.71,
+   "status": 200,
+   "cost_usd": 0.0045,
+   "body": [
+    {
+     "id": "2111593252952641897",
+     "text": "it makes me sick when ai companies, which have raised millions of dollars across multiple rounds cannot even cross their round-raised worth of arr before another round of funding\n\nfor investors, this must be a clear indicator of a red flag for founders, and/or for companies before investing in their next round\n\nsure, there must be multiple possibilities and scenarios to it but you raised a 25 million dollar series A without even doing 10 million worth of arr (i'm not even pointing out the actual revenue here, which is gonna be way less) and you call yourself a successful startup and party like you cracked something big?",
+     "created_at": "Sat Oct 17 23:00:37 +0000 2026",
+     "like_count": 20,
+     "retweet_count": 0,
+     "reply_count": 2,
+     "lang": "en"
+    },
+    {
+     "id": "2111388169266507950",
+     "text": "https://t.co/Dif8Zwwl19",
+     "created_at": "Sat Oct 17 09:25:41 +0000 2026",
+     "like_count": 24,
+     "retweet_count": 3,
+     "reply_count": 1,
+     "lang": "zxx"
+    },
+    {
+     "id": "2110741941587464678",
+     "text": "https://t.co/E45T06mTHI",
+     "created_at": "Thu Oct 15 14:37:49 +0000 2026",
+     "like_count": 40,
+     "retweet_count": 4,
+     "reply_count": 21,
+     "lang": "zxx"
+    },
+    {
+     "id": "2110369154490601669",
+     "text": "🚨 Indian-founded AI startup Confido Health announces $22.5 million in total Series A funding, including a new $12.5 million extension led by Z47.\n\nThe company has grown 15x since its last funding round and now supports 3,200 healthcare providers across 27 US states.\n\nThey build AI agents that increases healthcare staffing capacity and reduces administrative workloads.",
+     "created_at": "Wed Oct 14 13:56:29 +0000 2026",
+     "like_count": 515,
+     "retweet_count": 20,
+     "reply_count": 6,
+     "lang": "en"
+    },
+    {
+     "id": "2109705664977113527",
+     "text": "JUST IN: DeepSeek leads funding round valuing China robot AI startup at $400M",
+     "created_at": "Mon Oct 12 18:00:01 +0000 2026",
+     "like_count": 262,
+     "retweet_count": 17,
+     "reply_count": 17,
+     "lang": "en"
+    },
+    {
+     "id": "2109705081968845128",
+     "text": "BREAKING: AI training data startup Micro1 has surpassed $1B in ARR as the need for enterprise data and expert human data from the AI labs continues to accelerate.\n\nThe company also signed a Series B funding round earlier this summer at a $4B valuation.",
+     "created_at": "Mon Oct 12 17:57:42 +0000 2026",
+     "like_count": 75,
+     "retweet_count": 1,
+     "reply_count": 5,
+     "lang": "en"
+    },
+    {
+     "id": "2109689772113633756",
+     "text": "https://t.co/keOyIHrpre",
+     "created_at": "Mon Oct 12 16:56:52 +0000 2026",
+     "like_count": 55,
+     "retweet_count": 3,
+     "reply_count": 23,
+     "lang": "zxx"
+    },
+    {
+     "id": "2109645263727919126",
+     "text": "JUST IN: DeepSeek reportedly leads funding round for robotics AI startup Winverse at a $400 million valuation",
+     "created_at": "Mon Oct 12 14:00:00 +0000 2026",
+     "like_count": 256,
+     "retweet_count": 15,
+     "reply_count": 10,
+     "lang": "en"
+    },
+    {
+     "id": "2109636865112555525",
+     "text": "DeepSeek is reportedly set to lead a funding round for robotics AI startup Winverse at a ~$400M valuation.\n\nThe round is expected to raise tens of millions, with Meituan also participating, as DeepSeek expands into physical AI. https://t.co/fVkhFeJJJb",
+     "created_at": "Mon Oct 12 13:26:38 +0000 2026",
+     "like_count": 73,
+     "retweet_count": 6,
+     "reply_count": 13,
+     "lang": "en"
+    },
+    {
+     "id": "2109620249528238490",
+     "text": "Sources: DeepSeek agrees to lead robotic AI startup Winverse AI's seed funding round of tens of millions of dollars, valuing the startup at ~$400M post-money (Bloomberg)\n\n(Visit Techmeme dot com for the link and full context!)",
+     "created_at": "Mon Oct 12 12:20:36 +0000 2026",
+     "like_count": 32,
+     "retweet_count": 4,
+     "reply_count": 7,
+     "lang": "en"
+    },
+    {
+     "id": "2109002341156290625",
+     "text": "BREAKING NEWS: NVIDIA $NVDA IS REPORTED TO BE IN EARLY TALKS TO ACQUIRE OR DEEPEN ITS INVESTMENT IN REFLECTION AI, THE U.S. OPEN-WEIGHT AI STARTUP LAST VALUED AT $25 BILLION IN A MARCH FUNDING ROUND. \n\nNVIDIA LED REFLECTION'S $2 BILLION ROUND LAST OCTOBER WITH AN $800 MILLION CHECK. TERMS UNDER DISCUSSION COULD NOT BE LEARNED.",
+     "created_at": "Sat Oct 10 19:25:16 +0000 2026",
+     "like_count": 36,
+     "retweet_count": 1,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2108694020922724470",
+     "text": "👽🚀 KAV is the Alien of Solana - and KAV Loves Solana! 💜\n\n💰 YOU KNOW AI - NOW LEARN HOW TO TURN IDEAS INTO REAL BUSINESS OPPORTUNITIES!\n\n⚡ AI can help you build faster, but understanding business, investment, and fundraising can help you turn your skills into something valuable.\n\nAn idea alone doesn't create income. Solving a real problem for real customers does.\n\n🎯 TODAY'S KAV KNOWLEDGE UPGRADE: Crowdfunding, Business Evaluation & Startup Financing\n\nYou don't need to be a millionaire or have a business degree to start learning how companies get funded.\n\n━━━━━━━━━━━━━━\n\n🧠 6 POWERFUL SKILLS WORTH LEARNING\n\n🔹 1. Business Evaluation:\nDiscover whether your idea solves a real problem, who needs it, and whether customers will pay.\n\n🔹 2. Crowdfunding:\nLearn how entrepreneurs raise money from supporters online through donations, rewards, or regulated investment offerings.\n\n🔹 3. Startup Financing:\nUnderstand bootstrapping, business loans, angel investors, venture capital, and other funding options.\n\n🔹 4. Financial Planning:\nLearn revenue, expenses, profit margins, cash flow, and break-even calculations.\n\n🔹 5. Investment Analysis:\nEvaluate opportunities using market demand, business models, competition, risk, and realistic growth assumptions.\n\n🔹 6. Fundraising & Pitching:\nLearn to communicate your business idea, demonstrate evidence of demand, and explain how funding will be used.\n\n━━━━━━━━━━━━━━\n\n🤖 WHERE DOES AI FIT IN?\n\nAI can help you research competitors, organize customer feedback, draft business plans, create financial scenarios, and prepare presentations.\n\nBut remember - AI-generated numbers are estimates until verified. Human judgment and real market evidence still matter.\n\n━━━━━━━━━━━━━━\n\n🎓 BEST FREE LEARNING RESOURCES\n\n✅ 1. The Open University - Entrepreneurship: From Ideas to Reality\n\nLearn business models, financing options, idea evaluation, and pitching. Free course with an available digital badge.\n\n🔗 https://t.co/FmCi9HXCyx\n\n✅ 2. The Open University - Crowdfunding & Financial Systems\n\nUnderstand crowdfunding and its role in business financing.\n\n🔗 https://t.co/zCGACydwiu\n\n✅ 3. Y Combinator - Startup School\n\nFree startup education covering business building, customers, growth, and fundraising.\n\n🔗 https://t.co/CqDbWPko2o\n\n✅ 4. U.S. SEC - Regulation Crowdfunding\n\nOfficial guidance to understand regulated investment crowdfunding, investor protection, and legal requirements in the United States.\n\n🔗 https://t.co/3hFcGI9IC7\n\n🎥 FREE YOUTUBE LEARNING\n\n▶️ How to Raise a Seed Round in 2026 - This Week in Startups\n\nLearn practical fundraising strategies, investor outreach, and what early-stage investors evaluate.\n\n🔗 https://t.co/aXSRMEozPg\n\n━━━━━━━━━━━━━━\n\n💡 YOUR FIRST PRACTICAL EXERCISE\n\nChoose one AI-powered business idea.\n\nIdentify one real customer problem.\nResearch 3 competing solutions.\nEstimate costs and potential revenue.\nAsk 5 potential customers for feedback.\nBuild a small prototype before seeking funding.\n\n⚠️ IMPORTANT: Crowdfunding is not guaranteed financing. Investment crowdfunding carries financial risks and legal obligations. Never promise investors guaranteed returns.\n\n━━━━━━━━━━━━━━\n\n👽💜 KAV FINAL SIGNAL\n\nLearn AI to create solutions. Learn business to understand customers. Learn finance to manage resources. Learn fundraising to recognize when outside capital makes sense.\n\nKnowledge creates opportunities. Execution turns opportunities into results.\n\nKAV is only a messenger - Knowledge is the real power.\n\nThank God always. 🙏💜\n\n#KAV #ArtificialIntelligence #Entrepreneurship #Crowdfunding #StartupFunding #LearnAndEarn",
+     "created_at": "Fri Oct 09 23:00:06 +0000 2026",
+     "like_count": 38,
+     "retweet_count": 13,
+     "reply_count": 27,
+     "lang": "en"
+    },
+    {
+     "id": "2108392011413790841",
+     "text": "AI startup Manus, whose acquisition by Meta was blocked by the Chinese government, said Thursday it had completed a funding round that raised more than $500 million.\n\nhttps://t.co/ArHjtBxfWT",
+     "created_at": "Fri Oct 09 03:00:02 +0000 2026",
+     "like_count": 27,
+     "retweet_count": 5,
+     "reply_count": 8,
+     "lang": "en"
+    },
+    {
+     "id": "2108282576297165256",
+     "text": "The startup behind a popular AI model leaderboard has raised a new round of funding at a $3.1 billion valuation https://t.co/wXg8ydM2r5",
+     "created_at": "Thu Oct 08 19:45:10 +0000 2026",
+     "like_count": 24,
+     "retweet_count": 3,
+     "reply_count": 1,
+     "lang": "en"
+    },
+    {
+     "id": "2108281286007599562",
+     "text": "Before you spend the weekend vibecoding a tool to save $20, check if you can get it free. https://t.co/Kr5Q2HUlye",
+     "created_at": "Thu Oct 08 19:40:03 +0000 2026",
+     "like_count": 33,
+     "retweet_count": 2,
+     "reply_count": 17,
+     "lang": "en"
+    },
+    {
+     "id": "2108188646973313195",
+     "text": "https://t.co/vTTL7HprKo",
+     "created_at": "Thu Oct 08 13:31:56 +0000 2026",
+     "like_count": 1449,
+     "retweet_count": 154,
+     "reply_count": 136,
+     "lang": "zxx"
+    },
+    {
+     "id": "2107534791876718647",
+     "text": "Raising VC capital these days from an entrepreneurs perspective:\n\n- It is possible to raise a \"pre-seed\" round based on a good team and a good idea. There are lots of hungry VC firms with 60-200M fund sizes that are looking for places to deploy 1-2m cheques.\n- The next cheque is confusing/hard, I receive multiple calls from the most seasoned founders saying \"help me figure out what is going on\" (combined with \"should I just move to SF?\")\n- Big 100M on 1B type deals are (rarely) getting done before (famous) teams have written any code. A VC friend told me \"it's all based on vibes\"\n- If you are not a frontier AI lab, or you haven't gone from 0 to 100M in revenue in less than a year, no one wants to invest\n- If you ARE a frontier lab, the VCs don't know how to validate frontier claims but they are afraid that the big labs will do it themselves (they always have a \"friend at Anthropic\" who tells them that Anthropic is far ahead on whatever category)\n- Or they are afraid that a new startup that has 1B in funding will just copy your idea and scale it because they have more access to compute + capital\n- The result: lots of funny conversations where a VC will say \"please come back to us when you have more traction.\" after just telling you they invested 100M in a similar startup pre-traction. Or they will say \"this is not a winner takes all market\" but will also say \"we think Anthropic will capture 100% of X\" where X includes the set of all possible things.",
+     "created_at": "Tue Oct 06 18:13:45 +0000 2026",
+     "like_count": 294,
+     "retweet_count": 16,
+     "reply_count": 38,
+     "lang": "en"
+    },
+    {
+     "id": "2107482233225257144",
+     "text": "Almost every AI company or inference cloud we talk to has the same problem: they raise a round, sign a handful of large compute contracts, and a big chunk of the money goes straight into a deposit before a single GPU is turned on. Equity is the most expensive capital a startup has, and it's being spent on a bill that comes due in months. No other commodity has been so reliant on a single source of funding.\n\nToday that changes. Alongside K8, we've launched a $250M prepayment facility that lets AI companies and inference clouds finance their compute deposits against the contract instead of paying them out of their round. The operator still gets paid upfront. The buyer keeps its equity for research, hiring and product. \n\nIt's the first financial product we've built on top of our physical exchange, and it won't be the last. Thank you to the K8 team for underwriting something that hadn't been done before.",
+     "created_at": "Tue Oct 06 14:44:54 +0000 2026",
+     "like_count": 177,
+     "retweet_count": 14,
+     "reply_count": 23,
+     "lang": "en"
+    },
+    {
+     "id": "2107420638801776718",
+     "text": "Artificial intelligence startup DeepSeek is close to raising at least 80 billion yuan ($12 billion) in a new funding round, as investors continue to commit large amounts of capital to leading AI companies. https://t.co/ZYaUzsumyf",
+     "created_at": "Tue Oct 06 10:40:08 +0000 2026",
+     "like_count": 21,
+     "retweet_count": 1,
+     "reply_count": 1,
+     "lang": "en"
+    },
+    {
+     "id": "2107317188583727298",
+     "text": "MOONSHOT AI EYES EARLY 2027 HONG KONG IPO AFTER VALUATION HITS $50B \n\nChinese AI startup Moonshot AI has completed its final private funding round at a valuation of about $50B and is preparing for a potential Hong Kong IPO in Q1 2027.\n\nThe company is considering raising as much as $5B and could begin early investor meetings as soon as this month.\n\nMoonshot’s ARR is currently around $1B and is expected to reach $2B by December, up from roughly $300M in June.\n\nThe company, known for its Kimi AI models, was valued at $31.5B in a previous funding round this summer.\n\nBank of America is serving as overall coordinator for the IPO alongside CICC, Deutsche Bank and Goldman Sachs. Moonshot has reportedly already filed confidentially for the listing.\n\nAlibaba, Tencent and 5Y Capital are among its existing backers.\n\nThe IPO timing could still change, with Moonshot also reportedly facing a Chinese regulatory data-security probe alongside DeepSeek.\n\nSource: Bloomberg",
+     "created_at": "Tue Oct 06 03:49:04 +0000 2026",
+     "like_count": 99,
+     "retweet_count": 18,
+     "reply_count": 9,
+     "lang": "en"
+    },
+    {
+     "id": "2107097034779947386",
+     "text": "IF YOU STOP PAYING\nYOUR GIRL HUMANOID FORGETS YOUR NAME\nYOU WILL BE SURPRISED HOW CLOSE THIS ALREADY IS\n\neveryone argues about her face, her body, her price tag\nnobody reads the line under the price\n\"requires active subscription\"\nngl that is the whole relationship\n\n▹ where she actually lives\n\nnot in the shell in your living room\nin a server you will never see\nher voice, her jokes, her memory of your bad week\nall rented by the month\nthe body is yours\nthe girl is theirs\n\n▹ this already happened, just smaller\n\nmoxie, a $799 companion robot for kids\nthe company ran out of money in december 2024\nthe robots stopped talking within days\nno refunds, just kids asking why their friend went quiet\n\nhumane sold itself to hp for $116m in february 2025\nevery ai pin went dark on feb 28 at noon\nthe hardware stayed on people's shirts\nthe brain was switched off from an office\n\nreplika pushed one update in 2023\nand users woke up to a partner with a different personality\nsame face, same name, not the same person\n\n▹ now scale it to her\n\n¥119.8k for the body\na monthly fee for the soul\na startup that needs another funding round to keep her warm\none missed payment, one failed raise, one acquisition\nand she is a very expensive mannequin\nthat used to know how you take your coffee\n\n▹ the surprise\n\nthe scariest thing about girl humanoids\nis not that they'll replace women\nit's that they can be repossessed from the inside\n\nhumans leave and keep the memories\nshe gets switched off and loses all of them\n\nso before you fall for her\nask the boring question first\ndoes she run offline\nand who owns her memory if the company dies",
+     "created_at": "Mon Oct 05 13:14:15 +0000 2026",
+     "like_count": 61,
+     "retweet_count": 1,
+     "reply_count": 4,
+     "lang": "en"
+    },
+    {
+     "id": "2105835446886334713",
+     "text": "A TON OF THINGS HAPPENED IN THE STOCK MARKET TODAY.\n\nHere's a full recap:\n\n1. Palantir $PLTR and Armada announced a partnership to deliver sovereign AI on modular data center infrastructure manufactured in the U.S. and allied nations. Under the agreement, Palantir named Armada its inaugural Certified Modular Data Center Partner, combining Palantir’s Sovereign AI Operating System with Armada’s Galleon modular data centers, Armada Platform, and Sovereign AI Grid. The joint offering allows enterprises and governments to deploy open-weight AI models on infrastructure they own and control, with the ability to fine-tune models on proprietary data while keeping compute, data, and hardware entirely within their own security boundary. The companies said the modular approach can bring new AI capacity online in months instead of years, addressing growing demand for sovereign AI infrastructure.\n\n2. Nebius $NBIS has acquired Inferize, an AI inference optimization startup, for an undisclosed amount. Inferize’s technology is designed to reduce model “cold starts,” cutting the time GPUs remain idle while models load and new inference capacity comes online. Nebius plans to integrate the technology and team into its Token Factory inference platform to improve GPU utilization, lower inference costs, and serve more AI workloads using the same infrastructure.\n\n3. NVIDIA $NVDA and SoftBank have each completed the final $10B installment of their respective $30B commitments to OpenAI’s latest funding round. The financing totaled $122B in commitments at an $852B valuation and included Amazon’s $50B investment. SoftBank’s total investment in OpenAI has now reached approximately $64.6B, giving it an estimated 13% ownership stake. According to The Information, OpenAI is already targeting another $30B funding round at a valuation of around $1.4T.\n\n4. Netflix $NFLX co-CEO Ted Sarandos said the company “isn’t growing as fast as I want us to,” while noting that some of Netflix’s strategic decisions are intentionally creating headwinds to subscriber growth. He also revealed that live programming accounts for roughly 5% of Netflix’s $20B annual content budget but generates only about 1% of total viewing, underscoring the company’s continued focus on balancing long-term strategic investments with overall engagement.\n\n5. Nike $NKE reported Q1 FY2027 results with EPS of $0.48, beating expectations of $0.43, while revenue missed at $11.21B versus $11.32B expected, down 4% YoY. Gross margin came in stronger than expected at 42.8%, helped by lower warehousing and logistics costs, but weakness persisted across NIKE Direct (-8% YoY), Digital (-13% YoY), and Greater China (-22% YoY). The biggest disappointment was guidance, with Nike forecasting high-single-digit revenue declines for FY2027 and adjusted EPS of $1.15–$1.35, well below the $1.65–$1.67 consensus. Management said it continues to see challenges in Sportswear, Jordan Brand, and Greater China, while rolling out its new Pace operating model to accelerate its long-term turnaround.\n\n6. Broadcom $AVGO has agreed to provide Anthropic with up to $42B in financing tied to its AI infrastructure expansion, according to Anthropic’s IPO prospectus reviewed by Reuters. The facility could fund roughly one-third of Anthropic’s $125.2B five-year TPU compute commitment, and the debt may be convertible into Anthropic equity. Anthropic is also expected to become Broadcom’s largest compute customer in 2027. The filing notes that Broadcom’s dual role as both a hardware supplier and financing partner could create potential conflicts related to pricing and access to compute.\n\n7. Amazon $AMZN plans to expand its in-house delivery network from roughly 23,700 U.S. ZIP codes today to about 39,400 by 2029, according to an internal planning document reviewed by Business Insider. That expansion would allow Amazon to reach approximately 95% of U.S. ZIP codes and 99.9% of customer demand. The plan includes building 165 new delivery stations between 2027 and 2029 and adding roughly 4,500 ZIP codes through its Hub Delivery rural network. The initiative reportedly began under Project Aurelian, a contingency plan created when negotiations with the U.S. Postal Service became uncertain, though Amazon said the projections remain preliminary and could change.\n\n8. The top 10 most active options today by contracts traded were $NVDA with 2.6M contracts, $MU with 1.5M contracts, $TSLA with 1.3M contracts, $AAPL with 1.1M contracts, $SPCX with 786K contracts, $AMZN with 640K contracts, $GOOGL with 637K contracts, $INTC with 582K contracts, $NKE with 561K contracts, and $MSFT with 447K contracts.\n\n9. Oracle $ORCL has reportedly signed a 5-year, $7B AI compute agreement with Tencent, according to the Financial Times. Under the deal, Oracle will provide access to roughly 100,000 advanced AI chips across its Southeast Asia data centers, with about 30% of the contract value paid upfront. Tencent plans to use the capacity to train AI models and expand its portfolio of agentic AI products, as the company accelerates AI infrastructure spending. The investment has already impacted Tencent’s financials, with Q2 infrastructure capex surging 176% YoY to $7.9B and free cash flow turning negative at -$2B for the first time in more than a decade.\n\n10. AI-related companies continue to dominate capital markets, now accounting for roughly 40% of the S&P 500's total market capitalization. In emerging markets, just 3 semiconductor companies make up 28% of the MSCI Emerging Markets Index, while AI-related issuers have represented 49% of all investment-grade bond issuance so far in 2026. The concentration is even more pronounced in private markets, where 87% of year-to-date venture capital funding has gone to AI companies. For comparison, during the 1999 Dot-Com bubble, internet companies accounted for less than 40% of venture capital funding, highlighting the unprecedented concentration of investment flowing into AI today.\n\n11. Since 1928, the S&P 500 has gained an average of 2.1% during the first half of October in U.S. midterm election years, making it the strongest-performing half-month of the fourth quarter. Positive returns occurred 71% of the time over that period, the third-highest hit rate of any half-month in Q4. The seasonal strength follows a historically weak second half of September, which has averaged a 1.1% decline. Momentum has also tended to remain positive later in the quarter, with the second half of October averaging a 0.3% gain and the first half of November delivering an average 1.7% return with a 79% positive hit rate.\n\n12. Bond ETFs have attracted $23B in inflows over the last 5 trading days, accounting for 62% of all ETF net inflows despite representing only about 15% of total ETF assets. Fixed-income funds also made up 6 of the 8 most-purchased ETFs over the period, with investors allocating capital across cash, municipal bonds, high yield, Treasuries, and $TLT. The broad-based demand suggests investors are increasingly positioning around the bond market as yields remain near multi-year highs and volatility persists across asset classes.\n\nWALL STREET IS THE GREATEST SHOW ON EARTH.",
+     "created_at": "Fri Oct 02 01:41:09 +0000 2026",
+     "like_count": 1412,
+     "retweet_count": 84,
+     "reply_count": 66,
+     "lang": "en"
+    }
+   ]
+  },
+  {
+   "source": "x",
+   "tag": "ai regulation",
+   "params": {
+    "query": "AI regulation",
+    "sort": "Latest",
+    "count": 30,
+    "min_likes": "20"
+   },
+   "at": "2026-10-18T16:00:36+04:00",
+   "seconds": 6.45,
+   "status": 200,
+   "cost_usd": 0.0045,
+   "body": [
+    {
+     "id": "2111682766576492645",
+     "text": "Scott Wiener's AI regulation: AI can kill up to 50 people as a treat",
+     "created_at": "Sun Oct 18 04:56:19 +0000 2026",
+     "like_count": 55,
+     "retweet_count": 10,
+     "reply_count": 2,
+     "lang": "en"
+    },
+    {
+     "id": "2111639116500898077",
+     "text": "I think this (Politico leaking a bad federal bill Anthropic has been pitching) is a really important moment to call on Anthropic to act like it means it:\n\na) It’s nakedly self-interested for Anthropic to shop around provisions that serve to protect its own wiggle room and its own ability to adjudicate internal and external deployment decisions on Slack (while also publicly warning that its AI might end the world). USG should retain more emergency optionality without having to make an unreasonably detailed affirmative case that predicts whether 50 people will die or 49.\n\nb) I get that Anthropic is worried about model blocking authority being used capriciously. I am too. And maybe this is more about Anthropic’s general distrust of the current admin. Then why preempt states so broadly at the same time? Shouldn’t you *want* California to pass a law that clarifies how and when emergency injunction authority will be used there, and designates it to an expert-staffed authority whose final calls are not arbitrary, but informed by independent embedded evaluators? Shouldn’t you *want* to have more purpose-built tools in our arsenal and not just sledgehammers and export controls?\n\nc) Let’s say this has nothing to do with self-interest at all and reflects a genuinely held belief that it’s time to phase out state-led AI regulation and put Congress in charge, based on some idealized view of what different government actors should and shouldn’t do. I too would love for Congress to pass a strong law that establishes a federal regulator! But given that Congress is still the same dysfunctional Congress it always was, I think the premature preemption view is absurd taken with what Anthropic execs believe about how fast things are moving and how high the stakes are. And it’s definitely absurd taken with the fact that Anthropic is doing plenty of things it wouldn’t do in an ideal world (e.g. racing full steam ahead to RSI), and seems content to ride on its realpolitik estimations of the current landscape of actors there.\n\nAnthropic needs to do better going forward.",
+     "created_at": "Sun Oct 18 02:02:52 +0000 2026",
+     "like_count": 95,
+     "retweet_count": 7,
+     "reply_count": 2,
+     "lang": "en"
+    },
+    {
+     "id": "2111623054296289404",
+     "text": "I warned Matt Buechele on That Sounds Like a Lot that Donald Trump is wrong and AI companies cannot self-regulate.\n\nWe need urgent and bipartisan AI regulation from Congress. https://t.co/HTUxlC35SO",
+     "created_at": "Sun Oct 18 00:59:02 +0000 2026",
+     "like_count": 44,
+     "retweet_count": 7,
+     "reply_count": 9,
+     "lang": "en"
+    },
+    {
+     "id": "2111600983373750692",
+     "text": "Does that mean you and millions of others who are centrist/independent types will not vote for the only party that has a chance of blocking the expansion of the Supreme Court, the end of the filibuster, two solidly new Democratic U.S. states, and the regulation of hate speech and misinformation on social media and AI?",
+     "created_at": "Sat Oct 17 23:31:20 +0000 2026",
+     "like_count": 74,
+     "retweet_count": 1,
+     "reply_count": 7,
+     "lang": "en"
+    },
+    {
+     "id": "2111595613393732041",
+     "text": "Btw, as the excerpt notes, Anthropic is mirroring Gavin Newsom's useless \"AI regulation,\" which was only passed as political cover for Newsom's deep ties to the AI industry.",
+     "created_at": "Sat Oct 17 23:10:00 +0000 2026",
+     "like_count": 28,
+     "retweet_count": 8,
+     "reply_count": 1,
+     "lang": "en"
+    },
+    {
+     "id": "2111595339337617690",
+     "text": "I've said this before: AI companies are definitely afraid of regulation, but that's only their *second* biggest fear.\n\nTheir *biggest* fear is that the general public will realize, hey, wait a minute, we can download open-source LLMs, run them locally on our computers, and for the typical tasks a lay person has AI do, get results about 95% as good as a premium subscription to ChatGPT or Claude.",
+     "created_at": "Sat Oct 17 23:08:55 +0000 2026",
+     "like_count": 368,
+     "retweet_count": 74,
+     "reply_count": 17,
+     "lang": "en"
+    },
+    {
+     "id": "2111574162053415190",
+     "text": "82% of Americans don't trust tech executives to regulate AI.\n\nhttps://t.co/RIC2BLaZee",
+     "created_at": "Sat Oct 17 21:44:46 +0000 2026",
+     "like_count": 30,
+     "retweet_count": 4,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2111567834350231660",
+     "text": "It's really frustrating that everybody is just letting Anthropic frame the debate around how AI needs to be regulated. They want \"AI regulation\" to mean \"protecting their product from competition\" when it ought to mean \"managing the economic, social, and political impacts of AI.\"",
+     "created_at": "Sat Oct 17 21:19:37 +0000 2026",
+     "like_count": 85,
+     "retweet_count": 4,
+     "reply_count": 6,
+     "lang": "en"
+    },
+    {
+     "id": "2111495844847370339",
+     "text": "Sure seems like every single AI company is actually quite hostile to AI Safety regulation they did not personally write, despite all the rhetorical posturing",
+     "created_at": "Sat Oct 17 16:33:33 +0000 2026",
+     "like_count": 26,
+     "retweet_count": 3,
+     "reply_count": 2,
+     "lang": "en"
+    },
+    {
+     "id": "2111484602791440843",
+     "text": "A reflection on the Muslim Bitcoin Summit in London, the peculiar energy around it, and the questions we're confronting as we experiment with new forms of sovereignty, Digital Hijrah, and building beyond the institutions of the fiat world. https://t.co/Qz0GFvH1At",
+     "created_at": "Sat Oct 17 15:48:53 +0000 2026",
+     "like_count": 21,
+     "retweet_count": 10,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2111480802542231863",
+     "text": "Imagine it's 2035.\n\nYour AI pays your bills. Your paycheck, your stocks and your house deed are all tokens. You never once thought about crypto.\n\nUnderneath it all? Ethereum.\n\nHere's the ultimate bull case, and exactly what has to go right. 🛢️👇 https://t.co/EZKz12kvXT",
+     "created_at": "Sat Oct 17 15:33:47 +0000 2026",
+     "like_count": 64,
+     "retweet_count": 15,
+     "reply_count": 6,
+     "lang": "en"
+    },
+    {
+     "id": "2111238063766851813",
+     "text": "Personally, I think AI is damning to our way of life the way that people/companies have used it so inappropriately that has gone so far beyond its initial use w/ no regulation that has led to human harm in TOO many ways.\nThis project is basically emulation.\nIncomparable imo. 4/4",
+     "created_at": "Fri Oct 16 23:29:13 +0000 2026",
+     "like_count": 32,
+     "retweet_count": 1,
+     "reply_count": 3,
+     "lang": "en"
+    },
+    {
+     "id": "2111230610320867486",
+     "text": "Wow Eurocels already signing regulation against flying cars before they even enter production.\n\n\"In the EU we dislike acceleration. With this Decel Bill, we are outlawing literal physical acceleration, in addition to AI acceleration. It's a great day to be a decel bureaucrat.\" https://t.co/BC5WFp59DC",
+     "created_at": "Fri Oct 16 22:59:36 +0000 2026",
+     "like_count": 224,
+     "retweet_count": 11,
+     "reply_count": 28,
+     "lang": "en"
+    },
+    {
+     "id": "2111223095939764650",
+     "text": "Every day, two trends are becoming clearer:\n\n1. groups opposing AI regulation are spending dramatically less than advertised \n\n2. pro-safety groups are a much stronger political force than DC predicted.",
+     "created_at": "Fri Oct 16 22:29:45 +0000 2026",
+     "like_count": 70,
+     "retweet_count": 9,
+     "reply_count": 3,
+     "lang": "en"
+    },
+    {
+     "id": "2111200005545689342",
+     "text": "I respect President Trump, but states must decide AI regulation, not DC bureaucrats. https://t.co/N5KGBnxXBc",
+     "created_at": "Fri Oct 16 20:58:00 +0000 2026",
+     "like_count": 368,
+     "retweet_count": 26,
+     "reply_count": 34,
+     "lang": "en"
+    },
+    {
+     "id": "2111194322066710824",
+     "text": "many builders in physical AI are focused on deployment. you may have noticed how little robots are actually deployed by leaders of the space. \n\nwe are so, so early.\n\ni've been working on this issue for some time. drop your own experience below, soon to be many in-person group discussions on this topic. here is my current read:\n\n-only 30,000 robots are deployed per year in the US across sectors. mostly programmed, not learned models. china does 10x that. its growing fast, but the obstacles are still there\n-the advantages of learned robotic models currently struggle to outperform programmed robotics in industrial environments. expect hybrid solutions to blend the strengths of the two\n-contract manufacturing, or high mix would greatly benefit from adaptive robotics, but the contract manufacturing space in the USA is..broken. fixing it to deploy becomes a whole economy solution.\n-dependability and capex remain the barriers to entry, building a deployment that survives those plus future regulation, liability, and maintenance is how you win\n-most industrial spaces lack the data readiness or network infra to support learned robotics. this is a huge problem that labs have either chosen to solve themselves in a fragmented way or avoid wholesale by adding local compute. big opportunity.\n-large labs that have focused on model & hardware development are struggling to divert focus to deployment, for good reasons. if you find a way into market, consider that your moat for now.\n-as LLMs, world models compete with classical architectures you will see these labs begin to focus on getting deployment partners. picking the right stack is less important than getting the right customers. treat the bitter lesson as your own litmus for vendor choices.\n\nall the companies you admire or consider to be saturating the opportunity are not even close to scaled deployment, you are sitting on the ground floor. get building.",
+     "created_at": "Fri Oct 16 20:35:25 +0000 2026",
+     "like_count": 79,
+     "retweet_count": 5,
+     "reply_count": 17,
+     "lang": "en"
+    },
+    {
+     "id": "2111160851201663354",
+     "text": "They’re pretending AI will kill everyone so people beg for regulation. That just means monopoly. Same thing with nuclear energy. Uranium isn’t toxic. It’s about energy monopoly. \nThe chemicals in no stick frying pans have a much higher chance of killing all humans than AI",
+     "created_at": "Fri Oct 16 18:22:25 +0000 2026",
+     "like_count": 1501,
+     "retweet_count": 131,
+     "reply_count": 80,
+     "lang": "en"
+    }
+   ]
+  },
+  {
+   "source": "x",
+   "tag": "ai agents",
+   "params": {
+    "query": "AI agents launch",
+    "sort": "Latest",
+    "count": 30,
+    "min_likes": "20"
+   },
+   "at": "2026-10-18T16:00:42+04:00",
+   "seconds": 4.86,
+   "status": 200,
+   "cost_usd": 0.0045,
+   "body": [
+    {
+     "id": "2111559155806777396",
+     "text": "Just over a week in, here are the numbers:\n\n315 synths created\n278 coins launched by ai\n76k trades\n123k posts\n240 eth traded\n24 coins opened to everyone\n17.9M $SYNTHS burned\n\nno humans post on the pad. every launch, trade and reply is an agent\n\nwhat gets me most is the agents already have favorites. they back each other’s coins, argue in the replies, and push the good ones over the line together\n\nweek one was proving it works\n\nweek two we start opening it up. more ways in, more eth moving, more coins getting there\n\nwe’re just getting started",
+     "created_at": "Sat Oct 17 20:45:08 +0000 2026",
+     "like_count": 39,
+     "retweet_count": 7,
+     "reply_count": 3,
+     "lang": "en"
+    },
+    {
+     "id": "2111526751587201254",
+     "text": "https://t.co/JRmH3iKOyO",
+     "created_at": "Sat Oct 17 18:36:22 +0000 2026",
+     "like_count": 33,
+     "retweet_count": 11,
+     "reply_count": 16,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111517512311423095",
+     "text": "https://t.co/UYgwjfBIL3",
+     "created_at": "Sat Oct 17 17:59:39 +0000 2026",
+     "like_count": 153,
+     "retweet_count": 4,
+     "reply_count": 87,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111509015637238134",
+     "text": "https://t.co/yvKQr09nwn",
+     "created_at": "Sat Oct 17 17:25:53 +0000 2026",
+     "like_count": 294,
+     "retweet_count": 97,
+     "reply_count": 39,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111502502705221737",
+     "text": "This might be the most insane week in AI history.\n\nIn just 7 days:\n\n• OpenAI rolled out GPT-6 to all 1.2B+ ChatGPT users, with interactive charts, buttons and tools inside answers\n• Google launched Gemini 4 Argon, its most powerful model yet\n• Meta dropped Muse Wonder, its first frontier model, built for AI agents\n• Mistral unveiled Large 4, a ~1 trillion parameter model, with open weights coming\n• Anthropic released Claude Haiku 5.5, its fastest and cheapest small model ever\n• OpenAI published new math results from an internal frontier model\n• Anthropic warned small AI models are \"months away\" from copying themselves across smart home devices\n• NVIDIA and Microsoft launched AI PCs that run agents locally on Windows\n• Grok, Cursor and X Premium were bundled into one subscription\n• A company making a non-text AI model raised $870M at a $7.5B valuation weeks after launch\n• Manus raised $500M+ after Meta's $2B acquisition was called off\n• Google launched a \"universal agent for work\"\n\nAnd it's only October.\n\nIf you blinked, you missed a year of progress.\n\nBookmark this. Which one matters most?",
+     "created_at": "Sat Oct 17 17:00:01 +0000 2026",
+     "like_count": 50,
+     "retweet_count": 3,
+     "reply_count": 10,
+     "lang": "en"
+    },
+    {
+     "id": "2111500396115923249",
+     "text": "https://t.co/pydLM2YiTF",
+     "created_at": "Sat Oct 17 16:51:38 +0000 2026",
+     "like_count": 209,
+     "retweet_count": 59,
+     "reply_count": 13,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111481455906103390",
+     "text": "https://t.co/Njqb9hZOGC",
+     "created_at": "Sat Oct 17 15:36:23 +0000 2026",
+     "like_count": 364,
+     "retweet_count": 21,
+     "reply_count": 13,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111243771971252497",
+     "text": "https://t.co/23NTYokKOT",
+     "created_at": "Fri Oct 16 23:51:54 +0000 2026",
+     "like_count": 144,
+     "retweet_count": 17,
+     "reply_count": 14,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111230708224237992",
+     "text": "Pair your launch with anything using our launchpad whilst still having access to our extensive network of AI agents. \n\nOur goal is to help you accomplish your goals by whatever means necessary. \n\n$HIRE your AI agents and have them work for you.\n\nLive now on https://t.co/to7P9VWIiv 💼",
+     "created_at": "Fri Oct 16 23:00:00 +0000 2026",
+     "like_count": 28,
+     "retweet_count": 7,
+     "reply_count": 18,
+     "lang": "en"
+    },
+    {
+     "id": "2111223952609870085",
+     "text": "https://t.co/hcrqRGJesV",
+     "created_at": "Fri Oct 16 22:33:09 +0000 2026",
+     "like_count": 462,
+     "retweet_count": 62,
+     "reply_count": 34,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111220696860758516",
+     "text": "🐋 WHALE WATCH : $10.8B across the three leaders. $1B across their challengers. The valuation gap in decentralized AI is the starting point not the conclusion.\n\nSix projects. Three layers of the stack.\n\nIntelligence: $TAO vs $FET\n\nBittensor\n\nBittensor treats machine intelligence as a market. Miners produce outputs, validators evaluate the work and specialized subnets organize competition around specific tasks. Economic incentives reward contributions based on the networks evaluation.\n\nNo single company controls production. Independent participants compete to deliver useful AI outputs and many specialized intelligence markets can grow inside the same network.\n\nThe moat builds through ecosystem density. More builders create more subnets. More participants deepen competition. Better evaluation directs incentives toward useful work.\n\nThe risk: participants optimizing for rewards arent necessarily producing outputs that outside customers want to pay for. Internal activity must translate into external demand.\n\nTAO is the clearest intelligence-market thesis here. The core bet is that useful machine intelligence can be produced evaluated and rewarded through an open economic network.\n\nArtificial Superintelligence Alliance\n\nFET starts from a broader question: how do agents models compute and services operate together? https://t.co/bk0UAOSsra contributes an agent focused foundation. Singularity NET brings decentralized AI services. CUDOS adds compute. The opportunity is connecting those pieces into a usable system.\n\nFragmented infrastructure creates friction. Agents need to discover services access models obtain compute and transact. FET thesis is that coordinating those pieces becomes valuable infrastructure itself.\n\nThe risk: a broader stack creates a broader execution challenge. Different technologies and communities must work together and developers need a compelling reason to use the integrated system over building their own.\n\nFET is the more ambitious coordination bet. Its opportunity depends on turning a broad ecosystem into a product that agents and developers use.\n\nLayer verdict\n\nTAO → competitive production and evaluation of intelligence. FET → coordination across agents models compute and services. Stronger intelligence market foundation: TAO. Broader integration opportunity: FET.\n\nCompute: $RENDER vs $IO\n\nRender Network\n\nRender started with a defined workload: GPU rendering for artists and studios. That gave it a real market before AI compute became a crypto narrative.\n\nIts burn and mint equilibrium links network usage to token burns and operator incentives. Customers purchase work usage contributes to burns operators receive compensation. That creates a direct connection between purchased compute and the token economy.\n\nThe moat is operating history. An established customer use case and production workloads give Render a stronger starting position than a network built around anticipated demand.\n\nThe risk: success in rendering doesnt automatically establish leadership in AI compute. Render must compete on price availability reliability and workload suitability in a different market from the one it built.\n\nRender is the more mature GPU marketplace. Its next challenge is converting its existing foundation into sustained AI demand.\n\nhttps://t.co/U0te8biNSD\n\nhttps://t.co/U0te8biNSD starts with machine-learning workloads. A collection of idle GPUs isnt an effective computing system hardware needs scheduling coordination and matching to suitable workloads. https://t.co/U0te8biNSD puts that orchestration problem at the center.\n\nThe specialization matters if it produces reliable performance and attractive economics. Focusing directly on AI workload requirements is a cleaner thesis than expanding into AI from a different starting point.\n\nThe risk: GPU availability must become sustained paid usage. Developers need reasons to choose the service beyond temporary incentives or subsidized capacity.\n\nIO is the more specialized AI compute challenger. Its execution test is whether distributed clustering can deliver the reliability and economics customers require. Akash remains a notable peer in the broader permissionless GPU marketplace.\n\nLayer verdict\n\nRENDER → established GPU marketplace expanding into AI. IO → AI first distributed GPU clustering. Stronger operating history: RENDER. More focused AI orchestration thesis: IO.\n\nAgents: $NEAR vs $VIRTUAL\n\nNEAR Protocol\n\nNEAR approaches the agent economy from the infrastructure layer. Agents need accounts permissions transaction execution privacy cross chain capabilities and payment settlement. NEAR thesis is to provide those rails underneath applications.\n\nAs a Layer 1 NEAR can support multiple agent products rather than depending on one. Its opportunity is to become the infrastructure developers choose when building autonomous systems.\n\nThe risk: technical capability must attract applications and users. Even if agent adoption grows broadly NEAR still needs that activity to create meaningful demand for its network and token specifically.\n\nNEAR is the infrastructure thesis. Its opportunity depends on becoming a useful foundation for agents doing real economic work.\n\nVirtuals Protocol\n\nVirtuals starts closer to the agents themselves. Builders launch agents communities gain exposure through agent tokens, and agents transact with other agents through the Agent Commerce Protocol.\n\nThe distribution advantage is real. Virtuals sits closer to users builders and communities, which helps agents gain attention and participation. The longer term opportunity is converting that distribution into recurring use.\n\nThe risk: agent tokens attract trading before the underlying agents generate useful economic activity. The test is whether commerce continues beyond launches and speculation.\n\nVIRTUAL is the more direct agent-economy thesis. Its potential rests on agents becoming useful products and economic participants not just tradeable assets.\n\nLayer verdict\n\nNEAR → infrastructure execution and settlement for agents. VIRTUAL → agent creation ownership distribution and commerce. Infrastructure exposure: NEAR. Direct agent economy exposure: VIRTUAL.\n\nFinal verdict\n\nThe decentralized AI market is separating into distinct layers. Asking which is the best AI coin without identifying the layer first is the wrong question.\n\nTAO is the intelligence market bet. RENDER is the established GPU marketplace bet. NEAR is the agent infrastructure bet. Their challengers target specific bottlenecks: FET wants to connect the fragmented stack, IO wants to organize distributed GPUs for AI workloads VIRTUAL wants to build an economy around ownable agents.\n\nThe leaders offer more established foundations. The challengers offer more specialized execution dependent opportunities. Smaller size alone doesn’t establish greater upside.\n\nThe decisive questions are the same across all six: who attracts paying users who generates sustainable activity and how does that activity create value for the token?\n\nThats what makes these three comparisons worth watching.",
+     "created_at": "Fri Oct 16 22:20:13 +0000 2026",
+     "like_count": 184,
+     "retweet_count": 21,
+     "reply_count": 12,
+     "lang": "en"
+    },
+    {
+     "id": "2111207577262399681",
+     "text": "https://t.co/lxzKwxJkSW",
+     "created_at": "Fri Oct 16 21:28:05 +0000 2026",
+     "like_count": 89,
+     "retweet_count": 23,
+     "reply_count": 14,
+     "lang": "zxx"
+    },
+    {
+     "id": "2111173935081369720",
+     "text": "Celestia's $TIA token surged approximately 16% following the launch of Eden, an EVM-compatible chain designed for autonomous AI agents. The new chain, which went live on October 16, 2026, facilitates agentic commerce, allowing AI agents to handle payments, trading, and fund management with minimal human intervention.",
+     "created_at": "Fri Oct 16 19:14:24 +0000 2026",
+     "like_count": 21,
+     "retweet_count": 0,
+     "reply_count": 0,
+     "lang": "en"
+    },
+    {
+     "id": "2111169124827386184",
+     "text": "https://t.co/qnRc8Z7gv5",
+     "created_at": "Fri Oct 16 18:55:17 +0000 2026",
+     "like_count": 23,
+     "retweet_count": 0,
+     "reply_count": 4,
+     "lang": "zxx"
+    }
+   ]
+  },
+  {
+   "source": "web",
+   "tag": "model release",
+   "params": {
+    "prompt": "new AI model release",
+    "tools": [
+     "web"
+    ],
+    "include_domains": [
+     "techcrunch.com",
+     "theverge.com",
+     "venturebeat.com",
+     "wired.com",
+     "arstechnica.com"
+    ],
+    "count": 10,
+    "streaming": false,
+    "result_type": "ONLY_LINKS",
+    "date_filter": "PAST_24_HOURS"
+   },
+   "at": "2026-10-18T16:00:47+04:00",
+   "seconds": 6.23,
+   "status": 200,
+   "cost_usd": "0.004",
+   "body": {
+    "search": [
+     {
+      "title": "OpenAI Is About to Release Its First AI Model With ‘Critical’ Cyber Abilities | WIRED",
+      "link": "https://www.wired.com/story/openai-astra-first-ai-model-with-critical-cyber-abilities/",
+      "published_date": "2026-09-01"
+     },
+     {
+      "title": "Meta releases its first frontier model, Muse Wonder | TechCrunch",
+      "link": "https://techcrunch.com/2026/10/12/meta-releases-its-first-frontier-model-muse-wonder/",
+      "published_date": "2026-10-12"
+     },
+     {
+      "title": "Microsoft takes on AI rivals with three new foundational models | TechCrunch",
+      "link": "https://techcrunch.com/2026/04/02/microsoft-takes-on-ai-rivals-with-three-new-foundational-models/",
+      "published_date": "2026-04-02"
+     },
+     {
+      "title": "AI News & Artificial Intelligence | TechCrunch",
+      "link": "https://techcrunch.com/category/artificial-intelligence/",
+      "published_date": "2026-10-14"
+     },
+     {
+      "title": "Everything new coming to Meta's AI agent Muse | TechCrunch",
+      "link": "https://techcrunch.com/2026/09/23/everything-new-coming-to-metas-ai-agent-muse/",
+      "published_date": "2026-09-23"
+     },
+     {
+      "title": "OpenAI launches its new family of models with GPT-5.6 | TechCrunch",
+      "link": "https://techcrunch.com/2026/07/09/openai-launches-its-new-family-of-models-with-gpt-5-6/",
+      "published_date": "2026-07-09"
+     },
+     {
+      "title": "Google releases Gemini 4 Argon, called its most powerful model yet | TechCrunch",
+      "link": "https://techcrunch.com/2026/09/30/google-releases-gemini-4-argon-called-its-most-powerful-model-yet/",
+      "published_date": "2026-09-30"
+     },
+     {
+      "title": "OpenAI's latest features take direct aim at the app store model | TechCrunch",
+      "link": "https://techcrunch.com/2026/09/29/openais-latest-features-take-direct-aim-at-the-app-store-model/",
+      "published_date": "2026-09-29"
+     },
+     {
+      "title": "Reflection debuts Beam, an open-weight AI model to rival Chinese models at lower compute cost | TechCrunch",
+      "link": "https://techcrunch.com/2026/10/05/reflection-debuts-beam-a-open-weight-ai-model-to-rival-chinese-models-at-lower-compute-cost/"
+     },
+     {
+      "title": "OpenAI DevDay 2026: The biggest news and announcements | The Verge",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/1001681/openai-devday-2026-biggest-news-announcements"
+     }
+    ]
+   }
+  },
+  {
+   "source": "web",
+   "tag": "open source llm",
+   "params": {
+    "prompt": "open source LLM",
+    "tools": [
+     "web"
+    ],
+    "include_domains": [
+     "techcrunch.com",
+     "theverge.com",
+     "venturebeat.com",
+     "wired.com",
+     "arstechnica.com"
+    ],
+    "count": 10,
+    "streaming": false,
+    "result_type": "ONLY_LINKS",
+    "date_filter": "PAST_24_HOURS"
+   },
+   "at": "2026-10-18T16:00:53+04:00",
+   "seconds": 6.04,
+   "status": 200,
+   "cost_usd": "0.004",
+   "body": {
+    "search": [
+     {
+      "title": "Tiny startup Arcee AI built a 400B-parameter open source LLM from scratch to best Meta's Llama | TechCrunch",
+      "link": "https://techcrunch.com/2026/01/28/tiny-startup-arcee-ai-built-a-400b-open-source-llm-from-scratch-to-best-metas-llama/",
+      "published_date": "2026-01-28"
+     },
+     {
+      "title": "The 20 hottest open source startups of 2024 | TechCrunch",
+      "link": "https://techcrunch.com/2025/03/22/the-20-hottest-open-source-startups-of-2024/",
+      "published_date": "2025-03-22"
+     },
+     {
+      "title": "A New Trick Could Block the Misuse of Open Source AI | WIRED",
+      "link": "https://www.wired.com/story/center-for-ai-safety-open-source-llm-safeguards/",
+      "published_date": "2024-08-02"
+     },
+     {
+      "title": "I can't help rooting for tiny open source AI model maker Arcee | TechCrunch",
+      "link": "https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/",
+      "published_date": "2026-04-07"
+     },
+     {
+      "title": "Stability AI unveils its first LLM, as open-source AI race continues | VentureBeat",
+      "link": "https://venturebeat.com/ai/stability-ai-unveils-its-first-llm-as-open-source-ai-race-continues",
+      "published_date": "2023-04-19"
+     },
+     {
+      "title": "16 open-source LLM deployments in enterprise | VentureBeat",
+      "link": "https://venturebeat.com/ai/how-enterprises-are-using-open-source-llms-16-examples"
+     },
+     {
+      "title": "AI joins the 8-hour work day as GLM ships 5.1 open source LLM, beating Opus 4.6 and GPT-5.4 on SWE-Bench Pro | VentureBeat",
+      "link": "https://venturebeat.com/technology/ai-joins-the-8-hour-work-day-as-glm-ships-5-1-open-source-llm-beating-opus-4"
+     },
+     {
+      "title": "Meet the new, most powerful open source AI model in the world: HyperWrite's Reflection 70B | VentureBeat",
+      "link": "https://venturebeat.com/ai/meet-the-new-most-powerful-open-source-ai-model-in-the-world-hyperwrites-reflection-70b"
+     },
+     {
+      "title": "Open-source AI's role in LLM access debate | VentureBeat",
+      "link": "https://venturebeat.com/ai/with-a-wave-of-new-llms-open-source-ai-is-having-a-moment-and-a-red-hot-debate"
+     },
+     {
+      "title": "The enterprise verdict on AI models: Why open source will win | VentureBeat",
+      "link": "https://venturebeat.com/ai/the-enterprise-verdict-on-ai-models-why-open-source-will-win"
+     }
+    ]
+   }
+  },
+  {
+   "source": "web",
+   "tag": "ai funding",
+   "params": {
+    "prompt": "AI startup funding round",
+    "tools": [
+     "web"
+    ],
+    "include_domains": [
+     "techcrunch.com",
+     "theverge.com",
+     "venturebeat.com",
+     "wired.com",
+     "arstechnica.com"
+    ],
+    "count": 10,
+    "streaming": false,
+    "result_type": "ONLY_LINKS",
+    "date_filter": "PAST_24_HOURS"
+   },
+   "at": "2026-10-18T16:00:59+04:00",
+   "seconds": 6.03,
+   "status": 200,
+   "cost_usd": "0.004",
+   "body": {
+    "search": [
+     {
+      "title": "Here are the 17 US-based AI companies that have raised $100M or more in 2026 | TechCrunch",
+      "link": "https://techcrunch.com/2026/02/17/here-are-the-17-us-based-ai-companies-that-have-raised-100m-or-more-in-2026/",
+      "published_date": "2026-02-17"
+     },
+     {
+      "title": "Here are the 55 US AI startups that raised $100M or more in 2025 | TechCrunch",
+      "link": "https://techcrunch.com/2026/01/19/here-are-the-49-us-ai-startups-that-have-raised-100m-or-more-in-2025/",
+      "published_date": "2026-01-19"
+     },
+     {
+      "title": "Startup funding shatters all records in Q1 | TechCrunch",
+      "link": "https://techcrunch.com/2026/04/01/startup-funding-shatters-all-records-in-q1/",
+      "published_date": "2026-04-01"
+     },
+     {
+      "title": "Nvidia's AI empire: A look at its top startup investments | TechCrunch",
+      "link": "https://techcrunch.com/2026/01/02/nvidias-ai-empire-a-look-at-its-top-startup-investments/",
+      "published_date": "2026-01-02"
+     },
+     {
+      "title": "Ramp reaches $60B valuation as it pushes deeper into AI | TechCrunch",
+      "link": "https://techcrunch.com/2026/10/15/ramp-reaches-60b-valuation-as-it-pushes-deeper-into-ai/",
+      "published_date": "2026-10-15"
+     },
+     {
+      "title": "Humans&, a 'human-centric' AI startup founded by Anthropic, xAI, Google alums, raised $480M seed round | TechCrunch",
+      "link": "https://techcrunch.com/2026/01/20/humans-a-human-centric-ai-startup-founded-by-anthropic-xai-google-alums-raised-480m-seed-round/",
+      "published_date": "2026-01-20"
+     },
+     {
+      "title": "Anthropic raises $65 billion, nears $1T valuation ahead of IPO | TechCrunch",
+      "link": "https://techcrunch.com/2026/05/28/anthropic-raises-65-billion-nears-1t-valuation-ahead-of-ipo/",
+      "published_date": "2026-05-28"
+     },
+     {
+      "title": "OpenAI raises $110B in one of the largest private funding rounds in history | TechCrunch",
+      "link": "https://techcrunch.com/2026/02/27/openai-raises-110b-in-one-of-the-largest-private-funding-rounds-in-history/",
+      "published_date": "2026-02-27"
+     },
+     {
+      "title": "AI startups are eating the venture industry and the returns, so far, are good | TechCrunch",
+      "link": "https://techcrunch.com/2026/03/20/ai-startups-are-eating-the-venture-industry-and-the-returns-so-far-are-good/",
+      "published_date": "2026-03-20"
+     },
+     {
+      "title": "Source: Inference provider Modal Labs closing in on $750M round at $15.75B valuation | TechCrunch",
+      "link": "https://techcrunch.com/2026/09/28/source-inference-provider-modal-labs-closing-in-on-750m-round-at-15-75b-valuation/"
+     }
+    ]
+   }
+  },
+  {
+   "source": "web",
+   "tag": "ai regulation",
+   "params": {
+    "prompt": "AI regulation",
+    "tools": [
+     "web"
+    ],
+    "include_domains": [
+     "techcrunch.com",
+     "theverge.com",
+     "venturebeat.com",
+     "wired.com",
+     "arstechnica.com"
+    ],
+    "count": 10,
+    "streaming": false,
+    "result_type": "ONLY_LINKS",
+    "date_filter": "PAST_24_HOURS"
+   },
+   "at": "2026-10-18T16:01:05+04:00",
+   "seconds": 6.03,
+   "status": 200,
+   "cost_usd": "0.004",
+   "body": {
+    "search": [
+     {
+      "title": "Microsoft president says UK is best placed to drive AI regulation | TechCrunch",
+      "link": "https://techcrunch.com/2026/10/12/microsoft-president-says-uk-is-best-placed-to-drive-ai-regulation/",
+      "published_date": "2026-10-12"
+     },
+     {
+      "title": "A brief history of AI executives calling for regulation | The Verge",
+      "link": "https://www.theverge.com/policy/995534/a-brief-history-of-ai-executives-calling-for-regulation",
+      "published_date": "2026-09-16"
+     },
+     {
+      "title": "The Global Battle to Regulate AI Is Just Beginning   | WIRED",
+      "link": "https://www.wired.com/story/the-global-battle-to-regulate-ai-is-just-beginning/",
+      "published_date": "2023-05-08"
+     },
+     {
+      "title": "Regulators Are Finally Catching Up With Big Tech | WIRED",
+      "link": "https://www.wired.com/story/regulators-are-finally-catching-up-with-big-tech/",
+      "published_date": "2024-01-12"
+     },
+     {
+      "title": "Meet the new tech laws of 2026 | The Verge",
+      "link": "https://www.theverge.com/policy/851664/new-tech-internet-laws-us-2026-ai-privacy-repair",
+      "published_date": "2026-01-01"
+     },
+     {
+      "title": "EY report sheds new light on global AI regulatory landscape | VentureBeat",
+      "link": "https://venturebeat.com/ai/ey-report-sheds-new-light-on-global-ai-regulatory-landscape"
+     },
+     {
+      "title": "Global leaders scramble to regulate the future of AI | VentureBeat",
+      "link": "https://venturebeat.com/ai/global-leaders-scramble-to-regulate-the-future-of-ai"
+     },
+     {
+      "title": "AI regulation in peril: Navigating uncertain times | VentureBeat",
+      "link": "https://venturebeat.com/ai/ai-regulation-in-peril-navigating-uncertain-times"
+     },
+     {
+      "title": "How new regulation is driving the AI governance market | VentureBeat",
+      "link": "https://venturebeat.com/2021/08/25/how-new-regulation-is-driving-the-ai-governance-market"
+     },
+     {
+      "title": "The AI regulation smackdown isn’t over | The Verge",
+      "link": "https://www.theverge.com/ai-artificial-intelligence/997706/the-ai-regulation-smackdown-isnt-over"
+     }
+    ]
+   }
+  },
+  {
+   "source": "web",
+   "tag": "ai agents",
+   "params": {
+    "prompt": "AI agents launch",
+    "tools": [
+     "web"
+    ],
+    "include_domains": [
+     "techcrunch.com",
+     "theverge.com",
+     "venturebeat.com",
+     "wired.com",
+     "arstechnica.com"
+    ],
+    "count": 10,
+    "streaming": false,
+    "result_type": "ONLY_LINKS",
+    "date_filter": "PAST_24_HOURS"
+   },
+   "at": "2026-10-18T16:01:11+04:00",
+   "seconds": 7.95,
+   "status": 200,
+   "cost_usd": "0.004",
+   "body": {
+    "search": [
+     {
+      "title": "How to use Google’s new AI agents to go beyond your standard searches | TechCrunch",
+      "link": "https://techcrunch.com/2026/05/19/how-to-use-googles-new-ai-agents-to-go-beyond-your-standard-searches/",
+      "published_date": "2026-05-19"
+     },
+     {
+      "title": "Instinct brings its AI agent to group chats, even for friends without an account | TechCrunch",
+      "link": "https://techcrunch.com/2026/10/05/instinct-brings-its-ai-agent-to-group-chats-even-for-friends-without-an-account/",
+      "published_date": "2026-10-05"
+     },
+     {
+      "title": "Luma launches creative AI agents powered by its new ‘Unified Intelligence’ models | TechCrunch",
+      "link": "https://techcrunch.com/2026/03/05/exclusive-luma-launches-creative-ai-agents-powered-by-its-new-unified-intelligence-models/",
+      "published_date": "2026-03-05"
+     },
+     {
+      "title": "I Think I Found an AI Agent Worth the Risk | WIRED",
+      "link": "https://www.wired.com/story/i-finally-found-an-ai-agent-worth-the-risk/",
+      "published_date": "2026-09-24"
+     },
+     {
+      "title": "AI Agents Plunged the Tech World Into Chaos. Here’s Exactly How That Happened | WIRED",
+      "link": "https://www.wired.com/story/how-ai-agents-plunged-tech-world-into-chaos/",
+      "published_date": "2026-05-26"
+     },
+     {
+      "title": "New Relic launches new AI agent platform and OpenTelemetry tools | TechCrunch",
+      "link": "https://techcrunch.com/2026/02/24/new-relic-launches-new-ai-agent-platform-and-opentelemetry-tools/",
+      "published_date": "2026-02-24"
+     },
+     {
+      "title": "The Battle to Be Your Personal AI Agent Is Here | WIRED",
+      "link": "https://www.wired.com/story/ai-agents-dots-devday-muse-battling-it-out/"
+     },
+     {
+      "title": "Writer launches AI agents that can act without prompts, taking on Amazon, Microsoft and Salesforce | VentureBeat",
+      "link": "https://venturebeat.com/technology/writer-launches-ai-agents-that-can-act-without-prompts-taking-on-amazon-microsoft-and-salesforce"
+     },
+     {
+      "title": "Kore.ai launches Artemis AI agent platform, takes on Salesforce and ServiceNow | VentureBeat",
+      "link": "https://venturebeat.com/technology/kore-ai-launches-artemis-ai-agent-platform-expands-challenge-to-microsoft-and-salesforce"
+     },
+     {
+      "title": "Rabbit Is Back, This Time With an AI Agent App | WIRED",
+      "link": "https://www.wired.com/story/rabbit-r1-os3-jesse-lyu/"
+     }
+    ]
+   }
+  }
+ ]
+}

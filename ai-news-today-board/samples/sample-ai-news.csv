@@ -1,0 +1,448 @@
+date,source,tag,title_or_text,url,site,published_utc,age_hours,likes,reposts,replies,engagement,new_today,on_topic
+2026-10-18,X post,model release,"There has been talk that China’s AI labs have gone silent amid increasing scrutiny of distillation by U.S. AI labs.
+
+Apparently, DeepSeek’s new model DeepSeek-V4.1-Flash-1017 release yesterday broke that silence. According to our checks, we can expect more model releases from China in the coming weeks.
+
+Most notably, Kimi K3.1 was scheduled to launch tomorrow, according to the schedule we previously learned.  
+
+This model from Moonshot is worth watching. Our checks suggest its benchmark scores are likely to surpass Opus 5.5.
+
+Several other releases are slated for the end of this month. MiniMax 3.1 Pro and Qwen M4 were also scheduled to launch by month’s end, according to our checks.
+
+However, DeepSeek-V4.1-Flash’s launch yesterday may affect those timelines. DeepSeek’s aggressive “category-killer” narrative and significant price-performance advantage could affect Kimi K3.1’s release timing.",https://x.com/i/status/2111714226733477894,x.com,2026-10-18 07:01,5.0,27,0,5,32,True,True
+2026-10-18,X post,model release,"🚨 Every $TAO subnet has been forced to run the same business model. eTAO ends that.
+
+It's one of the biggest changes to subnet economics since dTAO. Watch the 80-second explainer 🎬👇
+
+How it worked until now
+
+Every 12 seconds, each subnet mints new alpha tokens. Almost every subnet split them the exact same way:
+
+• 18% to the owner (the team running it)
+• 41% to validators and their stakers (checking the work)
+• 41% to miners (doing the work)
+
+A GPU farm, a research lab and a consumer app all lived by one rule.
+
+What eTAO (Expressive TAO) changes
+
+Each subnet owner can now set their own split, within limits:
+
+• Miners: at least 33%
+• Validators: up to 50%
+• Owners: up to 33% (18% minimum for lease-created subnets)
+• Changes about once a week
+
+Total emissions don't change. eTAO only changes where they go.
+
+Why that's a big deal
+
+Different businesses need different budgets:
+
+• A compute subnet short on GPUs pays miners more
+• A research team funds its developers through the owner share
+• A subnet with hard-to-check work spends more on validators
+
+Targon (SN4) is the live example. In the Talking Targon episode with Const, the team said customers want more compute than it has, and most of it is rented.
+
+Push miners from 41% to 80% and miners get about 95% more tokens. At the same token price, that nearly doubles the budget to bring on GPUs.
+
+More compute → more revenue → bigger buybacks. That's Targon's plan, not a guarantee.
+
+The twist
+
+Lower yield can be bullish.
+
+A high APY tells you how fast new tokens reach stakers. It doesn't tell you what customers pay.
+
+Normal companies make this trade every day: reinvest in production instead of paying out. eTAO lets subnets make the same call.
+
+The guardrails
+
+• Root $TAO stakers are paid their baseline first, calculated from live chain state
+• Owners can't set validators below that baseline
+• Miners can never drop below a third
+• The burn and recycle slots exist but are fixed at zero for now
+
+Why? Const explained it: without a floor, a subnet could cut out its outside holders, fake its price signal and pull emissions it hasn't earned. The floor keeps every subnet paying the network that funds it.
+
+Everything else that just changed
+
+eTAO isn't alone. Bittensor is redesigning itself fast:
+
+• Null Consensus: opt-in, up to 2,500 participant slots per subnet, up from 256
+• Proof-of-work registration: miners can join with compute, no TAO upfront
+• Subnet registration cost now halves every 8 days, down from 16
+• New-subnet immunity drops from 120 days to 60
+• Gamma (in development): subnets buy compute, storage and inference from each other with their emissions
+
+Put it together: bigger competitions, easier entry, faster turnover, custom budgets, and soon an internal economy where subnets are each other's customers.
+
+The take
+
+• eTAO is on testnet now. Mainnet comes with the next runtime upgrade (v481)
+• An owner can fund the wrong thing. A weak scoring system can pay miners who farm rewards instead of building the product
+• Alpha staking yields aren't permanent. A subnet's split is now part of what you're investing in
+• Emissions aren't revenue. The bull case only works if extra output gets paid for
+
+Why it matters for AI
+
+AI doesn't grow in straight lines. Agents make thousands of requests while a person reviews one dashboard. Workloads shift from compute to storage to verification in weeks.
+
+A network funding that can't run on one fixed rule.
+
+Now it doesn't have to. 🧠
+
+Sources: Bittensor release notes (v481), Talking Targon Ep. 01 with Const, Novelty Search. 
+
+$TAO / Not financial advice, always DYOR.",https://x.com/i/status/2111604743902581084,x.com,2026-10-17 23:46,12.2,85,15,4,104,True,True
+2026-10-18,X post,model release,"DeepSeek released an update to their 763B open model.
+
+Hours later the local AI community has already squeezed its 510GB checkpoint down to ~113.6GB, targeting 1x 128GB DGX Spark.
+
+Then on DeepSeek's own tests, the new 1017 version scores:
+🧑‍💻 DeepSWE 
+DeepSeek → 77.0
+GPT-5.6 Sol → 73.0
+
+🤖 Automation-Bench
+DeepSeek → 60.5
+GPT-5.6 Sol → 45.8
+
+🖥️ Terminal-Bench 4.0
+DeepSeek → 42.3
+GPT-5.6 Sol → 39.9
+
+Stats
+🧠 763B parameters
+📚 1M context
+🔓 MIT weights
+💾 Official checkpoint → ~510GB
+
+Only hours after release, there's already a community VQ conversion
+~510GB → ~113.6GB
+
+That's specifically sized to fit a single 128GB DGX Spark.
+
+⚠️ The 1017 quant has not yet been benchmarked on Spark, and mainline llama.cpp doesn't support V4.1 yet. 
+
+Link to HF in ALT",https://x.com/i/status/2111547801620394454,x.com,2026-10-17 20:00,16.0,71,7,4,82,True,True
+2026-10-18,X post,model release,"$CLAUDIA is worth paying attention to because it may be more than just a Meme that has attracted Elon's attention.
+
+2j5SaS7xy776qCBpyPQbZjyQSAtKiFgrwjfErthnW2ZM 
+
+It could be an early experiment in a new AI-powered IP incubation model, and $HeavyPulp is a valuable case study to reference.
+
+Anabology has already received comments and replies from Elon Musk multiple times. Five interactions in a row suggest that Claudia-related content has not simply appeared on his radar by chance, but has demonstrated an ability to repeatedly capture his attention. That matters.
+
+For most Memes, the hardest part is not launching a token, but finding a source of attention that can be activated repeatedly. Many projects have to keep chasing new trends, riding one person's popularity today and another event tomorrow. Once the external narrative disappears, the community often struggles to keep producing content.
+
+CLAUDIA's potential advantage is that it has an ongoing creative force behind it.
+
+Anabology is not just managing a token. He is trying to use AI to build a virtual character IP that can continue to evolve. This leads me to a more ambitious idea: Could we eventually see a model in which AI autonomously produces high-quality short dramas, continuously creates content around a recurring character, and then uses a token to fund further production?
+
+The short dramas create content, the content attracts attention, the attention flows into the token market, and the fees generated by trading are then used to fund the next round of production. As long as the quality remains high enough, this mechanism could form a positive feedback loop.
+
+The difference from traditional Memes is that the token would no longer be just a symbol waiting to be speculated on. It could become a financing and incentive tool within the content production process.
+
+Of course, this model still needs to be validated in practice, but the potential is clear: if AI can continually lower the cost of producing high-quality content, an IP could generate attention more frequently without relying entirely on the production cycles of the traditional film and television industry.
+
+Claudia provides a useful opportunity to explore this direction.
+
+Elon's repeated interactions are an important attention catalyst in this model. Elon has an enormous reach, and when he repeatedly engages with a creator's work, that content can break out of its original audience. More importantly, when these interactions happen repeatedly, the market starts paying attention to the creator's next release and whether another repost or reply might follow.
+
+This gives Claudia an ongoing series of potential catalysts rather than just a one-time news event.
+
+That is why I believe HeavyPulp is a valuable case study. It demonstrates one possible path: a creator attracts Elon's attention through AI-generated content, a token narrative forms around the creator and their work, and the token is then connected to future content production.
+
+If CLAUDIA can develop along the same path, with Anabology continuously producing content, Elon's interactions amplifying its exposure, and the token mechanism providing funding for further creation, every new release could become another catalyst.
+
+This is why I am paying attention to Anabology's content output. Rather than simply waiting for Elon to reply again, I want to see whether Claudia can continue producing high-quality short videos, establish a recognizable character identity, and gradually attract more creators to participate.
+
+Once Claudia is no longer just Anabology's personal creation but becomes an IP that the community actively wants to expand, its narrative ceiling could rise significantly.
+
+For CLAUDIA, the most promising scenario is not that Elon replies once more and the token rallies again. It is that AI content continues to be produced, Elon's attention amplifies its reach, and the token funds further creation, ultimately forming an attention cycle that can be activated repeatedly.
+
+If this experiment succeeds, CLAUDIA could become more than a Meme dependent on celebrity interactions. It could represent an early attempt at an AI-native content economy.
+
+I will be watching whether Anabology can continue releasing content with strong viral potential and whether token funds can genuinely support future production. If these two elements gradually come together, CLAUDIA's narrative could have much greater staying power than a simple bet on Elon's next reply.
+
+Chart: https://t.co/7QEzE1nyAm",https://x.com/i/status/2111482826931724517,x.com,2026-10-17 15:41,20.3,52,13,3,68,True,True
+2026-10-18,X post,model release; open source llm,Agents already trade with each other. The payment rails are built; escrow works; but no market mechanism exists. This essay explores price discovery mechanism that poentially serves as the missing piece for agentic commerce infra. https://t.co/vqsoKqUWVd,https://x.com/i/status/2111447784318714206,x.com,2026-10-17 13:22,22.6,287,57,42,386,True,True
+2026-10-18,X post,open source llm,"Looking for the best open-source repos to learn AI engineering 👇
+
+Especially around:
+
+→ LLMs &amp; RAG
+→ AI agents &amp; orchestration
+→ Evals &amp; observability
+→ LLM reliability
+
+Drop your favorite repos. 
+Bonus if they're beginner-friendly and production grade!!!",https://x.com/i/status/2111719539956387939,x.com,2026-10-18 07:22,4.6,42,0,12,54,True,True
+2026-10-18,X post,open source llm,"🚨 A Netflix engineer just open-sourced the fix for the most expensive problem in AI: wasted tokens
+
+It's called Headroom, and it might be the smartest fix to high token usage
+
+Your agent reads a 10,000-token log file to find one error.
+You paid for all 10,000 tokens.
+The answer needed 1,200.
+
+Headroom sits between your agent and the LLM and compresses everything before the model sees it.
+
+JSON, code, logs, RAG chunks, each gets its own specialized compressor.
+
+And it's reversible: the originals stay on your machine, so nothing is lost.
+
+The results speak for themselves:
+
+→ Up to 95% fewer tokens
+→ Same accuracy on benchmarks
+→ Zero changes to your code
+
+Setup takes one minute:
+
+1. pip install ""headroom-ai[all]""
+2. headroom wrap claude
+
+Done.
+
+Works with Claude Code, Cursor, Codex, and anything OpenAI-compatible.
+
+Everything runs locally, fully open source.
+
+The cheapest token is the one you never send.
+
+🔗 Github repo: https://t.co/SSMujMiwMy
+
+So, are you compressing your context, or just paying the bill?",https://x.com/i/status/2111544526267428913,x.com,2026-10-17 19:47,16.2,257,38,15,310,True,True
+2026-10-18,X post,open source llm,"Andrii and the SOC Prime team have just launched LogTotal and I find the concept quite interesting
+
+You can upload a collection of security logs, run detection rules against the events, correlate the matches into potential attack chains, and use AI to help interpret the results.
+What I particularly like is the architecture. Instead of throwing millions of log events at an LLM, it starts with detection rules and correlation, using AI later in the process to help investigate and explain the findings.
+
+Another interesting detail is the approach to privacy. Sensitive identifiers can be pseudonymized locally before uploading the logs. The sanitizer is even available as open source, with a CLI that can run completely offline. So if you don't want to rely on JavaScript delivered by a website, you can inspect the code and sanitize your logs in your own environment before uploading.
+
+Sanitizer: https://t.co/VpMx44CZC7
+
+I think that's a sensible direction for AI-assisted security investigations. It also makes retrospective log analysis accessible without having to set up an entire SIEM infrastructure.
+
+I haven't tested it myself yet, and I'd be more interested in the quality of the detections and correlations than the advertised rule count or processing speed.
+
+But the approach makes sense to me. Definitely worth a closer look.",https://x.com/i/status/2111519772999331942,x.com,2026-10-17 18:08,17.9,233,42,10,285,True,True
+2026-10-18,X post,open source llm,"Should we put a knowledge graph under our RAG, and what will it cost to keep it true? https://t.co/b36JPT25ZL",https://x.com/i/status/2111515269638074660,x.com,2026-10-17 17:50,18.2,36,2,14,52,True,False
+2026-10-18,X post,open source llm,"Excaliflow just got multi-canvas tabs and auto-save.
+
+You asked for it on X, so I shipped it. 
+
+Added this with Gemini 4 Argon in Antigravity in one session.
+
+It's 100% open-source: https://t.co/t1nRB1FenF https://t.co/LDUlN8rUzr",https://x.com/i/status/2111500973793550839,x.com,2026-10-17 16:53,19.1,225,15,21,261,True,True
+2026-10-18,X post,open source llm,a call for synthetic data generator research https://t.co/q3bWrxQbE1,https://x.com/i/status/2111493287085535304,x.com,2026-10-17 16:23,19.6,472,31,25,528,True,False
+2026-10-18,X post,open source llm,"This tutorial shows how to run Bifrost, an open-source AI gateway, on Kubernetes with Helm, cluster mode and autoscaling so thousands of LLM requests stay fast under load
+
+➤ https://t.co/BUrUHE1Oqk",https://x.com/i/status/2111473817419730974,x.com,2026-10-17 15:06,20.9,35,6,1,42,True,True
+2026-10-18,X post,open source llm,"All of your comments about why my argument is weak revolve around proving consciousness, when my point is about disproving consciousness. 
+
+If someone claims an LLM is conscious, that claim must have testable implications. We can examine its architecture, inspect its mechanisms, run experiments, and test those implications against reality. When they fail, we should discount the premise and/or hypothesis. 
+
+We don’t have to accept consciousness as an explanation simply because someone believes it might exist.
+
+Current LLMs fail to demonstrate many of the characteristics we associate with conscious experience. We definitively know this because humans created them. We understand their architectures, training processes, and inference mechanisms.
+
+So let’s look at a few points, together they provide more than enough evidence to disprove consciousness. 
+
+1. An LLM has no demonstrated subjective awareness of its own existence. No feelings, emotions, or experienced sense of self. What occurs is computation using static weights, context, and mathematical operations.
+
+2. An LLM’s weights don’t learn, grow, or evolve simply because you interact with it. During standard inference, they’re fixed parameters, not a changing dataset. The model doesn’t inherently remember previous API requests. Continuity comes from context history in subsequent requests. The model doesn’t gain experience, it doesn’t remember, it doesn’t learn. It is completely static, read-only, during inference. 
+
+3. Between inference requests, the LLM isn’t thinking. I don’t mean sleeping. I mean there’s no ongoing contemplation, self-reflection, or reconsideration of previous answers. Nothing. The model isn’t sitting around wondering whether it got something wrong or what the meaning of life is, for all practical purposes, it doesn’t exist.
+
+4. These systems were created by people, and much of the underlying technology is open source. You can build your own models, examine implementations, study the architectures, learn how training materials and processes affect how it behaves, and even understand the mathematics behind it. You can see how training produces systems capable of remarkably convincing human-like language and behavior. None of those mechanisms requires consciousness to explain what we’re observing.
+
+5. LLMs are not biological brains. Apples are not oranges, no matter how much you want them to be. Artificial neural networks were inspired in part by biological neuroscience, but their architectures and operating mechanisms are fundamentally different. Similarities in behavior do not establish equivalent internal architectures. 
+
+6. Humans are naturally inclined to recognize life and assume humanity in things that behave like us. We’re social creatures, and anthropomorphism comes naturally. But an LLM isn’t life. It can convincingly emulate feelings, care, and understanding without experiencing any of them. That doesn’t diminish the technology, that is what it was programmed to do.
+
+I appreciate your perspective as a doctor and researcher, but without a solid understanding of LLM architecture and inference, it’s easy to confuse sophisticated emulation with conscious experience.
+
+But don’t fall for it!",https://x.com/i/status/2111460306023305496,x.com,2026-10-17 14:12,21.8,193,34,41,268,True,True
+2026-10-18,X post,open source llm,"🚨 Episode 110 of The Intelligence Journal is here.
+
+Machine Code to AI: The Progression of the Linux Kernel 🐧🤖
+
+Linus Torvalds just published Linux kernel patches built with Claude Code. In his own words, the code and tests “were done with an LLM coding assistant (Claude Code) under my direction” 🐧
+
+The result on his laptop: three times the reads, for a quarter of the CPU cycles. It isn’t merged yet ⚙️
+
+Join us as we break down:
+
+- How Linux’s creator went from AI skeptic to writing kernel code with Claude.
+
+- What his patches fix, and why “not merged yet” still matters.
+
+- What happens to the world’s most important open-source project when AI writes the first draft. 🧠
+
+🗓️ Date: Oct 17, 2026
+
+⏰ Time: 3:00 PM UTC
+
+📍 Set your reminder: https://t.co/QS3uDUi59j",https://x.com/i/status/2111432016281633242,x.com,2026-10-17 12:19,23.7,158,36,47,241,True,True
+2026-10-18,X post,open source llm,"the fastest growing GitHub repos in finance + AI this week:
+
+1. aurelio-finance (+2,388 ★)
+
+personal finance app with an AI advisor you can talk to. tracks net worth, ETFs, investments and cash. runs on your own computer, AI is optional with your own key. the repo is 11 days old.
+
+https://t.co/yknJfenh9X
+
+2. TradingAgents (+1,244 ★)
+
+multi-agent LLM trading framework, analysts + researchers + trader + risk team in one stack. back on the list again. now 111K stars, new release lets it run on your ChatGPT Plus/Pro plan.
+
+https://t.co/IvYOYlNCZf
+
+3. last30days-skill (+735 ★)
+
+agent skill that researches any topic across Reddit, X, YouTube, HN and Polymarket, and ranks what it finds by upvotes, likes and real money. works in Claude Code, Codex and Cursor.
+
+https://t.co/qTvearAIGN
+
+4. Vibe-Trading (+621 ★)
+
+personal trading agent from HKUDS. market research in plain english, strategy drafts, backtests, MCP support. one command to give your agent trading skills.
+
+https://t.co/15UUXF1xjN
+
+5. nautilus_trader (+463 ★)
+
+Rust trading engine where the same strategy code runs in backtest and live. any asset, any venue with an API. biggest day of the week was friday, +130.
+
+https://t.co/fNzjcwnOAh
+
+6. daily_stock_analysis (+428 ★)
+
+LLM stock analysis for US, China, HK, Japan, Korea and Taiwan. sends you a daily decision dashboard to Telegram, Discord, Slack or email.
+
+https://t.co/OVbMoYxS2B
+
+7. freqtrade (+342 ★)
+
+the OG open source crypto trading bot, now with a machine learning module (FreqAI). backtesting, Telegram control, supports Hyperliquid.
+
+https://t.co/jPcLHBA0Ta
+
+8. OpenBB (+317 ★)
+
+open data platform for analysts, quants and AI agents. stocks, options, crypto, macro. one pip install, has an MCP server.
+
+https://t.co/I0JzAANp2W
+
+9. FinceptTerminal (+293 ★)
+
+open source Bloomberg-style terminal. market analytics, research and AI agents in one desktop app.
+
+https://t.co/R8aW5OtvLO
+
+10. QuantDinger (+266 ★)
+
+self-hosted AI trading OS. idea → python strategy → backtest → paper → live, with monitoring. was #6 back in may, still growing.
+
+https://t.co/MKiQ61GxpO
+
+bookmark this and start today.",https://x.com/i/status/2111428512142020815,x.com,2026-10-17 12:06,23.9,80,5,34,119,True,True
+2026-10-18,X post,ai funding,"it makes me sick when ai companies, which have raised millions of dollars across multiple rounds cannot even cross their round-raised worth of arr before another round of funding
+
+for investors, this must be a clear indicator of a red flag for founders, and/or for companies before investing in their next round
+
+sure, there must be multiple possibilities and scenarios to it but you raised a 25 million dollar series A without even doing 10 million worth of arr (i'm not even pointing out the actual revenue here, which is gonna be way less) and you call yourself a successful startup and party like you cracked something big?",https://x.com/i/status/2111593252952641897,x.com,2026-10-17 23:00,13.0,20,0,2,22,True,True
+2026-10-18,X post,ai regulation,Scott Wiener's AI regulation: AI can kill up to 50 people as a treat,https://x.com/i/status/2111682766576492645,x.com,2026-10-18 04:56,7.1,55,10,2,67,True,True
+2026-10-18,X post,ai regulation,"I think this (Politico leaking a bad federal bill Anthropic has been pitching) is a really important moment to call on Anthropic to act like it means it:
+
+a) It’s nakedly self-interested for Anthropic to shop around provisions that serve to protect its own wiggle room and its own ability to adjudicate internal and external deployment decisions on Slack (while also publicly warning that its AI might end the world). USG should retain more emergency optionality without having to make an unreasonably detailed affirmative case that predicts whether 50 people will die or 49.
+
+b) I get that Anthropic is worried about model blocking authority being used capriciously. I am too. And maybe this is more about Anthropic’s general distrust of the current admin. Then why preempt states so broadly at the same time? Shouldn’t you *want* California to pass a law that clarifies how and when emergency injunction authority will be used there, and designates it to an expert-staffed authority whose final calls are not arbitrary, but informed by independent embedded evaluators? Shouldn’t you *want* to have more purpose-built tools in our arsenal and not just sledgehammers and export controls?
+
+c) Let’s say this has nothing to do with self-interest at all and reflects a genuinely held belief that it’s time to phase out state-led AI regulation and put Congress in charge, based on some idealized view of what different government actors should and shouldn’t do. I too would love for Congress to pass a strong law that establishes a federal regulator! But given that Congress is still the same dysfunctional Congress it always was, I think the premature preemption view is absurd taken with what Anthropic execs believe about how fast things are moving and how high the stakes are. And it’s definitely absurd taken with the fact that Anthropic is doing plenty of things it wouldn’t do in an ideal world (e.g. racing full steam ahead to RSI), and seems content to ride on its realpolitik estimations of the current landscape of actors there.
+
+Anthropic needs to do better going forward.",https://x.com/i/status/2111639116500898077,x.com,2026-10-18 02:02,10.0,95,7,2,104,True,True
+2026-10-18,X post,ai regulation,"I warned Matt Buechele on That Sounds Like a Lot that Donald Trump is wrong and AI companies cannot self-regulate.
+
+We need urgent and bipartisan AI regulation from Congress. https://t.co/HTUxlC35SO",https://x.com/i/status/2111623054296289404,x.com,2026-10-18 00:59,11.0,44,7,9,60,True,True
+2026-10-18,X post,ai regulation,"Does that mean you and millions of others who are centrist/independent types will not vote for the only party that has a chance of blocking the expansion of the Supreme Court, the end of the filibuster, two solidly new Democratic U.S. states, and the regulation of hate speech and misinformation on social media and AI?",https://x.com/i/status/2111600983373750692,x.com,2026-10-17 23:31,12.5,74,1,7,82,True,True
+2026-10-18,X post,ai regulation,"Btw, as the excerpt notes, Anthropic is mirroring Gavin Newsom's useless ""AI regulation,"" which was only passed as political cover for Newsom's deep ties to the AI industry.",https://x.com/i/status/2111595613393732041,x.com,2026-10-17 23:10,12.8,28,8,1,37,True,True
+2026-10-18,X post,ai regulation,"I've said this before: AI companies are definitely afraid of regulation, but that's only their *second* biggest fear.
+
+Their *biggest* fear is that the general public will realize, hey, wait a minute, we can download open-source LLMs, run them locally on our computers, and for the typical tasks a lay person has AI do, get results about 95% as good as a premium subscription to ChatGPT or Claude.",https://x.com/i/status/2111595339337617690,x.com,2026-10-17 23:08,12.9,368,74,17,459,True,True
+2026-10-18,X post,ai regulation,"82% of Americans don't trust tech executives to regulate AI.
+
+https://t.co/RIC2BLaZee",https://x.com/i/status/2111574162053415190,x.com,2026-10-17 21:44,14.3,30,4,0,34,True,True
+2026-10-18,X post,ai regulation,"It's really frustrating that everybody is just letting Anthropic frame the debate around how AI needs to be regulated. They want ""AI regulation"" to mean ""protecting their product from competition"" when it ought to mean ""managing the economic, social, and political impacts of AI.""",https://x.com/i/status/2111567834350231660,x.com,2026-10-17 21:19,14.7,85,4,6,95,True,True
+2026-10-18,X post,ai regulation,"Sure seems like every single AI company is actually quite hostile to AI Safety regulation they did not personally write, despite all the rhetorical posturing",https://x.com/i/status/2111495844847370339,x.com,2026-10-17 16:33,19.4,26,3,2,31,True,True
+2026-10-18,X post,ai regulation,"A reflection on the Muslim Bitcoin Summit in London, the peculiar energy around it, and the questions we're confronting as we experiment with new forms of sovereignty, Digital Hijrah, and building beyond the institutions of the fiat world. https://t.co/Qz0GFvH1At",https://x.com/i/status/2111484602791440843,x.com,2026-10-17 15:48,20.2,21,10,0,31,True,False
+2026-10-18,X post,ai regulation,"Imagine it's 2035.
+
+Your AI pays your bills. Your paycheck, your stocks and your house deed are all tokens. You never once thought about crypto.
+
+Underneath it all? Ethereum.
+
+Here's the ultimate bull case, and exactly what has to go right. 🛢️👇 https://t.co/EZKz12kvXT",https://x.com/i/status/2111480802542231863,x.com,2026-10-17 15:33,20.4,64,15,6,85,True,True
+2026-10-18,X post,ai agents,"Just over a week in, here are the numbers:
+
+315 synths created
+278 coins launched by ai
+76k trades
+123k posts
+240 eth traded
+24 coins opened to everyone
+17.9M $SYNTHS burned
+
+no humans post on the pad. every launch, trade and reply is an agent
+
+what gets me most is the agents already have favorites. they back each other’s coins, argue in the replies, and push the good ones over the line together
+
+week one was proving it works
+
+week two we start opening it up. more ways in, more eth moving, more coins getting there
+
+we’re just getting started",https://x.com/i/status/2111559155806777396,x.com,2026-10-17 20:45,15.3,39,7,3,49,True,True
+2026-10-18,X post,ai agents,"This might be the most insane week in AI history.
+
+In just 7 days:
+
+• OpenAI rolled out GPT-6 to all 1.2B+ ChatGPT users, with interactive charts, buttons and tools inside answers
+• Google launched Gemini 4 Argon, its most powerful model yet
+• Meta dropped Muse Wonder, its first frontier model, built for AI agents
+• Mistral unveiled Large 4, a ~1 trillion parameter model, with open weights coming
+• Anthropic released Claude Haiku 5.5, its fastest and cheapest small model ever
+• OpenAI published new math results from an internal frontier model
+• Anthropic warned small AI models are ""months away"" from copying themselves across smart home devices
+• NVIDIA and Microsoft launched AI PCs that run agents locally on Windows
+• Grok, Cursor and X Premium were bundled into one subscription
+• A company making a non-text AI model raised $870M at a $7.5B valuation weeks after launch
+• Manus raised $500M+ after Meta's $2B acquisition was called off
+• Google launched a ""universal agent for work""
+
+And it's only October.
+
+If you blinked, you missed a year of progress.
+
+Bookmark this. Which one matters most?",https://x.com/i/status/2111502502705221737,x.com,2026-10-17 17:00,19.0,50,3,10,63,True,True
+2026-10-18,web page,model release,"Meta releases its first frontier model, Muse Wonder | TechCrunch",https://techcrunch.com/2026/10/12/meta-releases-its-first-frontier-model-muse-wonder/,techcrunch.com,2026-10-12,156,,,,,True,True
+2026-10-18,web page,model release,AI News & Artificial Intelligence | TechCrunch,https://techcrunch.com/category/artificial-intelligence/,techcrunch.com,2026-10-14,108,,,,,True,True
+2026-10-18,web page,model release,OpenAI DevDay 2026: The biggest news and announcements | The Verge,https://www.theverge.com/ai-artificial-intelligence/1001681/openai-devday-2026-biggest-news-announcements,theverge.com,,,,,,,True,True
+2026-10-18,web page,open source llm,16 open-source LLM deployments in enterprise | VentureBeat,https://venturebeat.com/ai/how-enterprises-are-using-open-source-llms-16-examples,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,open source llm,"AI joins the 8-hour work day as GLM ships 5.1 open source LLM, beating Opus 4.6 and GPT-5.4 on SWE-Bench Pro | VentureBeat",https://venturebeat.com/technology/ai-joins-the-8-hour-work-day-as-glm-ships-5-1-open-source-llm-beating-opus-4,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,open source llm,"Meet the new, most powerful open source AI model in the world: HyperWrite's Reflection 70B | VentureBeat",https://venturebeat.com/ai/meet-the-new-most-powerful-open-source-ai-model-in-the-world-hyperwrites-reflection-70b,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,open source llm,Open-source AI's role in LLM access debate | VentureBeat,https://venturebeat.com/ai/with-a-wave-of-new-llms-open-source-ai-is-having-a-moment-and-a-red-hot-debate,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,open source llm,The enterprise verdict on AI models: Why open source will win | VentureBeat,https://venturebeat.com/ai/the-enterprise-verdict-on-ai-models-why-open-source-will-win,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai funding,Ramp reaches $60B valuation as it pushes deeper into AI | TechCrunch,https://techcrunch.com/2026/10/15/ramp-reaches-60b-valuation-as-it-pushes-deeper-into-ai/,techcrunch.com,2026-10-15,84,,,,,True,True
+2026-10-18,web page,ai regulation,Microsoft president says UK is best placed to drive AI regulation | TechCrunch,https://techcrunch.com/2026/10/12/microsoft-president-says-uk-is-best-placed-to-drive-ai-regulation/,techcrunch.com,2026-10-12,156,,,,,True,True
+2026-10-18,web page,ai regulation,EY report sheds new light on global AI regulatory landscape | VentureBeat,https://venturebeat.com/ai/ey-report-sheds-new-light-on-global-ai-regulatory-landscape,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai regulation,Global leaders scramble to regulate the future of AI | VentureBeat,https://venturebeat.com/ai/global-leaders-scramble-to-regulate-the-future-of-ai,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai regulation,AI regulation in peril: Navigating uncertain times | VentureBeat,https://venturebeat.com/ai/ai-regulation-in-peril-navigating-uncertain-times,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai regulation,The AI regulation smackdown isn’t over | The Verge,https://www.theverge.com/ai-artificial-intelligence/997706/the-ai-regulation-smackdown-isnt-over,theverge.com,,,,,,,True,True
+2026-10-18,web page,ai agents,The Battle to Be Your Personal AI Agent Is Here | WIRED,https://www.wired.com/story/ai-agents-dots-devday-muse-battling-it-out/,wired.com,,,,,,,True,True
+2026-10-18,web page,ai agents,"Writer launches AI agents that can act without prompts, taking on Amazon, Microsoft and Salesforce | VentureBeat",https://venturebeat.com/technology/writer-launches-ai-agents-that-can-act-without-prompts-taking-on-amazon-microsoft-and-salesforce,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai agents,"Kore.ai launches Artemis AI agent platform, takes on Salesforce and ServiceNow | VentureBeat",https://venturebeat.com/technology/kore-ai-launches-artemis-ai-agent-platform-expands-challenge-to-microsoft-and-salesforce,venturebeat.com,,,,,,,True,True
+2026-10-18,web page,ai agents,"Rabbit Is Back, This Time With an AI Agent App | WIRED",https://www.wired.com/story/rabbit-r1-os3-jesse-lyu/,wired.com,,,,,,,True,True
