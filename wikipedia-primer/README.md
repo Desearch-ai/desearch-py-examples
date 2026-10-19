@@ -1,12 +1,14 @@
-# Wikipedia Primer (Desearch MCP)
+# Wikipedia Primer: a Wikipedia search API for agents (Desearch MCP)
 
 Made by Desearch, https://desearch.ai
 
-Get a short, Wikipedia-grounded primer on any topic: a plain summary with a link after each fact, the related Wikipedia pages, and an optional web cross-check. A saved prompt for Cursor or Claude does it with no code. This folder also has a tiny Python CLI that calls the hosted Desearch MCP `ai-search` tool with the `wikipedia` source and, with `--web`, the `web-search` tool.
+Use Desearch as a Wikipedia search API for agents: ask a question in plain words and get back clean Wikipedia articles with links, plus a short summary where each fact keeps its source. This folder turns that into a short, Wikipedia-grounded primer on any topic: a plain summary with a link after each fact, the related Wikipedia pages, and an optional web cross-check. A saved prompt for Cursor or Claude does it with no code. The tiny Python CLI calls the hosted Desearch MCP `ai-search` tool with the `wikipedia` source and, with `--web`, the `web-search` tool.
+
+In plain words, the CLI keeps only real articles, keeps only results whose title matches the page they link to, and keeps a summary sentence only while it still has a source. If you build your own agent, `clean_pages()` in `wikipedia_primer.py` gives you the cleaned list of pages (title, link, language) and, if you pass it a list, what it left out and why.
 
 What the CLI does with the results:
 - keeps only Wikipedia article links (`https://<language>.wikipedia.org/wiki/<page>`) and marks pages that are not in English
-- drops pages that are not articles: `Talk:`, `User:`, `File:`, `Category:`, `Template:`, `Help:`, `Portal:`, `Wikipedia:`, `Draft:`, `Special:`, `Module:`, `MediaWiki:`, `Book:`, `TimedText:` and the other Wikipedia namespaces, plus every "talk" variant such as `User talk:`. It checks both the link and the title.
+- drops pages that are not articles: `Talk:`, `User:`, `File:`, `Category:`, `Template:`, `Help:`, `Portal:`, `Wikipedia:`, `Draft:`, `Special:`, `Module:`, `MediaWiki:`, `Book:`, `TimedText:` and the other Wikipedia namespaces, plus the "talk" variants such as `User talk:`. It checks both the link and the title.
 - drops a page when its title does not match the page it links to (see the rule below)
 - removes summary links to pages it left out, and leaves out a fact whose only link was one of those pages
 - swaps citation numbers for the page link
@@ -30,7 +32,7 @@ python wikipedia_primer.py "retrieval-augmented generation" --web
 ## How the title check works
 Sometimes a result's title names one page while its link opens another, for example the title "Climate finance" with the link `/wiki/Carbon_finance`. The CLI leaves those out, because you cannot tell which page the summary used.
 
-The rule: take the title and drop the site name at the end (" - Wikipedia" and its versions in other languages). Take the part of the link after `/wiki/`, decode it (`%C3%A9` becomes `é`) and cut anything after `#`. In both, turn underscores into spaces and ignore upper and lower case. If the two are not the same text, the page is left out. Every page that is left out is listed under "Notes" with the reason.
+The rule: take the title and drop the site name at the end (" - Wikipedia" and its versions in other languages). Take the part of the link after `/wiki/`, decode it (`%C3%A9` becomes `é`) and cut anything after `#`. In both, turn underscores into spaces and ignore upper and lower case. If the two are not the same text, the page is left out. Each page that is left out is listed under "Notes" with the reason.
 
 Only the English names of Wikipedia namespaces are checked. On other language editions a page in a translated namespace can still get through, but it will usually fail the title check.
 
