@@ -1,8 +1,10 @@
-# Who's Asking For It (Desearch MCP)
+# Who's Asking For It: social listening on X (Desearch MCP)
 
 Made by Desearch, https://desearch.ai
 
-Find recent public X posts where people ask for a tool like yours, compare options, or say they are about to switch. A saved prompt for Cursor or Claude does the full job with no code. This folder also has a tiny Python CLI that runs the same searches through the hosted Desearch MCP `x-search` tool, keeps posts inside your date window, removes duplicates and gives each post a first-pass intent label (High, Medium, Low).
+Social listening on X: pull recent public X posts about a topic or problem, keep them inside your date window, and read what people say in their own words. A saved prompt for Cursor or Claude does it with no code. This folder also has a tiny Python CLI that runs the same searches through the hosted Desearch MCP `x-search` tool, keeps posts inside your date window, removes duplicates and gives each post a rough first-pass label (High, Medium, Low) for how close it is to someone asking for a tool.
+
+This is for listening, not a lead list. Most posts it finds are announcements, promotions and general chat. In a live run on 2026-10-19 with the default newsletter phrases, 21 posts came back inside the window and none of them was someone asking which tool to use; the two High labels were promotional threads.
 
 ## Setup
 ```
@@ -20,10 +22,10 @@ python whos_asking.py --days 14 --group '("anyone recommend" OR "any recommendat
 ```
 Keep OR terms inside parentheses. `-filter:retweets` and `lang en` are added for you. Without `--group` the script runs three newsletter example groups; swap in the words people use for your product.
 
-The intent label is a simple keyword check: High needs a clear ask ("can anyone recommend", "switching from") plus a question mark, Medium is an open question, and everything else is Low. Read the High and Medium rows yourself before replying to anyone.
+The intent label is a simple keyword check: High needs a clear ask ("can anyone recommend", "switching from") plus a question mark, Medium is an open question, and everything else is Low. It is a rough hint, not a judgment, so read the posts yourself.
 
 ## Sample output (searches from 2026-10-03, handles, text and links hidden)
-See `sample-output.txt`.
+See `sample-output.txt`. A live run from 2026-10-19 is in `samples/live-run-2026-10-19.md`.
 ```
 4 + 22 + 3 posts returned, 29 kept (2026-09-03 to 2026-10-03), first 8 shown
 Rank | Intent | Date | Who | What they said | Link
@@ -32,7 +34,7 @@ Rank | Intent | Date | Who | What they said | Link
 ```
 
 ## No-code version
-Paste the prompt in `saved-prompt.md` into Cursor or Claude with the Desearch MCP server connected (`https://mcp.desearch.ai/mcp`, key in the `Authorization` header). The prompt also adds a Reddit pass through `ai-search` and asks the assistant to judge intent from the full post.
+Paste the prompt in `saved-prompt.md` into Cursor or Claude with the Desearch MCP server connected (`https://mcp.desearch.ai/mcp`, key in the `Authorization` header). The prompt reads each post in full and groups it as Asks, Complaints, Opinions, or Promo and news, in tables with links, keeps your date window, and adds a Reddit pass through `ai-search` as a separate "date not confirmed" list.
 
 ## Tests (offline, no key needed)
 ```
