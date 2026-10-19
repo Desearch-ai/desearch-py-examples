@@ -12,11 +12,18 @@ import json
 import os
 import re
 import sys
-from urllib.parse import urlparse
+import unicodedata
+from urllib.parse import unquote, urlparse
 
 MCP_URL = "https://mcp.desearch.ai/mcp"
 DEFAULT_KEY_FILE = os.path.expanduser("~/.desearch-api-key")
-SKIP_PREFIXES = ("File:", "Talk:", "Category:", "Wikipedia:", "Template:", "Help:", "Portal:")
+# Wikipedia namespaces that are not articles. "<name> talk" variants (User talk, File talk...) are caught too.
+NON_ARTICLE_NAMESPACES = {
+    "talk", "user", "wikipedia", "wp", "project", "file", "image", "media", "mediawiki", "template",
+    "help", "category", "portal", "draft", "timedtext", "module", "book", "special", "gadget",
+    "gadget definition", "education program", "topic", "event",
+}
+TITLE_SUFFIX = re.compile(r"\s+[-\u2013\u2014|]\s+[^-\u2013\u2014|]*(wiki|\u0432\u0438\u043a\u0438|\u7dad\u57fa|\u7ef4\u57fa)[^-\u2013\u2014|]*$", re.I)
 SKIP_WEB_HOSTS = ("reddit.com", "x.com", "twitter.com", "youtube.com", "facebook.com", "tiktok.com")
 CITE = re.compile(r"\s*\[\d+\]\((https?://[^)\s]+)\)")
 CITE_PLAIN = re.compile(r" \((https?://[^)\s]+)\)")
@@ -60,22 +67,62 @@ def parse_json(content):
 
 
 def page_title(r):
-    return (r.get("title") or "").replace(" - Wikipedia", "").strip()
+    """Result title without the trailing site name (" - Wikipedia", " - Wikip\u00e9dia" and so on)."""
+    return TITLE_SUFFIX.sub("", (r.get("title") or "").strip()).strip()
 
 
-def clean_pages(results):
-    """Drop non-article pages and duplicates; mark non-English Wikipedia pages."""
+def norm(text):
+    """Lowercase, URL-decoded, underscores as spaces, no #fragment, single spaces."""
+    t = unicodedata.normalize("NFC", unquote(text or "").split("#", 1)[0]).replace("_", " ")
+    return " ".join(t.split()).casefold()
+
+
+def is_non_article(name):
+    """True for Talk:, User:, File:, Category:, ... and every "<namespace> talk:" page."""
+    n = norm(name)
+    if ":" not in n:
+        return False
+    ns = n.split(":", 1)[0].strip()
+    return ns in NON_ARTICLE_NAMESPACES or ns.endswith(" talk")
+
+
+def wiki_slug(link):
+    """Article name from a Wikipedia link, or None if it is not https://<lang>.wikipedia.org/wiki/<name>."""
+    u = urlparse(link or "")
+    host = u.netloc.lower()
+    if not (host == "wikipedia.org" or host.endswith(".wikipedia.org")) or not u.path.startswith("/wiki/"):
+        return None
+    return u.path[len("/wiki/"):] or None
+
+
+def drop_reason(r):
+    """Why a result is left out of the page list, or None to keep it."""
+    link, title = r.get("link") or "", page_title(r)
+    slug = wiki_slug(link)
+    if slug is None:
+        return "not a Wikipedia article link"
+    if is_non_article(slug) or is_non_article(title):
+        return "not an article (talk, user, file, category or other namespace page)"
+    if norm(title) != norm(slug):
+        return "title does not match the page it links to"
+    return None
+
+
+def clean_pages(results, dropped=None):
+    """Keep Wikipedia articles whose title matches their link; drop duplicates; mark non-English pages.
+    If a list is passed as `dropped`, each left-out result is added to it with the reason."""
     out, seen = [], set()
     for r in results or []:
         link, title = r.get("link") or "", page_title(r)
-        host = urlparse(link).netloc
-        if not link or link in seen or "wikipedia.org" not in host:
+        reason = drop_reason(r)
+        if reason:
+            if dropped is not None:
+                dropped.append({"title": title, "link": link, "reason": reason})
             continue
-        path_title = link.rsplit("/wiki/", 1)[-1]
-        if title.startswith(SKIP_PREFIXES) or path_title.startswith(tuple(p.replace(" ", "_") for p in SKIP_PREFIXES)):
+        if link in seen:
             continue
         seen.add(link)
-        lang = host.split(".")[0]
+        lang = urlparse(link).netloc.lower().split(".")[0]
         out.append({"title": title, "link": link, "lang": lang,
                     "note": "" if lang == "en" else f"{lang} Wikipedia"})
     return out
@@ -98,13 +145,20 @@ def page_texts(results):
     return out
 
 
-def check_numbers(summary, results):
+def check_numbers(summary, results, dropped_links=()):
     """Keep a sentence's link only if every number in it appears on that page.
     If another returned page has the numbers, link that page instead; otherwise drop the sentence.
+    Links to pages in `dropped_links` are removed first; a sentence left with no link is dropped.
     Returns (text, notes)."""
-    texts = page_texts(results)
+    dropped_links = set(dropped_links)
+    texts = {l: t for l, t in page_texts(results).items() if l not in dropped_links}
     kept, notes = [], []
     for sent in SENT.split(link_citations(summary)):
+        if dropped_links and any(l in dropped_links for l in CITE_PLAIN.findall(sent)):
+            sent = CITE_PLAIN.sub(lambda m: "" if m.group(1) in dropped_links else m.group(0), sent)
+            if not CITE_PLAIN.findall(sent):
+                notes.append("Left out a fact cited only to a page that was left out.")
+                continue
         nums = [n.rstrip(".,") for n in NUM.findall(CITE_PLAIN.sub("", sent))]
         links = CITE_PLAIN.findall(sent)
         if not nums or not links or all(all(n in texts.get(l, "") for n in nums) for l in links):
@@ -132,17 +186,20 @@ def pick_web(results, n=3):
 
 
 def format_primer(topic, wiki, web=None):
-    pages = clean_pages((wiki or {}).get("search"))
+    dropped = []
+    pages = clean_pages((wiki or {}).get("search"), dropped)
     lines = [f"## {topic}: a primer", ""]
     if not any(p["lang"] == "en" for p in pages):
         lines += ["No English Wikipedia article came back for this topic.", ""]
-    text, notes = check_numbers((wiki or {}).get("completion"), (wiki or {}).get("search"))
+    text, notes = check_numbers((wiki or {}).get("completion"), (wiki or {}).get("search"),
+                                {d["link"] for d in dropped})
     lines += [text, "", "### Wikipedia pages"]
     lines += [f"- {p['title']}{' (' + p['note'] + ')' if p['note'] else ''}: {p['link']}" for p in pages[:6]]
     if web is not None:
         lines += ["", "### Web cross-check (read these next)"]
         picks = pick_web((web or {}).get("data"))
         lines += [f"- {w['title']}: {w['link']}" for w in picks] or ["- No web pages came back."]
+    notes += [f"Left out {d['title'] or d['link']}: {d['reason']}." for d in dropped]
     if notes:
         lines += ["", "### Notes"] + [f"- {n}" for n in notes]
     return "\n".join(lines)

@@ -78,3 +78,80 @@ def test_main_exits_without_key_file(tmp_path):
 @pytest.mark.skipif(not os.path.exists("/home/box/.keti/desearch-api-key"), reason="builder box only")
 def test_builder_key_fingerprint():
     assert wp.key_fingerprint(wp.read_key("/home/box/.keti/desearch-api-key")) == "560b"
+
+
+W = "https://en.wikipedia.org/wiki/"
+
+
+@pytest.mark.parametrize("slug", [
+    "Talk:Carbon_credit", "User:Someone", "User_talk:Someone", "File:Map.png", "File_talk:Map.png",
+    "Category:Carbon_finance", "Template:Climate", "Help:Contents", "Portal:Climate", "Wikipedia:About",
+    "Wikipedia_talk:About", "Draft:Carbon_x", "Special:Search", "Module:Citation", "MediaWiki:Edittools",
+    "Book:Climate", "TimedText:Clip.webm", "Category%20talk:Carbon"])
+def test_namespace_pages_dropped_by_url(slug):
+    r = {"title": "Carbon credit - Wikipedia", "link": W + slug}
+    assert wp.drop_reason(r).startswith("not an article")
+    assert wp.clean_pages([r]) == []
+
+
+def test_namespace_pages_dropped_by_title_prefix():
+    r = {"title": "Portal talk:Climate change - Wikipedia", "link": W + "Climate_change"}
+    assert wp.drop_reason(r).startswith("not an article")
+
+
+def test_colon_in_article_title_is_kept():
+    r = {"title": "Star Wars: Episode IV - Wikipedia", "link": W + "Star_Wars:_Episode_IV"}
+    assert wp.drop_reason(r) is None
+
+
+@pytest.mark.parametrize("link", [
+    "https://www.example.com/wiki/Carbon_credit", "https://wikipedia.org.example.com/wiki/Carbon_credit",
+    "https://en.wikipedia.org/w/index.php?title=Carbon_credit", "https://en.wikipedia.org/wiki/", ""])
+def test_non_wikipedia_article_links_dropped(link):
+    assert wp.drop_reason({"title": "Carbon credit", "link": link}) == "not a Wikipedia article link"
+
+
+def test_title_link_mismatch_dropped():
+    r = {"title": "Climate finance - Wikipedia", "link": W + "Carbon_finance"}
+    assert wp.drop_reason(r) == "title does not match the page it links to"
+    dropped = []
+    assert wp.clean_pages([r], dropped) == [] and dropped[0]["reason"].startswith("title does not match")
+
+
+@pytest.mark.parametrize("title,link", [
+    ("Personal carbon credits - Wikipedia", W + "Personal_Carbon_Credits"),
+    ("Gold Standard (carbon offset standard) - Wikipedia", W + "Gold_Standard_(carbon_offset_standard)"),
+    ("Gold Standard (carbon offset standard)", W + "Gold_Standard_%28carbon_offset_standard%29"),
+    ("Carbon emission trading - Wikipedia", W + "Carbon_emission_trading#History"),
+    ("Cr\u00e9dit carbone - Wikip\u00e9dia", "https://fr.wikipedia.org/wiki/Cr%C3%A9dit_carbone"),
+    ("Carbon credit | Wikipedia", "https://en.m.wikipedia.org/wiki/Carbon_credit"),
+])
+def test_matching_titles_kept(title, link):
+    assert wp.drop_reason({"title": title, "link": link}) is None
+
+
+def test_format_primer_lists_dropped_pages_in_notes():
+    wiki = {"completion": "", "search": [
+        {"title": "Carbon offsets and credits - Wikipedia", "link": W + "Carbon_offsets_and_credits"},
+        {"title": "Climate finance - Wikipedia", "link": W + "Carbon_finance"},
+        {"title": "Talk:Carbon offsets and credits - Wikipedia", "link": W + "Talk:Carbon_offset"}]}
+    out = wp.format_primer("Carbon credits", wiki)
+    assert "- Carbon offsets and credits: " in out and "- Climate finance:" not in out
+    assert "Left out Climate finance: title does not match the page it links to." in out
+    assert "Left out Talk:Carbon offsets and credits: not an article" in out
+
+
+def test_summary_facts_cited_only_to_dropped_pages_are_left_out():
+    wiki = {"completion": "Credits are traded [1](https://en.wikipedia.org/wiki/Carbon_offsets_and_credits). "
+                          "The market was 402.58 billion [2](https://en.wikipedia.org/wiki/Talk:Carbon_offset). "
+                          "Some are criticised [2](https://en.wikipedia.org/wiki/Talk:Carbon_offset)"
+                          "[1](https://en.wikipedia.org/wiki/Carbon_offsets_and_credits).",
+            "search": [
+                {"title": "Carbon offsets and credits - Wikipedia", "link": W + "Carbon_offsets_and_credits", "snippet": ""},
+                {"title": "Talk:Carbon offsets and credits - Wikipedia", "link": W + "Talk:Carbon_offset",
+                 "snippet": "valued at 402.58 billion"}]}
+    out = wp.format_primer("Carbon credits", wiki)
+    assert "Talk:Carbon_offset)" not in out.split("### Notes")[0]
+    assert "402.58" not in out
+    assert "Some are criticised (https://en.wikipedia.org/wiki/Carbon_offsets_and_credits)." in out
+    assert "Left out a fact cited only to a page that was left out." in out
