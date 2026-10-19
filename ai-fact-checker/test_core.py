@@ -147,6 +147,43 @@ def test_kill_switch_cap_and_rate_limit():
     assert code == 429 and h["Cache-Control"] == "no-store"
 
 
+class NoCostClient(FakeClient):
+    """API answers 200 but sends no cost header and no body cost_usd."""
+    def ai_search(self, payload, tag=""):
+        st, body, _ = super().ai_search(payload, tag)
+        return st, body, {"cost": 0.0, "cost_known": False, "latency_s": 1}
+
+    def x_search(self, params, tag=""):
+        st, body, _ = super().x_search(params, tag)
+        return st, body, {"cost": 0.0, "cost_known": False, "latency_s": 1}
+
+
+def test_cap_still_trips_when_cost_headers_are_missing():
+    ch = Checker(client=NoCostClient(), live=True, cap=core.DailyCap(0.01))
+    assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # 2 calls x 0.005 fallback
+    assert abs(ch.cap.spent - 0.01) < 1e-9
+    assert ch.handle({"claim": "Octopuses have three hearts"}, "b")[0] == 503 and ch._client.calls == 2
+    assert ch.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.0
+
+
+def test_client_cost_header_then_body(monkeypatch):
+    import io, urllib.request
+    from factcheck import client as fcm
+
+    class R(io.BytesIO):
+        status = 200
+        def __init__(self, body, headers):
+            super().__init__(body); self.headers = headers
+
+    def run(body, headers):
+        monkeypatch.setattr(urllib.request, "urlopen", lambda req, timeout=0: R(body, headers))
+        return fcm.Client(KEY, quiet=True).ai_search({"prompt": "x"})[2]
+    assert run(b'{"cost_usd": 0.004}', {"X-Desearch-Cost-USD": "0.003"})["cost"] == 0.003
+    r = run(b'{"cost_usd": 0.004}', {})
+    assert r["cost"] == 0.004 and r["cost_known"] is True
+    assert run(b'[]', {})["cost_known"] is False
+
+
 def test_missing_key_is_500_without_details(monkeypatch):
     monkeypatch.delenv("DESEARCH_API_KEY", raising=False)
     monkeypatch.delenv("DESEARCH_API_KEY_FILE", raising=False)

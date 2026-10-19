@@ -21,7 +21,7 @@ The response is `{"search": [{"title", "link", "snippet", "highlights"}], "compl
 
 ## Run it locally
 ```bash
-python3 -m pip install -r requirements.txt       # only pytest, for the tests
+python3 -m pip install -r requirements-dev.txt   # only pytest, for the tests
 export DESEARCH_API_KEY_FILE=/path/to/key         # or DESEARCH_API_KEY=your_key, or --key-file
 python3 app.py                                    # web app at http://127.0.0.1:8000
 curl -s "http://127.0.0.1:8000/api/check?claim=Honey+never+spoils+if+stored+sealed"
@@ -49,7 +49,7 @@ python3 -m pytest -q                              # offline tests, no key needed
 The key is read on the server only (`DESEARCH_API_KEY`), never sent to the browser, and never written to a response or log line. In front of the paid calls:
 - input checks (no call for blank or junk input);
 - a per-IP limit (5 checks per 10 minutes, 15 per day) and a global limit (30 per 10 minutes);
-- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day);
+- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day); if a response carries no cost, the call counts `DEMO_FALLBACK_COST_USD` (default $0.005) so the cap still works;
 - a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on result responses, so a CDN serves repeat claims, plus an in-memory cache keyed by the normalized claim;
 - a kill switch: `DEMO_LIVE=0` turns off live calls and points to `/sample.json`.
 On a serverless host the limit, cap and in-memory cache are per warm instance, so they are best effort; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.

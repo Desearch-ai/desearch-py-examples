@@ -29,7 +29,15 @@ class Checker:
                                                    global_window=int(_env_float("DEMO_GLOBAL_10MIN", 30)))
         self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
         self.cache = cache or core.TTLCache()
+        self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
+
+    def cap_cost(self, status, rec):
+        """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
+        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so missing headers cannot switch the cap off."""
+        if rec.get("cost_known", True):
+            return rec["cost"]
+        return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
 
     def client(self):
         if self._client is None:
@@ -47,7 +55,7 @@ class Checker:
             futs = {name: ex.submit(fn, arg, f"check-{name}") for name, fn, arg in jobs}
             for name, f in futs.items():
                 st, body, rec = f.result()
-                self.cap.add(rec["cost"])
+                self.cap.add(self.cap_cost(st, rec))
                 calls[name] = {"status": st, "body": body, "cost": rec["cost"], "latency_s": rec["latency_s"]}
         if calls["ai"]["status"] != 200 or not isinstance(calls["ai"]["body"], dict):
             return calls["ai"]["status"], None, calls
