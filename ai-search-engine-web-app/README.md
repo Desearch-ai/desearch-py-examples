@@ -22,7 +22,7 @@ If you call it from Python's `urllib`, send a `User-Agent` header. Without one t
 
 ## Run it locally
 ```bash
-python3 -m pip install -r requirements.txt       # only pytest, for the tests
+python3 -m pip install -r requirements-dev.txt   # only pytest, for the tests
 export DESEARCH_API_KEY_FILE=/path/to/key         # or DESEARCH_API_KEY=your_key, or --key-file
 python3 app.py                                    # web app at http://127.0.0.1:8000
 curl -s "http://127.0.0.1:8000/api/search?q=python+3.14+free+threading&range=year"

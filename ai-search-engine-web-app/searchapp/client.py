@@ -55,18 +55,22 @@ class Client:
         except ValueError:
             body = raw[:2000]
         bill = {k.lower(): v for k, v in hd.items() if k.lower().startswith("x-desearch")}
-        # POST /search sends no X-Desearch-* headers (2026-10-19), only cost_usd in the body, so fall back to it.
+        # POST /search sends no X-Desearch-* headers (2026-10-19), only cost_usd in the body. Header first, then the
+        # body's cost_usd; if neither is there the cost is unknown (not zero) and the service counts a fallback.
         body_cost = body.get("cost_usd") if isinstance(body, dict) else None
-        try:
-            cost = float(bill.get("x-desearch-cost-usd") or body_cost or 0)
-        except (TypeError, ValueError):
-            cost = 0.0
+        cost, cost_known, cost_source = 0.0, False, "none"
+        for src, v in (("header", bill.get("x-desearch-cost-usd")), ("body", body_cost)):
+            try:
+                cost, cost_known, cost_source = float(v), True, src
+                break
+            except (TypeError, ValueError):
+                continue
         cost = round(cost, 6)
-        cost_source = "header" if bill.get("x-desearch-cost-usd") else ("body" if body_cost is not None else "none")
         self.total += cost
         rec = {"n": n, "tag": tag, "time": ts, "request": {"method": method, "url": url, "body": payload,
                "headers": {"Authorization": "<redacted>", "User-Agent": UA}}, "status": st, "latency_s": lat,
-               "billing_headers": bill, "body_cost_usd": body_cost, "cost": cost, "cost_source": cost_source}
+               "billing_headers": bill, "body_cost_usd": body_cost, "cost": cost, "cost_source": cost_source,
+               "cost_known": cost_known}
         if self.log:
             self._write(self.log / "raw" / f"{n:03d}-{tag}.json", json.dumps({**rec, "body": body}, indent=1, ensure_ascii=False))
             self._write(self.log / "calls.jsonl", json.dumps(rec) + "\n", "a")

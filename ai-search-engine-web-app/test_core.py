@@ -221,6 +221,40 @@ def test_client_reads_cost_from_body_and_redacts(monkeypatch, tmp_path):
         c._write(tmp_path / "leak.txt", "x " + KEY)
 
 
+def test_client_cost_header_then_body_then_unknown(monkeypatch):
+    def run(body, headers):
+        r = _Resp(body); r.headers = {"Content-Type": "application/json", **headers}
+        monkeypatch.setattr(urllib.request, "urlopen", lambda req, timeout=0: r)
+        return Client(KEY, quiet=True).search({"query": "x"})[2]
+    h = run(b'{"cost_usd": 0.005}', {"X-Desearch-Cost-USD": "0.004"})
+    assert h["cost"] == 0.004 and h["cost_source"] == "header" and h["cost_known"] is True
+    b = run(b'{"cost_usd": 0.005}', {})
+    assert b["cost"] == 0.005 and b["cost_source"] == "body" and b["cost_known"] is True
+    z = run(b'{"detail": "x", "cost_usd": 0.0}', {})   # the 503 for a blank query reports cost_usd 0.0: known, zero
+    assert z["cost"] == 0.0 and z["cost_known"] is True
+    n = run(b'{"results": []}', {})
+    assert n["cost"] == 0.0 and n["cost_source"] == "none" and n["cost_known"] is False
+
+
+def test_cap_counts_fallback_when_cost_unknown(monkeypatch):
+    class NoCost(FakeClient):
+        def search(self, payload, tag="search"):
+            st, body, _ = super().search(payload, tag)
+            body.pop("cost_usd")
+            return st, body, {"cost": 0.0, "cost_known": False, "latency_s": 0.3}
+    e = engine(client=NoCost(), cap=core.DailyCap(0.01))
+    assert e.fallback_cost == 0.005
+    assert e.handle_search({"q": "first query"}, "a")[0] == 200
+    assert e.handle_search({"q": "second query"}, "b")[0] == 200
+    assert abs(e.cap.spent - 0.01) < 1e-9
+    assert e.handle_search({"q": "third query"}, "c")[0] == 503 and len(e._client.calls) == 2
+    assert e.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.0
+    assert e.cap_cost(503, {"cost": 0.0, "cost_known": False}) == 0.0
+    assert e.cap_cost(200, {"cost": 0.004, "cost_known": True}) == 0.004
+    monkeypatch.setenv("DEMO_FALLBACK_COST_USD", "0.02")
+    assert Engine(client=NoCost(), live=True).fallback_cost == 0.02
+
+
 def test_vercel_functions_import_without_key(monkeypatch):
     monkeypatch.delenv("DESEARCH_API_KEY", raising=False)
     monkeypatch.setenv("DEMO_LIVE", "0")

@@ -28,7 +28,15 @@ class Engine:
                                                    global_window=int(_env_float("DEMO_GLOBAL_10MIN", 60)))
         self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
         self.cache = cache or core.TTLCache()
+        self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
+
+    def cap_cost(self, status, rec):
+        """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
+        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so a missing cost cannot switch the cap off."""
+        if rec.get("cost_known", True):
+            return rec["cost"]
+        return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
 
     def client(self):
         if self._client is None:
@@ -38,7 +46,7 @@ class Engine:
     # paid parts -------------------------------------------------------------------------------------------------
     def search(self, q, mode="fast", count=10, start=None, end=None):
         st, body, rec = self.client().search(core.search_body(q, mode, count, start, end), "search")
-        self.cap.add(rec["cost"])
+        self.cap.add(self.cap_cost(st, rec))
         if st != 200 or not isinstance(body, dict):
             return st, None, rec
         results, stats = core.clean_results(body, start, end)
@@ -47,7 +55,7 @@ class Engine:
 
     def answer(self, q, search_urls=None):
         st, body, rec = self.client().ai_search(core.answer_body(q), "answer")
-        self.cap.add(rec["cost"])
+        self.cap.add(self.cap_cost(st, rec))
         if st != 200 or not isinstance(body, dict):
             return st, None, rec
         return 200, {**core.build_answer(q, body, search_urls), "cost_usd": rec["cost"], "latency_s": rec["latency_s"]}, rec
