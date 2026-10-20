@@ -29,6 +29,7 @@ Only `DESEARCH_API_KEY` must be set; the others fall back to the defaults above 
 - The key is read in `factcheck/client.py` and only sent in the `Authorization` header to `api.desearch.ai`. Responses never include it; the client refuses to write any file that contains it; the function logs one line per paid check (`calls`, `cost`, `spent_today`) and never the claim text or IP.
 - Result responses carry `Cache-Control: public, max-age=0, s-maxage=21600`, so the Vercel CDN answers repeat requests for the exact same URL for 6 hours without running the function (the in-memory cache also catches the same claim written with different case or punctuation, inside one warm instance). Errors, 429 and 503 are `no-store`.
 - Limits and the daily cap are in memory, so each warm instance has its own counters and a cold start resets them (best effort, no KV). With N warm instances the real ceiling is about N x $1/day. The hard outer limit is the key's balance; keep it small.
+- A Desearch 401, 402 or 403 (invalid key or out of balance) is treated like the kill switch: the response is 503 with a demo paused message and `"sample": "/sample.json"`, and those calls count $0 against the daily cap.
 - The per-IP limit uses the first `X-Forwarded-For` address. Vercel overwrites that header with the real client IP, so callers cannot spoof it there (locally they can).
 
 ## 4. Smoke test after deploy (about $0.006)

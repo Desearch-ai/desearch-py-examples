@@ -158,6 +158,38 @@ class NoCostClient(FakeClient):
         return st, body, {"cost": 0.0, "cost_known": False, "latency_s": 1}
 
 
+class ErrorClient(FakeClient):
+    """Desearch answers every call with one HTTP status and a positive known cost."""
+    def __init__(self, status):
+        super().__init__()
+        self.status = status
+
+    def _err(self):
+        self.calls += 1
+        return self.status, {"detail": "error"}, {"cost": 0.004, "cost_known": True, "latency_s": 1}
+
+    def ai_search(self, payload, tag=""):
+        return self._err()
+
+    def x_search(self, params, tag=""):
+        return self._err()
+
+
+@pytest.mark.parametrize("status", [401, 402, 403])
+def test_key_or_balance_error_serves_paused_sample(status):
+    ch = Checker(client=ErrorClient(status), live=True)
+    code, headers, body = ch.handle({"claim": "Honey never spoils if stored"}, "ip")
+    assert code == 503 and headers["Cache-Control"] == "no-store"
+    assert json.loads(body) == {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"}
+    assert ch.cap.spent == 0.0
+
+
+def test_upstream_500_still_returns_502():
+    ch = Checker(client=ErrorClient(500), live=True)
+    code, _, body = ch.handle({"claim": "Honey never spoils if stored"}, "ip")
+    assert code == 502 and json.loads(body) == {"error": "Search API returned 500. Try again later."}
+
+
 def test_cap_still_trips_when_cost_headers_are_missing():
     ch = Checker(client=NoCostClient(), live=True, cap=core.DailyCap(0.01))
     assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # 2 calls x 0.005 fallback
