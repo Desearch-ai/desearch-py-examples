@@ -363,8 +363,10 @@ def test_redis_store_error_is_503_like_the_kill_switch(monkeypatch, capsys):
 
 def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
     from factcheck import limits
-    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN", "DEMO_IP_SALT"):
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN",
+                 "DEMO_IP_SALT", "VERCEL"):
         monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("VERCEL_ENV", "development")  # not production or preview, and VERCEL is unset: local fallback
     monkeypatch.setenv("DEMO_PER_IP_10MIN", "1")
     limits._warned = False
     called = []
@@ -381,3 +383,39 @@ def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
     assert "in-memory counters" in err and "8.8.8.8" not in err and TOKEN not in err
     Checker(client=FakeClient(), live=True)
     assert "in-memory counters" not in capsys.readouterr().err
+
+
+def test_vercel_without_store_fails_closed(monkeypatch, capsys):
+    from factcheck import limits
+    from factcheck.service import PAUSED
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
+        monkeypatch.delenv(name, raising=False)
+    called = []
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: called.append(1))
+    for key, val in (("VERCEL", "1"), ("VERCEL_ENV", "production"), ("VERCEL_ENV", "preview")):
+        monkeypatch.delenv("VERCEL", raising=False)
+        monkeypatch.delenv("VERCEL_ENV", raising=False)
+        monkeypatch.setenv(key, val)
+        limits._closed_warned = False
+        ch = Checker(client=FakeClient(), live=True)
+        assert not isinstance(ch.limiter, core.RateLimiter) and not isinstance(ch.cap, core.DailyCap)
+        code, h, body = ch.handle({"claim": claim_n(1)}, "1.2.3.4")
+        assert code == 503 and h["Cache-Control"] == "no-store" and json.loads(body) == PAUSED
+        assert ch._client.calls == 0 and called == []
+        code2, h2, _ = ch.handle({"claim": claim_n(2)}, "9.9.9.9")
+        assert code2 == 503 and h2["Cache-Control"] == "no-store" and ch._client.calls == 0
+        bad, hb, _ = ch.handle({"claim": ""}, "1.2.3.4")
+        assert bad == 400 and hb["Cache-Control"] == "no-store"
+    err = capsys.readouterr().err
+    assert "refusing live checks" in err and "in-memory counters" not in err
+    assert "1.2.3.4" not in err and "9.9.9.9" not in err and "Honey never spoils" not in err and TOKEN not in err
+
+
+def test_vercel_with_store_still_runs(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("VERCEL_ENV", "production")
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "1.2.3.4")[0] == 200 and ch._client.calls == 2

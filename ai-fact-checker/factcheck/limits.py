@@ -4,9 +4,10 @@ Fixed windows: 10 minute keys are named by the window start, daily keys by the U
 Each key is one transaction: INCR (or INCRBYFLOAT for the USD cap) and EXPIRE together,
 with a TTL equal to that window. The token is sent only in the Authorization header.
 
-If the store is not configured, `load` returns (None, None) and the caller keeps the
-in-memory limiter and cap. A configured store that errors raises StoreError; callers
-fail closed. This module never logs the token, the claim text or the IP.
+If the store is not configured on a local run, `load` returns (None, None) and the
+caller keeps the in-memory limiter and cap. On Vercel (`VERCEL` set, or `VERCEL_ENV`
+of production or preview) a missing store fails closed. A configured store that errors
+raises StoreError. This module never logs the token, the claim text or the IP.
 """
 import hashlib, json, os, sys, threading, time, urllib.error, urllib.request
 
@@ -14,6 +15,7 @@ WINDOW = 600
 DAY = 86400
 FALLBACK_IP_SALT = "desearch-ai-fact-checker"
 _warned = False
+_closed_warned = False
 
 
 class StoreError(Exception):
@@ -37,8 +39,20 @@ def ip_hash(ip):
     return hashlib.sha256(f"{salt}\n{ip or ''}".encode()).hexdigest()
 
 
+def on_vercel():
+    """True when this process is a Vercel function (production, preview, or `VERCEL` set)."""
+    if _env("VERCEL"):
+        return True
+    return _env("VERCEL_ENV").lower() in ("production", "preview")
+
+
+def hosted_without_store():
+    """Vercel with neither KV_REST_API_* nor UPSTASH_REDIS_REST_* configured."""
+    return on_vercel() and credentials() is None
+
+
 def warn_fallback_once():
-    """One line when the process has no shared store. No token, claim or IP."""
+    """One line on a local run with no shared store. No token, claim or IP."""
     global _warned
     if _warned:
         return
@@ -46,15 +60,43 @@ def warn_fallback_once():
     print("[check] warning: shared limit store is not configured; using in-memory counters", file=sys.stderr)
 
 
+def warn_closed_once():
+    """One line when a hosted run has no shared store. No token, claim or IP."""
+    global _closed_warned
+    if _closed_warned:
+        return
+    _closed_warned = True
+    print("[check] warning: shared limit store is not configured; refusing live checks", file=sys.stderr)
+
+
+class ClosedStore:
+    """Hosted process with no shared store. Every counter operation fails closed."""
+
+    spent = 0.0
+
+    def ok(self):
+        raise StoreError("unconfigured")
+
+    def allow(self, ip):
+        raise StoreError("unconfigured")
+
+    def add(self, usd):
+        raise StoreError("unconfigured")
+
+
 def load(per_ip, per_ip_day, global_window, cap_usd):
-    """Return (limiter, cap) sharing one Redis client, or (None, None) when unset."""
+    """Return (limiter, cap). Redis when configured, closed on Vercel if not, else memory."""
     creds = credentials()
-    if not creds:
-        warn_fallback_once()
-        return None, None
-    url, token = creds
-    shared = SharedLimits(url, token, per_ip, per_ip_day, global_window, cap_usd)
-    return shared, shared
+    if creds:
+        url, token = creds
+        shared = SharedLimits(url, token, per_ip, per_ip_day, global_window, cap_usd)
+        return shared, shared
+    if on_vercel():
+        warn_closed_once()
+        closed = ClosedStore()
+        return closed, closed
+    warn_fallback_once()
+    return None, None
 
 
 def _day(now):

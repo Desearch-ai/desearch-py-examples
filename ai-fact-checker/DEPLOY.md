@@ -24,7 +24,7 @@ The per-IP limits (5 per 10 min, 15 per UTC day), the global limit (30 per 10 mi
 
 Each counter is one Redis transaction (`POST /multi-exec`): `INCR` and `EXPIRE` together. The daily cap uses `INCRBYFLOAT` and `EXPIRE` on one key. Keys are fixed windows. The 10 min buckets are named by the window start. The per-IP day counter and the USD cap are named by the UTC day. The TTL matches the window: 600 seconds, or 86400 seconds (one UTC day) for daily keys. The function checks the cap and the limits before a paid call, and records the call cost after it.
 
-If the URL and the token are not set, the function falls back to the in-memory counters and logs a warning once. Those in-memory counters are per warm instance. If the store is set but a call to it fails, the function fails closed: HTTP 503, `Cache-Control: no-store`, and `"sample": "/sample.json"`, the same response as the kill switch (`DEMO_LIVE=0`). No paid call is made on that path.
+On Vercel, where `VERCEL` is set or `VERCEL_ENV` is `production` or `preview`, the Redis URL and token are required. If neither `KV_REST_API_*` nor `UPSTASH_REDIS_REST_*` is configured, `/api/check` fails closed: HTTP 503, `Cache-Control: no-store`, and `"sample": "/sample.json"`, the same response as the kill switch (`DEMO_LIVE=0`). No paid call is made. The in-memory counters are not used on Vercel. Locally (`python3 app.py`, no `VERCEL` var), a missing store still falls back to those in-memory counters and logs a warning once. If the store is set but a call to it fails, the function fails closed the same way.
 
 ## 3. Environment variables (Production)
 | Name | Value | Notes |
@@ -41,7 +41,7 @@ If the URL and the token are not set, the function falls back to the in-memory c
 | `KV_REST_API_TOKEN` | from the Upstash integration | Server-side only. Preferred REST token. Never log it. |
 | `UPSTASH_REDIS_REST_URL` | alias of the URL | Accepted when `KV_REST_API_URL` is unset. Server-side only. |
 | `UPSTASH_REDIS_REST_TOKEN` | alias of the token | Accepted when `KV_REST_API_TOKEN` is unset. Server-side only. Never log it. |
-Only `DESEARCH_API_KEY` must be set; the others fall back to the defaults above when unset. With no Redis URL and token, limits stay in memory (see section 2). Do not set `FACTCHECK_LOG_DIR` in production (it writes raw responses to disk). Vercel applies env changes only to new deployments, so redeploy after any change.
+Only `DESEARCH_API_KEY` must be set for a local run. On Vercel, also set a Redis URL and token or `/api/check` returns 503 (see section 2). The other demo settings fall back to the defaults above when unset. Do not set `FACTCHECK_LOG_DIR` in production (it writes raw responses to disk). Vercel applies env changes only to new deployments, so redeploy after any change.
 
 ## 4. What protects the key and the balance
 - The key is read in `factcheck/client.py` and only sent in the `Authorization` header to `api.desearch.ai`. Responses never include it; the client refuses to write any file that contains it; the function logs one line per paid check (`calls`, `cost`, `spent_today`) and never the claim text, the IP, or the Redis token.
@@ -79,4 +79,4 @@ grep sample cap.json
 Set `DEMO_DAILY_CAP_USD` back to `1.0` and redeploy.
 
 ## 6. Local run, same code
-`DESEARCH_API_KEY_FILE=/path/to/key python3 app.py` serves the same page and `/api/check` at http://127.0.0.1:8000. Without the Redis env vars the process logs one warning and uses the in-memory counters.
+`DESEARCH_API_KEY_FILE=/path/to/key python3 app.py` serves the same page and `/api/check` at http://127.0.0.1:8000. Without the Redis env vars, and only when `VERCEL` is unset and `VERCEL_ENV` is not `production` or `preview`, the process logs one warning and uses the in-memory counters.

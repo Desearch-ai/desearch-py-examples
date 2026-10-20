@@ -3,9 +3,10 @@
 Safety: the Desearch key is read on the server only and never put in a response or a log line. Requests are
 validated before any paid call; a per-IP limit, a daily spend cap, a cache and a kill switch (DEMO_LIVE=0) sit
 in front of the API. Limits and the cap live in Upstash Redis when it is configured, so they hold across
-instances; otherwise they fall back to memory (one warning). A store error fails closed with the same 503
-as the kill switch. The in-memory result cache is per warm instance; the CDN cache (Cache-Control s-maxage)
-serves repeat claims without calling the function at all. Logs never include the Redis token, the claim or the IP.
+instances. On Vercel a missing store fails closed with the same 503 as the kill switch. A local run with no
+store falls back to memory (one warning). A store error fails closed the same way. The in-memory result cache
+is per warm instance; the CDN cache (Cache-Control s-maxage) serves repeat claims without calling the function
+at all. Logs never include the Redis token, the claim or the IP.
 """
 import json, os, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
@@ -82,6 +83,9 @@ class Checker:
             claim = core.clean_claim(query.get("claim"))
         except core.FormError as e:
             return out(400, {"error": str(e)})
+        if limits.hosted_without_store():
+            limits.warn_closed_once()
+            return out(503, PAUSED)
         wiki = str(query.get("wiki", "")).lower() in ("1", "true", "yes", "on")
         key = core.cache_key(claim, wiki)
         hit = self.cache.get(key)
