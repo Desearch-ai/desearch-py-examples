@@ -2,16 +2,20 @@
 
 Safety: the Desearch key is read on the server only and never put in a response or a log line. Requests are
 validated before any paid call; a per-IP limit, a daily spend cap, a cache and a kill switch (DEMO_LIVE=0) sit
-in front of the API. On Vercel the limit, cap and in-memory cache are per warm instance (best effort); the CDN
-cache (Cache-Control s-maxage) serves repeat claims without calling the function at all.
+in front of the API. Limits and the cap live in Upstash Redis when it is configured, so they hold across
+instances. On Vercel a missing store fails closed with the same 503 as the kill switch. A local run with no
+store falls back to memory (one warning). A store error fails closed the same way. The in-memory result cache
+is per warm instance; the CDN cache (Cache-Control s-maxage) serves repeat claims without calling the function
+at all. Logs never include the Redis token, the claim or the IP.
 """
 import json, os, sys, urllib.parse
 from concurrent.futures import ThreadPoolExecutor
-from . import core
+from . import core, limits
 from .client import Client, api_key
 
 CACHE_HEADER = "public, max-age=0, s-maxage=21600"
 NO_STORE = "no-store"
+PAUSED = {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"}
 
 
 def _env_float(name, default):
@@ -24,6 +28,15 @@ def _env_float(name, default):
 class Checker:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
         self._client = client
+        if limiter is None and cap is None:
+            per_ip = int(_env_float("DEMO_PER_IP_10MIN", 5))
+            per_ip_day = int(_env_float("DEMO_PER_IP_DAY", 15))
+            global_window = int(_env_float("DEMO_GLOBAL_10MIN", 30))
+            cap_usd = _env_float("DEMO_DAILY_CAP_USD", 1.0)
+            limiter, cap = limits.load(per_ip, per_ip_day, global_window, cap_usd)
+            if limiter is None:
+                limiter = core.RateLimiter(per_ip=per_ip, per_ip_day=per_ip_day, global_window=global_window)
+                cap = core.DailyCap(cap_usd)
         self.limiter = limiter or core.RateLimiter(per_ip=int(_env_float("DEMO_PER_IP_10MIN", 5)),
                                                    per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 15)),
                                                    global_window=int(_env_float("DEMO_GLOBAL_10MIN", 30)))
@@ -70,19 +83,25 @@ class Checker:
             claim = core.clean_claim(query.get("claim"))
         except core.FormError as e:
             return out(400, {"error": str(e)})
+        if limits.hosted_without_store():
+            limits.warn_closed_once()
+            return out(503, PAUSED)
         wiki = str(query.get("wiki", "")).lower() in ("1", "true", "yes", "on")
         key = core.cache_key(claim, wiki)
         hit = self.cache.get(key)
         if hit:
             return out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
         if not self.live:
-            return out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
-        if not self.cap.ok():
-            return out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
-        if not self.limiter.allow(ip or "unknown"):
-            return out(429, {"error": "Too many checks from your network. Try again in a few minutes."})
+            return out(503, PAUSED)
         try:
+            if not self.cap.ok():
+                return out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
+            if not self.limiter.allow(ip or "unknown"):
+                return out(429, {"error": "Too many checks from your network. Try again in a few minutes."})
             st, res, _ = self.run(claim, wiki)
+        except limits.StoreError:
+            print("[check] shared limit store error", file=sys.stderr)
+            return out(503, PAUSED)
         except RuntimeError as e:   # missing key on the server: say so without details
             print(f"[check] server error: {type(e).__name__}", file=sys.stderr)
             return out(500, {"error": "The demo is not configured."})

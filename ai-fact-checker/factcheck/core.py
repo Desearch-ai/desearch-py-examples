@@ -196,7 +196,8 @@ def build_result(claim, ai, x=None, wiki=None):
 
 
 class RateLimiter:
-    """Sliding-window per-IP and global limits, in memory. On serverless hosts this is per warm instance only."""
+    """Sliding-window per-IP and global limits, in memory. Fallback when no shared store is configured.
+    On serverless hosts this copy is per warm instance only."""
 
     def __init__(self, per_ip=5, window=600, per_ip_day=15, global_window=30, clock=time.time):
         self.per_ip, self.window, self.per_ip_day, self.global_window, self.clock = per_ip, window, per_ip_day, global_window, clock
@@ -215,7 +216,8 @@ class RateLimiter:
 
 
 class DailyCap:
-    """Stops paid calls once today's header cost reaches `cap_usd`. Day boundary is UTC. Per process / instance."""
+    """Stops paid calls once today's header cost reaches `cap_usd`. Day boundary is UTC.
+    In-memory fallback when no shared store is configured (per process / instance)."""
 
     def __init__(self, cap_usd=1.0, clock=time.time):
         self.cap, self.clock, self.day, self.spent, self.lock = cap_usd, clock, None, 0.0, threading.Lock()

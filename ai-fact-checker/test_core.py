@@ -1,5 +1,5 @@
 """Offline tests (no key, no network): python3 -m pytest -q"""
-import json, pathlib, sys
+import hashlib, io, json, pathlib, sys, time, urllib.error, urllib.request
 import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from factcheck import core
@@ -210,3 +210,212 @@ def test_vercel_files():
     assert "api/check.py" in v["functions"]
     assert (root / "public" / "index.html").is_file() and (root / "api" / "check.py").is_file()
     assert "Made by Desearch" in (root / "public" / "index.html").read_text()
+
+
+NOW = 1700000100
+TOKEN = "super-secret-token"
+SALT = "test-salt"
+
+
+def claim_n(i):
+    return f"Honey never spoils in test case {i}"
+
+
+class FakeRedis:
+    """In-memory stand-in for the Upstash REST transaction endpoint. Speaks the HTTP layer."""
+
+    def __init__(self, fail=None):
+        self.fail, self.values, self.seen = fail, {}, []
+
+    def __call__(self, req, timeout=0):
+        body = json.loads(req.data.decode())
+        self.seen.append({"url": req.full_url, "body": body, "auth": req.get_header("Authorization")})
+        if self.fail == "network":
+            raise urllib.error.URLError("down")
+        if self.fail == "redis":
+            return io.BytesIO(b'{"error":"ERR down"}')
+        out = []
+        for cmd in body:
+            op = cmd[0].upper()
+            key = cmd[1]
+            if op == "INCR":
+                self.values[key] = int(self.values.get(key, 0)) + 1
+                out.append({"result": self.values[key]})
+            elif op == "INCRBYFLOAT":
+                self.values[key] = round(float(self.values.get(key, 0) or 0) + float(cmd[2]), 6)
+                out.append({"result": str(self.values[key])})
+            elif op == "GET":
+                out.append({"result": None if key not in self.values else str(self.values[key])})
+            elif op == "EXPIRE":
+                out.append({"result": 1 if key in self.values else 0})
+            else:
+                out.append({"error": "unknown"})
+        return io.BytesIO(json.dumps(out).encode())
+
+
+def use_store(monkeypatch, fake, *, kv=True, **env):
+    from factcheck import limits
+    limits._warned = False
+    if kv:
+        monkeypatch.setenv("KV_REST_API_URL", "https://kv.example.upstash.io")
+        monkeypatch.setenv("KV_REST_API_TOKEN", TOKEN)
+        monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://other.example.upstash.io")
+        monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", "other-token")
+    else:
+        monkeypatch.delenv("KV_REST_API_URL", raising=False)
+        monkeypatch.delenv("KV_REST_API_TOKEN", raising=False)
+        monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://upstash.example.upstash.io")
+        monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", TOKEN)
+    monkeypatch.setenv("DEMO_IP_SALT", SALT)
+    for k, v in env.items():
+        monkeypatch.setenv(k, str(v))
+    monkeypatch.setattr(urllib.request, "urlopen", fake)
+
+
+def pin(ch, now=NOW):
+    clock = lambda: now
+    ch.limiter.clock = clock
+    ch.cap.clock = clock
+
+
+def test_redis_sixth_request_from_one_ip_is_429(monkeypatch, capsys):
+    from factcheck import limits
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    ch = Checker(client=FakeClient(), live=True)
+    assert limits._warned is False
+    pin(ch)
+    ip, other = "1.2.3.4", "5.6.7.8"
+    for i in range(1, 6):
+        code, _, _ = ch.handle({"claim": claim_n(i)}, ip)
+        assert code == 200
+    assert ch._client.calls == 10
+    code, h, body = ch.handle({"claim": claim_n(6)}, ip)
+    assert code == 429 and h["Cache-Control"] == "no-store" and ch._client.calls == 10
+    assert "Too many checks" in body and TOKEN not in body and ip not in body
+    code_b, _, _ = ch.handle({"claim": claim_n(7)}, other)
+    assert code_b == 200 and ch._client.calls == 12
+
+    hsh = hashlib.sha256(f"{SALT}\n{ip}".encode()).hexdigest()
+    assert limits.ip_hash(ip) == hsh and ip not in hsh
+    start = NOW // 600 * 600
+    day = time.strftime("%Y-%m-%d", time.gmtime(NOW))
+    first = [r["body"] for r in fake.seen[:6]]
+    assert first[0] == [["GET", f"factcheck:usd:{day}"]]
+    assert first[1] == [["INCR", f"factcheck:ip10:{hsh}:{start}"], ["EXPIRE", f"factcheck:ip10:{hsh}:{start}", 600, "NX"]]
+    assert first[2][0][1] == f"factcheck:ipday:{hsh}:{day}" and first[2][1][2:] == [86400, "NX"]
+    assert first[3] == [["INCR", f"factcheck:g10:{start}"], ["EXPIRE", f"factcheck:g10:{start}", 600, "NX"]]
+    assert [c[0] for c in first[4]] == ["INCRBYFLOAT", "EXPIRE"] and first[4][1][2:] == [86400, "NX"]
+    assert [c[0] for c in first[5]] == ["INCRBYFLOAT", "EXPIRE"]
+    blob = json.dumps(fake.seen)
+    assert ip not in blob and other not in blob
+    assert all(r["url"] == "https://kv.example.upstash.io/multi-exec" for r in fake.seen)
+    assert all(r["auth"] == "Bearer " + TOKEN for r in fake.seen)
+    assert all(TOKEN not in r["url"] for r in fake.seen)
+    err = capsys.readouterr().err
+    assert TOKEN not in err and ip not in err and "Honey never spoils" not in err
+
+
+def test_redis_global_limit_and_upstash_env_names(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, kv=False, DEMO_GLOBAL_10MIN=2)
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "10.0.0.1")[0] == 200
+    assert ch.handle({"claim": claim_n(2)}, "10.0.0.2")[0] == 200
+    code, h, body = ch.handle({"claim": claim_n(3)}, "10.0.0.3")
+    assert code == 429 and h["Cache-Control"] == "no-store" and "Too many checks" in body
+    assert ch._client.calls == 4
+    assert fake.seen[0]["url"] == "https://upstash.example.upstash.io/multi-exec"
+    assert any(cmd[0] == "INCR" and cmd[1].startswith("factcheck:g10:") for r in fake.seen for cmd in r["body"])
+
+
+def test_redis_cap_blocks_once_reached(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD="0.0055")
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "1.1.1.1")[0] == 200
+    assert abs(ch.cap.spent - 0.0055) < 1e-9
+    before = len(fake.seen)
+    code, h, body = ch.handle({"claim": claim_n(2)}, "2.2.2.2")
+    assert code == 503 and h["Cache-Control"] == "no-store" and "used up" in body and '"sample": "/sample.json"' in body
+    assert ch._client.calls == 2
+    new = fake.seen[before:]
+    assert len(new) == 1 and new[0]["body"][0][0] == "GET"
+
+
+def test_redis_store_error_is_503_like_the_kill_switch(monkeypatch, capsys):
+    for fail in ("network", "redis"):
+        fake = FakeRedis(fail=fail)
+        use_store(monkeypatch, fake)
+        ch = Checker(client=FakeClient(), live=True)
+        code, h, body = ch.handle({"claim": claim_n(1)}, "9.9.9.9")
+        paused = Checker(client=FakeClient(), live=False).handle({"claim": claim_n(1)}, "9.9.9.9")
+        assert code == 503 and h["Cache-Control"] == "no-store" and body == paused[2]
+        assert '"sample": "/sample.json"' in body and ch._client.calls == 0
+        bad, hb, _ = ch.handle({"claim": ""}, "9.9.9.9")
+        assert bad == 400 and hb["Cache-Control"] == "no-store"
+    err = capsys.readouterr().err
+    assert TOKEN not in err and "9.9.9.9" not in err and "Honey never spoils" not in err
+    assert "shared limit store error" in err
+
+
+def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
+    from factcheck import limits
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN",
+                 "DEMO_IP_SALT", "VERCEL"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("VERCEL_ENV", "development")  # not production or preview, and VERCEL is unset: local fallback
+    monkeypatch.setenv("DEMO_PER_IP_10MIN", "1")
+    limits._warned = False
+    called = []
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: called.append(1))
+    ch = Checker(client=FakeClient(), live=True)
+    assert isinstance(ch.limiter, core.RateLimiter) and isinstance(ch.cap, core.DailyCap)
+    assert ch.handle({"claim": claim_n(1)}, "8.8.8.8")[0] == 200
+    code, h, _ = ch.handle({"claim": claim_n(2)}, "8.8.8.8")
+    assert code == 429 and h["Cache-Control"] == "no-store" and called == []
+    digest = limits.ip_hash("8.8.8.8")
+    assert digest == hashlib.sha256(f"{limits.FALLBACK_IP_SALT}\n8.8.8.8".encode()).hexdigest()
+    assert "8.8.8.8" not in digest
+    err = capsys.readouterr().err
+    assert "in-memory counters" in err and "8.8.8.8" not in err and TOKEN not in err
+    Checker(client=FakeClient(), live=True)
+    assert "in-memory counters" not in capsys.readouterr().err
+
+
+def test_vercel_without_store_fails_closed(monkeypatch, capsys):
+    from factcheck import limits
+    from factcheck.service import PAUSED
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
+        monkeypatch.delenv(name, raising=False)
+    called = []
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: called.append(1))
+    for key, val in (("VERCEL", "1"), ("VERCEL_ENV", "production"), ("VERCEL_ENV", "preview")):
+        monkeypatch.delenv("VERCEL", raising=False)
+        monkeypatch.delenv("VERCEL_ENV", raising=False)
+        monkeypatch.setenv(key, val)
+        limits._closed_warned = False
+        ch = Checker(client=FakeClient(), live=True)
+        assert not isinstance(ch.limiter, core.RateLimiter) and not isinstance(ch.cap, core.DailyCap)
+        code, h, body = ch.handle({"claim": claim_n(1)}, "1.2.3.4")
+        assert code == 503 and h["Cache-Control"] == "no-store" and json.loads(body) == PAUSED
+        assert ch._client.calls == 0 and called == []
+        code2, h2, _ = ch.handle({"claim": claim_n(2)}, "9.9.9.9")
+        assert code2 == 503 and h2["Cache-Control"] == "no-store" and ch._client.calls == 0
+        bad, hb, _ = ch.handle({"claim": ""}, "1.2.3.4")
+        assert bad == 400 and hb["Cache-Control"] == "no-store"
+    err = capsys.readouterr().err
+    assert "refusing live checks" in err and "in-memory counters" not in err
+    assert "1.2.3.4" not in err and "9.9.9.9" not in err and "Honey never spoils" not in err and TOKEN not in err
+
+
+def test_vercel_with_store_still_runs(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("VERCEL_ENV", "production")
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "1.2.3.4")[0] == 200 and ch._client.calls == 2

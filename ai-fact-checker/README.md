@@ -52,10 +52,11 @@ The key is read on the server only (`DESEARCH_API_KEY`), never sent to the brows
 - a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day); if a response carries no cost, the call counts `DEMO_FALLBACK_COST_USD` (default $0.005) so the cap still works;
 - a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on result responses, so a CDN serves repeat claims, plus an in-memory cache keyed by the normalized claim;
 - a kill switch: `DEMO_LIVE=0` turns off live calls and points to `/sample.json`.
-On a serverless host the limit, cap and in-memory cache are per warm instance, so they are best effort; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
+The per-IP limit, the global limit and the daily cap are stored in Upstash Redis when `KV_REST_API_URL` and `KV_REST_API_TOKEN` are set (or `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`), so they hold across Vercel instances. On Vercel, if that store is not configured, `/api/check` returns 503 with the sample pointer and makes no paid call. A local run with no store falls back to in-memory counters and logs a warning once. If the store is configured but a call fails, the endpoint returns that same 503. The in-memory result cache is still per warm instance; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
 
 ## Files
-- `factcheck/core.py`: input checks, request bodies, source cleanup, cue labels, citation check, X post filter, limiter, cap, cache. No network.
+- `factcheck/core.py`: input checks, request bodies, source cleanup, cue labels, citation check, X post filter, in-memory limiter, cap, cache. No network.
+- `factcheck/limits.py`: shared Upstash Redis counters (stdlib urllib). Local runs fall back to the in-memory limiter and cap when no store is configured. On Vercel a missing store fails closed.
 - `factcheck/client.py`: plain-HTTP Desearch client (key redaction guard).
 - `factcheck/service.py`: the `/api/check` endpoint logic shared by local and Vercel.
 - `api/check.py`: Vercel Python function. `public/index.html`: the page. `vercel.json`: function settings.
