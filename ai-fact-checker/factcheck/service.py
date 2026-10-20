@@ -34,7 +34,10 @@ class Checker:
 
     def cap_cost(self, status, rec):
         """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
-        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so missing headers cannot switch the cap off."""
+        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so missing headers cannot switch the cap off.
+        A 401, 402 or 403 (invalid key or out of balance) counts $0."""
+        if status in (401, 402, 403):
+            return 0.0
         if rec.get("cost_known", True):
             return rec["cost"]
         return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
@@ -86,6 +89,8 @@ class Checker:
         except RuntimeError as e:   # missing key on the server: say so without details
             print(f"[check] server error: {type(e).__name__}", file=sys.stderr)
             return out(500, {"error": "The demo is not configured."})
+        if st in (401, 402, 403):   # bad key or empty balance: same response as the kill switch
+            return out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if st != 200:
             return out(502, {"error": f"Search API returned {st}. Try again later."})
         self.cache.put(key, res)
