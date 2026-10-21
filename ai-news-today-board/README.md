@@ -19,16 +19,14 @@ Authors are shown as "a user". Posts that mention an account are left out, so ev
 
 ```bash
 pip install -r requirements.txt
-# Put your Desearch API key (from console.desearch.ai) in a key file, one line:
-printf '%s' 'YOUR_KEY' > ~/.desearch_api_key && chmod 600 ~/.desearch_api_key
 ```
 
-The script reads the key only from a key file (`--key-file PATH`, default `~/.desearch_api_key`). It does not read environment variables.
+Set `DESEARCH_API_KEY` in your environment. The key is read only at runtime. The legacy `--key-file` flag is accepted but ignored.
 
 ## Run
 
 ```bash
-python ai_news_board.py --key-file ~/.desearch_api_key --out output
+python ai_news_board.py --out output
 ```
 
 Offline, from the saved sample (no key, no cost):
@@ -69,3 +67,9 @@ One run is 10 calls (5 sub-queries x 2 sources). Each response reports its cost 
 ```bash
 python -m unittest discover -s tests
 ```
+
+## Live demo
+
+Run `python app.py` and open `http://127.0.0.1:8000`. Set `DEMO_LIVE=0` to view the saved sample without a key. See [DEPLOY.md](DEPLOY.md) for Vercel setup and environment settings.
+
+The live board makes 10 parallel calls per build and caches results for six hours. Cost is read per call from the response header, then body `cost_usd`, with a configurable $0.005 fallback. The demo filters replies, a small profanity/NSFW word list and posts without links that have very low engagement. Some failed searches are marked as a partial result.
