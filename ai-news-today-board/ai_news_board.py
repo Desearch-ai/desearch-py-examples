@@ -195,7 +195,7 @@ def collect_rows(raw, seen=None, max_age_hours=24, page_days=7, filter_x=False):
             for t in items:
                 if filter_x:
                     from newsboard.xfilter import keep_post
-                    if not keep_post(t): continue
+                    if not keep_post(t, tag=rec["tag"], query=QUERY_PLAN.get(rec["tag"])): continue
                 text = t.get("text") or ""
                 likes = num(t.get("like_count"))
                 if likes < raw.get("min_likes", 0): stats["x_below_min_likes"] += 1; continue
@@ -245,7 +245,8 @@ def build_board(raw_responses, now, seen=None):
     raw = dict(raw_responses) if isinstance(raw_responses, dict) else {"calls": raw_responses}
     raw["started"] = now.isoformat() if isinstance(now, dt.datetime) else now
     rows, stats = collect_rows(raw, seen, filter_x=True)
-    posts = sorted((r for r in rows if r["source"] == "X post"), key=lambda r: r["engagement"], reverse=True)[:TOP_N]
+    from newsboard.xfilter import prepare_posts
+    posts = prepare_posts(r for r in rows if r["source"] == "X post")[:TOP_N]
     pages = sorted((r for r in rows if r["source"] == "web page"), key=lambda r: r["published_utc"] or "0", reverse=True)
     return {"x_posts": [{**r, "author": "a user"} for r in posts], "pages": pages,
             "generated_at": raw["started"], "calls": stats["calls"], "cost_usd": stats["cost_usd"]}
