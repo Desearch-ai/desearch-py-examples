@@ -1,5 +1,6 @@
 """Offline display filtering and compact X post presentation."""
 import os
+from html import unescape
 import re
 
 WORDS = ("fuck", "fucking", "fucker", "fucked", "shit", "porn", "pornography", "nsfw", "xxx", "bitch", "fck")
@@ -15,7 +16,9 @@ SYNONYMS = {
 }
 NOISE = (
     r"november\s+3|vote|voting|election|make\s+it\s+count|globalist|democrat|republican",
-    r"coins?|crypto|bitcoin|btc|blockchain|memecoin|airdrop|wallet|defi|nft|pump",
+    r"coins?|crypto|bitcoin|btc|blockchain|memecoin|airdrop|wallet|defi|nft|pump|"
+    r"launchpad|market\s+makers?|supply[-\s]controlled|pre-?sale|tokenomics|"
+    r"mint(?:ing|ed)?(?!\s+(?:condition|green)\b)|token\s+launch|liquidity\s+pool|tge|whitelist",
     r"stock\s+list|stocks\s+to\s+watch|buy\s+now",
 )
 
@@ -47,6 +50,15 @@ def politics_or_person(text):
         plain = re.sub(r"\b" + re.escape(name) + r"\b", "", plain, flags=re.I)
     return bool(re.search(r"\b[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?\s+[A-Z][a-z]+\b", plain)
                 or re.search(r"\bAndrii\b", plain, re.I))
+
+
+def decode_text(text):
+    """Decode nested HTML entities from X text before processing it."""
+    while True:
+        decoded = unescape(text)
+        if decoded == text:
+            return text
+        text = decoded
 
 
 def normalise(text):
@@ -97,7 +109,7 @@ def relevant(text, tag=None, query=None):
 def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
     if os.environ.get("DEMO_X_FILTER", "1") == "0":
         return True
-    text = str(post.get("text") or "")
+    text = decode_text(str(post.get("text") or ""))
     if has_profanity(text) or politics_or_person(text) or not relevant(text, tag or topic, query):
         return False
     if any(post.get(k) for k in ("in_reply_to_status_id", "in_reply_to_status_id_str", "in_reply_to_user_id", "is_reply", "reply_to")):
@@ -114,6 +126,7 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
 
 
 def truncate_text(text, limit=280):
+    text = decode_text(text)
     if len(text) <= limit:
         return text
     links = LINK.findall(text)
@@ -133,10 +146,11 @@ def prepare_posts(posts, threshold=0.5):
     """Keep strongest representatives before truncating their display text."""
     kept, shingles = [], []
     for post in sorted(posts, key=lambda p: p.get("engagement", 0), reverse=True):
-        words = normalise(post["title_or_text"]).split()
+        text = decode_text(post["title_or_text"])
+        words = normalise(text).split()
         current = set(zip(words, words[1:], words[2:])) if len(words) >= 3 else {tuple(words)}
         if any(len(current & other) / len(current | other) >= threshold for other in shingles if current | other):
             continue
         shingles.append(current)
-        kept.append({**post, "title_or_text": truncate_text(post["title_or_text"])})
+        kept.append({**post, "title_or_text": truncate_text(text)})
     return kept

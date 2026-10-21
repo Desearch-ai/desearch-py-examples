@@ -212,3 +212,65 @@ def test_public_sample_passes_filter(monkeypatch):
         assert not politics_or_person(text)
         assert keep_post({'text': text, 'like_count': post['likes'],
                           'retweet_count': post['reposts'], 'reply_count': post['replies']}, tag=post['tag'])
+
+
+@pytest.mark.parametrize('term', [
+    'launchpad', 'market maker', 'market makers', 'supply-controlled',
+    'presale', 'pre-sale', 'tokenomics', 'mint', 'minting', 'minted',
+    'token launch', 'liquidity pool', 'TGE', 'whitelist',
+])
+def test_strong_crypto_terms_drop_on_their_own(term):
+    assert not keep_post({'text': f'AI {term} available soon', 'like_count': 50}, tag='ai')
+
+
+def test_orbio_launchpad_dropped():
+    text = ('You can now launch supply-controlled AI agents paired with ORBIO, funded by the people '
+            'who want them and backed by AI market makers from day one. Launching them straight '
+            'from the Orbio launchpad, soon.')
+    assert not keep_post({'text': text, 'like_count': 50}, tag='ai')
+
+
+@pytest.mark.parametrize('phrase', ['mint condition', 'mint green', 'token', 'tokens', 'eth'])
+def test_non_crypto_uses_kept(phrase):
+    assert keep_post({'text': f'AI {phrase}', 'like_count': 50}, tag='ai')
+
+
+@pytest.mark.parametrize('encoded,decoded', [
+    ('AI &amp;amp; models &lt;3 &gt;2 &quot;new&quot; &#39;release&#39;',
+     'AI & models <3 >2 "new" \'release\''),
+    ('AI &#x26;amp; models', 'AI & models'),
+])
+def test_entities_decoded_for_display(encoded, decoded):
+    from ai_news_board import collect_rows
+    raw = {'calls': [{'source': 'x', 'tag': 'ai', 'body': [
+        {'id': '1', 'text': encoded, 'like_count': 50}]}]}
+    assert collect_rows(raw)[0][0]['title_or_text'] == decoded
+    assert build_board(raw, '2026-10-21T00:00:00+00:00')['x_posts'][0]['title_or_text'] == decoded
+
+
+@pytest.mark.parametrize('text', ['AI cr&#121;pto', 'AI sh&#105;t', 'AI &#64;someone'])
+def test_entities_decoded_before_filter(text):
+    assert not keep_post({'text': text, 'like_count': 50}, tag='ai')
+
+
+def test_entities_decoded_before_dedupe_and_truncation():
+    from newsboard.xfilter import prepare_posts, truncate_text
+    posts = [
+        {'title_or_text': 'AI &#109;odel &#114;elease', 'engagement': 50},
+        {'title_or_text': 'AI model release', 'engagement': 10},
+    ]
+    assert prepare_posts(posts) == [{'title_or_text': 'AI model release', 'engagement': 50}]
+    assert truncate_text('AI ' + '&amp;amp;' * 270) == 'AI ' + '&' * 270
+    assert len(truncate_text('AI ' + '&amp;amp;' * 400)) <= 280
+
+
+def test_public_sample_entities_and_length():
+    import json
+    from pathlib import Path
+    from newsboard.xfilter import LINK
+    board = json.loads((Path(__file__).resolve().parents[1] / 'public/sample.json').read_text())
+    assert board['x_posts']
+    for post in board['x_posts']:
+        text = post['title_or_text']
+        assert not any(entity in text for entity in ('&amp;', '&lt;', '&gt;', '&quot;', '&#'))
+        assert len(text) <= 280 or LINK.fullmatch(text)

@@ -193,10 +193,10 @@ def collect_rows(raw, seen=None, max_age_hours=24, page_days=7, filter_x=False):
             items = rec["body"] if isinstance(rec["body"], list) else []
             stats["x_returned"] += len(items)
             for t in items:
+                from newsboard.xfilter import decode_text, keep_post
+                text = decode_text(str(t.get("text") or ""))
                 if filter_x:
-                    from newsboard.xfilter import keep_post
-                    if not keep_post(t, tag=rec["tag"], query=QUERY_PLAN.get(rec["tag"])): continue
-                text = t.get("text") or ""
+                    if not keep_post({**t, "text": text}, tag=rec["tag"], query=QUERY_PLAN.get(rec["tag"])): continue
                 likes = num(t.get("like_count"))
                 if likes < raw.get("min_likes", 0): stats["x_below_min_likes"] += 1; continue
                 t0 = parse_any(t.get("created_at"))
