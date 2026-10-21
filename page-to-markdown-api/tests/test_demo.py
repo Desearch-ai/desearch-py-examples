@@ -30,6 +30,7 @@ class FakeClient:
 
 
 def make(client=None, **kwargs):
+    kwargs.setdefault('limiter', RateLimiter())
     return Converter(client=client or FakeClient(), resolver=dns, live=kwargs.pop('live', True), **kwargs)
 
 
@@ -72,7 +73,7 @@ def test_any_nonpublic_dns_answer_rejected(address):
 def test_normalization_and_public_url():
     assert validate_url('HTTPS://Example.COM:443/a///#fragment', dns) == 'https://example.com/a'
     assert validate_url('http://Example.com:80/', dns) == 'http://example.com'
-    assert validate_url('https://example.com:8443/a?q=1#x', dns) == 'https://example.com:8443/a?q=1'
+    assert validate_url('https://example.com:443/a?q=1#x', dns) == 'https://example.com/a?q=1'
 
 
 def test_dns_failure_and_no_answers():
@@ -87,6 +88,9 @@ def test_paused_even_with_cache(monkeypatch):
     status, body = response(c)
     assert status == 503 and body['status'] == 'paused' and body['markdown'] == c.sample['markdown']
     assert c._client.calls == 1
+    for _ in range(3):
+        assert response(c)[0] == 503
+    assert response(c)[0] == 429
     monkeypatch.setenv('DEMO_LIVE', '0')
     assert not Converter(resolver=dns).live
 
@@ -131,7 +135,8 @@ def test_title_empty_and_output_cap():
 
 def test_cache_and_expiry():
     clock = [0]
-    c = make(cache=TTLCache(clock=lambda: clock[0]))
+    c = make(cache=TTLCache(clock=lambda: clock[0]),
+             limiter=RateLimiter(clock=lambda: clock[0]))
     assert not response(c, 'HTTPS://EXAMPLE.COM:443/a/#x')[1]['cached']
     clock[0] = 21599
     hit = response(c, 'https://example.com/a')[1]
@@ -155,9 +160,9 @@ def test_limits_and_day_reset():
 
 def test_global_limit():
     c = make(FakeClient(500), limiter=RateLimiter(global_window=2))
-    assert response(c, ip='one')[0] == 502
-    assert response(c, ip='two')[0] == 502
-    assert response(c, ip='three')[0] == 429 and c._client.calls == 2
+    assert response(c, ip='192.0.2.1')[0] == 502
+    assert response(c, ip='192.0.2.2')[0] == 502
+    assert response(c, ip='192.0.2.3')[0] == 429 and c._client.calls == 2
 
 
 @pytest.mark.parametrize('headers,body,cost', [
@@ -174,6 +179,7 @@ def test_header_body_fallback_and_daily_cap(headers, body, cost):
     c = make(Client('test-placeholder', opener=opener), cap=DailyCap(cost))
     assert response(c)[1]['cost_usd'] == cost
     assert c.cap.spent == cost
+    assert response(c)[1]['cached']
     assert response(c, 'https://example.com/another')[0] == 503
     opener.assert_called_once()
     req = opener.call_args.args[0]
