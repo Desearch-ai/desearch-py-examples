@@ -70,8 +70,8 @@ def test_shared_global_limit(monkeypatch):
     monkeypatch.setenv('DEMO_GLOBAL_10MIN', '3')
     _, a, b = boards(monkeypatch)
     for i in range(3):
-        assert result((a, b)[i % 2], str(i))[0] == 502
-    assert result(b, 'another-ip')[0] == 429
+        assert result((a, b)[i % 2], f'192.0.2.{i + 1}')[0] == 502
+    assert result(b, '192.0.2.4')[0] == 429
 
 
 def test_shared_day_limit(monkeypatch):
