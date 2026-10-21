@@ -27,7 +27,7 @@ Every request, including rejected and cached ones, counts toward the shared rate
 
 Live mode fails closed with the saved paused response when Redis configuration is missing or Redis fails, including authentication errors. There is no automatic memory fallback. Explicitly injected in-memory limiter, cap or cache objects also select memory defaults for tests and local development.
 
-When `VERCEL` has any non-empty value, `DEMO_STATE=memory` is refused with the saved paused 503 response and no paid call, while explicitly injected limiter, cap or cache objects remain available for tests.
+When either `VERCEL` or `VERCEL_ENV` has any non-empty value, `DEMO_STATE=memory` is refused with the saved paused 503 response and no paid call, while explicitly injected limiter, cap or cache objects remain available for tests.
 
 Concurrent requests across instances can pass a budget check before another call records its cost. Keep the shared key balance small as the hard outer ceiling. Cache misses are serialized within an instance. The handler trusts the first forwarded IP set by Vercel; do not expose the local development server through an untrusted proxy.
 

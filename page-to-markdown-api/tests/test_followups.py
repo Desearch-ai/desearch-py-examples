@@ -33,10 +33,10 @@ def test_client_ip_only_uses_leftmost_forwarded_entry():
                       'x-forwarded-for': ' , later', 'X-Real-IP': ' real '}) == 'real'
 
 
-@pytest.mark.parametrize('vercel', ['1', '0', 'false', ' '])
-def test_vercel_refuses_memory(monkeypatch, vercel):
+@pytest.mark.parametrize('variable,vercel', [('VERCEL', v) for v in ['1', '0', 'false', ' ']] + [('VERCEL_ENV', 'preview')])
+def test_vercel_refuses_memory(monkeypatch, variable, vercel):
     monkeypatch.setenv('DEMO_STATE', 'memory')
-    monkeypatch.setenv('VERCEL', vercel)
+    monkeypatch.setenv(variable, vercel)
     c = Converter(client=FakeClient(), resolver=dns, live=True)
     for _ in range(7):
         status, body = response(c)

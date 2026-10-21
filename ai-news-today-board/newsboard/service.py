@@ -24,7 +24,7 @@ class Board:
         self.build_lock = threading.Lock()
         injected = any(item is not None for item in (limiter, cap, cache))
         self.memory_refused = (os.environ.get("DEMO_STATE") == "memory"
-                               and bool(os.environ.get("VERCEL")) and not injected)
+                               and bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV")) and not injected)
         memory = injected or (os.environ.get("DEMO_STATE") == "memory"
                               and not self.memory_refused)
         backend = core if memory else state

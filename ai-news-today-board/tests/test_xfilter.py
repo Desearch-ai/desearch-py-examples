@@ -20,13 +20,13 @@ def test_replies(field, value):
 
 
 def test_engagement_and_links(monkeypatch):
-    assert not keep_post({'text': 'AI news', 'url': 'https://x.com/i/status/1', 'like_count': 4})
-    assert keep_post({'text': 'AI news', 'like_count': 3, 'retweet_count': 1, 'reply_count': 1})
-    assert keep_post({'text': 'AI https://example.test'})
-    assert keep_post({'text': 'AI', 'entities': {'urls': [{'expanded_url': 'https://example.test'}]}})
+    assert not keep_post({'text': 'AI model news', 'url': 'https://x.com/i/status/1', 'like_count': 4})
+    assert keep_post({'text': 'AI model news', 'like_count': 3, 'retweet_count': 1, 'reply_count': 1})
+    assert keep_post({'text': 'AI model news https://example.test'})
+    assert keep_post({'text': 'AI model news', 'entities': {'urls': [{'expanded_url': 'https://example.test'}]}})
     monkeypatch.setenv('DEMO_X_MIN_ENGAGEMENT', '10')
-    assert not keep_post({'text': 'AI', 'like_count': 9})
-    assert keep_post({'text': 'AI', 'like_count': 2}, min_engagement=2)
+    assert not keep_post({'text': 'AI model news', 'like_count': 9})
+    assert keep_post({'text': 'AI model news', 'like_count': 2}, min_engagement=2)
     monkeypatch.setenv('DEMO_X_FILTER', '0')
     assert keep_post({'text': 'NSFW', 'is_reply': True})
 
@@ -232,7 +232,7 @@ def test_orbio_launchpad_dropped():
 
 @pytest.mark.parametrize('phrase', ['mint condition', 'mint green', 'token', 'tokens', 'eth'])
 def test_non_crypto_uses_kept(phrase):
-    assert keep_post({'text': f'AI {phrase}', 'like_count': 50}, tag='ai')
+    assert keep_post({'text': f'AI {phrase} research update', 'like_count': 50}, tag='ai')
 
 
 @pytest.mark.parametrize('encoded,decoded', [

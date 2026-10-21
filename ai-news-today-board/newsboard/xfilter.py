@@ -4,7 +4,7 @@ from html import unescape
 import re
 
 WORDS = ("fuck", "fucking", "fucker", "fucked", "shit", "porn", "pornography", "nsfw", "xxx", "bitch", "fck")
-LINK = re.compile(r"https?://\S+", re.I)
+LINK = re.compile(r"(?:https?://|(?<!\w)(?:t\.co/|www\.))\S+", re.I)
 LEET = str.maketrans({"@": "a", "$": "s", "0": "o", "1": "i", "3": "e", "!": "i", "4": "a", "5": "s", "7": "t"})
 SYNONYMS = {
     "ai": "ai artificial intelligence llm llms gpt openai anthropic claude gemini llama neural machine learning generative chatgpt",
@@ -110,6 +110,17 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
     if os.environ.get("DEMO_X_FILTER", "1") == "0":
         return True
     text = decode_text(str(post.get("text") or ""))
+    plain = LINK.sub("", text)
+    if not any(c.isalnum() for c in plain):
+        return False
+    lang = post.get("lang", "und")
+    if lang != "en":
+        if lang != "und":
+            return False
+        plain = re.sub(r"(?<!\w)[@#]\w+", "", plain)
+        letters = [c for c in plain if c.isalpha()]
+        if len(letters) < 8 or sum(c.isascii() for c in letters) / len(letters) < 0.85:
+            return False
     if has_profanity(text) or politics_or_person(text) or not relevant(text, tag or topic, query):
         return False
     if any(post.get(k) for k in ("in_reply_to_status_id", "in_reply_to_status_id_str", "in_reply_to_user_id", "is_reply", "reply_to")):

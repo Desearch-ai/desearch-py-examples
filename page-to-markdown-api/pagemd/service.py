@@ -29,7 +29,7 @@ class Converter:
         self._client = client
         injected_state = any(item is not None for item in (limiter, cap, cache))
         memory_requested = os.environ.get('DEMO_STATE') == 'memory'
-        self._memory_refused = memory_requested and bool(os.environ.get('VERCEL')) and not injected_state
+        self._memory_refused = memory_requested and bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV')) and not injected_state
         memory = injected_state or (memory_requested and not self._memory_refused)
         redis = state.RedisREST() if not memory else None
         self.limiter = limiter if limiter is not None else (

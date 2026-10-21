@@ -36,10 +36,10 @@ def response(board, query=None, ip='192.0.2.1'):
     return status, headers, json.loads(body)
 
 
-@pytest.mark.parametrize('vercel', ['1', '0', 'false', ' '])
-def test_vercel_refuses_memory(monkeypatch, vercel):
+@pytest.mark.parametrize('variable,vercel', [('VERCEL', v) for v in ['1', '0', 'false', ' ']] + [('VERCEL_ENV', 'preview')])
+def test_vercel_refuses_memory(monkeypatch, variable, vercel):
     monkeypatch.setenv('DEMO_STATE', 'memory')
-    monkeypatch.setenv('VERCEL', vercel)
+    monkeypatch.setenv(variable, vercel)
     client = Mock()
     board = Board(client=client, live=True)
     # Even available shared state and a cache hit must not enable this configuration.
