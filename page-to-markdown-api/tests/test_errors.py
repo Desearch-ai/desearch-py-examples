@@ -1,6 +1,9 @@
 """Deterministic, offline coverage for demo extraction failures."""
 import json
 import socket
+import urllib.error
+
+from pagemd.client import Client
 
 import pytest
 
@@ -57,8 +60,8 @@ def response(service):
      'Timed out fetching this page. Try again or use another link.', .0005),
     (200, 4, {}, TimeoutError(), True, 504, 'timed_out',
      'Timed out fetching this page. Try again or use another link.', .0005),
-    (200, 0, {}, OSError('connection failed'), True, 504, 'timed_out',
-     'Timed out fetching this page. Try again or use another link.', .0005),
+    (200, 0, {}, OSError('connection failed'), True, 502, 'unreachable',
+     "Couldn't reach this site. Check the link and try again.", 0),
     (504, 0, {}, None, True, 504, 'timed_out',
      'Timed out fetching this page. Try again or use another link.', .002),
     (408, 0, {}, None, True, 504, 'timed_out',
@@ -133,4 +136,106 @@ def test_error_cost_exhausts_cap_before_next_extract():
     code, body = response(service)
     assert code == 503 and body['status'] == 'paused'
     assert body['cost_usd_this_request'] == 0
+    assert client.calls == 1
+
+
+CONNECTION_FAILURES = [
+    socket.gaierror('name or service not known'),
+    ConnectionRefusedError('connection refused'),
+    ConnectionResetError('connection reset'),
+    OSError('connection failed'),
+    urllib.error.URLError(socket.gaierror('getaddrinfo failed')),
+    urllib.error.URLError(ConnectionRefusedError()),
+    urllib.error.URLError('connection failed'),
+]
+TIMEOUTS = [TimeoutError(), socket.timeout(), urllib.error.URLError(TimeoutError())]
+
+
+@pytest.mark.parametrize('failure,status',
+                         [(e, 598) for e in CONNECTION_FAILURES] + [(e, 599) for e in TIMEOUTS])
+def test_client_connection_failures(failure, status):
+    calls = []
+
+    def opener(req, timeout):
+        calls.append((req, timeout))
+        raise failure
+
+    assert Client('offline-test-key', opener=opener).extract('https://example.com') == (
+        status, '', {'cost': 0, 'cost_known': False})
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize('failure', CONNECTION_FAILURES + TIMEOUTS)
+def test_service_connection_failures(failure):
+    service, client = make(failure=failure)
+    code, body = response(service)
+    timeout = failure in TIMEOUTS
+    assert (code, body['status']) == ((504, 'timed_out') if timeout else (502, 'unreachable'))
+    assert service.cap.spent == (.0005 if timeout else 0)
+    assert body['cost_usd_this_request'] == 0
+    assert client.calls == 1
+
+
+@pytest.mark.parametrize('message', [
+    'Name or service not known', 'nodename nor servname provided', 'getaddrinfo failed',
+    'ENOTFOUND', 'ERR_NAME_NOT_RESOLVED', 'DNS failure', 'Could not resolve host',
+    'Connection refused', 'ECONNREFUSED', 'ERR_CONNECTION_REFUSED',
+    'Failed to establish a new connection',
+])
+@pytest.mark.parametrize('as_dict', [False, True])
+def test_api_unreachable_body(message, as_dict):
+    payload = {'error': {'details': [message]}} if as_dict else message
+    service, client = make(504, payload, known=True)
+    code, body = response(service)
+    assert (code, body['status'], body['message']) == (
+        502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
+    assert body['error'] == body['message']
+    assert service.cap.spent == body['cost_usd_this_request'] == 0
+    assert not service.cache.d
+    assert client.calls == 1
+
+
+def test_status_598_is_unreachable():
+    service, client = make(598, {}, known=True)
+    code, body = response(service)
+    assert (code, body['status']) == (502, 'unreachable')
+    assert service.cap.spent == body['cost_usd_this_request'] == 0
+    assert client.calls == 1
+
+
+def test_blocked_precedes_unreachable():
+    service, client = make(598, {'error': 'blocked, DNS failure'})
+    code, body = response(service)
+    assert (code, body['status']) == (502, 'blocked')
+    assert client.calls == 1
+
+
+@pytest.mark.parametrize('addresses', [None, [], [
+    (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('93.184.216.34', 443)),
+    (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('127.0.0.1', 443)),
+]])
+def test_validation_dns_failure_and_private_addresses(addresses):
+    service, client = make()
+
+    def resolver(*args, **kwargs):
+        if addresses is None:
+            raise socket.gaierror('name or service not known')
+        return addresses
+
+    service.resolver = resolver
+    code, body = response(service)
+    if addresses:
+        assert (code, body['status']) == (400, 'invalid')
+    else:
+        assert (code, body['status'], body['message']) == (
+            502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
+    assert service.cap.spent == body['cost_usd_this_request'] == 0
+    assert client.calls == 0
+
+
+def test_successful_content_is_not_unreachable():
+    service, client = make(200, {'html': '<p>DNS connection refused</p>'})
+    code, body = response(service)
+    assert code == 200
+    assert body['status'] == 'empty'
     assert client.calls == 1
