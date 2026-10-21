@@ -138,17 +138,17 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
 
 def truncate_text(text, limit=280):
     text = decode_text(text)
+    plain = LINK.sub("", text).strip()
+    if not plain:
+        return ""
     if len(text) <= limit:
         return text
     links = LINK.findall(text)
-    suffix = " ".join(links)
-    if len(suffix) > limit:
-        # Preserve the first URL whole if the URL budget is exhausted.
-        return links[0]
-    plain = LINK.sub("", text).strip()
+    suffix = links[0] if links else ""
+    # A URL must leave room for readable text and an ellipsis.
+    if len(suffix) + 3 > limit:
+        suffix = ""
     budget = limit - len(suffix) - (1 if suffix else 0)
-    if budget <= 0:
-        return suffix
     short = plain[:max(0, budget - 1)].rstrip() + "…"
     return short + (" " + suffix if suffix else "")
 
@@ -158,10 +158,13 @@ def prepare_posts(posts, threshold=0.5):
     kept, shingles = [], []
     for post in sorted(posts, key=lambda p: p.get("engagement", 0), reverse=True):
         text = decode_text(post["title_or_text"])
+        display = truncate_text(text)
+        if not display or not any(c.isalpha() for c in LINK.sub("", display)):
+            continue
         words = normalise(text).split()
         current = set(zip(words, words[1:], words[2:])) if len(words) >= 3 else {tuple(words)}
         if any(len(current & other) / len(current | other) >= threshold for other in shingles if current | other):
             continue
         shingles.append(current)
-        kept.append({**post, "title_or_text": truncate_text(text)})
+        kept.append({**post, "title_or_text": display})
     return kept
