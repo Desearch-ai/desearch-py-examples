@@ -20,6 +20,8 @@ For an offline preview, set `DEMO_LIVE` to `0` and run `python app.py`. Open the
 
 Each live cache miss sends one Extract GET with the existing Authorization header, no redirects and no retries. Header billing takes precedence over body billing and the fallback. A 404 costs zero; authentication and balance errors pause the demo. Empty pages are billed and cached too. The daily cap prevents subsequent calls once reached; the last call can exceed the remaining balance because actual cost is known only afterward.
 
+Every request, including rejected and cached ones, counts toward the rate limits, which are still per warm instance.
+
 Limits, cap and six-hour normalized URL cache live in memory per warm instance. Cold starts reset them and multiple instances each have their own budget. Keep the shared key balance small as the hard outer ceiling. Cache misses are serialized within an instance. The handler trusts the first forwarded IP set by Vercel; do not expose the local development server through an untrusted proxy.
 
 Responses use `no-store` to keep submitted URLs out of CDN caches. The application does not log request lines, URLs, IPs or raw API bodies and writes no submitted URLs to disk. Hosting access logs may retain query strings independently; review the hosting provider's log settings. DNS checks reject any non-public answer and any exposed unsafe final URL. Extract performs the remote fetch, so redirects it does not expose cannot be inspected here.

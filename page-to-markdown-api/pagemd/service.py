@@ -47,6 +47,8 @@ class Converter:
         def sample(code, status, message):
             return out(code, {**self.sample, 'status': status, 'error': message, 'message': message,
                               'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0})
+        if not self.limiter.allow(ip or 'unknown'):
+            return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
         try:
             url = validate_url(query.get('url'), self.resolver)
         except URLValidationError as e:
@@ -58,8 +60,6 @@ class Converter:
             return out(200, {**hit, 'cached': True, 'cost_usd_this_request': 0})
         if not self.cap.ok():
             return sample(503, 'paused', "Today's demo budget is used up. See the saved sample below.")
-        if not self.limiter.allow(ip or 'unknown'):
-            return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
         try:
             if self._client is None:
                 self._client = Client(os.environ.get('DESEARCH_API_KEY', '').strip())

@@ -87,6 +87,9 @@ def test_paused_even_with_cache(monkeypatch):
     status, body = response(c)
     assert status == 503 and body['status'] == 'paused' and body['markdown'] == c.sample['markdown']
     assert c._client.calls == 1
+    for _ in range(3):
+        assert response(c)[0] == 503
+    assert response(c)[0] == 429
     monkeypatch.setenv('DEMO_LIVE', '0')
     assert not Converter(resolver=dns).live
 
@@ -131,7 +134,8 @@ def test_title_empty_and_output_cap():
 
 def test_cache_and_expiry():
     clock = [0]
-    c = make(cache=TTLCache(clock=lambda: clock[0]))
+    c = make(cache=TTLCache(clock=lambda: clock[0]),
+             limiter=RateLimiter(clock=lambda: clock[0]))
     assert not response(c, 'HTTPS://EXAMPLE.COM:443/a/#x')[1]['cached']
     clock[0] = 21599
     hit = response(c, 'https://example.com/a')[1]
@@ -174,6 +178,7 @@ def test_header_body_fallback_and_daily_cap(headers, body, cost):
     c = make(Client('test-placeholder', opener=opener), cap=DailyCap(cost))
     assert response(c)[1]['cost_usd'] == cost
     assert c.cap.spent == cost
+    assert response(c)[1]['cached']
     assert response(c, 'https://example.com/another')[0] == 503
     opener.assert_called_once()
     req = opener.call_args.args[0]
