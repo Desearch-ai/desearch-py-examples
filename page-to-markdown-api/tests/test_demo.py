@@ -99,12 +99,12 @@ def test_paused_even_with_cache(monkeypatch):
 def test_failures_sample_cost_and_no_retry(status):
     c = make(FakeClient(status, rec={'cost': .8, 'cost_known': True}))
     code, body = response(c)
-    assert code == (503 if status in (401, 402, 403) else 502)
+    assert code == (503 if status in (401, 402, 403) else 404 if status == 404 else 504 if status == 599 else 502)
     assert body['markdown'] == c.sample['markdown'] and body['sample'] == '/sample.json'
     assert c._client.calls == 1
     assert c.cap.spent == (0 if status in (401, 402, 403, 404) else .8)
     if status == 404:
-        assert body['error'] == "Couldn't fetch this page, the site may block bots"
+        assert body['error'] == 'Page not found. Check the link and try again.'
 
 
 @pytest.mark.parametrize('placement', ['rec', 'body', 'nested'])
@@ -206,7 +206,7 @@ def test_env_and_missing_configuration(monkeypatch):
 def test_http_failure_once(failure):
     opener = Mock(side_effect=failure)
     c = make(Client('test-placeholder', opener=opener))
-    assert response(c)[0] == 502
+    assert response(c)[0] == (504 if isinstance(failure, TimeoutError) else 502)
     opener.assert_called_once()
 
 
@@ -232,7 +232,7 @@ def test_timeout_returning_sample():
     client.extract.side_effect = TimeoutError()
     c = make(client)
     status, body = response(c)
-    assert status == 502 and body['markdown'] == c.sample['markdown']
+    assert status == 504 and body['markdown'] == c.sample['markdown']
     client.extract.assert_called_once()
 
 

@@ -6,6 +6,12 @@ import urllib.parse
 import urllib.request
 
 
+def connection_status(error):
+    """Reserve 599 for actual timeouts, including urllib's wrapped reason."""
+    reason = error.reason if isinstance(error, urllib.error.URLError) else error
+    return 599 if isinstance(reason, TimeoutError) else 598
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
@@ -27,8 +33,8 @@ class Client:
                 status, headers, raw = r.status, dict(r.headers), r.read().decode('utf-8', 'replace')
         except urllib.error.HTTPError as e:
             status, headers, raw = e.code, dict(e.headers or {}), e.read().decode('utf-8', 'replace')
-        except (OSError, TimeoutError, urllib.error.URLError):
-            return 599, '', {'cost': 0, 'cost_known': False}
+        except (OSError, urllib.error.URLError) as e:
+            return connection_status(e), '', {'cost': 0, 'cost_known': False}
         try:
             body = json.loads(raw)
         except ValueError:

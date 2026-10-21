@@ -2,18 +2,50 @@
 import json
 import math
 import os
+import re
+import time
 from pathlib import Path
 import socket
 import threading
 from urllib.parse import parse_qs, urlsplit
 import core
-from .client import Client
+from .client import Client, connection_status
 from .guards import DailyCap, RateLimiter, TTLCache
 from . import state
-from .urlguard import validate_url, URLValidationError
+from .urlguard import validate_url, URLValidationError, URLUnreachableError
 
 NO_STORE = 'no-store'
 MAX_MARKDOWN = 200 * 1024
+FAST_404_SECONDS = 3.0
+
+
+def _site_blocked(body):
+    """Inspect API error fields only, never extracted page content."""
+    def visit(value, error_field=False):
+        if isinstance(value, str):
+            return error_field and bool(re.search(
+                r'\b(blocked|forbidden by site|access denied|captcha|bot protection|robots)\b',
+                value, re.IGNORECASE))
+        if isinstance(value, dict):
+            return any(visit(v, error_field or k in ('error', 'detail', 'message'))
+                       for k, v in value.items() if k not in ('html', 'text', 'content'))
+        if isinstance(value, list):
+            return any(visit(v, error_field) for v in value)
+        return False
+    return visit(body)
+
+
+def _site_unreachable(body):
+    """Inspect non-success API bodies for DNS and connection refusal reports."""
+    if isinstance(body, dict):
+        return any(_site_unreachable(value) for value in body.values())
+    if isinstance(body, list):
+        return any(_site_unreachable(value) for value in body)
+    return isinstance(body, str) and bool(re.search(
+        r'name or service not known|nodename nor servname|getaddrinfo|enotfound|'
+        r'err_name_not_resolved|\bdns\b|could not resolve|connection refused|'
+        r'econnrefused|err_connection_refused|failed to establish a new connection',
+        body, re.IGNORECASE))
 
 
 def _env_float(name, default):
@@ -25,8 +57,9 @@ def _env_float(name, default):
 
 
 class Converter:
-    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None):
+    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None, clock=time.monotonic):
         self._client = client
+        self.clock = clock
         injected_state = any(item is not None for item in (limiter, cap, cache))
         memory_requested = os.environ.get('DEMO_STATE') == 'memory'
         self._memory_refused = memory_requested and bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV')) and not injected_state
@@ -70,6 +103,8 @@ class Converter:
             return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
         try:
             url = validate_url(query.get('url'), self.resolver)
+        except URLUnreachableError:
+            return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
         except URLValidationError as e:
             return sample(400, 'invalid', str(e))
         if not self.live:
@@ -82,12 +117,17 @@ class Converter:
         try:
             if self._client is None:
                 self._client = Client(os.environ.get('DESEARCH_API_KEY', '').strip())
-            st, body, rec = self._client.extract(url)
+            started = self.clock()
+            try:
+                st, body, rec = self._client.extract(url)
+            finally:
+                elapsed = self.clock() - started
         except RuntimeError:
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
-        except (OSError, TimeoutError):
-            st, body, rec = 599, '', {'cost_known': False}
-        cost = 0 if st in (401, 402, 403, 404) else (rec['cost'] if rec.get('cost_known') else self.fallback_cost)
+        except OSError as e:
+            st, body, rec = connection_status(e), '', {'cost': 0, 'cost_known': False}
+        unreachable = st not in (200, 598) and _site_unreachable(body)
+        cost = 0 if st in (401, 402, 403, 404, 598) or unreachable else (rec['cost'] if rec.get('cost_known') else self.fallback_cost)
         self.cap.add(cost)
         try:
             candidates = [rec.get('final_url')]
@@ -103,8 +143,14 @@ class Converter:
             return sample(400, 'invalid', 'The page redirected to an unsafe address. Try another link.')
         if st in (401, 402, 403):
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        if st not in (200, 598) and _site_blocked(body):
+            return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
+        if unreachable:
+            return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
+        if st in (408, 504, 599) or (st == 404 and elapsed >= FAST_404_SECONDS):
+            return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
         if st == 404:
-            return sample(502, 'error', "Couldn't fetch this page, the site may block bots")
+            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
         if st != 200:
             return sample(502, 'error', "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
         content = body

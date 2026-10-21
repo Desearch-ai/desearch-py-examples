@@ -9,6 +9,10 @@ class URLValidationError(ValueError):
     pass
 
 
+class URLUnreachableError(URLValidationError):
+    """A syntactically safe hostname could not be resolved."""
+
+
 BINARY = re.compile(r'\.(pdf|zip|exe|dmg|png|jpe?g|gif|webp|svg|ico|mp4|mp3|iso|tar|gz|bz2|xz|7z|rar|wav|avi|mov|woff2?|ttf|bin|msi|apk|docx?|xlsx?|pptx?)/?$', re.I)
 
 
@@ -54,9 +58,12 @@ def validate_url(value, resolver=socket.getaddrinfo):
             reject()
         if BINARY.search(unquote(p.path)):
             reject()
-        addresses = resolver(host, default_port, type=socket.SOCK_STREAM)
+        try:
+            addresses = resolver(host, default_port, type=socket.SOCK_STREAM)
+        except socket.gaierror as e:
+            raise URLUnreachableError('Could not resolve hostname') from e
         if not addresses:
-            reject()
+            raise URLUnreachableError('Could not resolve hostname')
         for record in addresses:
             ip = ipaddress.ip_address(record[4][0])
             if not ip.is_global or ip.is_multicast or ip.is_reserved or getattr(ip, 'ipv4_mapped', None):
