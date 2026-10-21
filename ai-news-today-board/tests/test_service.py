@@ -12,6 +12,11 @@ from newsboard.service import Board, CACHE_HEADER, client_ip, parse_query
 from ai_news_board import build_board, plan_requests
 
 
+@pytest.fixture(autouse=True)
+def memory_state(monkeypatch):
+    monkeypatch.setenv("DEMO_STATE", "memory")
+
+
 class FakeClient:
     def __init__(self, status=200, cost=0, known=False, failed_tag=None, barrier=None):
         self.status, self.cost, self.known = status, cost, known
