@@ -9,7 +9,6 @@
    "type": "wikipedia",
    "snippet": "Science is the peer-reviewed academic journal of the American Association for the Advancement of Science (AAAS) and one of the world's top academic journals. It was first published in 1880, is currently circulated weekly and has a subscriber base of around 130,000.",
    "quote": "| Publisher | American Association for the Advancement of Science (United States) |",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -20,7 +19,6 @@
    "type": "web",
    "snippet": "Popular Science has been demystifying the worlds of science and technology since 1872. We explain the inner workings of the phone in your pocket, explore world-changing innovations, and examine everything from the marvels of deep space to the secret lives of staples like bread.",
    "quote": "Popular Science. Demystifying the worlds of science and technology since 1872.",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -31,7 +29,6 @@
    "type": "web",
    "snippet": "Science/AAAS peer-reviewed journals deliver impactful research, daily news, expert commentary, and career resources.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -42,7 +39,6 @@
    "type": "web",
    "snippet": "A SCIENCE promove ensinos e pesquisas para a ampliação e disseminação dos conhecimentos sobre métodos de pesquisa e qualidade da informação.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -53,7 +49,6 @@
    "type": "web",
    "snippet": "AboutPressCopyrightContact usCreatorsAdvertiseDevelopersTermsPrivacyPolicy & SafetyHow YouTube worksTest new features · © 2026 Google LLC · Science Magazine - YouTube",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -64,7 +59,6 @@
    "type": "wikipedia",
    "snippet": "Science is a systematic discipline that builds and organises knowledge in the form of testable explanations about nature and society. It is driven by the scientific method: an empirical cycle that typically involves making observations, producing hypotheses, testing them with evidence, and",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -75,7 +69,6 @@
    "type": "web",
    "snippet": "Science is the leading multidisciplinary, international journal of peer-reviewed research including analysis and news coverage of breakthroughs and policy.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -86,7 +79,6 @@
    "type": "web",
    "snippet": "Science News features daily news articles, feature stories, reviews and more in all disciplines of science, as well as Science News magazine archives back to 1924.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -97,7 +89,6 @@
    "type": "web",
    "snippet": "Science.gov is a gateway to government science information provided by U.S. Government science agencies, including research and development results.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   },
   {
@@ -108,7 +99,6 @@
    "type": "web",
    "snippet": "Correction: Science is both a body of knowledge and the process for building that knowledge.",
    "quote": "",
-   "label": "unclear",
    "term_share": 0.0
   }
  ],
@@ -120,28 +110,23 @@
  },
  "strong": 0,
  "no_strong_sources": true,
- "labels": {
-  "unclear": 10
- },
  "summary": {
   "lines": [
    {
-    "text": "Closest on-topic source reviewed:.",
+    "text": "Closest on-topic source reviewed.",
     "cites": [
      "https://en.wikipedia.org/wiki/Science_%28journal%29"
     ]
    }
   ],
   "hidden": 1,
+  "verdict_hidden": 0,
   "cited_urls": [
    "https://en.wikipedia.org/wiki/Science_%28journal%29"
   ]
  },
- "posts": [],
- "x_returned": 4,
- "x_off_topic_dropped": 4,
- "x_query": "zorblaxian moon crystals cure",
- "cost_usd": 0.0055,
+ "x_enabled": false,
+ "cost_usd": 0.004,
  "latency_s": 9.61,
- "calls": 2
+ "calls": 1
 }
