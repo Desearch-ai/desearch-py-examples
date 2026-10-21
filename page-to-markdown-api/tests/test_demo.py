@@ -160,9 +160,9 @@ def test_limits_and_day_reset():
 
 def test_global_limit():
     c = make(FakeClient(500), limiter=RateLimiter(global_window=2))
-    assert response(c, ip='one')[0] == 502
-    assert response(c, ip='two')[0] == 502
-    assert response(c, ip='three')[0] == 429 and c._client.calls == 2
+    assert response(c, ip='192.0.2.1')[0] == 502
+    assert response(c, ip='192.0.2.2')[0] == 502
+    assert response(c, ip='192.0.2.3')[0] == 429 and c._client.calls == 2
 
 
 @pytest.mark.parametrize('headers,body,cost', [

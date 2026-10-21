@@ -1,5 +1,6 @@
 """Shared demo state over the Upstash Redis REST pipeline API."""
 import hashlib
+import ipaddress
 import json
 import os
 import time
@@ -39,6 +40,21 @@ def digest(value):
     return hashlib.sha256(value.encode()).hexdigest()
 
 
+def ip_bucket(ip):
+    """Group IPv6 clients by /64, preserving individual IPv4 addresses."""
+    if not isinstance(ip, str):
+        return 'invalid'
+    try:
+        address = ipaddress.ip_address(ip.strip())
+    except ValueError:
+        return 'invalid'
+    if isinstance(address, ipaddress.IPv4Address):
+        return str(address)
+    if address.ipv4_mapped is not None:
+        return str(address.ipv4_mapped)
+    return str(ipaddress.ip_network((address, 64), strict=False))
+
+
 class Limiter:
     """Fixed windows; every attempt increments all three counters in one pipeline."""
     def __init__(self, redis, per_ip=5, per_ip_day=15, global_window=30, namespace='p2m', clock=time.time):
@@ -47,7 +63,7 @@ class Limiter:
 
     def allow(self, ip):
         now = int(self.clock())
-        hashed = digest(ip)
+        hashed = digest(ip_bucket(ip))
         commands = []
         for scope, seconds in ((f'ip:{hashed}:10min', 600), (f'ip:{hashed}:day', 86400), ('global:10min', 600)):
             key = f'{self.namespace}:limit:{scope}:{now // seconds}'

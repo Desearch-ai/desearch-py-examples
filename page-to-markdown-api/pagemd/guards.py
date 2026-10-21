@@ -1,4 +1,5 @@
 import collections, threading, time
+from .state import ip_bucket
 
 class RateLimiter:
     """Sliding-window per-IP and global limits, in memory. On serverless hosts this is per warm instance only."""
@@ -8,6 +9,7 @@ class RateLimiter:
         self.hits, self.lock = collections.defaultdict(list), threading.Lock()
 
     def allow(self, ip):
+        ip = ip_bucket(ip)
         now = self.clock()
         with self.lock:
             h = self.hits[ip] = [t for t in self.hits[ip] if now - t < 86400]
