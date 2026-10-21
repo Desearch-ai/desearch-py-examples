@@ -203,7 +203,7 @@ def collect_rows(raw, seen=None, max_age_hours=24, page_days=7, filter_x=False):
                 age = round((ref - t0).total_seconds() / 3600, 1) if t0 else None
                 if age is not None and age > max_age_hours: stats["x_too_old"] += 1; continue
                 if not re.sub(r"https?://\S+", "", text).strip(): stats["x_link_only"] += 1; continue
-                if MENTION.search(text): stats["x_skipped_mentions"] += 1; continue  # keep quotes unedited and handle-free
+                if not filter_x and MENTION.search(text): stats["x_skipped_mentions"] += 1; continue  # keep quotes unedited and handle-free
                 url = f"https://x.com/i/status/{t.get('id')}" if t.get("id") else norm_url(t.get("url"))
                 rp, rq = num(t.get("retweet_count")), num(t.get("reply_count"))
                 row = {"date": day, "source": "X post", "tag": rec["tag"], "title_or_text": text,

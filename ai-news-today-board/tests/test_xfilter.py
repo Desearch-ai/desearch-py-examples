@@ -54,7 +54,7 @@ def test_masked_profanity(text):
     'AI policy cannot save our democracy. The future is in your hands. On November 3, make it count.',
     'AI crypto morning brief: bitcoin and ETH markets rally.',
     'AI photonics stock list: NVDA AMD INTC AVGO stocks to watch.',
-    'AI token promo: get in before i ape',
+    'AI token airdrop promo: get in before i ape',
     'AI law changes everything. Buy $MOON today.',
     'AI models are stocks to watch, buy now',
     'A beautiful sunny morning in the garden.',
@@ -84,7 +84,7 @@ def test_eagle_dedupe_and_truncate():
     assert result[0]['url'].endswith('/1')
     assert result[0]['engagement'] == 100
     assert result[1]['title_or_text'].endswith('… https://example.test/report')
-    assert len(result[1]['title_or_text']) <= 310
+    assert len(result[1]['title_or_text']) <= 280
 
 
 def test_truncation_link_positions():
@@ -105,3 +105,110 @@ def test_disabled_filter_restores_board_posts(monkeypatch):
     assert len(collect_rows(raw)[0]) == 2
     monkeypatch.setenv('DEMO_X_FILTER', '0')
     assert len(build_board(raw, '2026-10-21T00:00:00+00:00')['x_posts']) == 2
+
+
+@pytest.mark.parametrize('text', ['fck', 'b*tch', '****', '***', 'f*ck', 'F*CKING'])
+def test_additional_masked_profanity(text):
+    from newsboard.xfilter import has_profanity
+    assert has_profanity(text)
+    assert not keep_post({'text': 'AI ' + text, 'like_count': 50}, tag='ai')
+
+
+def test_normal_profanity_guard():
+    from newsboard.xfilter import has_profanity
+    assert not has_profanity('A normal AI model with tokens and useful results')
+
+
+@pytest.mark.parametrize('text', [
+    'New LLM with 1M tokens context window', 'Claude cuts cost per token',
+    'AI eth benchmark results', 'AI ape benchmark results',
+])
+def test_ambiguous_crypto_words_kept(text):
+    assert keep_post({'text': text, 'like_count': 50}, tag='ai')
+
+
+@pytest.mark.parametrize('context', ['coin', 'crypto', 'blockchain', '$SOL', 'airdrop',
+                                     'memecoin', 'wallet', 'defi', 'nft', 'pump'])
+@pytest.mark.parametrize('word', ['token', 'tokens', 'ape', 'eth'])
+def test_crypto_context_dropped(context, word):
+    assert not keep_post({'text': f'AI {word} {context}', 'like_count': 50}, tag='ai')
+
+
+def test_ape_airdrop_dropped():
+    assert not keep_post({'text': 'Ape into this token airdrop now', 'like_count': 50})
+
+
+@pytest.mark.parametrize('name', ['Donald Trump', 'Gavin Newsom', 'Scott Wiener',
+    'Biden', 'Harris', 'Vance', 'Pelosi', 'Schumer', 'McConnell', 'DeSantis',
+    'Obama', 'Macron', 'Starmer', 'Sunak', 'Scholz', 'Merz', 'Meloni',
+    'von der Leyen', 'Orban', 'Sanchez', 'the Politico bill', 'Andrii',
+    'Matt Buechele', 'Jane Smith', '@someone'])
+def test_politicians_and_people_dropped(name):
+    assert not keep_post({'text': f'AI update from {name}', 'like_count': 50}, tag='ai')
+
+
+@pytest.mark.parametrize('term', ['election', 'senator', 'governor', 'congress',
+    'bill sponsor', 'bill sponsored', 'legislation sponsor', 'campaign', 'vote',
+    'partisan', 'GOP', 'Democrats', 'Republicans', 'politics'])
+def test_politics_dropped_even_when_requested(term):
+    assert not keep_post({'text': f'AI {term} update', 'like_count': 50}, tag=f'ai {term}')
+
+
+@pytest.mark.parametrize('name', ['OpenAI', 'Google DeepMind', 'Claude', 'Llama 4',
+    'Anthropic', 'Meta AI', 'Hugging Face', 'Mistral AI', 'Microsoft', 'Nvidia',
+    'GitHub', 'EU AI Act', '@OpenAI'])
+def test_organization_allowlist(name):
+    assert keep_post({'text': f'{name} releases AI model weights', 'like_count': 50}, tag='ai')
+
+
+@pytest.mark.parametrize('prefix', [250, 278])
+def test_all_urls_preserved_within_hard_limit(prefix):
+    from newsboard.xfilter import truncate_text, LINK
+    links = ['https://one.test/a', 'https://two.test/report']
+    text = links[0] + ' ' + 'x' * (prefix - len(links[0]) - 1) + ' ' + links[1] + ' trailing' * 30
+    result = truncate_text(text)
+    assert len(result) <= 280
+    assert LINK.findall(result) == links
+
+
+def test_url_starting_at_279_is_not_cut():
+    from newsboard.xfilter import truncate_text, LINK
+    link = 'https://example.test/report'
+    result = truncate_text('x' * 278 + ' ' + link)
+    assert len(result) <= 280
+    assert LINK.findall(result) == [link]
+
+
+def test_urls_exhaust_budget():
+    from newsboard.xfilter import truncate_text
+    first = 'https://example.test/' + 'a' * 140
+    second = 'https://example.test/' + 'b' * 140
+    assert truncate_text('AI ' + first + ' ' + second) == first
+
+
+@pytest.mark.parametrize('text', ['x' * 280, 'x' * 281, 'AI details ' * 100])
+def test_hard_limit_and_ellipsis(text):
+    from newsboard.xfilter import truncate_text
+    result = truncate_text(text)
+    assert len(result) <= 280
+    if len(text) > 280:
+        assert result.endswith('…')
+    else:
+        assert result == text
+
+
+def test_public_sample_passes_filter(monkeypatch):
+    import json
+    from pathlib import Path
+    from newsboard.xfilter import has_profanity, relevant, politics_or_person
+    monkeypatch.setenv('DEMO_X_FILTER', '1')
+    board = json.loads((Path(__file__).resolve().parents[1] / 'public/sample.json').read_text())
+    assert board['x_posts']
+    for post in board['x_posts']:
+        text = post['title_or_text']
+        assert len(text) <= 280
+        assert not has_profanity(text)
+        assert relevant(text, tag=post['tag'])
+        assert not politics_or_person(text)
+        assert keep_post({'text': text, 'like_count': post['likes'],
+                          'retweet_count': post['reposts'], 'reply_count': post['replies']}, tag=post['tag'])

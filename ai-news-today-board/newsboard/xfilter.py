@@ -2,7 +2,7 @@
 import os
 import re
 
-WORDS = ("fuck", "fucking", "fucker", "fucked", "shit", "porn", "pornography", "nsfw", "xxx")
+WORDS = ("fuck", "fucking", "fucker", "fucked", "shit", "porn", "pornography", "nsfw", "xxx", "bitch", "fck")
 LINK = re.compile(r"https?://\S+", re.I)
 LEET = str.maketrans({"@": "a", "$": "s", "0": "o", "1": "i", "3": "e", "!": "i", "4": "a", "5": "s", "7": "t"})
 SYNONYMS = {
@@ -15,9 +15,38 @@ SYNONYMS = {
 }
 NOISE = (
     r"november\s+3|vote|voting|election|make\s+it\s+count|globalist|democrat|republican",
-    r"crypto|bitcoin|btc|eth|token|tokens|memecoin|ape|airdrop",
+    r"coins?|crypto|bitcoin|btc|blockchain|memecoin|airdrop|wallet|defi|nft|pump",
     r"stock\s+list|stocks\s+to\s+watch|buy\s+now",
 )
+
+
+POLITICS = re.compile(
+    r"\b(?:trump|newsom|wiener|biden|harris|vance|pelosi|schumer|mcconnell|"
+    r"desantis|obama|macron|starmer|sunak|scholz|merz|meloni|von der leyen|"
+    r"orb[aá]n|s[aá]nchez|politics|political|elections?|senators?|governors?|congress|"
+    r"bill\s+sponsor\w*|legislation\s+sponsor\w*|politico|campaign\w*|"
+    r"vot(?:e|es|ed|ing)|partisan|gop|democrats?|republicans?)\b", re.I)
+ALLOWLIST = (
+    "OpenAI", "Google DeepMind", "Google", "DeepMind", "Anthropic", "Claude",
+    "Llama 4", "Meta AI", "Meta", "Hugging Face", "Mistral AI", "Microsoft",
+    "Nvidia", "GitHub", "EU AI Act",
+)
+ALLOWED_HANDLES = {"openai", "googledeepmind", "anthropic", "claudeai", "meta",
+                   "huggingface", "mistralai", "microsoft", "nvidia", "github"}
+
+
+def politics_or_person(text):
+    plain = LINK.sub("", text)
+    if POLITICS.search(plain):
+        return True
+    for handle in re.findall(r"(?<![\w@])@([A-Za-z0-9_]+)", plain):
+        if handle.lower() not in ALLOWED_HANDLES:
+            return True
+    plain = re.sub(r"(?<![\w@])@[A-Za-z0-9_]+", "", plain)
+    for name in sorted(ALLOWLIST, key=len, reverse=True):
+        plain = re.sub(r"\b" + re.escape(name) + r"\b", "", plain, flags=re.I)
+    return bool(re.search(r"\b[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?\s+[A-Z][a-z]+\b", plain)
+                or re.search(r"\bAndrii\b", plain, re.I))
 
 
 def normalise(text):
@@ -26,6 +55,8 @@ def normalise(text):
 
 def has_profanity(text):
     text = LINK.sub("", text.lower()).translate(LEET)
+    if re.search(r"(?<!\S)\*{3,}(?!\S)", text):
+        return True
     text = re.sub(r"(?<![a-z*])(?:[a-z*][\s._-]+){2,}[a-z*](?![a-z*])",
                   lambda m: re.sub(r"[\s._-]+", "", m.group()), text)
     for token in re.findall(r"[a-z*]+", text):
@@ -67,7 +98,7 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
     if os.environ.get("DEMO_X_FILTER", "1") == "0":
         return True
     text = str(post.get("text") or "")
-    if has_profanity(text) or not relevant(text, tag or topic, query):
+    if has_profanity(text) or politics_or_person(text) or not relevant(text, tag or topic, query):
         return False
     if any(post.get(k) for k in ("in_reply_to_status_id", "in_reply_to_status_id_str", "in_reply_to_user_id", "is_reply", "reply_to")):
         return False
@@ -85,14 +116,17 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
 def truncate_text(text, limit=280):
     if len(text) <= limit:
         return text
-    first_link = LINK.search(text)
-    short = text[:limit - 1].rstrip()
-    # Remove a partial URL before appending the intact first link.
-    if first_link and first_link.end() > len(short):
-        if first_link.start() < len(short):
-            short = short[:first_link.start()].rstrip()
-        return short + "… " + first_link.group()
-    return short + "…"
+    links = LINK.findall(text)
+    suffix = " ".join(links)
+    if len(suffix) > limit:
+        # Preserve the first URL whole if the URL budget is exhausted.
+        return links[0]
+    plain = LINK.sub("", text).strip()
+    budget = limit - len(suffix) - (1 if suffix else 0)
+    if budget <= 0:
+        return suffix
+    short = plain[:max(0, budget - 1)].rstrip() + "…"
+    return short + (" " + suffix if suffix else "")
 
 
 def prepare_posts(posts, threshold=0.5):
