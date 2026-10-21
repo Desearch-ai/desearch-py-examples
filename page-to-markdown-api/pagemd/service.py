@@ -2,6 +2,8 @@
 import json
 import math
 import os
+import re
+import time
 from pathlib import Path
 import socket
 import threading
@@ -14,6 +16,23 @@ from .urlguard import validate_url, URLValidationError
 
 NO_STORE = 'no-store'
 MAX_MARKDOWN = 200 * 1024
+FAST_404_SECONDS = 3.0
+
+
+def _site_blocked(body):
+    """Inspect API error fields only, never extracted page content."""
+    def visit(value, error_field=False):
+        if isinstance(value, str):
+            return error_field and bool(re.search(
+                r'\b(blocked|forbidden by site|access denied|captcha|bot protection|robots)\b',
+                value, re.IGNORECASE))
+        if isinstance(value, dict):
+            return any(visit(v, error_field or k in ('error', 'detail', 'message'))
+                       for k, v in value.items() if k not in ('html', 'text', 'content'))
+        if isinstance(value, list):
+            return any(visit(v, error_field) for v in value)
+        return False
+    return visit(body)
 
 
 def _env_float(name, default):
@@ -25,8 +44,9 @@ def _env_float(name, default):
 
 
 class Converter:
-    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None):
+    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None, clock=time.monotonic):
         self._client = client
+        self.clock = clock
         injected_state = any(item is not None for item in (limiter, cap, cache))
         memory_requested = os.environ.get('DEMO_STATE') == 'memory'
         self._memory_refused = memory_requested and bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV')) and not injected_state
@@ -82,7 +102,11 @@ class Converter:
         try:
             if self._client is None:
                 self._client = Client(os.environ.get('DESEARCH_API_KEY', '').strip())
-            st, body, rec = self._client.extract(url)
+            started = self.clock()
+            try:
+                st, body, rec = self._client.extract(url)
+            finally:
+                elapsed = self.clock() - started
         except RuntimeError:
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
         except (OSError, TimeoutError):
@@ -103,8 +127,12 @@ class Converter:
             return sample(400, 'invalid', 'The page redirected to an unsafe address. Try another link.')
         if st in (401, 402, 403):
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        if st != 200 and _site_blocked(body):
+            return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
+        if st in (408, 504, 599) or (st == 404 and elapsed >= FAST_404_SECONDS):
+            return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
         if st == 404:
-            return sample(502, 'error', "Couldn't fetch this page, the site may block bots")
+            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
         if st != 200:
             return sample(502, 'error', "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
         content = body
