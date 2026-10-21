@@ -27,8 +27,10 @@ def _env_float(name, default):
 class Converter:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None):
         self._client = client
-        memory = os.environ.get('DEMO_STATE') == 'memory' or any(
-            item is not None for item in (limiter, cap, cache))
+        injected_state = any(item is not None for item in (limiter, cap, cache))
+        memory_requested = os.environ.get('DEMO_STATE') == 'memory'
+        self._memory_refused = memory_requested and bool(os.environ.get('VERCEL')) and not injected_state
+        memory = injected_state or (memory_requested and not self._memory_refused)
         redis = state.RedisREST() if not memory else None
         self.limiter = limiter if limiter is not None else (
             RateLimiter if memory else lambda **kw: state.Limiter(redis, **kw))(
@@ -47,6 +49,8 @@ class Converter:
     def handle(self, query, ip):
         with self.lock:
             try:
+                if self._memory_refused:
+                    raise state.StateUnavailable()
                 return self._handle(query, ip)
             except state.StateUnavailable:
                 return 503, {'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': NO_STORE,
@@ -124,7 +128,14 @@ class Converter:
 
 
 def client_ip(headers, fallback=''):
-    return (headers.get('x-forwarded-for') or headers.get('X-Forwarded-For') or '').split(',')[0].strip() or headers.get('x-real-ip') or fallback
+    headers = {key.lower(): value for key, value in headers.items()}
+    for name in ('x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip'):
+        value = headers.get(name) or ''
+        if name != 'x-real-ip':
+            value = value.split(',')[0]
+        if value.strip():
+            return value.strip()
+    return fallback.strip()
 
 
 def parse_query(path):
