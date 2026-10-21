@@ -60,8 +60,8 @@ def response(service):
      'Timed out fetching this page. Try again or use another link.', .0005),
     (200, 4, {}, TimeoutError(), True, 504, 'timed_out',
      'Timed out fetching this page. Try again or use another link.', .0005),
-    (200, 0, {}, OSError('connection failed'), True, 502, 'unreachable',
-     "Couldn't reach this site. Check the link and try again.", 0),
+    (200, 0, {}, OSError('connection failed'), True, 502, 'error',
+     "We couldn't fetch this page right now. Try another link. Here is a saved sample.", 0),
     (504, 0, {}, None, True, 504, 'timed_out',
      'Timed out fetching this page. Try again or use another link.', .002),
     (408, 0, {}, None, True, 504, 'timed_out',
@@ -170,7 +170,10 @@ def test_service_connection_failures(failure):
     service, client = make(failure=failure)
     code, body = response(service)
     timeout = failure in TIMEOUTS
-    assert (code, body['status']) == ((504, 'timed_out') if timeout else (502, 'unreachable'))
+    assert (code, body['status']) == ((504, 'timed_out') if timeout else (502, 'error'))
+    if not timeout:
+        assert body['error'] == body['message'] == (
+            "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
     assert service.cap.spent == (.0005 if timeout else 0)
     assert body['cost_usd_this_request'] == 0
     assert client.calls == 1
@@ -195,16 +198,23 @@ def test_api_unreachable_body(message, as_dict):
     assert client.calls == 1
 
 
-def test_status_598_is_unreachable():
-    service, client = make(598, {}, known=True)
+@pytest.mark.parametrize('payload', [{}, {'error': 'DNS failure'},
+                                     {'error': 'blocked, connection refused'}])
+@pytest.mark.parametrize('known', [False, True])
+def test_status_598_is_generic_error(payload, known):
+    service, client = make(598, payload, known=known)
     code, body = response(service)
-    assert (code, body['status']) == (502, 'unreachable')
+    assert (code, body['status'], body['message']) == (
+        502, 'error',
+        "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
+    assert body['error'] == body['message']
     assert service.cap.spent == body['cost_usd_this_request'] == 0
+    assert not service.cache.d
     assert client.calls == 1
 
 
 def test_blocked_precedes_unreachable():
-    service, client = make(598, {'error': 'blocked, DNS failure'})
+    service, client = make(500, {'error': 'blocked, DNS failure'})
     code, body = response(service)
     assert (code, body['status']) == (502, 'blocked')
     assert client.calls == 1

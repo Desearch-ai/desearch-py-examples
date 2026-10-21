@@ -126,7 +126,7 @@ class Converter:
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
         except OSError as e:
             st, body, rec = connection_status(e), '', {'cost': 0, 'cost_known': False}
-        unreachable = st == 598 or (st != 200 and _site_unreachable(body))
+        unreachable = st not in (200, 598) and _site_unreachable(body)
         cost = 0 if st in (401, 402, 403, 404, 598) or unreachable else (rec['cost'] if rec.get('cost_known') else self.fallback_cost)
         self.cap.add(cost)
         try:
@@ -143,7 +143,7 @@ class Converter:
             return sample(400, 'invalid', 'The page redirected to an unsafe address. Try another link.')
         if st in (401, 402, 403):
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
-        if st != 200 and _site_blocked(body):
+        if st not in (200, 598) and _site_blocked(body):
             return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
         if unreachable:
             return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
