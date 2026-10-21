@@ -9,8 +9,7 @@
    "type": "web",
    "snippet": "One of the biggest is the idea that the Great Wall of China is the only human-made structure that can be seen from space. Is this true?",
    "quote": "When it comes to spaceflight and astronomy, many myths abound, one of the biggest being the idea that you can see the Great Wall of China from space.",
-   "label": "contradicts",
-   "term_share": 1.0
+   "term_share": 0.57
   },
   {
    "rank": 2,
@@ -20,8 +19,7 @@
    "type": "wikipedia",
    "snippet": "The centimetre-band Spaceborne Imaging Radar of STS-59 and STS-68 was able to detect not only the Great Wall but also invisible buried segments of it. The human naked eye has an angular resolution of approximately 280 microradians (μrad) (approx 0.016° or 1 minute of arc), and the ISS targets",
    "quote": "Artificial structures visible from space without magnification include highways, dams, and cities.[1][2]",
-   "label": "contradicts",
-   "term_share": 1.0
+   "term_share": 0.86
   },
   {
    "rank": 3,
@@ -31,7 +29,6 @@
    "type": "web",
    "snippet": "You typically can’t see the Great Wall of China from space. A popular myth, the claim was disproved when astronauts stated that the Great Wall of China was not visible with the naked eye from the Moon.",
    "quote": "You typically can’t see the Great Wall of China from space. A popular myth, the claim was disproved when astronauts stated that the Great Wall of China was not visible with the naked eye from the Moon. Due to its coloration and pollution, the structure is only sometimes visible from low orbit and the International Space Station.",
-   "label": "contradicts",
    "term_share": 1.0
   },
   {
@@ -42,7 +39,6 @@
    "type": "web",
    "snippet": "Is the Great Wall of China visible from space with the naked eye, or is that an old myth astronauts and NASA have quietly debunked over several decades now?",
    "quote": "Is the Great Wall of China Visible From Space? The Real Answer",
-   "label": "contradicts",
    "term_share": 1.0
   },
   {
@@ -53,7 +49,6 @@
    "type": "web",
    "snippet": "The Great Wall of China and Inner Mongolia are featured in this image photographed by Expedition 10 Commander Leroy Chiao on the International Space Station. Despite myths to the contrary, the wall isn't visible from the moon, and is difficult or impossible to see from Earth orbit without the high-powered lenses used for this photo.",
    "quote": "The Great Wall of China and Inner Mongolia are featured in this image photographed by Expedition 10 Commander Leroy Chiao on the International Space Station.",
-   "label": "contradicts",
    "term_share": 0.71
   },
   {
@@ -64,7 +59,6 @@
    "type": "web",
    "snippet": "The Great Wall of China is not visible to the naked eye from space, even in low-earth orbit, according to NASA. Even though the wall is very long, ...",
    "quote": "What makes the Great Wall of China the only man-made object visible from space?",
-   "label": "contradicts",
    "term_share": 1.0
   },
   {
@@ -75,8 +69,7 @@
    "type": "web",
    "snippet": "Is the Great Wall truly visible from the moon? It is generally accepted that the Great Wall cannot be seen from the space which is proved from both the theory analysis and astronauts’ seeing.",
    "quote": "Can the Great Wall Be Seen from the Space?",
-   "label": "contradicts",
-   "term_share": 1.0
+   "term_share": 0.57
   },
   {
    "rank": 8,
@@ -86,18 +79,16 @@
    "type": "web",
    "snippet": "The enduring myth of the Great Wall of China being visible from space is debunked. Despite its immense length, the Wall's narrow width and similar color to its surroundings make it nearly impossible to see from orbit with the naked eye. Astronauts confirm this, highlighting that modern, larger structures are far more discernible.",
    "quote": "If there were an Olympic event for persistent global myths, the claim that the Great Wall of China is visible from space would win gold every single time. True. It has appeared in textbooks, trivia quizzes, travel brochures and dinner-table debates. For decades, many of us grew up confidently declaring: â€œOf course you can see it from space!â€�",
-   "label": "contradicts",
    "term_share": 1.0
   },
   {
    "rank": 9,
-   "title": "The Great Wall of China is not actually visible from space with the naked eye — astronauts from Apollo to the ISS have confirmed it — and the popular myth that it is predates space travel itself, with the best-known version coming from a 1932 Ripley's Believe It or Not cartoon",
+   "title": "The Great Wall of China is not actually visible from space with the naked eye , astronauts from Apollo to the ISS have confirmed it , and the popular myth that it is predates space travel itself, with the best-known version coming from a 1932 Ripley's Believe It or Not cartoon",
    "url": "https://spacedaily.com/d-the-great-wall-of-china-is-not-actually-visible-from-space-with-the-naked-eye-astronauts-from-apollo-to-the-iss-have-confirmed-it-and-the-popular-myth-that-it-is-predates-space-tra/",
    "domain": "spacedaily.com",
    "type": "web",
    "snippet": "\"The Great Wall of China is not visible from orbit with the naked eye. It's too narrow, and it follows the natural contours and colours of the landscape.\" So",
    "quote": "“The Great Wall of China is not visible from orbit with the naked eye. It’s too narrow, and it follows the natural contours and colours of the landscape.” So wrote the Canadian astronaut Chris Hadfield from the International Space Station during his five-month tour in 2012-2013. Hadfield’s posting was one of dozens of public statements from astronauts who have attempted, and failed, to see the Gre",
-   "label": "contradicts",
    "term_share": 1.0
   },
   {
@@ -108,7 +99,6 @@
    "type": "web",
    "snippet": "Veteran US astronaut Gene Cernan has stated: \"At Earth orbit of 100 miles (160 km) to 200 miles (320 km) high, the Great Wall of China is, indeed, visible to the naked eye.\" Ed Lu, Expedition 7 Science Officer aboard the International Space",
    "quote": "",
-   "label": "contradicts",
    "term_share": 1.0
   }
  ],
@@ -118,11 +108,8 @@
   "duplicates": 0,
   "skipped": {}
  },
- "strong": 10,
+ "strong": 8,
  "no_strong_sources": false,
- "labels": {
-  "contradicts": 10
- },
  "summary": {
   "lines": [
    {
@@ -156,20 +143,8 @@
    "https://timesofindia.indiatimes.com/life-style/travel/news/great-wall-of-china-is-visible-from-space-fact-or-myth/articleshow/128671144.cms"
   ]
  },
- "posts": [
-  {
-   "text": "Did you know the Great Wall of China is not visible from space with the naked eye? https://t.co/erROHMQCTF",
-   "author": "a user",
-   "created_at": "Mon May 25 12:02:16 +0000 2026",
-   "likes": 224,
-   "reposts": 230,
-   "url": "https://x.com/i/status/2058881333913412037"
-  }
- ],
- "x_returned": 10,
- "x_off_topic_dropped": 9,
- "x_query": "great wall china visible",
- "cost_usd": 0.0055,
+ "x_enabled": false,
+ "cost_usd": 0.004,
  "latency_s": 9.45,
- "calls": 2
+ "calls": 1
 }

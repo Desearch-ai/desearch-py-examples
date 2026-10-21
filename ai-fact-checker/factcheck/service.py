@@ -22,7 +22,7 @@ def _env_float(name, default):
 
 
 class Checker:
-    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
+    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, x_enabled=None):
         self._client = client
         self.limiter = limiter or core.RateLimiter(per_ip=int(_env_float("DEMO_PER_IP_10MIN", 5)),
                                                    per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 15)),
@@ -31,6 +31,7 @@ class Checker:
         self.cache = cache or core.TTLCache()
         self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
+        self.x_enabled = os.environ.get("DEMO_X_ENABLED", "").strip().lower() in ("1", "true") if x_enabled is None else x_enabled
 
     def cap_cost(self, status, rec):
         """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
@@ -48,9 +49,11 @@ class Checker:
         return self._client
 
     def run(self, claim, wiki=False):
-        """Paid part: 2 calls (ai-search web + X search), 3 with the Wikipedia option."""
+        """One web call, plus optional Wikipedia and X calls."""
         c = self.client()
-        jobs = [("ai", c.ai_search, core.ai_body(claim, "web")), ("x", c.x_search, core.x_params(claim))]
+        jobs = [("ai", c.ai_search, core.ai_body(claim, "web"))]
+        if self.x_enabled:
+            jobs.append(("x", c.x_search, core.x_params(claim)))
         if wiki:
             jobs.append(("wiki", c.ai_search, core.ai_body(claim, "wikipedia")))
         calls = {}
@@ -62,7 +65,7 @@ class Checker:
                 calls[name] = {"status": st, "body": body, "cost": rec["cost"], "latency_s": rec["latency_s"]}
         if calls["ai"]["status"] != 200 or not isinstance(calls["ai"]["body"], dict):
             return calls["ai"]["status"], None, calls
-        return 200, core.build_result(claim, calls["ai"], calls["x"], calls.get("wiki")), calls
+        return 200, core.build_result(claim, calls["ai"], calls.get("x"), calls.get("wiki")), calls
 
     def handle(self, query, ip):
         """query: dict of GET params. Returns (http_status, headers, json_text)."""
@@ -74,7 +77,7 @@ class Checker:
         except core.FormError as e:
             return out(400, {"error": str(e)})
         wiki = str(query.get("wiki", "")).lower() in ("1", "true", "yes", "on")
-        key = core.cache_key(claim, wiki)
+        key = core.cache_key(claim, wiki, self.x_enabled)
         hit = self.cache.get(key)
         if hit:
             return out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
