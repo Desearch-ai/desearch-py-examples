@@ -9,15 +9,15 @@ It dedupes by URL, tags every item with its sub-query, remembers what it has alr
 (a seen-URL file), and writes ai-news-YYYY-MM-DD.csv plus a markdown board with the top 15 posts
 by engagement and the news pages.
 
-Live:     python ai_news_board.py --key-file ~/.desearch_api_key
+Live:     python ai_news_board.py
 Offline:  python ai_news_board.py --from-raw samples/sample-raw.json
-Key: read only from a key file (--key-file PATH). Never from the environment.
+Key: read only from DESEARCH_API_KEY at runtime.
 """
 import argparse, asyncio, csv, datetime as dt, json, os, re, sys, time
 from urllib.parse import urlsplit
 
 BASE = "https://api.desearch.ai"
-DEFAULT_KEY_FILE = "~/.desearch_api_key"
+DEFAULT_KEY_FILE = None
 QUERY_PLAN = {  # tag: search text used for both sources
     "model release": "new AI model release",
     "open source llm": "open source LLM",
@@ -42,13 +42,11 @@ def now():
 
 
 def read_key(path):
-    p = os.path.expanduser(path)
-    if not os.path.isfile(p):
-        raise SystemExit(f"key file not found: {p} (put your Desearch API key in it, one line)")
-    k = open(p).read().strip()
-    if not k:
-        raise SystemExit(f"key file is empty: {p}")
-    return k
+    """Legacy entry point; the path is ignored and no key files are read."""
+    key = os.environ.get("DESEARCH_API_KEY", "").strip()
+    if not key:
+        raise SystemExit("Set DESEARCH_API_KEY")
+    return key
 
 
 # ---------- live calls ----------
@@ -179,12 +177,10 @@ def url_date(u):
     return None
 
 
-def build(raw, out_dir, seen_file=None, update_seen=False, max_age_hours=24, page_days=7):
+def collect_rows(raw, seen=None, max_age_hours=24, page_days=7, filter_x=False):
     day = (raw.get("started") or now())[:10]
     ref = parse_any(raw.get("started")) or dt.datetime.now(dt.timezone.utc)
-    seen = set()
-    if seen_file and os.path.isfile(seen_file):
-        seen = {l.strip() for l in open(seen_file) if l.strip()}
+    seen = set(seen or ())
     sites = raw.get("sites") or NEWS_SITES
     rows, by_url, stats = [], {}, {"x_returned": 0, "x_below_min_likes": 0, "x_skipped_mentions": 0, "web_returned": 0,
                                    "web_off_list": 0, "x_too_old": 0, "x_link_only": 0, "web_too_old": 0, "web_undated": 0, "duplicates": 0, "calls": 0, "cost_usd": 0.0}
@@ -197,6 +193,9 @@ def build(raw, out_dir, seen_file=None, update_seen=False, max_age_hours=24, pag
             items = rec["body"] if isinstance(rec["body"], list) else []
             stats["x_returned"] += len(items)
             for t in items:
+                if filter_x:
+                    from newsboard.xfilter import keep_post
+                    if not keep_post(t): continue
                 text = t.get("text") or ""
                 likes = num(t.get("like_count"))
                 if likes < raw.get("min_likes", 0): stats["x_below_min_likes"] += 1; continue
@@ -230,6 +229,35 @@ def build(raw, out_dir, seen_file=None, update_seen=False, max_age_hours=24, pag
     for r in rows:
         r["on_topic"] = bool(AI_TERMS.search(r["title_or_text"]))
     stats["cost_usd"] = round(stats["cost_usd"], 5)
+    return rows, stats
+
+
+def plan_requests():
+    jobs = []
+    for tag, query in QUERY_PLAN.items():
+        jobs.append(("x", tag, {"query": query, "sort": "Latest", "count": 30, "min_likes": "20"}))
+        jobs.append(("web", tag, {"prompt": query, "tools": ["web"], "include_domains": NEWS_SITES,
+                     "count": 10, "streaming": False, "result_type": "ONLY_LINKS", "date_filter": "PAST_24_HOURS"}))
+    return jobs
+
+
+def build_board(raw_responses, now, seen=None):
+    raw = dict(raw_responses) if isinstance(raw_responses, dict) else {"calls": raw_responses}
+    raw["started"] = now.isoformat() if isinstance(now, dt.datetime) else now
+    rows, stats = collect_rows(raw, seen, filter_x=True)
+    posts = sorted((r for r in rows if r["source"] == "X post"), key=lambda r: r["engagement"], reverse=True)[:TOP_N]
+    pages = sorted((r for r in rows if r["source"] == "web page"), key=lambda r: r["published_utc"] or "0", reverse=True)
+    return {"x_posts": [{**r, "author": "a user"} for r in posts], "pages": pages,
+            "generated_at": raw["started"], "calls": stats["calls"], "cost_usd": stats["cost_usd"]}
+
+
+def build(raw, out_dir, seen_file=None, update_seen=False, max_age_hours=24, page_days=7):
+    seen = set()
+    if seen_file and os.path.isfile(seen_file):
+        with open(seen_file) as fh:
+            seen = {line.strip() for line in fh if line.strip()}
+    rows, stats = collect_rows(raw, seen, max_age_hours, page_days)
+    day = (raw.get("started") or now())[:10]
     os.makedirs(out_dir, exist_ok=True)
     csv_path = os.path.join(out_dir, f"ai-news-{day}.csv")
     with open(csv_path, "w", newline="", encoding="utf-8") as fh:
@@ -285,7 +313,7 @@ def main(argv=None):
     ap.add_argument("--sites", nargs="+", default=NEWS_SITES, help="news sites for the web search")
     ap.add_argument("--max-age-hours", type=int, default=24, help="keep X posts from the last N hours")
     ap.add_argument("--page-days", type=int, default=7, help="keep pages dated within N days (undated pages are kept)")
-    ap.add_argument("--key-file", default=DEFAULT_KEY_FILE)
+    ap.add_argument("--key-file", default=DEFAULT_KEY_FILE, help="deprecated; key comes from DESEARCH_API_KEY")
     ap.add_argument("--from-raw", help="rebuild the board from a saved raw JSON, no API calls")
     ap.add_argument("--raw-out", help="where to save the raw responses (default <out>/raw-<date>.json)")
     ap.add_argument("--seen-file", default="seen-urls.txt", help="URLs already shown; new ones are added after a live run")
