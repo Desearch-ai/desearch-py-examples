@@ -6,6 +6,9 @@ import urllib.error
 import urllib.request
 
 
+USER_AGENT = 'desearch-py-examples/ig-engagement-demo'
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
@@ -18,7 +21,7 @@ def count(value):
 def sanitize(body, posts):
     if not posts:
         body = body.get('data', body) if isinstance(body, dict) else {}
-        return {'followers': count(body.get('followers')), 'is_private': body.get('is_private', body.get('private', False))} if isinstance(body, dict) else {}
+        return {'followers': count(body.get('followers')), 'is_private': bool(body.get('private') or body.get('is_private'))} if isinstance(body, dict) else {}
     if isinstance(body, dict):
         body = next((body[k] for k in ('posts', 'data', 'items', 'results') if isinstance(body.get(k), list)), [])
     cleaned = []
@@ -45,7 +48,7 @@ class Client:
 
     def fetch(self, handle, posts=False, timeout=45):
         path = '/desearch/instagram/profile/' + handle + ('/posts?count=12' if posts else '')
-        request = urllib.request.Request('https://api.desearch.ai' + path, headers={'Authorization': self.key}, method='GET')
+        request = urllib.request.Request('https://api.desearch.ai' + path, headers={'Authorization': self.key, 'User-Agent': USER_AGENT}, method='GET')
         try:
             with self.opener(request, timeout=timeout) as response:
                 status, headers, raw = response.status, dict(response.headers), response.read()
@@ -56,6 +59,7 @@ class Client:
         try:
             body = json.loads(raw)
         except (ValueError, UnicodeError):
+            # Error responses may be plain text; preserve their HTTP status.
             body = {}
         headers = {k.lower(): v for k, v in headers.items()}
         cost = None

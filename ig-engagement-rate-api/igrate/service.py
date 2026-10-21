@@ -131,7 +131,7 @@ class Engagement:
                 total += cost if cost is not None else env_float('DEMO_FALLBACK_COST_USD', ESTIMATE / 2)
                 if status in (401, 402, 403) or status >= 500:
                     return self.paused()
-                if status != 200 or (not posts and (not body or body.get('is_private'))) or (posts and not body):
+                if status != 200 or (not posts and (not body or body.get('private') or body.get('is_private'))) or (posts and not body):
                     return self.out(404, {'error': 'account not found or private'})
                 if not posts:
                     followers = body.get('followers')

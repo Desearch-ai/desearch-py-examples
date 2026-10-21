@@ -4,7 +4,7 @@ import socket
 import urllib.error
 
 import pytest
-from igrate.client import Client, sanitize
+from igrate.client import Client, USER_AGENT, sanitize
 from igrate.guards import DailyCap, RateLimiter, TTLCache
 from igrate.handles import validate_handle
 from igrate.service import Engagement, calculate, client_ip, parse_query
@@ -79,7 +79,7 @@ def test_paused_errors_no_retry(status, posts):
     if status == 599: assert d.cap.spent >= .027
 
 
-@pytest.mark.parametrize('profile, posts', [((404,{},0),None), ((422,{},0),None), ((302,{},0),None), ((200,{'is_private':True},0),None), ((200,{'followers':1},0),(200,[],0)), ((200,{'followers':1},0),(404,[],0))])
+@pytest.mark.parametrize('profile, posts', [((404,{},0),None), ((422,{},0),None), ((302,{},0),None), ((200,{'is_private':True},0),None), ((200,{'private':True},0),None), ((200,{'followers':1},0),(200,[],0)), ((200,{'followers':1},0),(404,[],0))])
 def test_missing_private(profile, posts):
     c = Fake(profile=profile)
     if posts is not None: c.posts = posts
@@ -175,7 +175,7 @@ def test_client_cost_and_routes(header,bodycost,expected):
 
 
 def test_sanitize_http_response_and_no_cursor():
-    raw={'posts':[{'shortcode':'Ab_2','mediaType':'carousel','stats':{'likeCount':10,'commentCount':2},'createTime':100000,'caption':'SECRET','usertags':['SECRET'],'children':[{'SECRET':1}]}]*20,'cursor':'DO_NOT_USE','caption':'SECRET'}
+    raw=[{'shortcode':'Ab_2','mediaType':'carousel','stats':{'likeCount':10,'commentCount':2},'createTime':100000,'caption':'SECRET','usertags':['SECRET'],'children':[{'SECRET':1}]}]*20
     calls=[]
     def opener(req,timeout):
         calls.append(req.full_url)
@@ -194,6 +194,35 @@ def test_client_http_error_timeout_and_no_redirect():
     assert Client('offline-placeholder',timeout).fetch('a')==(599,None,None)
     from igrate.client import NoRedirect
     assert NoRedirect().redirect_request(None,None,None,None,None,None) is None
+
+
+@pytest.mark.parametrize('posts', [False, True])
+def test_client_user_agent(posts):
+    calls = []
+    def opener(request, timeout):
+        calls.append(request)
+        return Response({})
+    Client('offline-placeholder', opener).fetch('creator', posts=posts)
+    assert USER_AGENT == 'desearch-py-examples/ig-engagement-demo'
+    assert calls[0].get_header('User-agent') == USER_AGENT
+
+
+def test_client_plain_text_forbidden_pauses_with_sample():
+    calls = []
+    def opener(request, timeout):
+        calls.append(request)
+        raise urllib.error.HTTPError(
+            request.full_url, 403, 'Forbidden', {'Content-Type': 'text/plain'},
+            io.BytesIO(b'error code: 1010'))
+    client = Client('offline-placeholder', opener)
+    assert client.fetch('creator') == (403, {'followers': None, 'is_private': False}, None)
+    calls.clear()
+    code, headers, body = run(demo(client))
+    assert code == 503
+    assert headers['Cache-Control'] == 'no-store'
+    assert body['status'] == 'paused' and body['sample'] is True
+    assert body['accounts']
+    assert len(calls) == 1
 
 
 def test_fallback_and_deadline(monkeypatch):
@@ -439,3 +468,49 @@ def test_redis_environment_aliases(monkeypatch):
     monkeypatch.setenv('UPSTASH_REDIS_REST_TOKEN', 'offline-primary')
     redis = state.RedisREST()
     assert (redis._url, redis._token) == ('https://primary.invalid', 'offline-primary')
+
+
+@pytest.mark.parametrize('flag', ['private', 'is_private'])
+def test_client_private_flags(flag):
+    payload = {'followers': 123, 'private': False, flag: True}
+    client = Client('offline-placeholder', lambda req, timeout: Response(payload))
+    d = demo(client)
+    assert run(d)[0:1] == (404,)
+    assert run(d)[2] == {'error': 'account not found or private'}
+
+
+def test_live_shape_fixtures_and_header_cost(monkeypatch):
+    from pathlib import Path
+    from datetime import datetime
+    fixtures = Path(__file__).parent / 'fixtures'
+    payloads = [json.loads((fixtures / name).read_text()) for name in ('profile_public.json', 'posts_public.json')]
+    calls = []
+    def opener(request, timeout):
+        index = len(calls)
+        calls.append(request.full_url)
+        return Response(payloads[index], {'x-desearch-cost-usd': ['0.00207', '0.02484'][index]})
+    monkeypatch.setattr('igrate.service.time.time', lambda: datetime.fromisoformat('2026-10-21T18:17+04:00').timestamp())
+    d = demo(Client('offline-placeholder', opener))
+    code, _, body = run(d)
+    assert code == 200 and len(calls) == 2
+    account = body['accounts'][0]
+    assert account['followers'] == 268325407
+    assert account['posts_used'] == account['eligible_posts'] == 1
+    assert account['engagement_rate_pct'] == 0.0197
+    assert account['by_format'] == {'image': None, 'carousel': None, 'video': 0.0197}
+    assert account['posts'][1] == {'url': 'https://www.instagram.com/p/DeuOR-CjKE9/', 'type': 'image', 'likes': 11547, 'comments': 130, 'taken_at': '2026-10-20T16:06:30+00:00'}
+    assert d.cap.spent == pytest.approx(0.02691)
+
+
+def test_sample_snapshot_computation():
+    from datetime import datetime
+    sample = demo().sample
+    assert sample['generated_at'] == sample['source_date'] == '2026-10-21T18:17+04:00'
+    assert sample['source_note'] == 'one live build of natgeo'
+    assert len(sample['accounts']) == 1
+    account = sample['accounts'][0]
+    assert account['handle'] == 'natgeo' and len(account['posts']) == 12
+    now = datetime.fromisoformat(sample['source_date']).timestamp()
+    assert account == {'handle': 'natgeo', **calculate(account['followers'], account['posts'], now=now)}
+    assert account['posts_used'] == 5
+    assert account['engagement_rate_pct'] == 0.0315
