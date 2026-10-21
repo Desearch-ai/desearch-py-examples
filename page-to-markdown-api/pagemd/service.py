@@ -1,4 +1,4 @@
-"""Shared demo endpoint. All state is ephemeral and per warm instance."""
+"""Shared demo endpoint. State is shared through Redis unless memory is explicitly selected."""
 import json
 import math
 import os
@@ -9,6 +9,7 @@ from urllib.parse import parse_qs, urlsplit
 import core
 from .client import Client
 from .guards import DailyCap, RateLimiter, TTLCache
+from . import state
 from .urlguard import validate_url, URLValidationError
 
 NO_STORE = 'no-store'
@@ -26,10 +27,17 @@ def _env_float(name, default):
 class Converter:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None):
         self._client = client
-        self.limiter = limiter or RateLimiter(per_ip=int(_env_float('DEMO_PER_IP_10MIN', 5)),
-            per_ip_day=int(_env_float('DEMO_PER_IP_DAY', 15)), global_window=int(_env_float('DEMO_GLOBAL_10MIN', 30)))
-        self.cap = cap or DailyCap(_env_float('DEMO_DAILY_CAP_USD', 1))
-        self.cache = cache or TTLCache()
+        memory = os.environ.get('DEMO_STATE') == 'memory' or any(
+            item is not None for item in (limiter, cap, cache))
+        redis = state.RedisREST() if not memory else None
+        self.limiter = limiter if limiter is not None else (
+            RateLimiter if memory else lambda **kw: state.Limiter(redis, **kw))(
+                per_ip=int(_env_float('DEMO_PER_IP_10MIN', 5)),
+                per_ip_day=int(_env_float('DEMO_PER_IP_DAY', 15)),
+                global_window=int(_env_float('DEMO_GLOBAL_10MIN', 30)))
+        self.cap = cap if cap is not None else (DailyCap(_env_float('DEMO_DAILY_CAP_USD', 1))
+            if memory else state.DailyCap(redis, _env_float('DEMO_DAILY_CAP_USD', 1)))
+        self.cache = cache if cache is not None else (TTLCache() if memory else state.Cache(redis))
         self.live = os.environ.get('DEMO_LIVE', '1').lower() in ('1', 'true') if live is None else live
         self.fallback_cost = _env_float('DEMO_FALLBACK_COST_USD', .0005)
         self.resolver = resolver or socket.getaddrinfo
@@ -38,7 +46,14 @@ class Converter:
 
     def handle(self, query, ip):
         with self.lock:
-            return self._handle(query, ip)
+            try:
+                return self._handle(query, ip)
+            except state.StateUnavailable:
+                return 503, {'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': NO_STORE,
+                             'X-Content-Type-Options': 'nosniff'}, json.dumps({**self.sample,
+                    'status': 'paused', 'error': 'The live demo is paused. See the saved sample below.',
+                    'message': 'The live demo is paused. See the saved sample below.',
+                    'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0}, ensure_ascii=False)
 
     def _handle(self, query, ip):
         def out(code, obj):

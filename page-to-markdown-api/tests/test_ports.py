@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 from pagemd.service import Converter
+from pagemd.guards import RateLimiter
 from pagemd.urlguard import validate_url, URLValidationError
 
 
@@ -47,7 +48,7 @@ def assert_port_rejected(url):
 def test_converter_returns_invalid_with_saved_sample_without_client_call():
     client = Mock()
     resolver = Mock(side_effect=AssertionError('Resolver must not be called'))
-    converter = Converter(client=client, resolver=resolver, live=True)
+    converter = Converter(client=client, resolver=resolver, live=True, limiter=RateLimiter())
     status, headers, text = converter.handle({'url': 'https://example.com:8080/a'}, 'ip')
     body = json.loads(text)
     assert status == 400 and body['status'] == 'invalid'

@@ -30,6 +30,7 @@ class FakeClient:
 
 
 def make(client=None, **kwargs):
+    kwargs.setdefault('limiter', RateLimiter())
     return Converter(client=client or FakeClient(), resolver=dns, live=kwargs.pop('live', True), **kwargs)
 
 
