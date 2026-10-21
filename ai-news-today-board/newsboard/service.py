@@ -1,7 +1,7 @@
 import json, os, sys, urllib.parse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-from . import core
+from . import core, state
 from .client import Client, api_key
 import datetime as dt
 import threading
@@ -22,11 +22,17 @@ class Board:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
         self._client = client
         self.build_lock = threading.Lock()
-        self.limiter = limiter or core.RateLimiter(per_ip=int(_env_float("DEMO_PER_IP_10MIN", 5)),
-                                                   per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 15)),
-                                                   global_window=int(_env_float("DEMO_GLOBAL_10MIN", 30)))
-        self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
-        self.cache = cache or core.TTLCache()
+        memory = os.environ.get("DEMO_STATE") == "memory" or any(
+            item is not None for item in (limiter, cap, cache))
+        backend = core if memory else state
+        args = () if memory else (state.RedisREST(),)
+        self.limiter = limiter if limiter is not None else (
+            backend.RateLimiter if memory else backend.Limiter)(
+                *args, per_ip=int(_env_float("DEMO_PER_IP_10MIN", 5)),
+                per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 15)),
+                global_window=int(_env_float("DEMO_GLOBAL_10MIN", 30)))
+        self.cap = cap if cap is not None else backend.DailyCap(*args, _env_float("DEMO_DAILY_CAP_USD", 1.0))
+        self.cache = cache if cache is not None else (backend.TTLCache if memory else backend.Cache)(*args)
         self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
 
@@ -76,7 +82,13 @@ class Board:
     def handle(self, query, ip):
         # Serialize cache misses so simultaneous viewers share a single paid build.
         with self.build_lock:
-            return self._handle(query, ip)
+            try:
+                return self._handle(query, ip)
+            except state.StateUnavailable:
+                return 503, {"Content-Type": "application/json; charset=utf-8",
+                             "Cache-Control": NO_STORE, "X-Content-Type-Options": "nosniff"}, json.dumps({
+                    "status": "paused", "error": "The live demo is paused. See the saved sample run.",
+                    "sample": "/sample.json"})
 
     def _handle(self, query, ip):
         """query: dict of GET params. Returns (http_status, headers, json_text)."""
@@ -91,9 +103,9 @@ class Board:
         if hit:
             return out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
         if not self.live:
-            return out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
+            return out(503, {"status": "paused", "error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if not self.cap.ok():
-            return out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
+            return out(503, {"status": "paused", "error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
         if not self.limiter.allow(ip or "unknown"):
             return out(429, {"error": "Too many requests from your network. Try again in a few minutes."})
         try:
@@ -102,7 +114,7 @@ class Board:
             print(f"[check] server error: {type(e).__name__}", file=sys.stderr)
             return out(500, {"error": "The demo is not configured."})
         if st in (401, 402, 403):   # bad key or empty balance: same response as the kill switch
-            return out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
+            return out(503, {"status": "paused", "error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if st != 200:
             return out(502, {"error": f"Search API returned {st}. Try again later."})
         self.cache.put(key, res)
