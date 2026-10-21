@@ -1,0 +1,301 @@
+{
+  "generated_at": "2026-10-17T09:27:12+04:00",
+  "sample": true,
+  "label": "EXAMPLE data: saved October 17, 2026 snapshot, not current statistics",
+  "accounts": [
+    {
+      "handle": "natgeo",
+      "followers": 268356497,
+      "posts_used": 6,
+      "eligible_posts": 6,
+      "engagement_rate_pct": 0.0558,
+      "by_format": {
+        "image": 0.0606,
+        "carousel": 0.0858,
+        "video": 0.0085
+      },
+      "posts": [
+        {
+          "url": "https://www.instagram.com/p/DehZj9wggt0/",
+          "type": "video",
+          "likes": 44771,
+          "comments": 319,
+          "taken_at": "2026-10-15T19:00:02+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DecPSQfoaRe/",
+          "type": "video",
+          "likes": 20555,
+          "comments": 101,
+          "taken_at": "2026-10-13T16:30:08+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DdG4RIxIPyf/",
+          "type": "video",
+          "likes": 79990,
+          "comments": 584,
+          "taken_at": "2026-09-10T13:00:14+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DekS-u4GltE/",
+          "type": "carousel",
+          "likes": 17453,
+          "comments": 50,
+          "taken_at": "2026-10-16T19:35:02+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DekBohqDEWz/",
+          "type": "video",
+          "likes": 20632,
+          "comments": 225,
+          "taken_at": "2026-10-16T17:04:49+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Deh3_cCl1Qs/",
+          "type": "image",
+          "likes": 29973,
+          "comments": 70,
+          "taken_at": "2026-10-16T13:00:00+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Degd1B8lyc_/",
+          "type": "carousel",
+          "likes": 64208,
+          "comments": 89,
+          "taken_at": "2026-10-15T22:00:01+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DehVfcplPaZ/",
+          "type": "carousel",
+          "likes": 170318,
+          "comments": 255,
+          "taken_at": "2026-10-15T15:59:15+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DehE9l7E_68/",
+          "type": "video",
+          "likes": 3693,
+          "comments": 24,
+          "taken_at": "2026-10-15T15:00:03+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DefvqAeFyRJ/",
+          "type": "carousel",
+          "likes": 455328,
+          "comments": 679,
+          "taken_at": "2026-10-15T01:09:38+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Defago5DWAD/",
+          "type": "image",
+          "likes": 162007,
+          "comments": 637,
+          "taken_at": "2026-10-14T22:04:46+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DefFZgggApb/",
+          "type": "video",
+          "likes": 41630,
+          "comments": 150,
+          "taken_at": "2026-10-14T19:00:49+00:00"
+        }
+      ]
+    },
+    {
+      "handle": "nasa",
+      "followers": 104375766,
+      "posts_used": 8,
+      "eligible_posts": 8,
+      "engagement_rate_pct": 0.4525,
+      "by_format": {
+        "image": 0.2812,
+        "carousel": 0.8143,
+        "video": 0.0527
+      },
+      "posts": [
+        {
+          "url": "https://www.instagram.com/p/DeTUk4sDSp-/",
+          "type": "video",
+          "likes": 691494,
+          "comments": 6846,
+          "taken_at": "2026-10-10T15:15:02+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeJ28eTxo4s/",
+          "type": "image",
+          "likes": 258856,
+          "comments": 794,
+          "taken_at": "2026-10-06T13:10:11+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeAYvsnn4la/",
+          "type": "carousel",
+          "likes": 1245825,
+          "comments": 4912,
+          "taken_at": "2026-10-02T20:52:45+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Dejxav7l58q/",
+          "type": "image",
+          "likes": 202051,
+          "comments": 614,
+          "taken_at": "2026-10-16T14:41:52+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DehUTymF6VL/",
+          "type": "image",
+          "likes": 156793,
+          "comments": 538,
+          "taken_at": "2026-10-15T15:49:04+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeelvcCF53n/",
+          "type": "image",
+          "likes": 172466,
+          "comments": 954,
+          "taken_at": "2026-10-14T14:23:38+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeclSZmF_7I/",
+          "type": "carousel",
+          "likes": 1874532,
+          "comments": 5950,
+          "taken_at": "2026-10-13T19:41:17+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeaMlUSEpgs/",
+          "type": "carousel",
+          "likes": 99423,
+          "comments": 588,
+          "taken_at": "2026-10-12T21:26:44+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeVqBdUl4kC/",
+          "type": "image",
+          "likes": 496574,
+          "comments": 3509,
+          "taken_at": "2026-10-11T16:30:01+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeSM5CYPDfd/",
+          "type": "video",
+          "likes": 54373,
+          "comments": 590,
+          "taken_at": "2026-10-09T19:02:56+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeR4fSKm2XE/",
+          "type": "image",
+          "likes": 341739,
+          "comments": 1339,
+          "taken_at": "2026-10-09T15:57:20+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeP15SzjF9r/",
+          "type": "carousel",
+          "likes": 567201,
+          "comments": 2116,
+          "taken_at": "2026-10-08T20:56:17+00:00"
+        }
+      ]
+    },
+    {
+      "handle": "starbucks",
+      "followers": 17566964,
+      "posts_used": 12,
+      "eligible_posts": 12,
+      "engagement_rate_pct": 0.3943,
+      "by_format": {
+        "image": 0.3313,
+        "carousel": 0.1717,
+        "video": 0.4657
+      },
+      "posts": [
+        {
+          "url": "https://www.instagram.com/p/DehMmprF4yi/",
+          "type": "carousel",
+          "likes": 41109,
+          "comments": 222,
+          "taken_at": "2026-10-15T14:41:48+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Deepj8PEnst/",
+          "type": "video",
+          "likes": 30031,
+          "comments": 88,
+          "taken_at": "2026-10-14T14:57:16+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeclTRWNLgN/",
+          "type": "video",
+          "likes": 62025,
+          "comments": 149,
+          "taken_at": "2026-10-13T19:42:05+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DecUYdqtjOZ/",
+          "type": "video",
+          "likes": 190762,
+          "comments": 581,
+          "taken_at": "2026-10-13T17:14:36+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DeHRIZ3kUV9/",
+          "type": "video",
+          "likes": 70233,
+          "comments": 2863,
+          "taken_at": "2026-10-05T13:01:15+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Dd4DlN6N6b9/",
+          "type": "image",
+          "likes": 91200,
+          "comments": 951,
+          "taken_at": "2026-09-29T15:13:57+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Dd30BssiQUM/",
+          "type": "video",
+          "likes": 46912,
+          "comments": 429,
+          "taken_at": "2026-09-29T12:58:18+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Dd1W1z8lOwf/",
+          "type": "video",
+          "likes": 16874,
+          "comments": 212,
+          "taken_at": "2026-09-28T14:04:46+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Dd1PZ3BCR97/",
+          "type": "video",
+          "likes": 56843,
+          "comments": 216,
+          "taken_at": "2026-09-28T12:59:49+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/Ddsp_v1k--q/",
+          "type": "image",
+          "likes": 23876,
+          "comments": 361,
+          "taken_at": "2026-09-25T04:58:41+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DdjsuUFjL2c/",
+          "type": "carousel",
+          "likes": 18637,
+          "comments": 343,
+          "taken_at": "2026-09-21T17:29:34+00:00"
+        },
+        {
+          "url": "https://www.instagram.com/p/DdTxPGOioSZ/",
+          "type": "video",
+          "likes": 174197,
+          "comments": 2102,
+          "taken_at": "2026-09-15T13:01:22+00:00"
+        }
+      ]
+    }
+  ]
+}
