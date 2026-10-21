@@ -25,3 +25,5 @@ Limits, cap and six-hour normalized URL cache live in memory per warm instance. 
 Responses use `no-store` to keep submitted URLs out of CDN caches. The application does not log request lines, URLs, IPs or raw API bodies and writes no submitted URLs to disk. Hosting access logs may retain query strings independently; review the hosting provider's log settings. DNS checks reject any non-public answer and any exposed unsafe final URL. Extract performs the remote fetch, so redirects it does not expose cannot be inspected here.
 
 Run offline checks from the repository root with `python -m pytest page-to-markdown-api -q` and `DESEARCH_API_KEY` unset.
+
+Submitted URLs allow no explicit port or only the scheme's default port (80 for HTTP and 443 for HTTPS), reject other or malformed ports before DNS resolution, and omit default ports from normalized URLs.

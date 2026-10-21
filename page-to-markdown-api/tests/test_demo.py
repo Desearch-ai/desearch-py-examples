@@ -72,7 +72,7 @@ def test_any_nonpublic_dns_answer_rejected(address):
 def test_normalization_and_public_url():
     assert validate_url('HTTPS://Example.COM:443/a///#fragment', dns) == 'https://example.com/a'
     assert validate_url('http://Example.com:80/', dns) == 'http://example.com'
-    assert validate_url('https://example.com:8443/a?q=1#x', dns) == 'https://example.com:8443/a?q=1'
+    assert validate_url('https://example.com:443/a?q=1#x', dns) == 'https://example.com/a?q=1'
 
 
 def test_dns_failure_and_no_answers():

@@ -23,13 +23,21 @@ def validate_url(value, resolver=socket.getaddrinfo):
         reject()
     try:
         p = urlsplit(value)
-        host, port = p.hostname, p.port
+        host = p.hostname
         if p.scheme.lower() not in ('http', 'https') or not host or p.username is not None or p.password is not None:
             reject()
+        port_message = 'Only standard web ports are allowed (http on 80, https on 443).'
+        try:
+            port = p.port
+        except ValueError:
+            raise URLValidationError(port_message)
+        default_port = 443 if p.scheme.lower() == 'https' else 80
+        if p.netloc.endswith(':') or (port is not None and port != default_port):
+            raise URLValidationError(port_message)
         host = host.rstrip('.').encode('idna').decode().lower()
         if '.' not in host or host == 'localhost' or host.endswith(('.localhost', '.local', '.internal')):
             reject()
-        if port == 0 or len(host) > 253 or any(not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label) for label in host.split('.')):
+        if len(host) > 253 or any(not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label) for label in host.split('.')):
             reject()
         # inet_aton recognizes legacy decimal, octal, hex and shortened IPv4 forms.
         try:
@@ -46,14 +54,15 @@ def validate_url(value, resolver=socket.getaddrinfo):
             reject()
         if BINARY.search(unquote(p.path)):
             reject()
-        addresses = resolver(host, port or (443 if p.scheme.lower() == 'https' else 80), type=socket.SOCK_STREAM)
+        addresses = resolver(host, default_port, type=socket.SOCK_STREAM)
         if not addresses:
             reject()
         for record in addresses:
             ip = ipaddress.ip_address(record[4][0])
             if not ip.is_global or ip.is_multicast or ip.is_reserved or getattr(ip, 'ipv4_mapped', None):
                 reject()
-        netloc = host + (f':{port}' if port and (p.scheme.lower(), port) not in (('https', 443), ('http', 80)) else '')
-        return urlunsplit((p.scheme.lower(), netloc, p.path.rstrip('/'), p.query, ''))
+        return urlunsplit((p.scheme.lower(), host, p.path.rstrip('/'), p.query, ''))
+    except URLValidationError:
+        raise
     except (ValueError, OSError, UnicodeError):
         reject()
