@@ -22,8 +22,11 @@ class Board:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
         self._client = client
         self.build_lock = threading.Lock()
-        memory = os.environ.get("DEMO_STATE") == "memory" or any(
-            item is not None for item in (limiter, cap, cache))
+        injected = any(item is not None for item in (limiter, cap, cache))
+        self.memory_refused = (os.environ.get("DEMO_STATE") == "memory"
+                               and bool(os.environ.get("VERCEL")) and not injected)
+        memory = injected or (os.environ.get("DEMO_STATE") == "memory"
+                              and not self.memory_refused)
         backend = core if memory else state
         args = () if memory else (state.RedisREST(),)
         self.limiter = limiter if limiter is not None else (
@@ -95,6 +98,10 @@ class Board:
         def out(code, obj, cache=NO_STORE):
             return code, {"Content-Type": "application/json; charset=utf-8", "Cache-Control": cache,
                           "X-Content-Type-Options": "nosniff"}, json.dumps(obj, ensure_ascii=False)
+        if not self.limiter.allow(ip or "unknown"):
+            return out(429, {"error": "Too many requests from your network. Try again in a few minutes."})
+        if self.memory_refused:
+            return out(503, {"status": "paused", "error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if query:
             return out(400, {"error": "This endpoint accepts no parameters."})
         utc = dt.datetime.now(dt.timezone.utc)
@@ -106,8 +113,6 @@ class Board:
             return out(503, {"status": "paused", "error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if not self.cap.ok():
             return out(503, {"status": "paused", "error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
-        if not self.limiter.allow(ip or "unknown"):
-            return out(429, {"error": "Too many requests from your network. Try again in a few minutes."})
         try:
             st, res = self.run()
         except RuntimeError as e:   # missing key on the server: say so without details
@@ -122,8 +127,14 @@ class Board:
 
 
 def client_ip(headers, fallback=""):
-    fwd = headers.get("x-forwarded-for") or headers.get("X-Forwarded-For") or ""
-    return fwd.split(",")[0].strip() or headers.get("x-real-ip") or fallback
+    normalized = {name.lower(): value for name, value in headers.items()}
+    for name in ("x-vercel-forwarded-for", "x-forwarded-for", "x-real-ip"):
+        value = normalized.get(name) or ""
+        if name != "x-real-ip":
+            value = value.split(",", 1)[0]
+        if value.strip():
+            return value.strip()
+    return fallback.strip()
 
 
 def parse_query(path):
