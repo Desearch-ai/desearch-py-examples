@@ -10,6 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 @pytest.fixture(autouse=True)
 def offline(monkeypatch):
+    monkeypatch.delenv('VERCEL', raising=False)
+    monkeypatch.delenv('VERCEL_ENV', raising=False)
     monkeypatch.delenv('DESEARCH_API_KEY', raising=False)
     monkeypatch.delenv('DESEARCH_API_KEY_FILE', raising=False)
     def blocked(*args, **kwargs):
