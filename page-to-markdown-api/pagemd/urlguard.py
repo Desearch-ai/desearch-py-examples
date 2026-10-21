@@ -1,0 +1,59 @@
+"""Validate public page URLs with an injectable DNS resolver, without fetching a page."""
+import ipaddress
+import re
+import socket
+from urllib.parse import unquote, urlsplit, urlunsplit
+
+
+class URLValidationError(ValueError):
+    pass
+
+
+BINARY = re.compile(r'\.(pdf|zip|exe|dmg|png|jpe?g|gif|webp|svg|ico|mp4|mp3|iso|tar|gz|bz2|xz|7z|rar|wav|avi|mov|woff2?|ttf|bin|msi|apk|docx?|xlsx?|pptx?)/?$', re.I)
+
+
+def validate_url(value, resolver=socket.getaddrinfo):
+    """Return a normalized URL only when every resolved address is public."""
+    def reject():
+        raise URLValidationError('Enter a public http or https page URL, without a file download.')
+    if not isinstance(value, str) or not value.strip() or len(value) > 2048:
+        reject()
+    value = value.strip()
+    if any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in value) or '\\' in value:
+        reject()
+    try:
+        p = urlsplit(value)
+        host, port = p.hostname, p.port
+        if p.scheme.lower() not in ('http', 'https') or not host or p.username is not None or p.password is not None:
+            reject()
+        host = host.rstrip('.').encode('idna').decode().lower()
+        if '.' not in host or host == 'localhost' or host.endswith(('.localhost', '.local', '.internal')):
+            reject()
+        if port == 0 or len(host) > 253 or any(not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label) for label in host.split('.')):
+            reject()
+        # inet_aton recognizes legacy decimal, octal, hex and shortened IPv4 forms.
+        try:
+            socket.inet_aton(host)
+        except OSError:
+            pass
+        else:
+            reject()
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            pass
+        else:
+            reject()
+        if BINARY.search(unquote(p.path)):
+            reject()
+        addresses = resolver(host, port or (443 if p.scheme.lower() == 'https' else 80), type=socket.SOCK_STREAM)
+        if not addresses:
+            reject()
+        for record in addresses:
+            ip = ipaddress.ip_address(record[4][0])
+            if not ip.is_global or ip.is_multicast or ip.is_reserved or getattr(ip, 'ipv4_mapped', None):
+                reject()
+        netloc = host + (f':{port}' if port and (p.scheme.lower(), port) not in (('https', 443), ('http', 80)) else '')
+        return urlunsplit((p.scheme.lower(), netloc, p.path.rstrip('/'), p.query, ''))
+    except (ValueError, OSError, UnicodeError):
+        reject()
