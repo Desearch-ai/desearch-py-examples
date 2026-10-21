@@ -193,17 +193,17 @@ def collect_rows(raw, seen=None, max_age_hours=24, page_days=7, filter_x=False):
             items = rec["body"] if isinstance(rec["body"], list) else []
             stats["x_returned"] += len(items)
             for t in items:
+                from newsboard.xfilter import decode_text, keep_post
+                text = decode_text(str(t.get("text") or ""))
                 if filter_x:
-                    from newsboard.xfilter import keep_post
-                    if not keep_post(t): continue
-                text = t.get("text") or ""
+                    if not keep_post({**t, "text": text}, tag=rec["tag"], query=QUERY_PLAN.get(rec["tag"])): continue
                 likes = num(t.get("like_count"))
                 if likes < raw.get("min_likes", 0): stats["x_below_min_likes"] += 1; continue
                 t0 = parse_any(t.get("created_at"))
                 age = round((ref - t0).total_seconds() / 3600, 1) if t0 else None
                 if age is not None and age > max_age_hours: stats["x_too_old"] += 1; continue
                 if not re.sub(r"https?://\S+", "", text).strip(): stats["x_link_only"] += 1; continue
-                if MENTION.search(text): stats["x_skipped_mentions"] += 1; continue  # keep quotes unedited and handle-free
+                if not filter_x and MENTION.search(text): stats["x_skipped_mentions"] += 1; continue  # keep quotes unedited and handle-free
                 url = f"https://x.com/i/status/{t.get('id')}" if t.get("id") else norm_url(t.get("url"))
                 rp, rq = num(t.get("retweet_count")), num(t.get("reply_count"))
                 row = {"date": day, "source": "X post", "tag": rec["tag"], "title_or_text": text,
@@ -245,7 +245,8 @@ def build_board(raw_responses, now, seen=None):
     raw = dict(raw_responses) if isinstance(raw_responses, dict) else {"calls": raw_responses}
     raw["started"] = now.isoformat() if isinstance(now, dt.datetime) else now
     rows, stats = collect_rows(raw, seen, filter_x=True)
-    posts = sorted((r for r in rows if r["source"] == "X post"), key=lambda r: r["engagement"], reverse=True)[:TOP_N]
+    from newsboard.xfilter import prepare_posts
+    posts = prepare_posts(r for r in rows if r["source"] == "X post")[:TOP_N]
     pages = sorted((r for r in rows if r["source"] == "web page"), key=lambda r: r["published_utc"] or "0", reverse=True)
     return {"x_posts": [{**r, "author": "a user"} for r in posts], "pages": pages,
             "generated_at": raw["started"], "calls": stats["calls"], "cost_usd": stats["cost_usd"]}
