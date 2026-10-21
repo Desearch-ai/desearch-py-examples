@@ -43,15 +43,15 @@ python3 -m unittest                              # standard library fallback, no
 
 ```json
 {"claim": "...", "no_strong_sources": false, "strong": 10,
- "summary": {"lines": [{"text": "...", "cites": ["https://..."]}], "hidden": 1, "cited_urls": ["https://..."]},
+ "summary": {"lines": [{"text": "...", "cites": ["https://..."]}], "hidden": 1, "verdict_hidden": 1, "cited_urls": ["https://..."]},
  "sources": [{"rank": 1, "title": "...", "url": "https://...", "domain": "...", "type": "web", "snippet": "...", "quote": "...", "term_share": 1.0}],
  "stats": {"returned": 10, "kept": 10, "duplicates": 0, "skipped": {}},
  "x_enabled": false, "cost_usd": 0.004, "latency_s": 10.0, "calls": 1, "cached": false}
 ```
 
 - **Sources** are deduped and shown neutrally: rank, title link, domain and snippet. No per-source stance or verdict is assigned.
-- **Summary** is the `completion` split into sentences. A sentence is shown only if every link it cites is one of the returned sources; the rest are hidden and counted. This checks citation destinations, not whether a source establishes the sentence's accuracy. Repeated citations and punctuation artefacts are cleaned up.
-- **No strong sources found** means fewer than two sources contain at least 60% of the claim's key terms. `term_share` and `strong` measure keyword overlap only; they do not establish source quality or the claim's accuracy.
+- **Summary** is the `completion` split into sentences. Judgment words and verdict phrasing are filtered with case-insensitive word boundaries, and dropped sentences are counted separately in `summary.verdict_hidden`. Remaining sentences are shown only if every link they cite is a returned source; uncited or mis-cited sentences are counted in `summary.hidden`. This checks citation destinations, not whether a source establishes the sentence's accuracy. Repeated citations and punctuation artefacts are cleaned up. The search request includes a `system_message` asking for a neutral summary of what sources say, with citations and without a verdict.
+- **Source count** says "N sources returned." With fewer than two displayed sources it also says "Few sources returned. Read them before you share anything." Legacy `term_share`, `strong` and `no_strong_sources` fields remain for JSON compatibility and are unused by the displays.
 - **Text cleanup** decodes HTML entities, strips tags (including tags encoded as entities) and collapses whitespace in titles, snippets, highlights, summaries and posts. Display text is escaped, and source links accept only HTTP or HTTPS URLs.
 - **X posts**, when enabled, must contain at least two distinct meaningful claim terms, or all terms if the claim has fewer than two. Stopwords are excluded and whole terms are matched. A small built-in profanity and slur filter uses case-insensitive word boundaries and catches simple obfuscations. Posts with account mentions are also dropped. Authors are shown as "a user". Returned display text has HTML removed.
 - When X is off, `/twitter` is never called, post fields are omitted, and the page hides the X section. When on, the result adds `posts`, `x_query`, `x_returned` and `x_dropped`. An empty or unavailable X result does not block web sources.
@@ -86,6 +86,6 @@ Three live runs on October 21, 2026 measured `ai/search` at 9.4 to 10.1 seconds.
 ## Search limitations
 
 - `tools: ["web", "wikipedia"]` in one call returned 10 Wikipedia links and no web links (twice), so the app makes one call per tool.
-- A made-up claim can still return loosely related pages. Keyword coverage is only a navigation hint; read the sources.
+- A made-up claim can still return loosely related pages. A source count does not establish source quality or the claim's accuracy; read the sources.
 - X searches can be slow or return unrelated posts. X is off by default; the relevance and profanity filters apply when enabled.
 - `wikipedia` is accepted by the API but is not listed in the documented `tools` values used for the original example.

@@ -12,12 +12,10 @@ python3 app.py --cli "The Great Wall of China is visible from space with the nak
 
 ```text
 Claim: The Great Wall of China is visible from space with the naked eye
-8 sources contain most of the claim's key words.
-This measures keyword overlap only. Read the sources to assess the claim.
-  - Multiple astronauts, including Yang Liwei and Leroy Chiao, confirmed they could not see it without magnification, citing its narrow width (around 4-5 meters) and low contrast with the surrounding landscape as reasons.
-  - The myth that it is visible from space predates space travel and originated from a 1932 Ripley's Believe It or Not cartoon, but has been debunked by astronaut observations and scientific explanations.
+10 sources returned.
   - While some structures like cities and large dams are visible from low Earth orbit, the Wall's size and coloration make it indistinguishable to the naked eye from space.
   (1 uncited summary sentence(s) hidden)
+2 summary sentence(s) that judged the claim were hidden.
  1. Can you see the Great Wall of China from space? | BBC Sky at Night Magazine
     www.skyatnightmagazine.com
     https://www.skyatnightmagazine.com/space-science/can-you-see-great-wall-china-from-space
@@ -61,6 +59,6 @@ This measures keyword overlap only. Read the sources to assess the claim.
 Cost $0.004 (1 calls)
 ```
 
-The made-up claim in `samples/made-up-claim.json` returned general science pages. The page shows "No strong sources found" because few claim terms matched. This measures keyword overlap only and does not establish source quality or the claim's accuracy.
+The made-up claim in `samples/made-up-claim.json` returned general science pages. The page says "10 sources returned." A source count does not establish source quality or the claim's accuracy. With fewer than two displayed sources, the page also says "Few sources returned. Read them before you share anything."
 
-Files: `samples/great-wall-from-space.json`, `samples/made-up-claim.json`, `samples/page.html`, `public/sample.json`. Sources are shown neutrally, without stance labels. Saved titles, snippets and summaries have HTML and punctuation cleanup applied. X is off, so post fields and the X section are omitted. Enable X explicitly with the CLI `--x` flag or the server's `DEMO_X_ENABLED=1` setting.
+Files: `samples/great-wall-from-space.json`, `samples/made-up-claim.json`, `samples/page.html`, `public/sample.json`. Sources are shown neutrally, without stance labels. Saved titles, snippets and summaries have HTML and punctuation cleanup applied. Summary sentences with judgment language were removed offline and counted in `summary.verdict_hidden`; the remaining cited sentences were kept. The QA regression excerpt in `samples/fixtures/eiffel-summary.json` retains the original summary as test input. X is off, so post fields and the X section are omitted. Enable X explicitly with the CLI `--x` flag or the server's `DEMO_X_ENABLED=1` setting.

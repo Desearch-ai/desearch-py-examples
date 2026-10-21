@@ -4,7 +4,7 @@ import collections, html, json, re, threading, time, urllib.parse
 MIN_CLAIM, MAX_CLAIM = 8, 200
 X_COUNT = 10
 STRONG_SHARE = 0.6        # a source "matches" when it contains at least 60% of the claim's key terms
-MIN_STRONG = 2            # fewer matching sources than this -> "no strong sources found"
+MIN_STRONG = 2            # legacy overlap metadata only; never used for display
 STOP = set("""a an the is are was were be been being of to in on at by for with from as and or but not no nor
 this that these those it its it's into than then so such can could will would should may might must do does did
 has have had about over under more most less very just also only there their they them he she his her we you your
@@ -16,7 +16,13 @@ PROFANITY = re.compile(r"\b(?:f[u*]ck(?:s|ed|er|ers|ing)?|sh[i!*]t(?:s|ty|ting)?
 SKIP_NS = re.compile(r"/wiki/(File|Archivo|Ficheiro|Fichier|Datei|Talk|Portal|Category|Template|User|Wikipedia|Help|Special)[:%]", re.I)
 WIKI_HOST = re.compile(r"^(?:[a-z\-]+\.)?(?:m\.)?wikipedia\.org$")
 MENTION = re.compile(r"(?<![\w])@\w{1,15}")
-CITE = re.compile(r"\[(\d+)\]\((https?://[^)\s]+)\)")
+CITE = re.compile(r"\[(\d+)\]\((https?://[^\s()]+(?:\([^\s()]*\)[^\s()]*)*)\)")
+VERDICT = re.compile(
+    r"\b(?:true|false|correct|incorrect|accurate|inaccurate|right|wrong|confirmed|debunked|"
+    r"myth|misconception|untrue|indeed)\b|"
+    r"\b(?:is|are|was|were)\s+not\b|\b(?:isn|aren|wasn|weren)['’]t\b|"
+    r"\b(?:the|this)\s+(?:claim|statement|assertion)\b[^.!?]*\b(?:is|are|was|were)\b|"
+    r"\bit\s+is\s+a\s+fact\b", re.I)
 
 
 class FormError(ValueError):
@@ -55,7 +61,9 @@ def key_terms(text):
 
 def ai_body(claim, tool="web"):
     """POST /desearch/ai/search body. One tool per call: web and wikipedia in one call returned only wikipedia links."""
-    return {"prompt": claim, "tools": [tool], "streaming": False, "result_type": "LINKS_WITH_FINAL_SUMMARY", "count": 10}
+    return {"prompt": claim, "tools": [tool], "streaming": False, "result_type": "LINKS_WITH_FINAL_SUMMARY", "count": 10,
+            "system_message": "Provide a neutral summary of what the sources say, citing sources. "
+                              "Do not judge whether the claim is true or false or give a verdict on the claim."}
 
 
 def x_params(claim):
@@ -144,17 +152,41 @@ def clean_sources(items, claim):
     return out, {"returned": len(items), "kept": len(out), "duplicates": dup, "skipped": dict(skipped)}
 
 
+def is_verdict(text):
+    """Conservatively hide judgment language, matching whole words in sentence text only."""
+    return bool(VERDICT.search(_txt(CITE.sub("", text))))
+
+
+def summary_sentences(text):
+    """Shield citation URLs from punctuation splitting and bind trailing citations to their sentence."""
+    citations = []
+
+    def shield(match):
+        citations.append(match.group())
+        return f"\x00{len(citations) - 1}\x00"
+
+    masked = CITE.sub(shield, text)
+    ends = re.finditer(r'''[.!?]["'’”\])]*(?:\s*\x00\d+\x00)*(?=\s+|$)''', masked)
+    start = 0
+    for end in ends:
+        part = masked[start:end.end()].strip()
+        if part:
+            yield re.sub(r"\x00(\d+)\x00", lambda m: citations[int(m[1])], part)
+        start = end.end()
+    if masked[start:].strip():
+        yield re.sub(r"\x00(\d+)\x00", lambda m: citations[int(m[1])], masked[start:].strip())
+
+
 def check_citations(completion, sources):
-    """Splits the summary into sentences; keeps those whose [n](url) citations all point at a kept source.
-    Uncited or mis-cited sentences are hidden and counted."""
+    """Hide verdicts separately, then keep sentences citing only returned sources."""
     norm = lambda u: urllib.parse.unquote(u).rstrip("/")
     urls = {norm(s["url"]) for s in sources}
     text = _txt(completion)
-    if not text:
-        return {"lines": [], "hidden": 0, "cited_urls": []}
-    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z\[])", text)
-    keep, hidden, cited = [], 0, []
-    for p in parts:
+    keep, hidden, verdict_hidden, cited = [], 0, 0, []
+    for p in summary_sentences(text):
+        if is_verdict(p):
+            verdict_hidden += 1
+            continue
         cs = CITE.findall(p)
         ok = bool(cs) and all(norm(u) in urls for _, u in cs)
         if ok:
@@ -167,7 +199,7 @@ def check_citations(completion, sources):
                 cited += [u for _, u in cs if u not in cited]
                 continue
             hidden += 1
-    return {"lines": keep, "hidden": hidden, "cited_urls": cited}
+    return {"lines": keep, "hidden": hidden, "verdict_hidden": verdict_hidden, "cited_urls": cited}
 
 
 def strength(sources):
@@ -279,15 +311,14 @@ def to_json(payload):
 
 
 def render_text(res):
-    p = [f"Claim: {res['claim']}"]
-    if res["no_strong_sources"]:
-        p.append("No strong sources found. Fewer than two sources contain most of the claim's key words.")
-    else:
-        p.append(f"{res['strong']} sources contain most of the claim's key words.")
-    p.append("This measures keyword overlap only. Read the sources to assess the claim.")
+    p = [f"Claim: {res['claim']}", f"{len(res['sources'])} sources returned."]
+    if len(res["sources"]) < 2:
+        p.append("Few sources returned. Read them before you share anything.")
     p += [f"  - {ln['text']}" for ln in res["summary"]["lines"]]
     if res["summary"]["hidden"]:
         p.append(f"  ({res['summary']['hidden']} uncited summary sentence(s) hidden)")
+    if res["summary"].get("verdict_hidden"):
+        p.append(f"{res['summary']['verdict_hidden']} summary sentence(s) that judged the claim were hidden.")
     for s in res["sources"]:
         p.append(f"{s['rank']:>2}. {s['title']}\n    {s['domain']}\n    {s['url']}\n    {s['snippet']}")
     if res.get("x_enabled"):
@@ -303,8 +334,9 @@ def render_html(res):
          "<style>body{font:15px system-ui;max-width:900px;margin:2em auto}td,th{border-bottom:1px solid #ddd;padding:.4em;vertical-align:top}"
          ".s{color:#555}</style>",
          f"<h1>AI Fact Checker</h1><p><b>Claim:</b> {e(res['claim'])}</p>"]
-    if res["no_strong_sources"]:
-        p.append("<p><b>No strong sources found.</b> Fewer than two returned sources contain most of the claim's key words. This measures keyword overlap only. Read the sources to assess the claim.</p>")
+    p.append(f"<p>{len(res['sources'])} sources returned.</p>")
+    if len(res["sources"]) < 2:
+        p.append("<p>Few sources returned. Read them before you share anything.</p>")
     if res["summary"]["lines"]:
         p.append("<h2>Draft summary (cited lines only)</h2><ul>")
         for ln in res["summary"]["lines"]:
@@ -314,6 +346,8 @@ def render_html(res):
         p.append("</ul>")
     if res["summary"]["hidden"]:
         p.append(f"<p class=s>{e(res['summary']['hidden'])} summary sentence(s) cited no returned source and were hidden.</p>")
+    if res["summary"].get("verdict_hidden"):
+        p.append(f"<p class=s>{e(res['summary']['verdict_hidden'])} summary sentence(s) that judged the claim were hidden.</p>")
     p.append("<h2>Sources</h2><table><tr><th>#</th><th>Source</th><th>Domain</th><th>Snippet</th></tr>")
     for s in res["sources"]:
         p.append(f"<tr><td>{e(s['rank'])}</td><td><a href='{e(safe_url(s['url']))}'>{e(s['title'] or s['url'])}</a>"

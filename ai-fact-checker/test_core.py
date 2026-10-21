@@ -27,8 +27,13 @@ def test_cache_key_normalizes():
 def test_bodies():
     b = core.ai_body("Honey never spoils if stored sealed")
     assert b["tools"] == ["web"] and b["streaming"] is False and b["count"] == 10
-    assert "exclude_domains" not in b and "system_message" not in b
+    assert "exclude_domains" not in b
+    assert b["prompt"] == "Honey never spoils if stored sealed"
+    assert b["result_type"] == "LINKS_WITH_FINAL_SUMMARY"
+    assert "neutral summary of what the sources say" in b["system_message"]
+    assert "citing sources" in b["system_message"] and "Do not judge whether the claim is true or false" in b["system_message"]
     assert core.ai_body("x y z", "wikipedia")["tools"] == ["wikipedia"]
+    assert core.ai_body("x y z", "wikipedia")["system_message"] == b["system_message"]
     assert core.x_params("Honey never spoils if it is stored sealed") == {"query": "honey never spoils stored", "sort": "Top", "count": 10}
 
 
@@ -238,11 +243,19 @@ def test_vercel_files():
 
 def test_eiffel_berlin_sources_are_neutral():
     import app
+    # Minimal excerpt of the actual failed QA output, copied into the repo.
+    fixture = json.loads((pathlib.Path(__file__).parent / "samples/fixtures/eiffel-summary.json").read_text())
+    lines = fixture["summary"]["lines"]
+    assert "is true;" in lines[0]["text"]
+    completion = " ".join(l["text"] + " " + " ".join(f"[{i}]({u})" for i, u in enumerate(l["cites"], 1)) for l in lines)
     ai = {"status": 200, "cost": 0.004, "latency_s": 10, "body": {
-        "search": [src("https://en.wikipedia.org/wiki/Eiffel_Tower", "Eiffel Tower", "The Eiffel Tower is in Paris, not Berlin."),
-                   src("https://en.wikipedia.org/wiki/Funkturm_Berlin", "Berlin Funkturm", "Berlin's tower was inspired by the Eiffel Tower.")],
-        "completion": "The Eiffel Tower is in Paris [1](https://en.wikipedia.org/wiki/Eiffel_Tower)."}}
-    res = core.build_result("The Eiffel Tower is in Berlin.", ai)
+        "search": fixture["sources"], "completion": completion}}
+    res = core.build_result(fixture["claim"] + ".", ai)
+    assert [l["text"] for l in res["summary"]["lines"]] == [l["text"] for l in lines[1:]]
+    assert res["summary"]["verdict_hidden"] == 1 and res["summary"]["hidden"] == 0
+    assert not any(core.is_verdict(l["text"]) for l in res["summary"]["lines"])
+    assert lines[0]["cites"][0] not in res["summary"]["cited_urls"]
+    assert res["x_enabled"] is False and "posts" not in res
     assert "labels" not in res and all("label" not in s for s in res["sources"])
     ch = mk()
     with patch.object(app, "api_key", return_value=KEY), patch.object(app, "Client", return_value=ch._client), \
@@ -252,6 +265,63 @@ def test_eiffel_berlin_sources_are_neutral():
     for text in (output.getvalue(), core.render_html(res)):
         assert "supports" not in text.lower() and "contradicts" not in text.lower() and "unclear" not in text.lower()
         assert "Eiffel Tower" in text and "Berlin" in text
+        assert "is true" not in text.lower() and lines[1]["text"] in text
+        assert "key words" not in text.lower() and "contain most" not in text.lower()
+        assert "3 sources returned." in text
+        assert "1 summary sentence(s) that judged the claim were hidden." in text
+
+
+def test_verdict_detection_positive_words_and_phrases():
+    words = ("true", "false", "correct", "incorrect", "accurate", "inaccurate", "right", "wrong",
+             "confirmed", "debunked", "myth", "misconception", "untrue", "indeed")
+    phrases = ("is not", "isn't", "isn’t", "are not", "aren't", "was not", "wasn't", "were not",
+               "the statement that the Eiffel Tower is in Berlin is", "the claim is",
+               "this claim is", "the assertion is", "it is a fact")
+    for phrase in words + phrases:
+        for variant in (phrase, phrase.upper(), phrase.title()):
+            text = f"({variant}) [1](https://a.org/source)."
+            assert core.is_verdict(text), text
+            r = core.check_citations(text, [{"url": "https://a.org/source"}])
+            assert r["lines"] == [] and r["verdict_hidden"] == 1 and r["hidden"] == 0, text
+
+
+def test_verdict_detection_negatives_and_word_boundaries():
+    for text in ("The Funkturm was built in 1926.", "The Eiffel Tower opened in 1889.",
+                 "Berlin has several towers inspired by the Eiffel Tower.",
+                 "The museum displays the statement beside a photograph.",
+                 "The bright tower rises above the rightmost building.",
+                 "The catalogue includes mythical figures and falsehoods."):
+        assert not core.is_verdict(text), text
+        r = core.check_citations(text + " [1](https://a.org/true)", [{"url": "https://a.org/true"}])
+        assert [l["text"] for l in r["lines"]] == [text]
+        assert r["verdict_hidden"] == 0 and r["hidden"] == 0
+
+
+def test_verdict_sentences_split_without_leaking_trailing_citations():
+    url = "https://a.org/tower"
+    completion = (f"The Funkturm was built in 1926 [1]({url}). "
+                  f"this claim is correct. [2]({url}) "
+                  f"berlin has observation decks [3]({url}). "
+                  f"indeed [4]({url}). An uncited sentence.")
+    r = core.check_citations(completion, [{"url": url}])
+    assert [l["text"] for l in r["lines"]] == ["The Funkturm was built in 1926.", "berlin has observation decks."]
+    assert r["verdict_hidden"] == 2 and r["hidden"] == 1
+    r = core.check_citations(f"This is false. [1]({url}) A neutral uncited sentence.", [{"url": url}])
+    assert r == {"lines": [], "hidden": 1, "verdict_hidden": 1, "cited_urls": []}
+    assert core.check_citations("", []) == {"lines": [], "hidden": 0, "verdict_hidden": 0, "cited_urls": []}
+
+
+def test_source_count_uses_returned_sources_only():
+    for count in (0, 1, 2, 9):
+        sources = [src(f"https://a.org/{n}", "General source") for n in range(count)]
+        res = core.build_result("The Eiffel Tower is in Berlin.", {"body": {"search": sources}})
+        # Legacy overlap metadata must have no effect on display copy.
+        res.update(strong=99, no_strong_sources=True)
+        for text in (core.render_text(res), core.render_html(res)):
+            assert f"{count} sources returned." in text
+            assert ("Few sources returned. Read them before you share anything." in text) == (count < 2)
+            for forbidden in ("key words", "contain most", "No strong sources found", "keyword overlap"):
+                assert forbidden not in text
 
 
 def test_posts_need_two_meaningful_claim_terms():
@@ -359,8 +429,12 @@ def test_unsafe_urls_are_not_rendered_as_links():
 def test_index_has_neutral_sources_and_safe_interpolation():
     text = (pathlib.Path(__file__).parent / "public/index.html").read_text()
     assert "Cue label" not in text and "9 seconds" not in text and "about 10 to 15 seconds" in text
-    for token in ("supports", "contradicts", "unclear", "s.label", "${s.rank}", "${d.summary.hidden}"):
+    for token in ("supports", "contradicts", "unclear", "s.label", "${s.rank}", "${d.summary.hidden}",
+                  "key words", "contain most", "No strong sources found", "d.no_strong_sources", "d.strong"):
         assert token not in text
+    assert "${esc(d.sources.length)} sources returned." in text and "d.sources.length < 2" in text
+    assert "Few sources returned. Read them before you share anything." in text
+    assert "${esc(d.summary.verdict_hidden)} summary sentence(s) that judged the claim were hidden." in text
     assert "d.x_enabled && d.posts?.length" in text
     for token in ("esc(s.rank)", "esc(s.title || s.url)", "esc(s.domain)", "esc(d.cost_usd)", "esc(d.calls)", "link(s.url)"):
         assert token in text

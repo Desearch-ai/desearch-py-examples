@@ -13,7 +13,7 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;pad
 </style>
 <h1>AI Fact Checker</h1>
 <p class="s">Made by Desearch | <a href="https://desearch.ai">https://desearch.ai</a></p>
-<p>Paste one claim. The app searches the web (and optionally Wikipedia) with the Desearch API, shows the sources it found with a link to each, and a short summary that keeps only lines tied to a returned source. It helps you find sources; it does not decide what is true.</p>
+<p>Paste one claim. The app searches the web (and optionally Wikipedia) with the Desearch API, shows the sources it found with a link to each, and a short summary that hides judgment language and keeps only lines tied to a returned source. It helps you find sources; it does not decide what is true.</p>
 <p class="s">A check takes about 10 to 15 seconds and costs $0.004 ($0.008 with Wikipedia). Cached checks cost nothing. Optional X search adds $0.0015 and can take up to 40 seconds.</p>
 <form id="f">
   <input type="text" id="claim" name="claim" maxlength="200" placeholder="e.g. Honey never spoils if it is stored sealed" required>
@@ -43,9 +43,11 @@ $("#f").onsubmit = async ev => {
 };
 function render(d) {
   let h = `<h2>Claim</h2><p>${esc(d.claim)}</p>`;
-  if (d.no_strong_sources) h += `<p class=warn><b>No strong sources found.</b> Fewer than two returned sources contain most of the claim's key words. This measures keyword overlap only. Read the sources to assess the claim.</p>`;
+  h += `<p>${esc(d.sources.length)} sources returned.</p>`;
+  if (d.sources.length < 2) h += `<p class=warn>Few sources returned. Read them before you share anything.</p>`;
   if (d.summary.lines.length) h += "<h2>Draft summary (cited lines only)</h2><ul>" + d.summary.lines.map(l => `<li>${esc(l.text)} ` + [...new Set(l.cites)].map((u, i, a) => `<a href="${link(u)}" rel="nofollow noopener">[source${a.length > 1 ? " " + (i + 1) : ""}]</a>`).join(" ") + "</li>").join("") + "</ul>";
   if (d.summary.hidden) h += `<p class=s>${esc(d.summary.hidden)} summary sentence(s) cited no returned source and were hidden.</p>`;
+  if (d.summary.verdict_hidden) h += `<p class=s>${esc(d.summary.verdict_hidden)} summary sentence(s) that judged the claim were hidden.</p>`;
   h += "<h2>Sources</h2><table><tr><th>#</th><th>Source</th><th>Domain</th><th>Snippet</th></tr>" + d.sources.map(s =>
     `<tr><td>${esc(s.rank)}</td><td><a href="${link(s.url)}" rel="nofollow noopener">${esc(s.title || s.url)}</a></td><td>${esc(s.domain)}</td><td>${esc((s.snippet || "").slice(0, 300))}</td></tr>`).join("") + "</table>";
   if (d.x_enabled && d.posts?.length) h += `<h2>How it is discussed on X</h2><p class=s>Search: ${esc(d.x_query)}. ${esc(d.posts.length)} of ${esc(d.x_returned)} posts passed the filters.</p><ul>` + d.posts.map(p =>

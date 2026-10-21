@@ -113,20 +113,6 @@
  "summary": {
   "lines": [
    {
-    "text": "Multiple astronauts, including Yang Liwei and Leroy Chiao, confirmed they could not see it without magnification, citing its narrow width (around 4-5 meters) and low contrast with the surrounding landscape as reasons.",
-    "cites": [
-     "https://www.skyatnightmagazine.com/space-science/can-you-see-great-wall-china-from-space",
-     "https://www.britannica.com/question/Can-you-see-the-Great-Wall-of-China-from-space"
-    ]
-   },
-   {
-    "text": "The myth that it is visible from space predates space travel and originated from a 1932 Ripley's Believe It or Not cartoon, but has been debunked by astronaut observations and scientific explanations.",
-    "cites": [
-     "https://nibble-app.com/blog/is-the-great-wall-of-china-visible-from-space",
-     "https://spacedaily.com/d-the-great-wall-of-china-is-not-actually-visible-from-space-with-the-naked-eye-astronauts-from-apollo-to-the-iss-have-confirmed-it-and-the-popular-myth-that-it-is-predates-space-tra/"
-    ]
-   },
-   {
     "text": "While some structures like cities and large dams are visible from low Earth orbit, the Wall's size and coloration make it indistinguishable to the naked eye from space.",
     "cites": [
      "https://www.britannica.com/question/Can-you-see-the-Great-Wall-of-China-from-space",
@@ -135,11 +121,9 @@
    }
   ],
   "hidden": 1,
+  "verdict_hidden": 2,
   "cited_urls": [
-   "https://www.skyatnightmagazine.com/space-science/can-you-see-great-wall-china-from-space",
    "https://www.britannica.com/question/Can-you-see-the-Great-Wall-of-China-from-space",
-   "https://nibble-app.com/blog/is-the-great-wall-of-china-visible-from-space",
-   "https://spacedaily.com/d-the-great-wall-of-china-is-not-actually-visible-from-space-with-the-naked-eye-astronauts-from-apollo-to-the-iss-have-confirmed-it-and-the-popular-myth-that-it-is-predates-space-tra/",
    "https://timesofindia.indiatimes.com/life-style/travel/news/great-wall-of-china-is-visible-from-space-fact-or-myth/articleshow/128671144.cms"
   ]
  },
