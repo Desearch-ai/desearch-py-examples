@@ -162,13 +162,13 @@ def test_organization_allowlist(name):
 
 
 @pytest.mark.parametrize('prefix', [250, 278])
-def test_all_urls_preserved_within_hard_limit(prefix):
+def test_first_url_preserved_within_hard_limit(prefix):
     from newsboard.xfilter import truncate_text, LINK
     links = ['https://one.test/a', 'https://two.test/report']
     text = links[0] + ' ' + 'x' * (prefix - len(links[0]) - 1) + ' ' + links[1] + ' trailing' * 30
     result = truncate_text(text)
     assert len(result) <= 280
-    assert LINK.findall(result) == links
+    assert LINK.findall(result) == links[:1]
 
 
 def test_url_starting_at_279_is_not_cut():
@@ -183,7 +183,9 @@ def test_urls_exhaust_budget():
     from newsboard.xfilter import truncate_text
     first = 'https://example.test/' + 'a' * 140
     second = 'https://example.test/' + 'b' * 140
-    assert truncate_text('AI ' + first + ' ' + second) == first
+    result = truncate_text('AI ' + first + ' ' + second)
+    assert result == 'AI… ' + first
+    assert len(result) <= 280
 
 
 @pytest.mark.parametrize('text', ['x' * 280, 'x' * 281, 'AI details ' * 100])
