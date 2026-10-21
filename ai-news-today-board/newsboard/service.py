@@ -1,4 +1,5 @@
 import json, os, sys, urllib.parse
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from . import core
 from .client import Client, api_key
@@ -60,7 +61,10 @@ class Board:
                 self.cap.add(cost)
                 calls.append({"source": kind, "tag": tag, "status": status, "body": body, "cost_usd": cost})
         spent = round(sum(call["cost_usd"] for call in calls), 6)
-        print(f"[board] calls={len(calls)} cost={spent} spent_today={round(self.cap.spent, 6)}", file=sys.stderr)
+        statuses = Counter(call["status"] for call in calls)
+        status_counts = ",".join(f"{code}:{statuses[code]}" for code in sorted(statuses))
+        print(f"[board] calls={len(calls)} cost={spent} spent_today={round(self.cap.spent, 6)} "
+              f"statuses={{{status_counts}}}", file=sys.stderr)
         if any(call["status"] in (401, 402, 403) for call in calls):
             return 403, None
         if any(not any(c["status"] == 200 for c in calls if c["source"] == kind) for kind in ("x", "web")):

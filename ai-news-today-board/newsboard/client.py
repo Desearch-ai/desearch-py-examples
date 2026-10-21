@@ -7,6 +7,7 @@ import urllib.parse
 import urllib.request
 
 BASE = "https://api.desearch.ai"
+UA = "ai-news-today-board/0.1 (+made-by-desearch)"
 
 
 def api_key():
@@ -23,8 +24,9 @@ class Client:
     def _call(self, method, path, params=None, payload=None):
         url = BASE + path + ("?" + urllib.parse.urlencode(params) if params else "")
         data = json.dumps(payload).encode() if payload is not None else None
+        hdr = {"Authorization": self.key, "User-Agent": UA, "Content-Type": "application/json"}
         req = urllib.request.Request(url, data=data, method=method,
-                                     headers={"Authorization": self.key, "Content-Type": "application/json"})
+                                     headers=hdr)
         try:
             with urllib.request.urlopen(req, timeout=self.timeout) as response:
                 status, headers, raw = response.status, dict(response.headers), response.read()

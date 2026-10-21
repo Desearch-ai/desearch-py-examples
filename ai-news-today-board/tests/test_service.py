@@ -41,12 +41,29 @@ def test_paused():
 
 
 @pytest.mark.parametrize('status', [401, 402, 403])
-def test_auth_pauses_and_counts_zero(status):
+def test_auth_pauses_and_counts_zero(status, capsys):
     board = Board(client=FakeClient(status, cost=9, known=True))
     result = response(board)
     assert result[0] == 503
     assert result[2] == response(Board(live=False))[2]
     assert board.cap.spent == 0
+    assert f'statuses={{{status}:10}}' in capsys.readouterr().err
+
+
+@pytest.mark.parametrize('failed_status,expected_status', [(403, 503), (500, 200)])
+def test_board_logs_sorted_status_counts(failed_status, expected_status, capsys):
+    client = FakeClient()
+    failed_tags = {tag for _, tag, _ in plan_requests()[:2]}
+
+    def call(params, tag):
+        status = failed_status if tag in failed_tags else 200
+        return status, [], {'cost': 0, 'cost_known': True}
+
+    client.x_search = client.ai_search = call
+    assert response(Board(client=client))[0] == expected_status
+    log = capsys.readouterr().err.strip()
+    assert log.startswith('[board] calls=10 ')
+    assert f'statuses={{200:8,{failed_status}:2}}' in log
 
 
 def test_fallback_cache_and_parallel_calls():
@@ -112,6 +129,23 @@ def test_client_cost_precedence(monkeypatch, headers, body, expected, known):
     monkeypatch.setattr(urllib.request, 'urlopen', Mock(return_value=reply))
     _, _, rec = Client('test-only-placeholder').x_search({'query': 'AI'})
     assert rec == {'cost': expected, 'cost_known': known}
+
+
+@pytest.mark.parametrize('method', ['x_search', 'ai_search'])
+def test_client_sends_user_agent(monkeypatch, method):
+    reply = Mock(status=200, headers={})
+    reply.read.return_value = b'{}'
+    reply.__enter__ = Mock(return_value=reply)
+    reply.__exit__ = Mock(return_value=False)
+    urlopen = Mock(return_value=reply)
+    monkeypatch.setattr(urllib.request, 'urlopen', urlopen)
+
+    assert getattr(Client('test-only-placeholder'), method)({})[0] == 200
+
+    urlopen.assert_called_once()
+    request = urlopen.call_args.args[0]
+    headers = {key.lower(): value for key, value in request.header_items()}
+    assert headers['user-agent'] == 'ai-news-today-board/0.1 (+made-by-desearch)'
 
 
 def test_http_auth_error_mock(monkeypatch):
