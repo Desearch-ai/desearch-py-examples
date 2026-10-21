@@ -37,16 +37,17 @@ def timestamp(value):
 def calculate(followers, posts, now=None):
     now = time.time() if now is None else now
     times = [timestamp(p['taken_at']) for p in posts]
-    pinned = 0
-    for k in (3, 2, 1):
-        if len(times) > k and times[k] is not None and all(t is not None and t < times[k] for t in times[:k]):
-            pinned = k
-            break
-    eligible = [p for i, p in enumerate(posts) if i >= pinned and times[i] is not None and now-times[i] >= 86400 and p['likes'] is not None and followers]
+    pinned_keys = ('isPinned', 'pinned', 'is_pinned')
+    has_flags = any(key in post for post in posts for key in pinned_keys)
+    pinned_rule = 'flag' if has_flags else 'first3_fallback'
+    eligible = [p for i, p in enumerate(posts)
+                if (not any(p.get(key) for key in pinned_keys) if has_flags else i >= 3)
+                and times[i] is not None and now-times[i] >= 86400
+                and p['likes'] is not None and followers]
     def rate(rows):
         return round(sum(p['likes'] + (p['comments'] or 0) for p in rows) / len(rows) / followers * 100, 4) if rows else None
     clean = [{**p, 'taken_at': dt.datetime.fromtimestamp(t, dt.timezone.utc).isoformat() if t is not None else ''} for p, t in zip(posts, times)]
-    return {'followers': followers or 0, 'posts_used': len(eligible), 'eligible_posts': len(eligible), 'engagement_rate_pct': rate(eligible), 'by_format': {kind: rate([p for p in eligible if p['type'] == kind]) for kind in ('image', 'carousel', 'video')}, 'posts': clean}
+    return {'followers': followers or 0, 'posts_used': len(eligible), 'pinned_rule': pinned_rule, 'eligible_posts': len(eligible), 'engagement_rate_pct': rate(eligible), 'by_format': {kind: rate([p for p in eligible if p['type'] == kind]) for kind in ('image', 'carousel', 'video')}, 'posts': clean}
 
 
 class Engagement:

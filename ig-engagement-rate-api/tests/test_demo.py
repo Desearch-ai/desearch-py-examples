@@ -14,7 +14,7 @@ from igrate import state
 class Fake:
     def __init__(self, profile=(200, {'followers': 1000}, .00207), posts=None):
         self.profile = profile
-        self.posts = posts or (200, [{'url':'', 'type':'image', 'likes':100, 'comments':10, 'taken_at':100000}], .02484)
+        self.posts = posts or (200, [{'url':'', 'type':'image', 'likes':100, 'comments':10, 'taken_at':100000, 'isPinned':False}], .02484)
         self.calls = []
 
     def fetch(self, handle, posts=False, timeout=45):
@@ -52,7 +52,8 @@ def test_success_cache_and_featured_bypass_limits():
     a = body['accounts'][0]
     assert a['engagement_rate_pct'] == 11
     assert a['eligible_posts'] == a['posts_used'] == 1
-    assert set(a['posts'][0]) == {'url','type','likes','comments','taken_at'}
+    assert set(a['posts'][0]) == {'url','type','likes','comments','taken_at','isPinned'}
+    assert a['pinned_rule'] == 'flag'
     assert len(d._client.calls) == 2
     assert d.cap.spent == pytest.approx(.02691)
     for _ in range(12):
@@ -276,7 +277,7 @@ def test_sample_and_entrypoints():
     d=demo()
     assert d.sample['sample'] is True and 'EXAMPLE' in d.sample['label']
     for account in d.sample['accounts']:
-        for post in account['posts']: assert set(post)=={'url','type','likes','comments','taken_at'}
+        for post in account.get('posts', []): assert set(post)=={'url','type','likes','comments','taken_at'}
     assert handler.log_message(None,'anything') is None
     assert parse_query('/api/engagement?handle=%40Ab')=={'handle':'@Ab'}
     assert client_ip({'X-Vercel-Forwarded-For':'1.2.3.4, 5.6.7.8'})=='1.2.3.4'
@@ -345,6 +346,7 @@ def test_copy_and_timeout_configuration():
     from pathlib import Path
     root=Path(__file__).resolve().parents[1]
     html=(root/'public/index.html').read_text()
+    assert 'based on' in html
     assert '45000' in html and 'AbortController' in html and '<progress' in html
     assert 'textContent' in html and 'innerHTML' not in html
     assert 'Made by' in html and 'https://desearch.ai' in html
@@ -495,9 +497,10 @@ def test_live_shape_fixtures_and_header_cost(monkeypatch):
     assert code == 200 and len(calls) == 2
     account = body['accounts'][0]
     assert account['followers'] == 268325407
-    assert account['posts_used'] == account['eligible_posts'] == 1
-    assert account['engagement_rate_pct'] == 0.0197
-    assert account['by_format'] == {'image': None, 'carousel': None, 'video': 0.0197}
+    assert account['posts_used'] == account['eligible_posts'] == 0
+    assert account['pinned_rule'] == 'first3_fallback'
+    assert account['engagement_rate_pct'] is None
+    assert account['by_format'] == {'image': None, 'carousel': None, 'video': None}
     assert account['posts'][1] == {'url': 'https://www.instagram.com/p/DeuOR-CjKE9/', 'type': 'image', 'likes': 11547, 'comments': 130, 'taken_at': '2026-10-20T16:06:30+00:00'}
     assert d.cap.spent == pytest.approx(0.02691)
 
@@ -509,8 +512,59 @@ def test_sample_snapshot_computation():
     assert sample['source_note'] == 'one live build of natgeo'
     assert len(sample['accounts']) == 1
     account = sample['accounts'][0]
-    assert account['handle'] == 'natgeo' and len(account['posts']) == 12
-    now = datetime.fromisoformat(sample['source_date']).timestamp()
-    assert account == {'handle': 'natgeo', **calculate(account['followers'], account['posts'], now=now)}
-    assert account['posts_used'] == 5
+    assert account['handle'] == 'natgeo'
+    assert 'posts' not in account
+    assert account['pinned_rule'] == 'first3_fallback'
+    assert account['posts_used'] == account['eligible_posts'] == 5
     assert account['engagement_rate_pct'] == 0.0315
+
+
+def calculation_post(taken_at=1, **fields):
+    return {'url': '', 'type': 'image', 'likes': 100, 'comments': 10,
+            'taken_at': taken_at, **fields}
+
+
+@pytest.mark.parametrize('key', ['isPinned', 'pinned', 'is_pinned'])
+@pytest.mark.parametrize('value', [True, 1, 'yes'])
+def test_explicit_pinned_flags(key, value):
+    raw = [calculation_post() for _ in range(5)]
+    raw[3][key] = value
+    raw[4][key] = False
+    posts = sanitize(raw, posts=True)
+    result = calculate(1000, posts, now=1000000)
+    assert posts[3][key] is True and posts[4][key] is False
+    assert result['pinned_rule'] == 'flag'
+    assert result['posts_used'] == result['eligible_posts'] == 4
+    assert result['engagement_rate_pct'] == 11
+
+
+@pytest.mark.parametrize('key', ['isPinned', 'pinned', 'is_pinned'])
+def test_false_flag_disables_fallback(key):
+    posts = [calculation_post(), calculation_post(**{key: False})]
+    result = calculate(1000, posts, now=1000000)
+    assert result['pinned_rule'] == 'flag'
+    assert result['posts_used'] == 2
+
+
+def test_no_top_level_flags_skips_first_three():
+    posts = [calculation_post(stats={'isPinned': True}) for _ in range(5)]
+    posts[0]['likes'] = 10000
+    result = calculate(1000, posts, now=1000000)
+    assert result['pinned_rule'] == 'first3_fallback'
+    assert result['posts_used'] == 2
+    assert result['engagement_rate_pct'] == 11
+    assert calculate(1000, posts[:3], now=1000000)['posts_used'] == 0
+
+
+@pytest.mark.parametrize('flagged', [False, True])
+def test_under_24_hours_excluded_with_boundary(flagged):
+    now = 1000000
+    posts = [calculation_post() for _ in range(3)]
+    posts += [calculation_post(now - 86400), calculation_post(now - 86399),
+              calculation_post(now + 1)]
+    if flagged:
+        for post in posts[:3]:
+            post['pinned'] = True
+    result = calculate(1000, posts, now=now)
+    assert result['posts_used'] == result['eligible_posts'] == 1
+    assert result['engagement_rate_pct'] == 11

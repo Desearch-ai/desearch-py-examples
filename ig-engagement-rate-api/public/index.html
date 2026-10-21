@@ -9,7 +9,7 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:900px;margin:3rem auto;padding
 <p>Made by <a href="https://desearch.ai">Desearch</a></p>
 <p>Estimate engagement from up to 12 recent public posts. No captions, tagged users or images are displayed.</p>
 <form id="form"><label for="handle">Instagram handle</label><br><input id="handle" maxlength="31" placeholder="@yourhandle" required autocomplete="off" spellcheck="false"> <button id="submit">Calculate</button></form>
-<p>Rate = average (likes + comments) per eligible post / followers × 100. Hidden likes, posts under 24 hours old and likely pinned posts are excluded. No eligible posts means n/a.</p>
+<p>Rate = average (likes + comments) per eligible post / followers × 100. Hidden likes, posts under 24 hours old and pinned posts are excluded. Pinned flags are used when present; otherwise the first 3 posts are skipped. No eligible posts means n/a.</p>
 <p id="status" role="status" aria-live="polite">Loading EXAMPLE data...</p>
 <progress id="progress" hidden aria-label="Looking up account"></progress>
 <div id="results"></div>
@@ -22,11 +22,11 @@ function render(data,message){
  for(const a of data.accounts || []){
   const section=document.createElement('section');
   const title=document.createElement('h2');title.textContent='@'+a.handle+(data.sample?' | EXAMPLE':'');section.append(title);
-  const totals=document.createElement('p');totals.textContent=`Followers: ${a.followers.toLocaleString()} | Posts used: ${a.posts_used} | Eligible posts: ${a.eligible_posts} | Engagement: ${a.engagement_rate_pct == null ? 'n/a' : a.engagement_rate_pct+'%'}`;section.append(totals);
+  const totals=document.createElement('p');totals.textContent=`Followers: ${a.followers.toLocaleString()} | Posts used: ${a.posts_used} | Eligible posts: ${a.eligible_posts} | Engagement: ${a.engagement_rate_pct == null ? 'n/a' : a.engagement_rate_pct+'%'} (based on ${a.posts_used} posts)`;section.append(totals);
   const formats=document.createElement('p');formats.textContent=Object.entries(a.by_format).map(([k,v])=>`${k}: ${v == null ? 'n/a' : v+'%'}`).join(' | ');section.append(formats);
   const wrap=document.createElement('div');wrap.className='scroll';const table=document.createElement('table');
   const head=document.createElement('tr');for(const text of ['Post','Type','Likes','Comments','Taken at']){const th=document.createElement('th');th.textContent=text;head.append(th);}table.append(head);
-  for(const p of a.posts){const tr=document.createElement('tr');const td=document.createElement('td');if(/^https:\/\/www\.instagram\.com\/p\/[A-Za-z0-9_-]+\/$/.test(p.url)){const link=document.createElement('a');link.href=p.url;link.textContent='Open post';link.target='_blank';link.rel='noopener noreferrer';td.append(link);}tr.append(td);for(const v of [p.type,p.likes,p.comments,p.taken_at]){const cell=document.createElement('td');cell.textContent=v ?? 'n/a';tr.append(cell);}table.append(tr);}wrap.append(table);section.append(wrap);$('results').append(section);
+  for(const p of a.posts || []){const tr=document.createElement('tr');const td=document.createElement('td');if(/^https:\/\/www\.instagram\.com\/p\/[A-Za-z0-9_-]+\/$/.test(p.url)){const link=document.createElement('a');link.href=p.url;link.textContent='Open post';link.target='_blank';link.rel='noopener noreferrer';td.append(link);}tr.append(td);for(const v of [p.type,p.likes,p.comments,p.taken_at]){const cell=document.createElement('td');cell.textContent=v ?? 'n/a';tr.append(cell);}table.append(tr);}wrap.append(table);section.append(wrap);$('results').append(section);
  }
 }
 const ready=fetch('/sample.json').then(r=>r.json()).then(d=>sample=d).catch(()=>sample);

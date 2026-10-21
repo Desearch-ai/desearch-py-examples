@@ -9,99 +9,14 @@
       "handle": "natgeo",
       "followers": 268325407,
       "posts_used": 5,
+      "pinned_rule": "first3_fallback",
       "eligible_posts": 5,
       "engagement_rate_pct": 0.0315,
       "by_format": {
         "image": 0.0114,
         "carousel": 0.0405,
         "video": 0.0326
-      },
-      "posts": [
-        {
-          "url": "https://www.instagram.com/p/DeuOR-CjKE9/",
-          "type": "image",
-          "likes": 11547,
-          "comments": 130,
-          "taken_at": "2026-10-20T16:06:30+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DehZj9wggt0/",
-          "type": "video",
-          "likes": 52531,
-          "comments": 394,
-          "taken_at": "2026-10-15T19:00:02+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DecPSQfoaRe/",
-          "type": "video",
-          "likes": 21920,
-          "comments": 105,
-          "taken_at": "2026-10-13T16:30:08+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/Dewd1c3iRmI/",
-          "type": "video",
-          "likes": 4253,
-          "comments": 75,
-          "taken_at": "2026-10-21T13:01:27+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/Des_X6JFjbE/",
-          "type": "carousel",
-          "likes": 124670,
-          "comments": 143,
-          "taken_at": "2026-10-21T01:00:01+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/Deu3BoCBbDP/",
-          "type": "video",
-          "likes": 60758,
-          "comments": 654,
-          "taken_at": "2026-10-20T22:05:09+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DeuQnVClIKd/",
-          "type": "video",
-          "likes": 45497,
-          "comments": 153,
-          "taken_at": "2026-10-20T18:00:03+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/Det5B-rAng2/",
-          "type": "carousel",
-          "likes": 40842,
-          "comments": 250,
-          "taken_at": "2026-10-20T13:00:58+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DesnktUkQPe/",
-          "type": "carousel",
-          "likes": 175712,
-          "comments": 335,
-          "taken_at": "2026-10-20T01:08:54+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DesR-VXRAQU/",
-          "type": "video",
-          "likes": 144651,
-          "comments": 527,
-          "taken_at": "2026-10-19T22:00:46+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DerZjgilW6X/",
-          "type": "video",
-          "likes": 29416,
-          "comments": 116,
-          "taken_at": "2026-10-19T16:00:04+00:00"
-        },
-        {
-          "url": "https://www.instagram.com/p/DeqfM8KF6tZ/",
-          "type": "image",
-          "likes": 30443,
-          "comments": 50,
-          "taken_at": "2026-10-19T16:00:01+00:00"
-        }
-      ]
+      }
     }
   ]
 }

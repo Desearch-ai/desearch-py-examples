@@ -36,6 +36,7 @@ def sanitize(body, posts):
         code = post.get('shortcode', '')
         url = 'https://www.instagram.com/p/' + code + '/' if isinstance(code, str) and re.fullmatch(r'[A-Za-z0-9_-]{1,100}', code) else ''
         cleaned.append({'url': url, 'type': kind, 'likes': count(stats.get('likeCount', post.get('likes'))), 'comments': count(stats.get('commentCount', post.get('comments'))), 'taken_at': post.get('createTime', post.get('taken_at'))})
+        cleaned[-1].update({key: bool(post[key]) for key in ('isPinned', 'pinned', 'is_pinned') if key in post})
     return cleaned
 
 
