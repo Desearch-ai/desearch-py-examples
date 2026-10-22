@@ -68,6 +68,8 @@ class Search:
                 return self._handle(q, page, ip)
             except state.StateUnavailable:
                 return self.paused()
+            except Exception:
+                return self.paused()
 
     def _handle(self, q, page, ip):
         if self.refused:
@@ -85,12 +87,14 @@ class Search:
             return self.paused()
         if not self.limiter.allow(ip):
             return self.out(429, {'status': 'limited', 'error': 'Too many searches. Try again later.'})
+        self.cap.add(self.fallback_cost)
         try:
             status, results, cost = client.search(q, page)
         except (OSError, TimeoutError):
             status, results, cost = 599, None, None
         cost = self.fallback_cost if cost is None else cost
-        self.cap.add(cost)
+        if cost != self.fallback_cost:
+            self.cap.add(cost - self.fallback_cost)
         if status != 200 or results is None:
             return self.paused(cost)
         result = {'status': 'ok', 'sample': False, 'query': q, 'page': page, 'results': results}

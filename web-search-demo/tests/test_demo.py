@@ -1,4 +1,6 @@
 import io
+import hashlib
+import http.client
 import json
 import urllib.error
 from unittest.mock import Mock
@@ -135,16 +137,17 @@ def test_upstream_failures_pause(status):
     assert service.cap.spent == .001
 
 
+@pytest.mark.parametrize('error_type', [state.StateUnavailable, RuntimeError])
 @pytest.mark.parametrize('target', ['cache.get', 'cap.ok', 'limiter.allow', 'cap.add', 'cache.put'])
-def test_redis_errors_fail_closed(target):
+def test_redis_errors_fail_closed(target, error_type):
     service = demo()
     name, method = target.split('.')
     obj = Mock(wraps=getattr(service, name))
     setattr(service, name, obj)
-    getattr(obj, method).side_effect = state.StateUnavailable()
+    getattr(obj, method).side_effect = error_type('private state details')
     code, _, body = call(service)
     assert code == 503 and body['status'] == 'paused' and body['sample']
-    if target in ('cache.get', 'cap.ok', 'limiter.allow'):
+    if target in ('cache.get', 'cap.ok', 'limiter.allow', 'cap.add'):
         service._client.search.assert_not_called()
 
 
@@ -272,3 +275,128 @@ def test_public_copy_uses_network_limits():
         assert 'per visitor' not in text
         assert '—' not in text
     assert (root / 'public/index.html').read_text().count('per network') == 2
+
+
+class FakeRedis:
+    """Exercise RedisREST's decoding with Upstash-shaped pipeline responses."""
+    def __init__(self, monkeypatch):
+        self.values = {}
+        self.commands = []
+        monkeypatch.setattr('urllib.request.urlopen', self.urlopen)
+        self.redis = state.RedisREST('https://redis.test', 'token')
+
+    def urlopen(self, request, **kwargs):
+        commands = json.loads(request.data)
+        self.commands.extend(commands)
+        entries = []
+        for command in commands:
+            op, key, *args = command
+            if op == 'GET':
+                result = self.values.get(key)
+            elif op in ('INCR', 'INCRBYFLOAT'):
+                amount = 1 if op == 'INCR' else float(args[0])
+                self.values[key] = float(self.values.get(key, 0)) + amount
+                result = self.values[key] if op == 'INCR' else str(self.values[key])
+            elif op == 'EXPIRE':
+                result = 1
+            else:
+                raise AssertionError(command)
+            entries.append({'result': result})
+        return Response(body=entries)
+
+
+def test_shared_daily_cap_utc_commands(monkeypatch):
+    fake = FakeRedis(monkeypatch)
+    cap = state.DailyCap(fake.redis, clock=lambda: 1767225600)  # 2026-01-01 UTC
+    key = 'websearch:spend:2026-01-01'
+    assert cap.ok()
+    cap.add(.001)
+    assert fake.commands == [['GET', key], ['INCRBYFLOAT', key, .001], ['EXPIRE', key, 172800]]
+    assert fake.values[key] == .001
+
+
+@pytest.mark.parametrize('spent', [1, 1.01])
+def test_shared_cap_at_or_over_budget_pauses(monkeypatch, spent):
+    fake = FakeRedis(monkeypatch)
+    cap = state.DailyCap(fake.redis, clock=lambda: 1767225600)
+    cap.add(spent)
+    service = demo(cap=cap)
+    code, _, body = call(service)
+    assert code == 503 and body['status'] == 'paused'
+    service._client.search.assert_not_called()
+
+
+@pytest.mark.parametrize('real_cost', [None, .001, 0, .0005, .003])
+def test_reservation_before_upstream_and_adjustment(monkeypatch, real_cost):
+    fake = FakeRedis(monkeypatch)
+    cap = state.DailyCap(fake.redis, clock=lambda: 1767225600)
+    key = cap._key()
+    service = demo(cap=cap)
+    def search(*args):
+        assert fake.values[key] == service.fallback_cost
+        return 200, ROWS, real_cost
+    service._client.search.side_effect = search
+    assert call(service)[0] == 200
+    assert fake.values[key] == pytest.approx(service.fallback_cost if real_cost is None else real_cost)
+    additions = [c for c in fake.commands if c[0] == 'INCRBYFLOAT']
+    assert len(additions) == (1 if real_cost in (None, .001) else 2)
+
+
+@pytest.mark.parametrize('target', ['adjustment', 'cache.put'])
+@pytest.mark.parametrize('error_type', [state.StateUnavailable, RuntimeError])
+def test_paid_spend_survives_state_failure(monkeypatch, target, error_type):
+    fake = FakeRedis(monkeypatch)
+    cap = state.DailyCap(fake.redis, clock=lambda: 1767225600)
+    service = demo(cap=cap)
+    if target == 'adjustment':
+        original_add = cap.add
+        def add(amount):
+            if service._client.search.called:
+                raise error_type('private connection details')
+            original_add(amount)
+        monkeypatch.setattr(cap, 'add', add)
+    else:
+        service.cache.put = Mock(side_effect=error_type('private connection details'))
+    code, _, body = call(service)
+    assert code == 503 and body['status'] == 'paused'
+    assert 'private' not in json.dumps(body)
+    service._client.search.assert_called_once()
+    assert fake.values[cap._key()] == pytest.approx(service.fallback_cost if target == 'adjustment' else .002)
+
+
+@pytest.mark.parametrize('failure', ['missing', 'oserror', 'incomplete', 'unexpected'])
+def test_redis_transport_failures_pause(monkeypatch, failure):
+    redis = state.RedisREST('' if failure == 'missing' else 'https://redis.test', 'token')
+    error = {'oserror': OSError('private connection details'),
+             'incomplete': http.client.IncompleteRead(b'private connection details', 100),
+             'unexpected': RuntimeError('private connection details')}.get(failure)
+    opener = Mock(side_effect=error)
+    monkeypatch.setattr('urllib.request.urlopen', opener)
+    with pytest.raises(state.StateUnavailable) as caught:
+        redis.pipeline([['GET', 'key']])
+    assert str(caught.value) == '' and caught.value.__suppress_context__
+    service = demo(cache=state.Cache(redis))
+    code, _, body = call(service)
+    assert code == 503 and body['status'] == 'paused'
+    assert 'private' not in json.dumps(body)
+    service._client.search.assert_not_called()
+    if failure == 'missing':
+        opener.assert_not_called()
+
+
+def test_shared_limiter_sixth_request_denied(monkeypatch):
+    fake = FakeRedis(monkeypatch)
+    limiter = state.Limiter(fake.redis, clock=lambda: 1767225600)
+    ip = '203.0.113.1'
+    assert [limiter.allow(ip) for _ in range(6)] == [True] * 5 + [False]
+    hashed = hashlib.sha256(ip.encode()).hexdigest()
+    key = f'websearch:limit:ip:{hashed}:10min:{1767225600 // 600}'
+    for offset in range(0, len(fake.commands), 6):
+        assert fake.commands[offset:offset + 2] == [['INCR', key], ['EXPIRE', key, 1200]]
+
+
+@pytest.mark.parametrize('real_cost', [0, .0005])
+def test_memory_cap_accepts_negative_adjustments(real_cost):
+    service = demo(client=Mock(search=Mock(return_value=(200, ROWS, real_cost))))
+    assert call(service)[0] == 200
+    assert service.cap.spent == pytest.approx(real_cost)
