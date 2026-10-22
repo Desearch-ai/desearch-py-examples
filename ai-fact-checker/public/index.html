@@ -2,18 +2,19 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Fact Checker: find sources for and against a claim | Made by Desearch</title>
-<meta name="description" content="Paste one claim and see the web pages that back it or push back on it, with links, plus how people discuss it on X. Made by Desearch.">
+<title>AI Fact Checker: find sources related to a claim | Made by Desearch</title>
+<meta name="description" content="Paste one claim and find related web sources with links and a cited summary. Made by Desearch.">
 <style>
 body{font:15px/1.5 system-ui,sans-serif;max-width:900px;margin:2em auto;padding:0 1em;color:#222}
 input[type=text]{width:100%;max-width:640px;padding:.5em;font:inherit}button{padding:.5em 1em;font:inherit}
 table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:.4em;text-align:left;vertical-align:top}
-.supports{color:#06702f}.contradicts{color:#b00}.unclear{color:#666}.s{color:#555;font-size:.9em}.err{color:#b00}
+.s{color:#555;font-size:.9em}.err{color:#b00}
 .ex button{margin:.2em;font-size:.85em}.warn{background:#fff6e0;padding:.6em;border-radius:4px}
 </style>
 <h1>AI Fact Checker</h1>
 <p class="s">Made by Desearch | <a href="https://desearch.ai">https://desearch.ai</a></p>
-<p>Paste one claim. The app searches the web (and optionally Wikipedia) with the Desearch API, shows the sources it found with a link to each, a short summary that keeps only lines tied to a returned source, and how people discuss the topic on X. It helps you find sources; it does not decide what is true.</p>
+<p>Paste one claim. The app searches the web (and optionally Wikipedia) with the Desearch API, shows the sources it found with a link to each, and a short summary that hides judgment language and keeps only lines tied to a returned source. It helps you find sources; it does not decide what is true.</p>
+<p class="s">A check takes about 10 to 15 seconds and costs $0.004 ($0.008 with Wikipedia). Cached checks cost nothing. Optional X search adds $0.0015 and can take up to 40 seconds.</p>
 <form id="f">
   <input type="text" id="claim" name="claim" maxlength="200" placeholder="e.g. Honey never spoils if it is stored sealed" required>
   <label><input type="checkbox" id="wiki"> also search Wikipedia</label>
@@ -25,30 +26,33 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;pad
   <button type="button">Humans only use 10 percent of their brain</button>
 </p>
 <div id="out"></div>
-<p class="s">Cue labels (supports, contradicts, unclear) are a keyword hint from each source's text, not a verdict. Read the sources before you share anything. <a href="https://github.com/Desearch-ai/desearch-py-examples/tree/main/ai-fact-checker">Source code</a></p>
+<p class="s">Read the sources before you share anything. <a href="https://github.com/Desearch-ai/desearch-py-examples/tree/main/ai-fact-checker">Source code</a></p>
 <script>
 const $ = s => document.querySelector(s), esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const link = u => esc(/^https?:\/\//i.test(String(u ?? "")) ? u : "#");
 document.querySelectorAll(".ex button").forEach(b => b.onclick = () => { $("#claim").value = b.textContent; $("#f").requestSubmit(); });
 $("#f").onsubmit = async ev => {
   ev.preventDefault();
   const claim = $("#claim").value.trim(), q = new URLSearchParams({claim});
   if ($("#wiki").checked) q.set("wiki", "1");
-  $("#out").innerHTML = "<p>Searching, this takes about 10 to 30 seconds...</p>";
+  $("#out").textContent = "Searching, this takes about 10 to 15 seconds. With X enabled, allow up to 40 seconds.";
   let r, d;
   try { r = await fetch("/api/check?" + q); d = await r.json(); } catch (e) { $("#out").innerHTML = "<p class=err>Network error.</p>"; return; }
-  if (!r.ok) { $("#out").innerHTML = `<p class=err>${esc(d.error)}</p>` + (d.sample ? `<p><a href="${esc(d.sample)}">Saved sample run</a></p>` : ""); return; }
+  if (!r.ok) { $("#out").innerHTML = `<p class=err>${esc(d.error)}</p>` + (d.sample === "/sample.json" ? '<p><a href="/sample.json">Saved sample run</a></p>' : ""); return; }
   render(d);
 };
 function render(d) {
   let h = `<h2>Claim</h2><p>${esc(d.claim)}</p>`;
-  if (d.no_strong_sources) h += `<p class=warn><b>No strong sources found.</b> Fewer than two returned sources contain most of the claim's key words. Do not treat this claim as confirmed.</p>`;
-  if (d.summary.lines.length) h += "<h2>Draft summary (cited lines only)</h2><ul>" + d.summary.lines.map(l => `<li>${esc(l.text)} ` + l.cites.map(u => `<a href="${esc(u)}" rel="nofollow noopener">[source]</a>`).join(" ") + "</li>").join("") + "</ul>";
-  if (d.summary.hidden) h += `<p class=s>${d.summary.hidden} summary sentence(s) cited no returned source and were hidden.</p>`;
-  h += "<h2>Sources</h2><table><tr><th>#</th><th>Cue label</th><th>Source</th><th>Snippet</th></tr>" + d.sources.map(s =>
-    `<tr><td>${s.rank}</td><td class="${esc(s.label)}">${esc(s.label)}</td><td><a href="${esc(s.url)}" rel="nofollow noopener">${esc(s.title || s.url)}</a><br><span class=s>${esc(s.domain)} (${esc(s.type)})</span></td><td>${esc((s.snippet || "").slice(0, 300))}</td></tr>`).join("") + "</table>";
-  if (d.posts.length) h += `<h2>How it is discussed on X</h2><p class=s>Search: ${esc(d.x_query)}. ${d.posts.length} of ${d.x_returned} posts contain the search words.</p><ul>` + d.posts.map(p =>
-    `<li>${esc(p.text.slice(0, 400))}<br><span class=s>a user, ${esc(p.created_at)}</span> ${p.url ? `<a href="${esc(p.url)}" rel="nofollow noopener">post</a>` : ""}</li>`).join("") + "</ul>";
-  h += `<p class=s>${d.cached ? "Served from cache, no cost." : "Cost of this check: $" + d.cost_usd + " (" + d.calls + " calls)."}</p>`;
+  h += `<p>${esc(d.sources.length)} sources returned.</p>`;
+  if (d.sources.length < 2) h += `<p class=warn>Few sources returned. Read them before you share anything.</p>`;
+  if (d.summary.lines.length) h += "<h2>Draft summary (cited lines only)</h2><ul>" + d.summary.lines.map(l => `<li>${esc(l.text)} ` + [...new Set(l.cites)].map((u, i, a) => `<a href="${link(u)}" rel="nofollow noopener">[source${a.length > 1 ? " " + (i + 1) : ""}]</a>`).join(" ") + "</li>").join("") + "</ul>";
+  if (d.summary.hidden) h += `<p class=s>${esc(d.summary.hidden)} summary sentence(s) cited no returned source and were hidden.</p>`;
+  if (d.summary.verdict_hidden) h += `<p class=s>${esc(d.summary.verdict_hidden)} summary sentence(s) that judged the claim were hidden.</p>`;
+  h += "<h2>Sources</h2><table><tr><th>#</th><th>Source</th><th>Domain</th><th>Snippet</th></tr>" + d.sources.map(s =>
+    `<tr><td>${esc(s.rank)}</td><td><a href="${link(s.url)}" rel="nofollow noopener">${esc(s.title || s.url)}</a></td><td>${esc(s.domain)}</td><td>${esc((s.snippet || "").slice(0, 300))}</td></tr>`).join("") + "</table>";
+  if (d.x_enabled && d.posts?.length) h += `<h2>How it is discussed on X</h2><p class=s>Search: ${esc(d.x_query)}. ${esc(d.posts.length)} of ${esc(d.x_returned)} posts passed the filters.</p><ul>` + d.posts.map(p =>
+    `<li>${esc(p.text.slice(0, 400))}<br><span class=s>a user, ${esc(p.created_at)}</span> ${p.url ? `<a href="${link(p.url)}" rel="nofollow noopener">post</a>` : ""}</li>`).join("") + "</ul>";
+  h += `<p class=s>${d.cached ? "Served from cache, no cost." : "Cost of this check: $" + esc(d.cost_usd) + " (" + esc(d.calls) + " calls)."}</p>`;
   $("#out").innerHTML = h;
 }
 </script>

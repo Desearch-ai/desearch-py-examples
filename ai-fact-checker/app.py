@@ -1,7 +1,7 @@
-"""AI Fact Checker: find sources for and against one claim with the Desearch API.
+"""AI Fact Checker: find sources related to one claim with the Desearch API.
 
 usage: python3 app.py                      local web app at http://127.0.0.1:8000 (same /api/check as on Vercel)
-       python3 app.py --cli "claim" [--wiki] [--json out.json] [--html out.html]
+       python3 app.py --cli "claim" [--wiki] [--x] [--json out.json] [--html out.html]
 Key: DESEARCH_API_KEY_FILE (path to a key file), --key-file, or DESEARCH_API_KEY. Standard library only.
 """
 import argparse, mimetypes, os, pathlib, sys
@@ -44,6 +44,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cli", metavar="CLAIM")
     ap.add_argument("--wiki", action="store_true", help="also search Wikipedia (one more call)")
+    ap.add_argument("--x", action="store_true", help="also search X in CLI mode (one more call)")
     ap.add_argument("--json")
     ap.add_argument("--html")
     ap.add_argument("--port", type=int, default=int(os.environ.get("PORT", 8000)))
@@ -54,7 +55,7 @@ def main(argv=None):
     if not key:
         print("Set DESEARCH_API_KEY_FILE or DESEARCH_API_KEY, or pass --key-file", file=sys.stderr)
         return 2
-    checker = Checker(client=Client(key, a.log_dir))
+    checker = Checker(client=Client(key, a.log_dir), x_enabled=a.x if a.cli is not None else None)
     if a.cli is not None:
         try:
             claim = core.clean_claim(a.cli)
@@ -69,15 +70,7 @@ def main(argv=None):
             pathlib.Path(a.json).write_text(core.to_json(res))
         if a.html:
             pathlib.Path(a.html).write_text(core.render_html(res))
-        print(f"Claim: {res['claim']}")
-        print("No strong sources found." if res["no_strong_sources"] else f"{res['strong']} sources contain most of the claim's key words.")
-        for ln in res["summary"]["lines"]:
-            print(f"  - {ln['text']}")
-        if res["summary"]["hidden"]:
-            print(f"  ({res['summary']['hidden']} uncited summary sentence(s) hidden)")
-        for s in res["sources"]:
-            print(f"{s['rank']:>2}. [{s['label']}] {s['title']}\n    {s['url']}")
-        print(f"X posts: {len(res['posts'])} on topic of {res['x_returned']} for query '{res['x_query']}'. Cost ${res['cost_usd']} ({res['calls']} calls)")
+        print(core.render_text(res))
         return 0
     os.environ.setdefault("DEMO_LIVE", "1")
     print(f"http://127.0.0.1:{a.port}", file=sys.stderr)
