@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page to Markdown | Made by Desearch</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;max-width:850px;margin:3rem auto;padding:0 1rem;color:#202c32;background:#fafbf9}input,button{font:inherit;padding:.65rem;border:1px solid #899b91;border-radius:6px}input{width:min(95%,580px)}button{cursor:pointer;background:#e4f1e9;margin:.3rem 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;border:1px solid #dde5de;border-radius:8px;padding:1.5rem;font:15px/1.6 ui-monospace,monospace}small{color:#526158}
+</style>
+<h1>Page to Markdown</h1>
+<p>Made by <a href="https://desearch.ai" target="_blank" rel="noopener noreferrer">Desearch</a></p>
+<p>Keep the useful words from a web page. Paste a public article, guide, or blog link to turn it into clean text you can copy or save.</p>
+<form id="form">
+<label for="url">Page link</label><br>
+<input id="url" type="url" maxlength="2048" placeholder="https://example.com/article" required>
+<button id="convert">Convert</button>
+</form>
+<p><small>Some pages need JavaScript or block visitors from other apps. If a link does not work, try another. Large pages are shortened.</small></p>
+<p id="message" role="status" aria-live="polite">Loading a saved sample...</p>
+<h2 id="title">Saved sample</h2>
+<button id="copy" type="button">Copy</button>
+<button id="download" type="button">Download .md</button>
+<pre id="markdown"></pre>
+<script>
+const $ = id => document.getElementById(id);
+const fallback = {title:'Saved sample', markdown:'# A small reading garden\n\nChoose a comfortable seat, bring a favorite book, and enjoy a quiet moment.', message:'Saved sample.'};
+let sample = fallback, markdown = fallback.markdown;
+function render(d, message) {
+  markdown = d.markdown || '';
+  $('markdown').textContent = markdown;
+  $('title').textContent = d.title || 'Your page';
+  $('message').textContent = message || d.message || (d.cached ? 'Ready, from a saved conversion.' : 'Ready to copy or save.');
+}
+const ready = fetch('/sample.json').then(r => {if (!r.ok) throw Error(); return r.json();}).then(d => sample = d).catch(() => sample = fallback);
+ready.then(() => {if (!$('convert').disabled) render(sample);});
+$('form').onsubmit = async event => {
+  event.preventDefault();
+  $('convert').disabled = true;
+  $('message').textContent = 'Converting your page...';
+  try {
+    const r = await fetch('/api/convert?' + new URLSearchParams({url:$('url').value}));
+    const d = await r.json();
+    if (!r.ok) {await ready; render(sample, d.error || 'Please try another link. Here is a saved sample.');}
+    else render(d);
+  } catch (_) {await ready; render(sample, 'We could not connect. Here is a saved sample. Try again later.');}
+  finally {$('convert').disabled = false;}
+};
+$('copy').onclick = async () => {
+  try {await navigator.clipboard.writeText(markdown); $('message').textContent = 'Copied.';}
+  catch (_) {$('message').textContent = 'Select the text below and copy it with your keyboard.';}
+};
+$('download').onclick = () => {
+  const url = URL.createObjectURL(new Blob([markdown], {type:'text/markdown;charset=utf-8'}));
+  const a = document.createElement('a'); a.href = url; a.download = 'page.md'; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+</script>
+</html>

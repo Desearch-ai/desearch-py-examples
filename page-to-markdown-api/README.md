@@ -6,6 +6,10 @@ A small Python CLI and library that turns a list of URLs into clean Markdown fil
 
 It works on pages whose text is in the HTML the server sends (articles, docs, blogs, reference pages). Pages that build their content in the browser with JavaScript will come back with little or no text in this mode; the tool marks them `EMPTY` and writes no file for them.
 
+## Demo
+
+The public Page to Markdown demo provides a URL form, a saved sample, Copy and Download buttons. Run `python app.py` locally or follow [DEPLOY.md](DEPLOY.md) for Vercel. The demo validates public URLs and DNS before one Extract request, never retries, caches conversions for six hours, and applies rate limits and a daily spend cap. Set `DEMO_LIVE=0` for a paused sample preview. The original CLI below retains its existing retry option and output files.
+
 ## Setup
 
 ```bash
