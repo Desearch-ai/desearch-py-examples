@@ -1,0 +1,22 @@
+{
+  "sample": true,
+  "generated_at": "2026-10-21T18:17+04:00",
+  "source_date": "2026-10-21T18:17+04:00",
+  "source_note": "one live build of natgeo",
+  "label": "EXAMPLE data: saved October 21, 2026 snapshot, not current statistics",
+  "accounts": [
+    {
+      "handle": "natgeo",
+      "followers": 268325407,
+      "posts_used": 5,
+      "pinned_rule": "first3_fallback",
+      "eligible_posts": 5,
+      "engagement_rate_pct": 0.0315,
+      "by_format": {
+        "image": 0.0114,
+        "carousel": 0.0405,
+        "video": 0.0326
+      }
+    }
+  ]
+}

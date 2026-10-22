@@ -102,6 +102,26 @@ class Offline(unittest.TestCase):
             self.assertEqual(out.returncode, 0, out.stderr)
             self.assertIn("36 posts", out.stdout); self.assertIn("brand_b: engagement rate", out.stdout)
 
+    def test_all_excluded_prints_na(self):
+        day = 86400; t0 = int(REF.timestamp())
+        # older posts listed first are likely pinned; the rest are under 24h, so none are eligible
+        ps = [post(1, t0 - 40 * day), post(2, t0 - 30 * day), post(3, t0 - 3600)]
+        raw = {"started": REF.isoformat(), "calls": [
+            {"account": "b", "kind": "profile", "status": 200, "body": {"followers": 1000}, "params": {}, "label": "b profile"},
+            {"account": "b", "kind": "posts", "status": 200, "body": ps, "params": {"count": 3}, "label": "b posts p1"}]}
+        with tempfile.TemporaryDirectory() as d:
+            raw_path = os.path.join(d, "raw.json")
+            json.dump(raw, open(raw_path, "w"))
+            outp = os.path.join(d, "y")
+            out = subprocess.run([sys.executable, os.path.join(HERE, "ig_engagement_rate.py"), "--from-raw", raw_path,
+                                  "--out", outp], capture_output=True, text=True)
+            self.assertEqual(out.returncode, 0, out.stderr)
+            self.assertNotIn("None %", out.stdout)
+            self.assertIn("b: engagement rate n/a (no eligible posts; try a higher --count)", out.stdout)
+            with open(outp + "-summary.csv") as f:
+                row = next(csv.DictReader(f))
+            self.assertEqual((row["posts_used"], row["engagement_rate_pct"], row["median_engagement_rate_pct"]), ("0", "", ""))
+
 
 if __name__ == "__main__":
     unittest.main()

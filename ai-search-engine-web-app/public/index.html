@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Search Engine | Made by Desearch</title>
+<style>
+ body{font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;max-width:900px;margin:1.5em auto;padding:0 1em;color:#1b1b1b}
+ h1{font-size:1.5em;margin:.2em 0}
+ .tag{color:#666;font-size:.9em}
+ form{display:flex;flex-wrap:wrap;gap:.5em;align-items:center;margin:1em 0}
+ #q{flex:1 1 360px;font-size:1.05em;padding:.55em .7em;border:1px solid #bbb;border-radius:8px}
+ button{padding:.55em 1em;border-radius:8px;border:1px solid #333;background:#111;color:#fff;cursor:pointer}
+ button.alt{background:#fff;color:#111}
+ button:disabled{opacity:.5;cursor:default}
+ select,input[type=date]{padding:.4em;border:1px solid #bbb;border-radius:6px}
+ .opts{display:flex;flex-wrap:wrap;gap:1em;align-items:center;font-size:.92em;width:100%}
+ .r{margin:1.1em 0}
+ .r a.t{font-size:1.08em;color:#1a0dab;text-decoration:none}
+ .r a.t:hover{text-decoration:underline}
+ .meta{color:#4d5156;font-size:.86em}
+ .nodate{color:#a15c00}
+ .out{color:#b00}
+ .p{margin:.25em 0 0;color:#333}
+ .box{border:1px solid #ddd;border-radius:10px;padding:.8em 1em;margin:1em 0;background:#fafafa}
+ .warn{background:#fff7e6;border-color:#f0c36d}
+ .err{color:#b00}
+ .s{color:#666;font-size:.86em}
+ #custom{display:none}
+</style>
+</head>
+<body>
+<h1>AI Search Engine</h1>
+<div class="tag">Made by Desearch | <a href="https://desearch.ai">https://desearch.ai</a>. Search results Desearch returned, with each page's published date and the passage that best matches your search.</div>
+
+<form id="f">
+ <input id="q" name="q" placeholder="Search the web, e.g. python 3.14 free threading performance" maxlength="300" required autofocus>
+ <button id="go" type="submit">Search</button>
+ <button id="ans" type="button" class="alt" disabled title="One more call: a short answer that cites the pages it used">Answer</button>
+ <div class="opts">
+  <label>Mode <select id="mode"><option value="fast">fast</option><option value="balanced">balanced</option></select></label>
+  <label>Published <select id="range">
+   <option value="any">any time</option><option value="day">past day</option><option value="week">past week</option>
+   <option value="month">past month</option><option value="year">past year</option><option value="custom">custom dates</option></select></label>
+  <span id="custom"><input type="date" id="from" aria-label="from"> to <input type="date" id="to" aria-label="to"></span>
+  <label>Results <select id="count"><option>10</option><option>15</option><option>20</option></select></label>
+  <label>Order <select id="order"><option value="api">as returned</option><option value="new">newest first</option></select></label>
+ </div>
+</form>
+
+<div id="status" class="s"></div>
+<div id="answer"></div>
+<div id="results"></div>
+<p class="s">JSON for agents: <code>GET /api/search?q=...&amp;mode=fast&amp;range=week</code> and <code>GET /api/answer?q=...</code>. Results are cached for 6 hours.</p>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
+let last = null;
+
+$("range").onchange = () => { $("custom").style.display = $("range").value === "custom" ? "inline" : "none"; };
+$("order").onchange = () => last && renderResults(last);
+
+function params() {
+  const p = new URLSearchParams({q: $("q").value.trim(), mode: $("mode").value, count: $("count").value});
+  if ($("range").value === "custom") {
+    if ($("from").value) p.set("from", $("from").value);
+    if ($("to").value) p.set("to", $("to").value);
+  } else if ($("range").value !== "any") p.set("range", $("range").value);
+  return p;
+}
+
+async function getJSON(url) {
+  const r = await fetch(url);
+  const d = await r.json().catch(() => ({error: "Unexpected response."}));
+  if (!r.ok && d.sample) {
+    const s = await fetch(d.sample).then(x => x.json()).catch(() => null);
+    return {status: r.status, data: d, sample: s};
+  }
+  return {status: r.status, data: d};
+}
+
+function renderResults(res) {
+  last = res;
+  let rows = res.results.slice();
+  if ($("order").value === "new") rows.sort((a, b) => (b.published_date || "").localeCompare(a.published_date || ""));
+  const s = res.stats;
+  const notes = [];
+  if (s.no_date) notes.push(`${s.no_date} without a published date`);
+  if (s.outside_window) notes.push(`${s.outside_window} dated outside your window`);
+  $("results").innerHTML = rows.map(r => `
+   <div class="r">
+    <a class="t" href="${esc(safeUrl(r.url))}" target="_blank" rel="noopener noreferrer">${esc(r.title)}</a>
+    <div class="meta">${esc(r.domain)} | ${r.published_date ? esc(r.published_date) : '<span class="nodate">date not given</span>'}
+      ${r.in_window === false ? '<span class="out">outside date window</span>' : ''}</div>
+    ${r.passage ? `<p class="p">${esc(r.passage)}</p>` : ""}
+   </div>`).join("") || "<p>No results.</p>";
+  $("status").textContent = `${s.shown} results (${res.mode}${res.start_date ? ", from " + res.start_date : ""}${res.end_date ? " to " + res.end_date : ""})`
+    + (notes.length ? ", " + notes.join(", ") : "") + `. ${res.cached ? "From cache" : "Cost $" + res.cost_usd_this_request}.`;
+}
+
+function renderAnswer(a) {
+  const shown = new Set((last ? last.results : []).map(r => r.url.replace(/\/$/, "")));
+  const overlap = a.links.filter(l => shown.has(l.url.replace(/\/$/, ""))).length;
+  const idx = new Map(a.links.map(l => [l.url.replace(/\/$/, ""), l.n]));
+  const cite = u => { const n = idx.get(u.replace(/\/$/, "")); return `<a href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">[${n || "source"}]</a>`; };
+  let h = `<div class="box ${a.no_strong_sources || a.declined ? "warn" : ""}"><b>Answer</b> <span class="s">(only sentences that cite one of the answer's own links are shown)</span>`;
+  if (a.declined) h += `<p><b>No summary for this search.</b> The answer service said: "${esc(a.declined_text)}" Its links are listed below.</p>`;
+  if (a.no_strong_sources) h += `<p><b>No strong sources.</b> Fewer than two answer links hold most of your search words. Read the search results instead.</p>`;
+  else if (!a.declined && !a.summary.lines.length) h += `<p>No sentence in the answer cited one of its own links, so nothing is shown.</p>`;
+  if (a.summary.lines.length) h += "<ul>" + a.summary.lines.map(l => `<li>${esc(l.text)} ${l.cites.map(cite).join(" ")}</li>`).join("") + "</ul>";
+  if (a.summary.hidden) h += `<p class="s">${a.summary.hidden} sentence(s) without a matching citation were hidden.</p>`;
+  h += "<ol class='s'>" + a.links.map(l => `<li><a href="${esc(safeUrl(l.url))}" target="_blank" rel="noopener noreferrer">${esc(l.title)}</a> (${esc(l.domain)}, ${l.published_date ? esc(l.published_date) : "date not given"})</li>`).join("") + "</ol>";
+  h += `<p class="s">${overlap} of ${a.links.length} answer links are also in the results below. ${a.cached ? "From cache" : "Cost $" + a.cost_usd_this_request}.</p></div>`;
+  $("answer").innerHTML = h;
+}
+
+$("f").onsubmit = async e => {
+  e.preventDefault();
+  $("go").disabled = true; $("ans").disabled = true; $("answer").innerHTML = ""; $("status").textContent = "Searching...";
+  try {
+    const {status, data, sample} = await getJSON("/api/search?" + params());
+    if (status === 200) { renderResults(data); $("ans").disabled = false; }
+    else {
+      $("results").innerHTML = `<p class="err">${esc(data.error || "Search failed.")}</p>`; $("status").textContent = "";
+      if (sample && sample.search) { renderResults(sample.search); $("ans").disabled = false; $("status").textContent = "Showing the saved sample run. " + $("status").textContent; }
+    }
+  } catch (err) { $("status").textContent = "Network error."; }
+  $("go").disabled = false;
+};
+
+$("ans").onclick = async () => {
+  $("ans").disabled = true; $("answer").innerHTML = '<p class="s">Asking for an answer (about 10 seconds)...</p>';
+  try {
+    const {status, data, sample} = await getJSON("/api/answer?" + new URLSearchParams({q: $("q").value.trim()}));
+    if (status === 200) renderAnswer(data);
+    else if (sample && sample.answer) renderAnswer(sample.answer);
+    else $("answer").innerHTML = `<p class="err">${esc(data.error || "Answer failed.")}</p>`;
+  } catch (err) { $("answer").innerHTML = '<p class="err">Network error.</p>'; }
+  $("ans").disabled = false;
+};
+</script>
+</body>
+</html>

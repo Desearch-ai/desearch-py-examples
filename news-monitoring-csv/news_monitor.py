@@ -11,7 +11,7 @@ from urllib.parse import urlparse, urlunparse
 
 BASE = "https://api.desearch.ai"
 FIELDS = ["topic", "kind", "source_domain", "title", "url", "published_date", "snippet", "first_seen"]
-EXPECTED_KEY_PREFIX = "a44f278b"  # sha256[:8] of the builder's own key; set to "" to skip the check
+EXPECTED_KEY_PREFIX = ""  # sha256[:8] of the builder's own key; set to "" to skip the check
 
 
 def now():
