@@ -30,6 +30,9 @@ def make_handler(search):
             ctype = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
             self._send(200, {"Content-Type": ctype + ("; charset=utf-8" if ctype.startswith("text") or ctype.endswith("json") else "")}, f.read_bytes())
 
+        def log_request(self, code="-", size="-"):
+            pass
+
         def log_message(self, fmt, *args):
             pass
     return H

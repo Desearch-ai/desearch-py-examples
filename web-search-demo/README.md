@@ -2,7 +2,7 @@
 
 Made by Desearch | https://desearch.ai
 
-A Vercel Python live demo for [web-search-api-quickstart](../web-search-api-quickstart/), following the `ig-engagement-rate-api` and `page-to-markdown-api` layout. Each uncached search makes exactly one GET to `https://api.desearch.ai/web?query=<q>&start=<0|10>` with a server-only `Authorization` header. No SDK, retries or redirects. Only `title`, `link` and `snippet` are returned for each result.
+A Vercel Python live demo for [web-search-api-quickstart](../web-search-api-quickstart/), following the `ig-engagement-rate-api` and `page-to-markdown-api` layout. Each uncached search makes exactly one GET to `https://api.desearch.ai/web?query=<q>&start=<0|20>` with a server-only `Authorization` header. No SDK, retries or redirects. Only `title`, `link` and `snippet` are returned for each result.
 
 Run locally from this directory:
 
@@ -13,7 +13,7 @@ DEMO_STATE=memory DEMO_LIVE=0 python app.py
 
 Open http://127.0.0.1:8000. The page loads the labelled saved `bittensor subnet` sample without spending credits. To enable local searches, export `DESEARCH_API_KEY` in the server environment and run `DEMO_STATE=memory DEMO_LIVE=1 python app.py`. The app never reads keys from files, exposes them in client code or logs requests. Use `python3` if that is your Python executable.
 
-`GET /api/search?q=bittensor%20subnet&page=1` accepts a stripped query of 2 to 200 characters and page `1` or `2` (default `1`). Page 2 requests only `start=10`; it does not fetch both pages. Invalid input returns 400 before accessing shared state or consuming limits. Results live in a `results` list, alongside `query`, `page`, `cached`, `sample`, `status`, `limits` and `cost_usd_this_request`.
+`GET /api/search?q=bittensor%20subnet&page=1` accepts a stripped query of 2 to 200 characters and page `1` or `2` (default `1`). Pages use a fixed size of 20 results. Page 2 requests only `start=20`; it does not fetch both pages. Invalid input returns 400 before accessing shared state or consuming limits. Results live in a `results` list, alongside `query`, `page`, `cached`, `sample`, `status`, `limits` and `cost_usd_this_request`.
 
 Queries are lowercased and whitespace-collapsed for cache keys, combined with page. Redis cache entries expire after 600 seconds. Cache hits cost $0 and bypass rate limits and the daily cap. Valid uncached requests return 429 when limited. Missing key, disabled live mode, exhausted daily cap, upstream failure or unavailable Redis returns paused 503 with the clearly labelled sample included. The page clears results on every error; the sample button can display the saved example explicitly.
 
@@ -28,8 +28,8 @@ Server environment variables:
 | `UPSTASH_REDIS_REST_TOKEN` | Shared Redis REST token; alias `KV_REST_API_TOKEN` |
 | `DEMO_LIVE` | `1`; set `0` to pause uncached live searches |
 | `DEMO_STATE` | Redis by default; `memory` for local development only |
-| `DEMO_PER_IP_10MIN` | `5` paid searches per visitor per 10 minutes |
-| `DEMO_PER_IP_DAY` | `15` paid searches per visitor per day |
+| `DEMO_PER_IP_10MIN` | `5` paid searches per network per 10 minutes |
+| `DEMO_PER_IP_DAY` | `15` paid searches per network per day |
 | `DEMO_GLOBAL_10MIN` | `30` paid searches globally per 10 minutes |
 | `DEMO_DAILY_CAP_USD` | `1.0` shared spend per UTC day |
 | `DEMO_FALLBACK_COST_USD` | `0.001` per upstream response without a valid cost header |
@@ -41,3 +41,5 @@ Runtime uses the Python standard library; requirements includes pytest for verif
 ```sh
 python -m pytest -q web-search-demo/tests
 ```
+
+Our function logs no queries and suppresses request logging. Vercel's own platform request log may still record the request path including the query string for GET requests.
