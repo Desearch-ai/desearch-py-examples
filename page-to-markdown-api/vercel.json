@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "functions": {
+    "api/convert.py": {"maxDuration": 60, "includeFiles": "{pagemd/**,core.py,public/sample.json}"}
+  },
+  "headers": [{"source": "/(.*)", "headers": [
+    {"key": "X-Content-Type-Options", "value": "nosniff"},
+    {"key": "Referrer-Policy", "value": "no-referrer"}
+  ]}]
+}

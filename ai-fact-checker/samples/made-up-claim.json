@@ -1,0 +1,132 @@
+{
+ "claim": "Zorblaxian moon crystals cure qwintel fever in glorptons",
+ "sources": [
+  {
+   "rank": 1,
+   "title": "Science (journal) - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Science_(journal)",
+   "domain": "en.wikipedia.org",
+   "type": "wikipedia",
+   "snippet": "Science is the peer-reviewed academic journal of the American Association for the Advancement of Science (AAAS) and one of the world's top academic journals. It was first published in 1880, is currently circulated weekly and has a subscriber base of around 130,000.",
+   "quote": "| Publisher | American Association for the Advancement of Science (United States) |",
+   "term_share": 0.0
+  },
+  {
+   "rank": 2,
+   "title": "Popular Science | Science and Technology Stories Since 1872",
+   "url": "https://www.popsci.com/",
+   "domain": "www.popsci.com",
+   "type": "web",
+   "snippet": "Popular Science has been demystifying the worlds of science and technology since 1872. We explain the inner workings of the phone in your pocket, explore world-changing innovations, and examine everything from the marvels of deep space to the secret lives of staples like bread.",
+   "quote": "Popular Science. Demystifying the worlds of science and technology since 1872.",
+   "term_share": 0.0
+  },
+  {
+   "rank": 3,
+   "title": "Science | AAAS",
+   "url": "https://www.science.org/",
+   "domain": "www.science.org",
+   "type": "web",
+   "snippet": "Science/AAAS peer-reviewed journals deliver impactful research, daily news, expert commentary, and career resources.",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 4,
+   "title": "Science | Sociedade para o Desenvolvimento de Pesquisa Cientifica - Science",
+   "url": "https://science.org.br/",
+   "domain": "science.org.br",
+   "type": "web",
+   "snippet": "A SCIENCE promove ensinos e pesquisas para a ampliação e disseminação dos conhecimentos sobre métodos de pesquisa e qualidade da informação.",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 5,
+   "title": "Science Magazine",
+   "url": "https://www.youtube.com/channel/UCv0aU2eKry3kdSTnFa8QAWA",
+   "domain": "www.youtube.com",
+   "type": "web",
+   "snippet": "AboutPressCopyrightContact usCreatorsAdvertiseDevelopersTermsPrivacyPolicy & SafetyHow YouTube worksTest new features · © 2026 Google LLC · Science Magazine - YouTube",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 6,
+   "title": "Science - Wikipedia",
+   "url": "https://en.wikipedia.org/wiki/Science",
+   "domain": "en.wikipedia.org",
+   "type": "wikipedia",
+   "snippet": "Science is a systematic discipline that builds and organises knowledge in the form of testable explanations about nature and society. It is driven by the scientific method: an empirical cycle that typically involves making observations, producing hypotheses, testing them with evidence, and",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 7,
+   "title": "Science Journal | Science | AAAS",
+   "url": "https://www.science.org/journal/science",
+   "domain": "www.science.org",
+   "type": "web",
+   "snippet": "Science is the leading multidisciplinary, international journal of peer-reviewed research including analysis and news coverage of breakthroughs and policy.",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 8,
+   "title": "Science News | The latest news from all areas of science",
+   "url": "https://www.sciencenews.org/",
+   "domain": "www.sciencenews.org",
+   "type": "web",
+   "snippet": "Science News features daily news articles, feature stories, reviews and more in all disciplines of science, as well as Science News magazine archives back to 1924.",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 9,
+   "title": "Science.gov",
+   "url": "https://www.science.gov/",
+   "domain": "www.science.gov",
+   "type": "web",
+   "snippet": "Science.gov is a gateway to government science information provided by U.S. Government science agencies, including research and development results.",
+   "quote": "",
+   "term_share": 0.0
+  },
+  {
+   "rank": 10,
+   "title": "What is science?",
+   "url": "https://undsci.berkeley.edu/understanding-science-101/what-is-science/",
+   "domain": "undsci.berkeley.edu",
+   "type": "web",
+   "snippet": "Correction: Science is both a body of knowledge and the process for building that knowledge.",
+   "quote": "",
+   "term_share": 0.0
+  }
+ ],
+ "stats": {
+  "returned": 10,
+  "kept": 10,
+  "duplicates": 0,
+  "skipped": {}
+ },
+ "strong": 0,
+ "no_strong_sources": true,
+ "summary": {
+  "lines": [
+   {
+    "text": "Closest on-topic source reviewed.",
+    "cites": [
+     "https://en.wikipedia.org/wiki/Science_%28journal%29"
+    ]
+   }
+  ],
+  "hidden": 1,
+  "verdict_hidden": 0,
+  "cited_urls": [
+   "https://en.wikipedia.org/wiki/Science_%28journal%29"
+  ]
+ },
+ "x_enabled": false,
+ "cost_usd": 0.004,
+ "latency_s": 9.61,
+ "calls": 1
+}

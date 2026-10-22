@@ -309,8 +309,11 @@ def main(argv=None):
         print(f"calls={len(raw['calls'])} header_cost_usd={sum(costs):.5f}", file=sys.stderr)
     rows, summ, fmts = build(raw, a.out, a.include_pinned, a.include_fresh)
     for s in summ:
-        print(f"{s['account']}: engagement rate {s['engagement_rate_pct']} % (median {s['median_engagement_rate_pct']} %) "
-              f"over {s['posts_used']} of {s['posts_returned']} posts; best format {s['best_format'] or 'n/a'}")
+        if s["engagement_rate_pct"] is None:
+            print(f"{s['account']}: engagement rate n/a (no eligible posts; try a higher --count)")
+        else:
+            print(f"{s['account']}: engagement rate {s['engagement_rate_pct']} % (median {s['median_engagement_rate_pct']} %) "
+                  f"over {s['posts_used']} of {s['posts_returned']} posts; best format {s['best_format'] or 'n/a'}")
     print(f"wrote {a.out}-posts.csv ({len(rows)} posts), {a.out}-summary.csv ({len(summ)} accounts), "
           f"{a.out}-formats.csv ({len(fmts)} rows), {a.out}-formats.svg, {a.out}-summary.md")
 

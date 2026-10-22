@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AI News Today Board</title>
+<style>body{font:16px system-ui;background:#f4f6fa;color:#182333;max-width:1100px;margin:40px auto;padding:0 20px}a{color:#245bb6;overflow-wrap:anywhere;word-break:break-word}p{overflow-wrap:anywhere;word-break:break-word}header{border-bottom:2px solid #ccd5e3;padding-bottom:24px}.columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}article{background:white;border:1px solid #dbe2ec;border-radius:12px;padding:20px;margin:16px 0}blockquote{margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}small{color:#52627a}#status{padding:16px;background:#e4ecfb;border-radius:8px}@media(max-width:700px){.columns{grid-template-columns:minmax(0,1fr)}}</style></head>
+<body><header><p>Made by <a href="https://desearch.ai">Desearch</a></p><h1>AI News Today Board</h1><p>AI posts and recent coverage from five fixed searches. Read the linked sources for context.</p></header>
+<p id="status" role="status">Loading the board...</p><div class="columns"><section><h2>Posts on X</h2><div id="posts"></div></section><section><h2>Recent coverage</h2><div id="pages"></div></section></div>
+<script>
+const statusLine=document.getElementById('status');
+function text(parent,tag,value){const el=document.createElement(tag);el.textContent=value;parent.append(el);return el;}
+function link(parent,url,label){try{const parsed=new URL(url);if(!['https:','http:'].includes(parsed.protocol))return;const el=text(parent,'a',label);el.href=parsed.href;el.rel='noopener noreferrer';}catch{}}
+function render(data,sample){statusLine.textContent=(sample?'Saved sample run. ':'')+'Generated: '+data.generated_at+' | Cost this request: $'+(data.cost_usd_this_request??0)+' | Cached: '+Boolean(data.cached)+(data.partial?' | Some searches failed.':'');
+for(const post of data.x_posts){const card=text(document.getElementById('posts'),'article','');text(card,'small',post.tag+' | a user');text(card,'blockquote',post.title_or_text);link(card,post.url,'Read post');text(card,'p',post.likes+' likes · '+post.reposts+' reposts · '+post.replies+' replies');}
+for(const page of data.pages){const card=text(document.getElementById('pages'),'article','');link(card,page.url,page.title_or_text||'Read page');text(card,'p',page.site+' | '+(page.published_utc||'no date'));}}
+(async()=>{try{let response=await fetch('/api/board');let sample=false;if(response.status===503){response=await fetch('/sample.json');sample=true;}const data=await response.json();if(!response.ok)throw new Error(data.error||'Could not load the board.');render(data,sample);}catch(error){statusLine.textContent=error.message;}})();
+</script></body></html>
