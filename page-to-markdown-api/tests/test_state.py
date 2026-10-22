@@ -55,8 +55,9 @@ def instances():
 
 def test_shared_ip_limit(shared):
     a, b = instances()
+    a.live = b.live = False
     for i in range(5):
-        assert response((a, b)[i % 2], 'invalid', ip='private-ip')[0] == 400
+        assert response((a, b)[i % 2], ip='private-ip')[0] == 503
     assert response(b, ip='private-ip')[0] == 429
     assert a._client.calls == b._client.calls == 0
     assert len(shared.commands) == 6
@@ -66,15 +67,17 @@ def test_shared_ip_limit(shared):
 def test_shared_global_limit(shared, monkeypatch):
     monkeypatch.setenv('DEMO_GLOBAL_10MIN', '2')
     a, b = instances()
-    assert response(a, 'invalid', ip='192.0.2.1')[0] == 400
-    assert response(b, 'invalid', ip='192.0.2.2')[0] == 400
+    a.live = b.live = False
+    assert response(a, ip='192.0.2.1')[0] == 503
+    assert response(b, ip='192.0.2.2')[0] == 503
     assert response(a, ip='192.0.2.3')[0] == 429
 
 
 def test_shared_daily_ip_limit(shared, monkeypatch):
     monkeypatch.setenv('DEMO_PER_IP_DAY', '1')
     a, b = instances()
-    assert response(a, 'invalid')[0] == 400
+    a.live = False
+    assert response(a)[0] == 503
     assert response(b)[0] == 429
 
 
