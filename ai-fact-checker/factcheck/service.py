@@ -22,14 +22,26 @@ def _env_float(name, default):
 
 
 class Checker:
-    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
+    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, x_enabled=None):
         self._client = client
         self.limiter = limiter or core.RateLimiter(per_ip=int(_env_float("DEMO_PER_IP_10MIN", 5)),
                                                    per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 15)),
                                                    global_window=int(_env_float("DEMO_GLOBAL_10MIN", 30)))
         self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
         self.cache = cache or core.TTLCache()
+        self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
+        self.x_enabled = os.environ.get("DEMO_X_ENABLED", "").strip().lower() in ("1", "true") if x_enabled is None else x_enabled
+
+    def cap_cost(self, status, rec):
+        """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
+        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so missing headers cannot switch the cap off.
+        A 401, 402 or 403 (invalid key or out of balance) counts $0."""
+        if status in (401, 402, 403):
+            return 0.0
+        if rec.get("cost_known", True):
+            return rec["cost"]
+        return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
 
     def client(self):
         if self._client is None:
@@ -37,9 +49,11 @@ class Checker:
         return self._client
 
     def run(self, claim, wiki=False):
-        """Paid part: 2 calls (ai-search web + X search), 3 with the Wikipedia option."""
+        """One web call, plus optional Wikipedia and X calls."""
         c = self.client()
-        jobs = [("ai", c.ai_search, core.ai_body(claim, "web")), ("x", c.x_search, core.x_params(claim))]
+        jobs = [("ai", c.ai_search, core.ai_body(claim, "web"))]
+        if self.x_enabled:
+            jobs.append(("x", c.x_search, core.x_params(claim)))
         if wiki:
             jobs.append(("wiki", c.ai_search, core.ai_body(claim, "wikipedia")))
         calls = {}
@@ -47,11 +61,11 @@ class Checker:
             futs = {name: ex.submit(fn, arg, f"check-{name}") for name, fn, arg in jobs}
             for name, f in futs.items():
                 st, body, rec = f.result()
-                self.cap.add(rec["cost"])
+                self.cap.add(self.cap_cost(st, rec))
                 calls[name] = {"status": st, "body": body, "cost": rec["cost"], "latency_s": rec["latency_s"]}
         if calls["ai"]["status"] != 200 or not isinstance(calls["ai"]["body"], dict):
             return calls["ai"]["status"], None, calls
-        return 200, core.build_result(claim, calls["ai"], calls["x"], calls.get("wiki")), calls
+        return 200, core.build_result(claim, calls["ai"], calls.get("x"), calls.get("wiki")), calls
 
     def handle(self, query, ip):
         """query: dict of GET params. Returns (http_status, headers, json_text)."""
@@ -63,7 +77,7 @@ class Checker:
         except core.FormError as e:
             return out(400, {"error": str(e)})
         wiki = str(query.get("wiki", "")).lower() in ("1", "true", "yes", "on")
-        key = core.cache_key(claim, wiki)
+        key = core.cache_key(claim, wiki, self.x_enabled)
         hit = self.cache.get(key)
         if hit:
             return out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
@@ -78,6 +92,8 @@ class Checker:
         except RuntimeError as e:   # missing key on the server: say so without details
             print(f"[check] server error: {type(e).__name__}", file=sys.stderr)
             return out(500, {"error": "The demo is not configured."})
+        if st in (401, 402, 403):   # bad key or empty balance: same response as the kill switch
+            return out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
         if st != 200:
             return out(502, {"error": f"Search API returned {st}. Try again later."})
         self.cache.put(key, res)

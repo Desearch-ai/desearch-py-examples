@@ -1,0 +1,196 @@
+{
+ "search": {
+  "query": "python 3.14 free threading performance",
+  "mode": "fast",
+  "count": 10,
+  "start_date": "2025-10-19",
+  "end_date": null,
+  "results": [
+   {
+    "rank": 1,
+    "title": "Python's GIL-Free Future Faces Technical Hurdles and Community Debate - iPrice News",
+    "url": "https://compare.iprice.ph/news/202510251916_Python-GIL-Free-Future-Technical-Hurdles-Debate",
+    "domain": "compare.iprice.ph",
+    "published_date": "2025-10-25",
+    "passage": "Early benchmarks show dramatic improvements in request processing rates for certain workloads,with some tests demonstrating nearly 4x better performance for JSON endpoints when using the free-threaded interpreter. Python 3.14 Free-Threaded vs Standard Performance Comparison Test Scenario|Python Version|Workers|Requests Per Second|Avg Latency|Memory Usage| |-|-|-|-|-|-| JSON Endpoint|3.14 ...",
+    "in_window": true
+   },
+   {
+    "rank": 2,
+    "title": "No More GIL! Unleash multi thread performance with Python 3.14",
+    "url": "https://www.youtube.com/watch?v=p2wRL9ovI9o",
+    "domain": "youtube.com",
+    "published_date": "2025-11-10",
+    "passage": "Python finally ditched the GIL.After 30+years of single-threaded execution,Python 3.14 gives you real multi-core performance with threading. ... com/bitswired/demos/tree/main/projects/free-threaded-python What You'll Learn: ... ✅ How the Global Interpreter Lock kills multi-threaded performance ✅ Installing Python 3. ... Same performance.The GIL forces single-core execution even on 16-core machines. ... Python 3.14 ...",
+    "in_window": true
+   },
+   {
+    "rank": 3,
+    "title": "Python 3.14 Is Here: Free Threading Removes the GIL — With Caveats | Stackademic",
+    "url": "https://stackademic.com/blog/python-3-14-is-here-free-threading-removes-the-gil-with-caveats-sep-18-2026",
+    "domain": "stackademic.com",
+    "published_date": "2026-09-18",
+    "passage": "Python 3.14 ships optional no-GIL builds for true multi-threading parallelism.Guido van Rossum warns the change is not a silver bullet for most developers. Python 3.14 officially released this week,delivering the most significant concurrency change in the language's modern history:optional free threading that removes the Global Interpreter Lock(GIL)from supported builds. For decades,the GIL allowed only one Python ...",
+    "in_window": true
+   },
+   {
+    "rank": 4,
+    "title": "Python 3.14 Free-Threading Is Now Officially Supported | byteiota",
+    "url": "https://byteiota.com/python-314-free-threading-officially-supported/",
+    "domain": "byteiota.com",
+    "published_date": "2026-07-03",
+    "passage": "The Performance Numbers Finally Make Sense Python 3.13t had a problem:the single-thread overhead was approximately 40%compared to the standard GIL build.That’s a non-starter for most real-world applications,where not every workload is purely CPU-bound and multi-threaded. Python 3.14t fixed this.By re-enabling the specializing adaptive interpreter(which had been disabled in 3.13t for thread-safety reasons),the ...",
+    "in_window": true
+   },
+   {
+    "rank": 5,
+    "title": "Python 3.14 Free-Threading: Real Benchmarks, Real Breakage, Real Code - DEV Community",
+    "url": "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+    "domain": "dev.to",
+    "published_date": "2026-04-13",
+    "passage": "Python 3.13 introduced an experimental free-threaded build.Python 3.14,released October 2025,promoted it to officially supported status via PEP 779.The implementation described in PEP 703 is now complete.Temporary workarounds in the interpreter have been replaced with permanent solutions,and the single-threaded performance hit has been slashed. Two things to know upfront: Free-threading is supported but not the ...",
+    "in_window": true
+   },
+   {
+    "rank": 6,
+    "title": "Free-threaded Python is no longer an experiment. Here's what it unlocked in my workload",
+    "url": "https://tech.yahoo.com/computing/articles/free-threaded-python-no-longer-210017585.html",
+    "domain": "tech.yahoo.com",
+    "published_date": "2026-10-17",
+    "passage": "The lock lets only one thread execute Python bytecode at a time within a process.That keeps CPython's memory management simple and safe,but it also means threads cannot spread CPU-bound work across cores.Developers who wanted real parallelism usually reached for multiprocessing,which spawns separate processes with their own memory,or leaned on C extensions that release the lock.A free-threaded build removes the ...",
+    "in_window": true
+   },
+   {
+    "rank": 7,
+    "title": "Compare Python 3.15's Free-Threaded Builds With Standard CPython",
+    "url": "https://www.c-sharpcorner.com/article/compare-python-3-15s-free-threaded-builds-with-standard-cpython",
+    "domain": "c-sharpcorner.com",
+    "published_date": "2026-10-12",
+    "passage": "for thread in threads: thread.join()The code illustrates shared mutable state.Even when individual built-in operations have internal thread-safety protections,a compound operation such as counter+1 should not be treated as an atomic transaction. If the application requires an exact counter,protect the update with a threading.Lock or use a suitable concurrent design.Benchmarking an incorrect result is not a ...",
+    "in_window": true
+   },
+   {
+    "rank": 8,
+    "title": "Python 3.14 Free-Threading Is Official — Here’s What Changes Now | byteiota",
+    "url": "https://byteiota.com/python-314-free-threading-officially-supported-2/",
+    "domain": "byteiota.com",
+    "published_date": "2026-08-13",
+    "passage": "python3.14t-W error-c\"import your_library If GIL gets re-enabled,you'll see a warning—or error with-W errorThe official free-threading how-to covers the full compatibility matrix.Read it before committing the free-threaded build to production. T-Strings:The Other Feature Worth Knowing Free-threading gets the headline,but PEP 750 ships something quietly useful:template string literals,or t-strings.The syntax mirrors ...",
+    "in_window": true
+   }
+  ],
+  "stats": {
+   "returned": 10,
+   "shown": 8,
+   "duplicates": 0,
+   "no_date": 0,
+   "outside_window": 0
+  },
+  "cost_usd": 0.005,
+  "latency_s": 0.48,
+  "cached": false,
+  "cost_usd_this_request": 0.005,
+  "note": "Saved run from 2026-10-19 09:31 Asia/Tbilisi. Results whose URL contains a personal handle were left out of this saved sample."
+ },
+ "answer": {
+  "query": "python 3.14 free threading performance",
+  "links": [
+   {
+    "n": 1,
+    "title": "Python 3.14 Is Here. How Fast Is It? - miguelgrinberg.com",
+    "url": "https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it",
+    "domain": "blog.miguelgrinberg.com",
+    "published_date": "2025-10-08",
+    "term_share": 0.4
+   },
+   {
+    "n": 2,
+    "title": "Python 3.14 Free-Threading: Real Benchmarks, Real Breakage, Real Code - DEV Community",
+    "url": "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+    "domain": "dev.to",
+    "published_date": "2026-04-13",
+    "term_share": 0.8
+   },
+   {
+    "n": 3,
+    "title": "Python 3.14 Free-Threading True Parallelism Without the GIL - DEV Community",
+    "url": "https://dev.to/edgar_montano/python-314-free-threading-true-parallelism-without-the-gil-a12",
+    "domain": "dev.to",
+    "published_date": "2025-11-07",
+    "term_share": 0.8
+   },
+   {
+    "n": 4,
+    "title": "Unlocking True Parallelism: A Developer's Guide to Free-Threaded Python 3.14 - DEV Community",
+    "url": "https://dev.to/mechcloud_academy/unlocking-true-parallelism-a-developers-guide-to-free-threaded-python-314-175i",
+    "domain": "dev.to",
+    "published_date": "2025-10-12",
+    "term_share": 0.6
+   },
+   {
+    "n": 5,
+    "title": "What’s new in Python 3.14 — Python 3.15.0 documentation",
+    "url": "https://docs.python.org/3/whatsnew/3.14.html",
+    "domain": "docs.python.org",
+    "published_date": "2025-10-07",
+    "term_share": 0.4
+   },
+   {
+    "n": 6,
+    "title": "Python 3.14 Is Here: Free Threading Removes the GIL — With Caveats | Stackademic",
+    "url": "https://stackademic.com/blog/python-3-14-is-here-free-threading-removes-the-gil-with-caveats-sep-18-2026",
+    "domain": "stackademic.com",
+    "published_date": "2026-09-18",
+    "term_share": 0.8
+   },
+   {
+    "n": 7,
+    "title": "Python 3.14 free-threaded build is now available in RHEL | Red Hat Developer",
+    "url": "https://developers.redhat.com/articles/2026/09/14/python-314-free-threaded-build-now-available-rhel",
+    "domain": "developers.redhat.com",
+    "published_date": "2026-09-14",
+    "term_share": 0.8
+   },
+   {
+    "n": 8,
+    "title": "I Benchmarked Python 3.14’s Free-Threading on 5 Real Tasks. Here’s What Actually Happened. | by PIXIPACE | Python in Plain English",
+    "url": "https://python.plainenglish.io/i-benchmarked-python-3-14s-free-threading-on-5-real-tasks-here-s-what-actually-happened-d7088b7e4fed?gi=e0c9df933b18",
+    "domain": "python.plainenglish.io",
+    "published_date": null,
+    "term_share": 0.8
+   },
+   {
+    "n": 9,
+    "title": "Python 3.14 Free-Threading: Real Benchmarks and Breakage",
+    "url": "https://www.danilchenko.dev/posts/python-314-free-threading/",
+    "domain": "danilchenko.dev",
+    "published_date": null,
+    "term_share": 0.8
+   },
+   {
+    "n": 10,
+    "title": "Python 3.14 Free-Threading in Django: Real Benchmarks for Async + Thread-Safe Views (No GIL Pain) | by Yogeshkrishnanseeniraj | Django Journal | Medium",
+    "url": "https://medium.com/django-journal/python-3-14-free-threading-in-django-real-benchmarks-for-async-thread-safe-views-no-gil-pain-82edc73a1c20",
+    "domain": "medium.com",
+    "published_date": null,
+    "term_share": 1.0
+   }
+  ],
+  "summary": {
+   "lines": [],
+   "hidden": 0,
+   "cited_urls": [
+    "https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it"
+   ]
+  },
+  "strong": 8,
+  "declined": true,
+  "declined_text": "The sources do not provide specific information about Python 3.14's performance with threading.",
+  "no_strong_sources": false,
+  "also_in_search_results": 2,
+  "cost_usd": 0.004,
+  "latency_s": 9.8,
+  "cached": false,
+  "cost_usd_this_request": 0.004
+ }
+}
