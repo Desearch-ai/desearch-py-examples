@@ -2,72 +2,90 @@
 
 Made by Desearch | https://desearch.ai
 
-Paste one claim and get the sources that back it or push back on it, each with a link, a short summary that keeps only the sentences tied to a returned source, and how the topic is discussed on X. It helps you find sources; it does not decide what is true.
+Paste one claim and get related sources, each with a link, and a short summary that keeps only sentences tied to a returned source. It helps you find sources; it does not decide what is true. Optional X search is off by default.
 
 It is a small web app (one HTML page plus one JSON endpoint) and a CLI. It runs locally with one command and deploys to Vercel as a static page plus one Python function. Standard library only, plain HTTP (no SDK).
 
 ## Desearch endpoints
+
 - `POST /desearch/ai/search` with `tools: ["web"]`, `result_type: "LINKS_WITH_FINAL_SUMMARY"`, `streaming: false`, `count: 10`: web sources plus a cited summary.
-- `GET /twitter` with `query` (the claim's first 4 key words), `sort: "Top"`, `count: 10`: posts about the topic.
 - Optional: a second `POST /desearch/ai/search` with `tools: ["wikipedia"]` when "also search Wikipedia" is ticked (`wiki=1`). It is a separate call because asking for `["web", "wikipedia"]` in one call returned only Wikipedia links in our runs.
+- Optional: `GET /twitter` with `query` (the claim's first 4 key terms), `sort: "Top"`, `count: 10`. The server calls it only when `DEMO_X_ENABLED=1` or `DEMO_X_ENABLED=true`; the CLI calls it only with `--x`.
 
 ## Try the endpoint first
+
 ```bash
 curl -s https://api.desearch.ai/desearch/ai/search \
   -H "Authorization: $DESEARCH_API_KEY" -H "Content-Type: application/json" \
   -d '{"prompt": "Octopuses have three hearts and blue blood", "tools": ["web"], "streaming": false, "result_type": "LINKS_WITH_FINAL_SUMMARY", "count": 10}'
 ```
-The response is `{"search": [{"title", "link", "snippet", "highlights"}], "completion": "... [1](https://...)", "cost_usd", ...}`. The cost is also in the `X-Desearch-Cost-Usd` response header.
+
+The response includes `search` entries with `title`, `link`, `snippet`, and `highlights`, plus a `completion` with Markdown citations and `cost_usd`. Cost is also available in the `X-Desearch-Cost-Usd` response header.
 
 ## Run it locally
+
 ```bash
-python3 -m pip install -r requirements.txt       # only pytest, for the tests
-export DESEARCH_API_KEY_FILE=/path/to/key         # or DESEARCH_API_KEY=your_key, or --key-file
+export DESEARCH_API_KEY_FILE=/path/to/key         # or DESEARCH_API_KEY, or --key-file
 python3 app.py                                    # web app at http://127.0.0.1:8000
 curl -s "http://127.0.0.1:8000/api/check?claim=Honey+never+spoils+if+stored+sealed"
 python3 app.py --cli "Humans only use 10 percent of their brain" --wiki --json out.json --html out.html
-python3 -m pytest -q                              # offline tests, no key needed
+python3 app.py --cli "Honey never spoils if stored sealed" --x
+python3 -m pytest -q                              # offline, if pytest is already installed
+python3 -m unittest                              # standard library fallback, no installation needed
 ```
+
 - `claim`: 8 to 200 characters with at least two words that carry meaning. Anything else gets HTTP 400 and makes no API call.
 - `wiki=1`: also search Wikipedia (one more call). Wikipedia file, talk and portal pages and non-English pages are dropped.
+- X is off by default. The server accepts only `1` or `true` (case-insensitive) for `DEMO_X_ENABLED`. The CLI uses `--x` independently of that server setting. An API query parameter cannot enable X.
 - Add `--log-dir runs/today` to save each API call with the key redacted.
 
 ## What you get
-```json
-{"claim": "...", "no_strong_sources": false, "strong": 10, "labels": {"contradicts": 10},
- "summary": {"lines": [{"text": "...", "cites": ["https://..."]}], "hidden": 1},
- "sources": [{"rank": 1, "label": "contradicts", "title": "...", "url": "https://...", "domain": "...", "type": "web", "snippet": "...", "term_share": 1.0}],
- "posts": [{"text": "...", "author": "a user", "url": "https://x.com/i/status/..."}], "x_query": "great wall china visible",
- "x_returned": 10, "cost_usd": 0.0055, "calls": 2, "cached": false}
-```
-- **Sources** come from the web search, deduped. Each gets a **cue label**: `contradicts` if its text has debunk words (myth, misconception, debunked, false, no evidence...), `supports` if it holds most of the claim's key words without them, else `unclear`. It is a keyword hint, not a verdict.
-- **Summary** is the `completion` split into sentences. A sentence is shown only if every link it cites is one of the returned sources; the rest are hidden and counted.
-- **No strong sources found** is shown when fewer than two sources hold at least 60% of the claim's key words. A made-up claim lands here instead of looking confirmed.
-- **X posts** are shown only if they contain all the search words and do not @-mention an account. Authors are shown as "a user". Post text is quoted as returned.
 
-## Demo safety (for the hosted version)
+```json
+{"claim": "...", "no_strong_sources": false, "strong": 10,
+ "summary": {"lines": [{"text": "...", "cites": ["https://..."]}], "hidden": 1, "verdict_hidden": 1, "cited_urls": ["https://..."]},
+ "sources": [{"rank": 1, "title": "...", "url": "https://...", "domain": "...", "type": "web", "snippet": "...", "quote": "...", "term_share": 1.0}],
+ "stats": {"returned": 10, "kept": 10, "duplicates": 0, "skipped": {}},
+ "x_enabled": false, "cost_usd": 0.004, "latency_s": 10.0, "calls": 1, "cached": false}
+```
+
+- **Sources** are deduped and shown neutrally: rank, title link, domain and snippet. No per-source stance or verdict is assigned.
+- **Summary** is the `completion` split into sentences. Judgment words and verdict phrasing are filtered with case-insensitive word boundaries, and dropped sentences are counted separately in `summary.verdict_hidden`. Remaining sentences are shown only if every link they cite is a returned source; uncited or mis-cited sentences are counted in `summary.hidden`. This checks citation destinations, not whether a source establishes the sentence's accuracy. Repeated citations and punctuation artefacts are cleaned up. The search request includes a `system_message` asking for a neutral summary of what sources say, with citations and without a verdict.
+- **Source count** says "N sources returned." With fewer than two displayed sources it also says "Few sources returned. Read them before you share anything." Legacy `term_share`, `strong` and `no_strong_sources` fields remain for JSON compatibility and are unused by the displays.
+- **Text cleanup** decodes HTML entities, strips tags (including tags encoded as entities) and collapses whitespace in titles, snippets, highlights, summaries and posts. Display text is escaped, and source links accept only HTTP or HTTPS URLs.
+- **X posts**, when enabled, must contain at least two distinct meaningful claim terms, or all terms if the claim has fewer than two. Stopwords are excluded and whole terms are matched. A small built-in profanity and slur filter uses case-insensitive word boundaries and catches simple obfuscations. Posts with account mentions are also dropped. Authors are shown as "a user". Returned display text has HTML removed.
+- When X is off, `/twitter` is never called, post fields are omitted, and the page hides the X section. When on, the result adds `posts`, `x_query`, `x_returned` and `x_dropped`. An empty or unavailable X result does not block web sources.
+
+## Demo controls (for the hosted version)
+
 The key is read on the server only (`DESEARCH_API_KEY`), never sent to the browser, and never written to a response or log line. In front of the paid calls:
+
 - input checks (no call for blank or junk input);
 - a per-IP limit (5 checks per 10 minutes, 15 per day) and a global limit (30 per 10 minutes);
-- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day);
-- a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on result responses, so a CDN serves repeat claims, plus an in-memory cache keyed by the normalized claim;
+- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day); if a response carries no cost, the call counts `DEMO_FALLBACK_COST_USD` (default $0.005);
+- a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on result responses, plus an in-memory cache keyed by the normalized claim and the Wikipedia and X settings;
 - a kill switch: `DEMO_LIVE=0` turns off live calls and points to `/sample.json`.
+
 On a serverless host the limit, cap and in-memory cache are per warm instance, so they are best effort; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
 
 ## Files
-- `factcheck/core.py`: input checks, request bodies, source cleanup, cue labels, citation check, X post filter, limiter, cap, cache. No network.
-- `factcheck/client.py`: plain-HTTP Desearch client (key redaction guard).
+
+- `factcheck/core.py`: input checks, request bodies, source and text cleanup, citation check, X post filters, limiter, cap, cache and report rendering. No network.
+- `factcheck/client.py`: plain HTTP Desearch client (key redaction guard).
 - `factcheck/service.py`: the `/api/check` endpoint logic shared by local and Vercel.
 - `api/check.py`: Vercel Python function. `public/index.html`: the page. `vercel.json`: function settings.
 - `app.py`: local server (page + `/api/check`) and CLI.
-- `test_core.py`: offline tests. `samples/`: saved runs and an HTML page.
+- `test_core.py`: offline tests compatible with pytest and unittest. `samples/`: saved data adapted offline to the current format, plus an HTML page.
 
-## Cost
-In our runs (2026-10-18): $0.004 per `ai/search` call and $0.0015 per `GET /twitter` call with `count` 10, so **$0.0055 per check**, $0.0095 with Wikipedia. Cached checks cost nothing.
+## Cost and timing
 
-## Known issues
+A check with X off costs **$0.004**, or **$0.008 with Wikipedia**. Enabling X adds $0.0015, for $0.0055 or $0.0095 with Wikipedia. Cached checks cost nothing. Keeping X off skips the approximately 30 second X call.
+
+Three live runs on October 21, 2026 measured `ai/search` at 9.4 to 10.1 seconds. Each X call took approximately 30.2 seconds and returned 0 posts. A customer saw 11 seconds and 26 seconds with X on. The page says **about 10 to 15 seconds** for a normal check; allow **up to 40 seconds** with X enabled. Wikipedia adds a parallel search call, so timing can vary.
+
+## Search limitations
+
 - `tools: ["web", "wikipedia"]` in one call returned 10 Wikipedia links and no web links (twice), so the app makes one call per tool.
-- A custom `system_message` asking for per-source labels came back as "NO STRONG SOURCES" or with an empty source list, so the app uses the default summary and labels sources itself.
-- A made-up claim still returns 10 loosely related pages and is billed like a normal search; the app shows "No strong sources found".
-- An X search with no matches returns `[]` after about 30 seconds and is billed $0.0015. X results for a topic can be mostly off-topic, so the app filters them by the search words.
-- `wikipedia` is accepted by the API but not yet listed in the documented `tools` values (the docs list `web` and `twitter`).
+- A made-up claim can still return loosely related pages. A source count does not establish source quality or the claim's accuracy; read the sources.
+- X searches can be slow or return unrelated posts. X is off by default; the relevance and profanity filters apply when enabled.
+- `wikipedia` is accepted by the API but is not listed in the documented `tools` values used for the original example.

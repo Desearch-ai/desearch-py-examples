@@ -55,15 +55,19 @@ class Client:
         except ValueError:
             body = raw[:2000]
         bill = {k.lower(): v for k, v in hd.items() if k.lower().startswith("x-desearch")}
-        try:
-            cost = float(bill.get("x-desearch-cost-usd") or 0)
-        except ValueError:
-            cost = 0.0
+        cost, cost_known = 0.0, False
+        for v in (bill.get("x-desearch-cost-usd"), body.get("cost_usd") if isinstance(body, dict) else None):
+            try:   # header first, then the body's cost_usd; if neither is there the cost is unknown (not zero)
+                cost, cost_known = float(v), True
+                break
+            except (TypeError, ValueError):
+                continue
         cost = round(cost, 6)
         self.total += cost
         rec = {"n": n, "tag": tag, "time": ts, "request": {"method": method, "url": url, "body": payload,
                "headers": {"Authorization": "<redacted>", "User-Agent": UA}}, "status": st, "latency_s": lat,
-               "billing_headers": bill, "body_cost_usd": body.get("cost_usd") if isinstance(body, dict) else None, "cost": cost}
+               "billing_headers": bill, "body_cost_usd": body.get("cost_usd") if isinstance(body, dict) else None, "cost": cost,
+               "cost_known": cost_known}
         if self.log:
             self._write(self.log / "raw" / f"{n:03d}-{tag}.json", json.dumps({**rec, "body": body}, indent=1, ensure_ascii=False))
             self._write(self.log / "calls.jsonl", json.dumps(rec) + "\n", "a")

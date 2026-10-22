@@ -1,0 +1,43 @@
+{
+ "claim": "The Eiffel Tower is in Berlin",
+ "sources": [
+  {
+   "url": "https://www.wonders-of-the-world.net/Eiffel-Tower/Repliques/Replicas-of-the-Eiffel-tower-in-Germany.php"
+  },
+  {
+   "url": "https://www.visitberlin.de/en/funkturm"
+  },
+  {
+   "url": "https://www.iamexpat.de/expat-info/germany-news/berlins-eiffel-tower-be-rebuilt-after-successful-crowdfunder"
+  }
+ ],
+ "summary": {
+  "lines": [
+   {
+    "text": "The statement that the Eiffel Tower is in Berlin is true; Berlin has several structures inspired by or resembling the Eiffel Tower, including a replica in Wedding and the Funkturm, a radio tower built in the 1920s that resembles the Eiffel Tower's architecture.",
+    "cites": [
+     "https://www.wonders-of-the-world.net/Eiffel-Tower/Repliques/Replicas-of-the-Eiffel-tower-in-Germany.php",
+     "https://www.visitberlin.de/en/funkturm"
+    ]
+   },
+   {
+    "text": "The Berlin Funkturm, built in 1924 and 1926, is a notable landmark that looks similar to the Eiffel Tower and is a civic landmark featuring a restaurant and observation deck.",
+    "cites": [
+     "https://www.visitberlin.de/en/funkturm"
+    ]
+   },
+   {
+    "text": "Additionally, there is a smaller reconstruction of the Eiffel Tower in Berlin's Wedding district, which was funded through crowdfunding and symbolizes Franco-German relations.",
+    "cites": [
+     "https://www.iamexpat.de/expat-info/germany-news/berlins-eiffel-tower-be-rebuilt-after-successful-crowdfunder"
+    ]
+   }
+  ],
+  "hidden": 0,
+  "cited_urls": [
+   "https://www.wonders-of-the-world.net/Eiffel-Tower/Repliques/Replicas-of-the-Eiffel-tower-in-Germany.php",
+   "https://www.visitberlin.de/en/funkturm",
+   "https://www.iamexpat.de/expat-info/germany-news/berlins-eiffel-tower-be-rebuilt-after-successful-crowdfunder"
+  ]
+ }
+}
