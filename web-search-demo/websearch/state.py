@@ -1,5 +1,6 @@
 """Shared demo state over the Upstash Redis REST pipeline API."""
 import hashlib
+import http.client
 import ipaddress
 import json
 import os
@@ -32,7 +33,9 @@ class RedisREST:
             if any(not isinstance(entry, dict) or 'error' in entry or 'result' not in entry for entry in entries):
                 raise StateUnavailable()
             return [entry['result'] for entry in entries]
-        except (OSError, TimeoutError, ValueError, TypeError, urllib.error.URLError):
+        except (OSError, TimeoutError, ValueError, TypeError, urllib.error.URLError, http.client.HTTPException):
+            raise StateUnavailable() from None
+        except Exception:
             raise StateUnavailable() from None
 
 
