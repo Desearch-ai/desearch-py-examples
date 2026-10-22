@@ -10,7 +10,7 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:900px;margin:3rem auto;padding
 <p>Search the web with one Desearch API call per page.</p>
 <form id="form"><label for="query">Search query</label><br><input id="query" minlength="2" maxlength="200" value="bittensor subnet" required>
 <label for="page">Page</label> <select id="page"><option value="1">1</option><option value="2">2</option></select> <button id="submit">Search</button></form>
-<p id="limits">Limits: 5 searches per 10 minutes, 15 per day per visitor</p>
+<p id="limits">Limits: 5 searches per 10 minutes, 15 per day per network</p>
 <p id="status" role="status" aria-live="polite">Loading saved sample...</p>
 <p id="cost">Request cost: $0</p>
 <p><a href="/sample.json" target="_blank" rel="noopener noreferrer">View saved EXAMPLE JSON</a> <button id="sample" type="button">Show sample</button></p>
@@ -47,7 +47,7 @@ $('form').onsubmit=async event=>{
   const response=await fetch('/api/search?'+new URLSearchParams({q:$('query').value,page:$('page').value}),{signal:controller.signal});
   const data=await response.json();if(run!==generation)return;
   $('cost').textContent='Request cost: $'+(response.headers.get('X-Desearch-Cost-Usd') || '0');
-  if(data.limits)$('limits').textContent=`Limits: ${data.limits.per_ip} searches per 10 minutes, ${data.limits.per_ip_day} per day per visitor`;
+  if(data.limits)$('limits').textContent=`Limits: ${data.limits.per_ip} searches per 10 minutes, ${data.limits.per_ip_day} per day per network`;
   if(!response.ok)throw Error(data.error || 'Search failed. Try again later.');
   render(data);$('status').textContent=data.cached?'Cached result, up to 10 minutes old.':'Search complete.';
  }catch(error){if(run===generation){$('results').replaceChildren();$('status').textContent=error.name==='AbortError'?'Search timed out. Try again later.':error.message;}}

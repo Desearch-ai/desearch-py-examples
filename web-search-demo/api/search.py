@@ -19,5 +19,8 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def log_request(self, code="-", size="-"):
+        pass
+
     def log_message(self, fmt, *args):
         pass

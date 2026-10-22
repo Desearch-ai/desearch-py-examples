@@ -6,6 +6,9 @@ import urllib.parse
 import urllib.request
 
 
+PER_PAGE = 20
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         return None
@@ -19,7 +22,7 @@ class Client:
         self.opener = opener or urllib.request.build_opener(NoRedirect()).open
 
     def search(self, query, page):
-        params = urllib.parse.urlencode({'query': query, 'start': (page - 1) * 10})
+        params = urllib.parse.urlencode({'query': query, 'start': (page - 1) * PER_PAGE})
         request = urllib.request.Request('https://api.desearch.ai/web?' + params,
             headers={'Authorization': self.key, 'User-Agent': 'desearch-py-examples/web-search-demo'}, method='GET')
         try:
@@ -46,5 +49,5 @@ class Client:
         # Project onto public fields; never return upstream error bodies or metadata.
         results = [{k: row.get(k, '') if isinstance(row.get(k, ''), str) else ''
                     for k in ('title', 'link', 'snippet')}
-                   for row in rows if isinstance(row, dict)]
+                   for row in rows[:PER_PAGE] if isinstance(row, dict)]
         return status, results, cost

@@ -4,7 +4,7 @@ import urllib.error
 from unittest.mock import Mock
 from urllib.parse import parse_qs, urlsplit
 import pytest
-from websearch.client import Client, NoRedirect
+from websearch.client import Client, NoRedirect, PER_PAGE
 from websearch.guards import DailyCap, RateLimiter, TTLCache
 from websearch.service import Search, client_ip, parse_query
 from websearch import state
@@ -93,7 +93,7 @@ def test_header_cost_and_one_request(value, expected):
     assert request.get_method() == 'GET'
     assert request.get_header('Authorization') == KEY
     assert request.full_url.startswith('https://api.desearch.ai/web?')
-    assert parse_qs(urlsplit(request.full_url).query) == {'query':['bittensor & subnet'], 'start':['10']}
+    assert parse_qs(urlsplit(request.full_url).query) == {'query':['bittensor & subnet'], 'start':[str(PER_PAGE)]}
     opener.assert_called_once()
 
 
@@ -230,3 +230,45 @@ def test_redis_aliases_and_failure(monkeypatch):
     with pytest.raises(state.StateUnavailable) as error:
         redis.pipeline([['GET','key']])
     assert 'private' not in str(error.value)
+
+
+def test_pages_do_not_overlap():
+    starts = []
+    def opener(request, **kwargs):
+        start = int(parse_qs(urlsplit(request.full_url).query)['start'][0])
+        starts.append(start)
+        return Response(body={'data': [dict(title=str(i), link=str(i), snippet='')
+                                      for i in range(start, start + PER_PAGE)]})
+    service = demo(client=Client(KEY, opener))
+    first = call(service, page='1')[2]['results']
+    second = call(service, page='2')[2]['results']
+    assert starts == [0, len(first)] == [0, PER_PAGE]
+    assert len(second) == PER_PAGE
+    assert {row['link'] for row in first}.isdisjoint(row['link'] for row in second)
+
+
+@pytest.mark.parametrize('entrypoint', ['vercel', 'local'])
+@pytest.mark.parametrize('method', ['GET', 'POST'])
+def test_handlers_do_not_log_queries(monkeypatch, capsys, entrypoint, method):
+    from api import search as api_search
+    from app import make_handler
+    service = demo()
+    monkeypatch.setattr(api_search, 'SEARCH', service)
+    handler = api_search.handler if entrypoint == 'vercel' else make_handler(service)
+    query = 'private-query-sentinel'
+    request = Mock()
+    request.makefile.return_value = io.BytesIO(
+        f'{method} /api/search?q={query}&page=1 HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n'.encode())
+    handler(request, ('127.0.0.1', 12345), Mock())
+    assert request.sendall.called
+    assert capsys.readouterr().err == ''
+
+
+def test_public_copy_uses_network_limits():
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    for name in ('public/index.html', 'README.md', 'DEPLOY.md'):
+        text = (root / name).read_text()
+        assert 'per visitor' not in text
+        assert '—' not in text
+    assert (root / 'public/index.html').read_text().count('per network') == 2
