@@ -34,8 +34,23 @@ The same data is available to AI assistants through the Desearch MCP tool `x-use
 ## Cost
 Billing is per post returned: a page of 16 to 18 posts cost $0.0024 to $0.0027 in our runs, so a 3-page lookup is about $0.0077. The cost of each call is in the `X-Desearch-Cost-Usd` response header.
 
-## Known issues
-- A cursor the API does not recognise is not rejected: it returns the first page again and is billed. The app only sends cursors the API gave it.
-- Pages can overlap: 1 to 3 posts repeated across 3 pages in our tests. The app drops repeats, but they are billed.
-- Posts are not always in strict newest-first order (posts a few seconds apart can swap). Sort by `created_utc` if order matters.
-- A page has 16 to 18 posts and there is no `count` parameter on this endpoint.
+## Response details
+- The local app follows only cursors supplied by the API, drops repeated posts and counts them.
+- Posts may arrive outside strict newest-first order. Sort by `created_utc` if order matters.
+- The endpoint chooses its page size and has no `count` parameter.
+
+## Hosted demo
+
+For marketing, community and partnerships teams, the hosted page shows a public X profile and recent posts to help assess an account before outreach. The labelled fictional sample loads without an API call. Submit a username, `@name` or an `x.com/name` link for a live lookup.
+
+The hosted endpoint is `GET /api/lookup?username=desearch_ai`. Each uncached lookup makes one GET to `https://api.desearch.ai/twitter/user/posts` with a server-only Authorization header. It does not follow cursors. The existing local server and CLI above retain their paging and CSV features.
+
+The hosted implementation uses `xlookup/`, `api/lookup.py`, `public/` and `vercel.json`, following the web search demo architecture. Runtime dependencies are standard library only. Successful results are cached for 15 minutes by normalized lowercase username. Cache hits cost $0 and consume no limits. Invalid input returns 400 before any state or upstream access. A missing account returns 404 `not found`.
+
+Default limits are 5 lookups per 10 minutes and 15 per day per network, 30 globally per 10 minutes, and a $1 shared daily spend cap. Shared Upstash Redis uses the separate `xlookup:` prefix and is required for hosting. State errors return paused 503 with a saved sample. Memory mode is only for local testing and is refused on Vercel. Set `DEMO_LIVE=0` to pause uncached lookups.
+
+Cost comes from the upstream cost header, then body `cost_usd`, then the $0.003 fallback. A 404 uses its header cost or zero. The fallback is reserved in shared spend before the call and adjusted afterward. Concurrent requests or a call crossing the remaining budget can exceed the cap. The page shows the cached flag and request cost.
+
+See [DEPLOY.md](DEPLOY.md) for all environment variables, Upstash setup, preview checks and deployment with an explicit target. Application handlers log no usernames or keys; Vercel's platform log may still record the path and query string.
+
+Run all offline tests from this directory with `python3 -m pytest -q`.

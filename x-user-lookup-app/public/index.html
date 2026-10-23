@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X Account Lookup | Made by Desearch</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;max-width:900px;margin:3rem auto;padding:0 1rem;background:#f7faf8;color:#20352c}input,select,button{font:inherit;padding:.6rem;border:1px solid #7b998c;border-radius:6px}input{max-width:90%;width:26rem}button{cursor:pointer;background:#dcefe5}li{background:white;padding:1rem;margin:1rem 0;border-radius:8px;overflow-wrap:anywhere}a{color:#146b4a}.url{font-size:.85rem}p{margin:.5rem 0}#profile:not(:empty){background:white;border:1px solid #7b998c;border-radius:8px;padding:1rem;margin-top:1rem}
+</style>
+<h1>X Account Lookup</h1>
+<p>Made by <a href="https://desearch.ai" target="_blank" rel="noopener noreferrer">Desearch</a></p>
+<p>Review a public X profile and recent posts before community, partnership or marketing outreach.</p>
+<form id="form"><label for="query">X username or profile URL</label><br><input id="query" value="desearch_ai" required> <button id="submit">Look up account</button></form>
+<p id="limits">Limits: 5 lookups per 10 minutes, 15 per day per network</p>
+<p id="status" role="status" aria-live="polite">Loading saved sample...</p>
+<p id="cost">Request cost: $0</p>
+<p><a href="/sample.json" target="_blank" rel="noopener noreferrer">View saved EXAMPLE JSON</a> <button id="sample" type="button">Show sample</button></p>
+<section id="profile"></section><ol id="results"></ol>
+<script>
+const $=id=>document.getElementById(id);
+let generation=0;
+function clear(){ $('results').replaceChildren();$('profile').replaceChildren(); }
+function line(parent,text){const p=document.createElement('p');p.textContent=text;parent.append(p);}
+function render(data){
+ clear();const p=data.profile;
+ if(p){line($('profile'),`${p.name} @${p.username}`);line($('profile'),p.bio);
+ line($('profile'),`${p.followers ?? 'Unknown'} followers, ${p.following ?? 'Unknown'} following, ${p.posts_total ?? 'Unknown'} posts, joined ${p.created || 'Unknown'}`);}
+ for(const row of data.posts || []){
+  const li=document.createElement('li');
+  line(li,(row.created_utc || 'Unknown time')+' UTC');line(li,row.text);
+  line(li,`${row.likes} likes, ${row.replies} replies, ${row.reposts} reposts, ${row.views} views`);
+  try{const url=new URL(row.link);if(['https:','http:'].includes(url.protocol)){
+   const a=document.createElement('a');a.textContent='View post';a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';li.append(a);
+  }}catch{}
+  $('results').append(li);
+ }
+ if(!data.posts?.length)line($('results'),'No recent posts returned.');
+}
+async function sample(){
+ const run=++generation;clear();$('cost').textContent='Request cost: $0';
+ try{const response=await fetch('/sample.json');if(!response.ok)throw Error();const data=await response.json();if(run!==generation)return;render(data);$('status').textContent=data.label;}
+ catch{if(run===generation){clear();$('status').textContent='Could not load the sample.';}}
+}
+$('sample').onclick=sample;
+$('form').onsubmit=async event=>{
+ event.preventDefault();const run=++generation;
+ clear();$('cost').textContent='Request cost: $0';$('status').textContent='Looking up account...';$('submit').disabled=true;
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),55000);
+ try{
+  const response=await fetch('/api/lookup?'+new URLSearchParams({username:$('query').value}),{signal:controller.signal});
+  const data=await response.json();if(run!==generation)return;
+  $('cost').textContent='Request cost: $'+(response.headers.get('X-Desearch-Cost-Usd') || '0');
+  if(data.limits)$('limits').textContent=`Limits: ${data.limits.per_ip} lookups per 10 minutes, ${data.limits.per_ip_day} per day per network`;
+  if(!response.ok)throw Error(data.error || 'Lookup failed. Try again later.');
+  render(data);$('status').textContent=data.cached?'Cached: yes. Result up to 15 minutes old.':'Lookup complete. Cached: no.';
+ }catch(error){if(run===generation){clear();$('status').textContent=error.name==='AbortError'?'Lookup timed out. Try again later.':error.message;}}
+ finally{clearTimeout(timer);$('submit').disabled=false;}
+};
+sample();
+</script>
+</html>
