@@ -9,8 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import youtube_creator_finder as app
 
 FIX = Path(__file__).parent / 'fixtures'
-RESULTS = json.loads((FIX / 'ilia-sample-results-2026-10-20.json').read_text())
-TASK = json.loads((FIX / 'ilia-sample-task-2026-10-20.json').read_text())
+RESULTS = json.loads((FIX / 'sample-results.json').read_text())
+TASK = json.loads((FIX / 'sample-task.json').read_text())
 
 
 class Response:
@@ -83,7 +83,7 @@ def test_missing_fields():
 
 @pytest.mark.parametrize('changes,flag', [({'views': None}, 'views_missing'), ({'videos': 1}, 'few_videos'), ({'email': '', 'website': ''}, 'no_contact'), ({'name': 'Official coffee'}, 'possible_brand_or_store'), ({'score': 59}, 'low_score')])
 def test_each_flag(changes, flag):
-    row = dict(views=5, videos=2, email='a@b', website='', name='Alice', score=60)
+    row = dict(views=5, videos=2, email='contact@example.com', website='', name='Alice', score=60)
     row.update(changes)
     assert app.quality_flags(row) == [flag]
 
@@ -180,7 +180,7 @@ def test_poll_stream_dedup_resume(cli, capsys, monkeypatch):
 def test_summary():
     rows = [app.parse_creator(r) for r in RESULTS['results']]
     summary = app.summarize(TASK, rows, TASK['request'])
-    for term in ['count_reached', 'reserved_cost_usd: 0.25', 'emails_count: 1', 'duration_seconds: 121.203018']:
+    for term in ['count_reached', 'reserved_cost_usd: 0.25', 'emails_count: 0', 'duration_seconds: 121.203018']:
         assert term in summary
 
 
@@ -245,16 +245,29 @@ def test_echoed_key_redacted_from_results(cli, tmp_path, capsys):
         assert 'secret-credential-123' not in path.read_text()
 
 
-def test_fixtures_are_complete():
-    paths = list(FIX.glob('*.json'))
-    evidence = Path(__file__).resolve().parents[1] / 'evidence'
-    if any(not (evidence / path.name).is_file() for path in paths):
-        pytest.skip('Evidence copies are not included in the public repository')
-    for path in paths:
-        assert path.read_bytes() == (evidence / path.name).read_bytes()
+def test_fixtures_are_neutral():
+    from urllib.parse import urlsplit
+
+    def check(value):
+        if isinstance(value, dict):
+            for item in value.values():
+                check(item)
+        elif isinstance(value, list):
+            for item in value:
+                check(item)
+        elif isinstance(value, str):
+            assert '@' not in value
+            if value.startswith(('http://', 'https://')):
+                assert urlsplit(value).hostname == 'example.com'
+
+    assert {path.name for path in FIX.glob('*.json')} == {'sample-results.json', 'sample-task.json'}
+    check(RESULTS)
+    check(TASK)
+    assert len(RESULTS['results']) == 5
+    assert all(row['name'].startswith('Example Channel ') for row in RESULTS['results'])
 
 
-@pytest.mark.parametrize('bio', ['Contact alice@example.com', 'https://example.com/shop www.brand.com/store', 'shop@example.com official@example.org brand.example.com/store'])
+@pytest.mark.parametrize('bio', ['Contact alice@example.com', 'https://example.com/shop www.example.com/store', 'shop@example.com official@example.com example.com/store'])
 def test_bio_addresses_do_not_flag(bio):
     assert 'possible_brand_or_store' not in app.quality_flags({'name': 'Alice'}, bio)
 
@@ -265,7 +278,7 @@ def test_handle_brand_substrings(handle):
 
 
 def test_contact_fields_do_not_flag():
-    assert 'possible_brand_or_store' not in app.quality_flags({'name': 'coffee.com', 'email': 'shop@example.com', 'website': 'https://official.com'})
+    assert 'possible_brand_or_store' not in app.quality_flags({'name': 'example.com', 'email': 'shop@example.com', 'website': 'https://example.com/official'})
 
 
 @pytest.mark.parametrize('term', ['shop', 'STORE', 'Official', 'retailer', 'brand', 'inc', 'ltd', 'llc', 'co.'])

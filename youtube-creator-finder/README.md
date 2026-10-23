@@ -27,7 +27,7 @@ python youtube_creator_finder.py \
   --idempotency-key my-keyboards-run-1
 ```
 
-Options: `--count` (5 to 200), `--min-score`, `--min-subscribers`, `--max-subscribers`, `--country` (repeatable), `--require-contact`, `--keyword` / `--exclude-keyword` (repeatable), `--exclude-file` (handles you already contacted, one per line or a previous output CSV), `--idempotency-key` (sending the same key again returns the first search and is not charged), `--task-id` (fetch an existing search, free), `--dry-run` (print the request body, no key needed).
+Options: `--count` (5 to 200), `--min-score`, `--min-subscribers`, `--max-subscribers`, `--country` (repeatable), `--require-contact`, `--keyword` / `--exclude-keyword` (repeatable), `--exclude-file` (handles you already contacted, one per line or a previous output CSV), `--idempotency-key` (sending the same key again returns the first search), `--task-id` (fetch an existing search, free), `--dry-run` (print the request body, no key needed).
 
 Endpoints used: `POST /desearch/people/search/youtube`, `GET /desearch/people/tasks/{task_id}`, `GET /desearch/people/tasks/{task_id}/results`, `GET /desearch/people/tasks/{task_id}/export?format=csv`.
 
@@ -42,11 +42,11 @@ Quality flags are computed locally: `views_missing`, `few_videos` (1 video or fe
 
 ## Cost
 
-The search reserves `count` creators at the route price when it starts and bills only the creators it delivers. In my run on 2026-10-23, `count` 5 reserved and billed $0.25 (5 creators, about 2.5 minutes). A search that found nobody was refunded in full ($0). Current prices: https://desearch.ai/pricing.
+The search reserves `count` creators at the route price when it starts and bills only the creators it delivers. In my run on 2026-10-23, `count` 5 reserved and billed $0.25 (5 creators, about 2.5 minutes). A search that finds nobody costs nothing. Current prices: https://desearch.ai/pricing.
 
 ## Sample
 
-`samples/sample-creators.csv` and `samples/sample-summary.md` come from the run above (2026-10-23).
+`samples/sample-creators.csv` and `samples/sample-summary.md` contain fictional example creators and example.com URLs.
 
 ## Tests
 
