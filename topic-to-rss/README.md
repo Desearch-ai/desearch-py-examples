@@ -35,7 +35,7 @@ The server binds to localhost. `/feed` returns `application/rss+xml`. Missing, b
 
 ## Requests, cache, and cost
 
-Requests use POST `https://api.desearch.ai/search`, balanced mode, highlights, and a date window from today minus `--days` through today. Counts must be 10, 15, or 20. Authorization contains the key directly. A custom User-Agent avoids Cloudflare HTTP 403 error 1010 triggered by the default Python urllib agent.
+Requests use POST `https://api.desearch.ai/search`, balanced mode, highlights, and a date window from today minus `--days` through today. Counts must be 10, 15, or 20. Authorization contains the key directly. Set your own User-Agent header when using plain urllib.
 
 A six-hour cache in `.cache/` beside the script stores result JSON. The SHA-256 key includes the topic and all request parameters, including the date window. Fresh hits reuse results without billing and report cost zero. `--no-cache` bypasses cache reads and writes. Changing parameters or crossing a date boundary can cause another request. Delete `.cache/` to clear results. Simultaneous misses can each send a billable request.
 

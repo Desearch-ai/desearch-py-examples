@@ -6,11 +6,11 @@
     <description>The newest dated pages for bittensor, via the Desearch API</description>
     <lastBuildDate>Fri, 23 Oct 2026 00:00:00 +0000</lastBuildDate>
     <item>
-      <title>Bittenser</title>
-      <link>https://instagram.com/popular/bittenser</link>
-      <guid isPermaLink="true">https://instagram.com/popular/bittenser</guid>
+      <title>Bittensor overview</title>
+      <link>https://example.org/bittensor/overview</link>
+      <guid isPermaLink="true">https://example.org/bittensor/overview</guid>
       <pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate>
-      <description>BittenserBittensor is an open-source protocol that functions as a decentralized machine learning network.It rewards participants with its native TAO token for contributing computational resources to train and.more181KThe Aeternum botnet stores its command layer on the Polygon blockchain.That mea</description>
+      <description>An overview of Bittensor, its subnets, and the roles of network participants.</description>
     </item>
     <item>
       <title>Published via Ecency</title>
@@ -34,9 +34,9 @@
       <description>Bittensor is down-3.29%today against the US DollarTAO/BTC decreased by-2.00%todayBittensor is currently trading 28.78%above our prediction on Oct 24,2026Bittensor gained 4.52%in the last month and is down-39.94%since 1 year agoBittensor price|$264.35| |Bittensor prediction|$205.27(-23.15%)| |</description>
     </item>
     <item>
-      <title>Subnet owner · taostats · Official Block Explorer &amp; Gateway to Bittensor</title>
-      <link>https://taostats.io/docs/concepts/subnets/subnet-owner</link>
-      <guid isPermaLink="true">https://taostats.io/docs/concepts/subnets/subnet-owner</guid>
+      <title>Subnet owner | Example documentation</title>
+      <link>https://example.org/subnets/subnet-owner</link>
+      <guid isPermaLink="true">https://example.org/subnets/subnet-owner</guid>
       <pubDate>Fri, 16 Oct 2026 00:00:00 +0000</pubDate>
       <description>Running on Bittensor testnet:Once the code base is complete and ready for testing it is possible to deploy on the Bittensor testnet,which emulates a similar environment and conditions to mainnet,in order to refine the code and processes,deploy and support applications and infrastructure,and to start</description>
     </item>

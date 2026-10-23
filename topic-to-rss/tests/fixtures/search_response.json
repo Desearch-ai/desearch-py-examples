@@ -1,11 +1,11 @@
 {
  "results": [
   {
-   "url": "https://instagram.com/popular/bittenser",
-   "title": "Bittenser",
+   "url": "https://example.org/bittensor/overview",
+   "title": "Bittensor overview",
    "published_date": "2026-10-22",
    "highlights": [
-    "Bittenser\nBittensor is an open-source protocol that functions as a decentralized machine learning network.It rewards participants with its native TAO token for contributing computational resources to train and.more\n\n181K\nThe Aeternum botnet stores its command layer on the Polygon blockchain.That mea"
+    "An overview of Bittensor, its subnets, and the roles of network participants."
    ]
   },
   {
@@ -17,8 +17,8 @@
    ]
   },
   {
-   "url": "https://taostats.io/docs/concepts/subnets/subnet-owner",
-   "title": "Subnet owner \u00b7 taostats \u00b7 Official Block Explorer & Gateway to Bittensor",
+   "url": "https://example.org/subnets/subnet-owner",
+   "title": "Subnet owner | Example documentation",
    "published_date": "2026-10-16",
    "highlights": [
     "Running on Bittensor testnet:Once the code base is complete and ready for testing it is possible to deploy on the Bittensor testnet,which emulates a similar environment and conditions to mainnet,in order to refine the code and processes,deploy and support applications and infrastructure,and to start"
