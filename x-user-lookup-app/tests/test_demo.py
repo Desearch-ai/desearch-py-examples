@@ -1,5 +1,6 @@
 import io
 import json
+from pathlib import Path
 import urllib.error
 from unittest.mock import Mock
 from urllib.parse import parse_qs, urlsplit
@@ -11,6 +12,11 @@ from xlookup import state
 
 KEY = 'test-secret-credential'
 ROWS = {'profile': {'username': 'example'}, 'posts': []}
+
+
+def test_hosted_page_guards_bio_before_rendering():
+    html = (Path(__file__).resolve().parents[1] / 'public' / 'index.html').read_text()
+    assert "if(typeof p.bio === 'string' && p.bio.trim()) line($('profile'),p.bio);" in html
 
 
 class Response:

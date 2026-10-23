@@ -21,7 +21,7 @@ function clear(){ $('results').replaceChildren();$('profile').replaceChildren();
 function line(parent,text){const p=document.createElement('p');p.textContent=text;parent.append(p);}
 function render(data){
  clear();const p=data.profile;
- if(p){line($('profile'),`${p.name} @${p.username}`);line($('profile'),p.bio);
+ if(p){line($('profile'),`${p.name} @${p.username}`);if(typeof p.bio === 'string' && p.bio.trim()) line($('profile'),p.bio);
  line($('profile'),`${p.followers ?? 'Unknown'} followers, ${p.following ?? 'Unknown'} following, ${p.posts_total ?? 'Unknown'} posts, joined ${p.created || 'Unknown'}`);}
  for(const row of data.posts || []){
   const li=document.createElement('li');
