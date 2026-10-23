@@ -1,0 +1,72 @@
+{
+ "results": [
+  {
+   "url": "https://instagram.com/popular/bittenser",
+   "title": "Bittenser",
+   "published_date": "2026-10-22",
+   "highlights": [
+    "Bittenser\nBittensor is an open-source protocol that functions as a decentralized machine learning network.It rewards participants with its native TAO token for contributing computational resources to train and.more\n\n181K\nThe Aeternum botnet stores its command layer on the Polygon blockchain.That mea"
+   ]
+  },
+  {
+   "url": "https://www.tradingview.com/news/coinmarketcal:dc51a2712094b:0-bittensor-etao-activates-subnet-emission-split-controls-20-oct-2026/",
+   "title": "Bittensor: eTAO activates subnet emission split controls - 20 Oct 2026 - TradingView News",
+   "published_date": "2026-10-20",
+   "highlights": [
+    "Bittensor:eTAO activates subnet emission split controls-20 Oct 2026\nLess than 1 min read\nBittensor activates eTAO on 20 Oct 2026,letting subnet owners set how alpha emissions are split among owners,validators and miners within protocol limits.Existing subnets keep their current split until their own"
+   ]
+  },
+  {
+   "url": "https://taostats.io/docs/concepts/subnets/subnet-owner",
+   "title": "Subnet owner \u00b7 taostats \u00b7 Official Block Explorer & Gateway to Bittensor",
+   "published_date": "2026-10-16",
+   "highlights": [
+    "Running on Bittensor testnet:Once the code base is complete and ready for testing it is possible to deploy on the Bittensor testnet,which emulates a similar environment and conditions to mainnet,in order to refine the code and processes,deploy and support applications and infrastructure,and to start"
+   ]
+  },
+  {
+   "url": "https://coincodex.com/article/93936/bittensor-prediction-october-20-2026/",
+   "title": "Bittensor Gained 4.52% in Last Month and is Predicted to Drop to $205.27 By Oct 24, 2026 | CoinCodex",
+   "published_date": "2026-10-20",
+   "highlights": [
+    "\nBittensor is down-3.29%today against the US Dollar\nTAO/BTC decreased by-2.00%today\nBittensor is currently trading 28.78%above our prediction on Oct 24,2026\nBittensor gained 4.52%in the last month and is down-39.94%since 1 year ago\nBittensor price|$264.35| \n|Bittensor prediction|$205.27(-23.15%)| \n|"
+   ]
+  },
+  {
+   "url": "https://www.aicoin.com/en/news-flash/3136878",
+   "title": "AiCoin News",
+   "published_date": "2026-10-16",
+   "highlights": [
+    "  BTC\n\ud83d\udcb281660.56\n0.8%\n  ETH\n\ud83d\udcb22417.69\n1.67%\n  SOL\n\ud83d\udcb2104.22\n1.64%\n  ZEC\n\ud83d\udcb21136.92\n8.5%\n  USDC\n\ud83d\udcb21.00\n0%\n  XAU\n\ud83d\udcb24176.72\n0.02%\n \nHIGER|10\u6708 16,2026 13:45\nBittensor recently underwent a major protocol upgrade,Null Consensus.The subnet participant limit has been expanded from 256 to 2500.Subnets can now choose"
+   ]
+  },
+  {
+   "url": "https://ecency.com/@cryptowebpicks/bittensor-tao-2-500-slots",
+   "title": "Published via Ecency",
+   "published_date": "2026-10-21",
+   "highlights": [
+    "Bittensor(tao):2,500 slots per subnet instead of 256,and what tao stakers need to know\nBittensor has implemented a significant change in the way subnets distribute rewards with the introduction of Runtime 475 on October 7,2026.Owners can now choose between the existing Yuma Consensus and a new Null "
+   ]
+  },
+  {
+   "url": "https://www.tradingview.com/news/coinmarketcal:dc51a2712094b:0-bittensor-etao-activates-subnet-emission-split-controls-20-oct-2026/",
+   "title": "Bittensor: eTAO activates subnet emission split controls - 20 Oct 2026 - TradingView News",
+   "published_date": "2026-10-20",
+   "highlights": [
+    "Bittensor:eTAO activates subnet emission split controls-20 Oct 2026\nLess than 1 min read\nBittensor activates eTAO on 20 Oct 2026,letting subnet owners set how alpha emissions are split among owners,validators and miners within protocol limits.Existing subnets keep their current split until their own"
+   ]
+  },
+  {
+   "url": "https://example.com/nodate",
+   "title": "No date",
+   "published_date": null,
+   "highlights": [
+    "x"
+   ]
+  }
+ ],
+ "cost_usd": 0.01,
+ "usage_count": 20,
+ "service": "Search API",
+ "currency": "USD"
+}
