@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Desearch: bittensor</title>
+    <link>https://desearch.ai</link>
+    <description>The newest dated pages for bittensor, via the Desearch API</description>
+    <lastBuildDate>Fri, 23 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Bittensor overview</title>
+      <link>https://example.org/bittensor/overview</link>
+      <guid isPermaLink="true">https://example.org/bittensor/overview</guid>
+      <pubDate>Thu, 22 Oct 2026 00:00:00 +0000</pubDate>
+      <description>An overview of Bittensor, its subnets, and the roles of network participants.</description>
+    </item>
+    <item>
+      <title>Published via Ecency</title>
+      <link>https://ecency.com/@cryptowebpicks/bittensor-tao-2-500-slots</link>
+      <guid isPermaLink="true">https://ecency.com/@cryptowebpicks/bittensor-tao-2-500-slots</guid>
+      <pubDate>Wed, 21 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Bittensor(tao):2,500 slots per subnet instead of 256,and what tao stakers need to knowBittensor has implemented a significant change in the way subnets distribute rewards with the introduction of Runtime 475 on October 7,2026.Owners can now choose between the existing Yuma Consensus and a new Null </description>
+    </item>
+    <item>
+      <title>Bittensor: eTAO activates subnet emission split controls - 20 Oct 2026 - TradingView News</title>
+      <link>https://www.tradingview.com/news/coinmarketcal:dc51a2712094b:0-bittensor-etao-activates-subnet-emission-split-controls-20-oct-2026</link>
+      <guid isPermaLink="true">https://www.tradingview.com/news/coinmarketcal:dc51a2712094b:0-bittensor-etao-activates-subnet-emission-split-controls-20-oct-2026</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Bittensor:eTAO activates subnet emission split controls-20 Oct 2026Less than 1 min readBittensor activates eTAO on 20 Oct 2026,letting subnet owners set how alpha emissions are split among owners,validators and miners within protocol limits.Existing subnets keep their current split until their own</description>
+    </item>
+    <item>
+      <title>Bittensor Gained 4.52% in Last Month and is Predicted to Drop to $205.27 By Oct 24, 2026 | CoinCodex</title>
+      <link>https://coincodex.com/article/93936/bittensor-prediction-october-20-2026</link>
+      <guid isPermaLink="true">https://coincodex.com/article/93936/bittensor-prediction-october-20-2026</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Bittensor is down-3.29%today against the US DollarTAO/BTC decreased by-2.00%todayBittensor is currently trading 28.78%above our prediction on Oct 24,2026Bittensor gained 4.52%in the last month and is down-39.94%since 1 year agoBittensor price|$264.35| |Bittensor prediction|$205.27(-23.15%)| |</description>
+    </item>
+    <item>
+      <title>Subnet owner | Example documentation</title>
+      <link>https://example.org/subnets/subnet-owner</link>
+      <guid isPermaLink="true">https://example.org/subnets/subnet-owner</guid>
+      <pubDate>Fri, 16 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Running on Bittensor testnet:Once the code base is complete and ready for testing it is possible to deploy on the Bittensor testnet,which emulates a similar environment and conditions to mainnet,in order to refine the code and processes,deploy and support applications and infrastructure,and to start</description>
+    </item>
+    <item>
+      <title>AiCoin News</title>
+      <link>https://www.aicoin.com/en/news-flash/3136878</link>
+      <guid isPermaLink="true">https://www.aicoin.com/en/news-flash/3136878</guid>
+      <pubDate>Fri, 16 Oct 2026 00:00:00 +0000</pubDate>
+      <description>  BTC💲81660.560.8%  ETH💲2417.691.67%  SOL💲104.221.64%  ZEC💲1136.928.5%  USDC💲1.000%  XAU💲4176.720.02% HIGER|10月 16,2026 13:45Bittensor recently underwent a major protocol upgrade,Null Consensus.The subnet participant limit has been expanded from 256 to 2500.Subnets can now choose</description>
+    </item>
+  </channel>
+</rss>
