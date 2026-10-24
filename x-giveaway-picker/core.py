@@ -2,11 +2,15 @@
 
 fetch(path, params) is injected and returns (HTTP status, JSON body, headers).
 """
+import copy
 import csv
 import datetime as dt
 import io
+import math
 import random
 import re
+import threading
+import time
 
 MAX_RETWEETER_PAGES = 25
 CSV_FIELDS = ['user_id', 'username', 'followers', 'account_created_at',
@@ -60,13 +64,20 @@ def draw(entrants, number, seed):
     return random.Random(seed).sample(ordered, min(number, len(ordered)))
 
 
-def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
-    options = validate(post, **rules)  # Validate everything before the first billed request.
-    now = now or dt.datetime.now(dt.timezone.utc)
-    now = now.replace(tzinfo=dt.timezone.utc) if now.tzinfo is None else now.astimezone(dt.timezone.utc)
-    stamp = parse_time(draw_timestamp) if draw_timestamp is not None else now
+def post_id(value):
+    return re.search(r'/status/([0-9]+)', clean_post(value)).group(1)
+
+
+def draw_time(value, now):
+    stamp = parse_time(value) if value is not None else now
     if stamp is None:
         raise ValueError('Invalid draw timestamp.')
+    return stamp
+
+
+def collect(fetch, options, *, now=None):
+    now = now or dt.datetime.now(dt.timezone.utc)
+    now = now.replace(tzinfo=dt.timezone.utc) if now.tzinfo is None else now.astimezone(dt.timezone.utc)
     notices, cost = [], 0.0
 
     def request(path, params):
@@ -84,9 +95,10 @@ def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
 
     posts = request('/twitter/urls', {'urls': options['url']})
     if not posts:
-        return dict(error='post not found or not public', entrants=[], winners=[], notices=[], cost_usd=cost)
+        return dict(error='post not found or not public', source=None, reposters={}, replies=[],
+                    notices=[], cost_usd=cost, collected_at=now.isoformat())
     source = posts[0]
-    post_id, author = str(source['id']), source.get('user') or {}
+    post_id = str(source['id'])
     reposters, replies = {}, []
     if options['must_repost']:
         cursor, seen = None, set()
@@ -113,7 +125,7 @@ def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
             if cursor is None:
                 break
             if page + 1 == MAX_RETWEETER_PAGES:
-                notices.append('first 500 reposters only')
+                notices.append(f'first 25 pages of reposters only ({len(reposters)} collected; more remain)')
                 break
             if cursor in seen:
                 notices.append('reposter collection stopped early: repeated cursor')
@@ -126,6 +138,27 @@ def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
         except Exception:
             notices.append('reply collection stopped early')
         notices.append(f"from the latest ~{len(replies)} replies the API returned (post shows {source.get('reply_count', 0)} replies)")
+    if options['must_repost'] and len(reposters) < source.get('retweet_count', 0):
+        notices.append(f"{len(reposters)} of {source['retweet_count']} reported reposts returned; deleted, protected or uncollected accounts do not appear")
+    return dict(source=source, reposters=reposters, replies=replies,
+                notices=notices, cost_usd=cost, collected_at=now.isoformat())
+
+
+def decide(collection, options, *, now=None, draw_timestamp=None, cached=False):
+    now = now or parse_time(collection['collected_at'])
+    now = now.replace(tzinfo=dt.timezone.utc) if now.tzinfo is None else now.astimezone(dt.timezone.utc)
+    stamp = draw_time(draw_timestamp, now)
+    if collection.get('error'):
+        return dict(error=collection['error'], entrants=[], winners=[],
+                    notices=list(collection['notices']), cost_usd=collection['cost_usd'])
+    source = collection['source']
+    post_id, author = str(source['id']), source.get('user') or {}
+    reposters, replies = collection['reposters'], collection['replies']
+    notices = list(collection['notices'])
+    cost = 0.0 if cached else collection['cost_usd']
+    if cached:
+        collected = parse_time(collection['collected_at']).isoformat().replace('+00:00', 'Z')
+        notices.append(f'reused the list collected at {collected}; no new API calls')
     users = dict(reposters)
     reply_tags = {}
     for reply in replies:
@@ -164,6 +197,69 @@ def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
     return dict(entrants=rows, winners=draw([r for r in rows if r['eligible']], options['winners'], seed),
                 seed=seed, notices=notices, coverage=coverage, cost_usd=cost,
                 returned_reposters=len(reposters), reported_reposts=source.get('retweet_count', 0))
+
+
+def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
+    options = validate(post, **rules)
+    now = now or dt.datetime.now(dt.timezone.utc)
+    draw_time(draw_timestamp, now)
+    return decide(collect(fetch, options, now=now), options, now=now,
+                  draw_timestamp=draw_timestamp)
+
+
+class RateLimiter:
+    def __init__(self, clock=time.time):
+        self.clock = clock
+        self.lock = threading.Lock()
+        self.runs = {}
+
+    def allow(self, ip):
+        with self.lock:
+            now = self.clock()
+            self.runs = {key: [t for t in times if now - t < 86400]
+                         for key, times in self.runs.items() if times and now - times[-1] < 86400}
+            times = self.runs.get(ip, [])
+            recent = [t for t in times if now - t < 600]
+            waits = []
+            if len(recent) >= 2:
+                waits.append(recent[-2] + 600 - now)
+            if len(times) >= 5:
+                waits.append(times[-5] + 86400 - now)
+            if waits:
+                return False, max(1, math.ceil(max(waits)))
+            self.runs.setdefault(ip, []).append(now)
+            return True, 0
+
+
+class CollectionCache:
+    def __init__(self, ttl=3600, clock=time.time, max_entries=100):
+        if ttl <= 0 or max_entries < 1:
+            raise ValueError('Cache bounds must be positive.')
+        self.ttl, self.clock, self.max_entries = ttl, clock, max_entries
+        self.lock = threading.Lock()
+        self.entries = {}
+
+    @staticmethod
+    def key(options):
+        return (post_id(options['url']), options['must_repost'], options['must_reply'], options['count'])
+
+    def get(self, key):
+        with self.lock:
+            now = self.clock()
+            self.entries = {k: v for k, v in self.entries.items() if now - v[0] < self.ttl}
+            entry = self.entries.get(key)
+            return copy.deepcopy(entry[1]) if entry else None
+
+    def put(self, key, collection):
+        if collection.get('error'):
+            return
+        with self.lock:
+            now = self.clock()
+            self.entries = {k: v for k, v in self.entries.items() if now - v[0] < self.ttl}
+            self.entries.pop(key, None)
+            if len(self.entries) >= self.max_entries:
+                del self.entries[min(self.entries, key=lambda k: self.entries[k][0])]
+            self.entries[key] = (now, copy.deepcopy(collection))
 
 
 def to_csv(rows):

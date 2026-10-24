@@ -68,7 +68,7 @@ def test_page_cap():
     result = pick(fake)
     assert len(fake.calls) == 26
     assert len([p for p, _ in fake.calls if p.endswith('retweeters')]) == 25
-    assert 'first 500 reposters only' in result['notices']
+    assert 'first 25 pages of reposters only (1 collected; more remain)' in result['notices']
     assert len(result['entrants']) == 1
 
 
@@ -159,3 +159,146 @@ def test_coverage_csv_and_cost():
     assert result['returned_reposters'] == 1 and result['reported_reposts'] == 100
     assert result['cost_usd'] == pytest.approx(0.002)
     assert core.to_csv(result['entrants']).splitlines()[0] == 'user_id,username,followers,account_created_at,reposted,replied,tags,eligible,reason'
+
+
+class Clock:
+    def __init__(self):
+        self.value = NOW.timestamp()
+
+    def __call__(self):
+        return self.value
+
+
+def test_rate_windows_and_independent_ips():
+    clock = Clock()
+    limiter = core.RateLimiter(clock)
+    assert limiter.allow('a') == (True, 0)
+    assert limiter.allow('a') == (True, 0)
+    assert limiter.allow('a') == (False, 600)
+    assert limiter.allow('b') == (True, 0)
+    clock.value += 599
+    assert limiter.allow('a') == (False, 1)
+    clock.value += 1
+    assert limiter.allow('a') == (True, 0)
+    assert len(limiter.runs['a']) == 3
+    clock.value += 600
+    assert limiter.allow('a')[0]
+    clock.value += 600
+    assert limiter.allow('a')[0]
+    assert limiter.allow('a') == (False, 84600)
+    clock.value = NOW.timestamp() + 86400
+    assert limiter.allow('a') == (True, 0)
+    assert 'b' not in limiter.runs
+
+
+def cached_run(cache, fake, clock, post='9000', stamp='2026-10-23T00:00:00Z', **rules):
+    options = core.validate(post, **rules)
+    key = cache.key(options)
+    collection = cache.get(key)
+    hit = collection is not None
+    now = dt.datetime.fromtimestamp(clock(), dt.timezone.utc)
+    if not hit:
+        collection = core.collect(fake, options, now=now)
+        cache.put(key, collection)
+    return core.decide(collection, options, now=now, draw_timestamp=stamp, cached=hit)
+
+
+def test_cache_expiry_and_redraw_rules():
+    clock = Clock()
+    cache = core.CollectionCache(clock=clock)
+    fake = Fake(pages=[{'users': [user(1), user(2)], 'next_cursor': None}] * 2)
+    first = cached_run(cache, fake, clock)
+    clock.value += 3599
+    again = cached_run(cache, fake, clock)
+    assert len(fake.calls) == 2
+    assert again['cost_usd'] == 0.0
+    assert again['seed'] == first['seed'] and again['winners'] == first['winners']
+    assert 'no new API calls' in again['notices'][-1]
+    other = cached_run(cache, fake, clock, stamp='2026-10-23T00:00:01Z', min_followers=101)
+    assert other['seed'] != first['seed'] and other['winners'] == []
+    assert len(fake.calls) == 2
+    clock.value += 1
+    assert cached_run(cache, fake, clock)['cost_usd'] > 0
+    assert len(fake.calls) == 4
+
+
+def test_cache_keys_errors_eviction_and_copy():
+    clock = Clock()
+    cache = core.CollectionCache(clock=clock, max_entries=2)
+    keys = [cache.key(core.validate(post, **rules)) for post, rules in
+            [('9000', {}), ('9001', {}), ('9000', {'must_reply': True}), ('9000', {'count': 20})]]
+    assert len(set(keys)) == 4
+    collection = core.collect(Fake(), core.validate('9000'), now=NOW)
+    cache.put(keys[0], collection)
+    copy = cache.get(keys[0]); copy['reposters'].clear()
+    assert cache.get(keys[0])['reposters']
+    clock.value += 1
+    cache.put(keys[1], collection)
+    clock.value += 1
+    cache.put(keys[2], collection)
+    assert cache.get(keys[0]) is None
+    assert cache.get(keys[1]) is not None
+    fake = Fake(posts=[])
+    for _ in range(2):
+        assert cached_run(cache, fake, clock, post='1999999999999999999')['error']
+    assert len(fake.calls) == 2
+
+
+def test_three_pages_and_missing_ids():
+    fake = Fake(pages=[{'users': [user(1), {'username': 'entrant_missing'}], 'next_cursor': 'a'},
+                       {'users': [user(1), user(2)], 'next_cursor': 'b'},
+                       {'users': [user(3)], 'next_cursor': None}])
+    result = pick(fake)
+    assert [params.get('cursor') for path, params in fake.calls[1:]] == [None, 'a', 'b']
+    assert [r['user_id'] for r in result['entrants']] == ['1', '2', '3']
+    assert '3 of 100 reported reposts returned; deleted, protected or uncollected accounts do not appear' in result['notices']
+
+
+@pytest.mark.parametrize('cursor', [None, 'remaining'])
+def test_exact_page_boundary(cursor):
+    pages = [{'users': [user(1)], 'next_cursor': str(i)} for i in range(24)]
+    pages.append({'users': [user(2)], 'next_cursor': cursor})
+    fake = Fake(pages=pages)
+    result = pick(fake)
+    assert len(fake.calls) == 26
+    assert ('first 25 pages of reposters only (2 collected; more remain)' in result['notices']) == (cursor is not None)
+
+
+def test_fake_id_guard_and_resolve_http_failure():
+    fake = Fake(posts=[])
+    result = core.pick(fake, '1999999999999999999', must_reply=True, now=NOW)
+    assert [path for path, _ in fake.calls] == ['/twitter/urls']
+    assert result['cost_usd'] == pytest.approx(0.001)
+    calls = []
+
+    def failure(path, params):
+        calls.append(path)
+        return 503, {}, {'x-desearch-cost-usd': '0.003'}
+
+    with pytest.raises(RuntimeError, match='503'):
+        core.pick(failure, '1999999999999999999')
+    assert calls == ['/twitter/urls']
+
+
+@pytest.mark.parametrize('post,rules', [('9001', {}), ('9000', {'must_reply': True}),
+                                      ('9000', {'must_repost': False, 'must_reply': True}),
+                                      ('9000', {'count': 20})])
+def test_separate_cache_collections(post, rules):
+    clock = Clock()
+    cache = core.CollectionCache(clock=clock)
+    cached_run(cache, Fake(), clock)
+    fake = Fake()
+    result = cached_run(cache, fake, clock, post=post, **rules)
+    assert fake.calls and result['cost_usd'] > 0
+    calls = len(fake.calls)
+    assert cached_run(cache, fake, clock, post=post, **rules)['cost_usd'] == 0
+    assert len(fake.calls) == calls
+
+
+def test_limiter_concurrent_calls():
+    from concurrent.futures import ThreadPoolExecutor
+    limiter = core.RateLimiter(Clock())
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(limiter.allow, ['same_ip'] * 20))
+    assert sum(allowed for allowed, _ in results) == 2
+    assert len(limiter.runs['same_ip']) == 2

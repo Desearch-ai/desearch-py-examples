@@ -1,17 +1,24 @@
 """X Giveaway Picker: standard-library HTTP server, CLI and Desearch client."""
 import argparse
+import datetime as dt
 import html
+import importlib.util
 import json
+import math
 import os
 import pathlib
 import sys
 import threading
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-import core
+
+spec = importlib.util.spec_from_file_location("giveaway_core", pathlib.Path(__file__).with_name("core.py"))
+core = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(core)
 
 BASE = 'https://api.desearch.ai'
 
@@ -62,6 +69,7 @@ def render(result=None, error=None):
 <p><label>Minimum account age in days <input type="number" name="min_account_age_days" min="0"></label>
 <label>Minimum followers <input type="number" name="min_followers" min="0"></label></p>
 <label>Reply count <input type="number" name="count" value="50" min="1" max="100"></label>
+<p><label>Draw timestamp (ISO UTC, optional, to repeat a draw) <input name="draw_timestamp"></label></p>
 <button>Collect and draw</button></form>'''
     if error:
         page += '<p>' + escape(error) + '</p>'
@@ -77,16 +85,21 @@ def render(result=None, error=None):
     return page
 
 
-def make_handler(client):
+def make_handler(client, *, limiter=None, cache=None, clock=None):
+    clock = clock or time.time
+    limiter = limiter if limiter is not None else core.RateLimiter(clock=clock)
+    cache = cache if cache is not None else core.CollectionCache(clock=clock)
     exports = {}
     lock = threading.Lock()
 
     class Handler(BaseHTTPRequestHandler):
-        def send(self, status, body, content_type='text/html; charset=utf-8'):
+        def send(self, status, body, content_type='text/html; charset=utf-8', retry_after=None):
             payload = body.encode()
             self.send_response(status)
             self.send_header('Content-Type', content_type)
             self.send_header('Content-Length', str(len(payload)))
+            if retry_after is not None:
+                self.send_header('Retry-After', str(retry_after))
             self.end_headers()
             self.wfile.write(payload)
 
@@ -111,7 +124,26 @@ def make_handler(client):
                 form = {key: values[0] for key, values in urllib.parse.parse_qs(self.rfile.read(length).decode()).items()}
                 form['must_repost'] = form.get('must_repost') == 'on'
                 form['must_reply'] = form.get('must_reply') == 'on'
-                result = core.pick(client.fetch, **form)
+                allowed_fields = {'post', 'winners', 'min_tags', 'min_account_age_days',
+                                  'min_followers', 'must_repost', 'must_reply', 'count', 'draw_timestamp'}
+                if 'post' not in form or set(form) - allowed_fields:
+                    raise ValueError('Invalid form fields')
+                stamp = form.pop('draw_timestamp', None)
+                options = core.validate(**form)
+                now = dt.datetime.fromtimestamp(clock(), dt.timezone.utc)
+                core.draw_time(stamp, now)
+                key = cache.key(options)
+                collection = cache.get(key)
+                cached = collection is not None
+                if not cached:
+                    # Use the socket peer address; X-Forwarded-For is not trusted.
+                    allowed, retry = limiter.allow(self.client_address[0])
+                    if not allowed:
+                        return self.send(429, f'Rate limit: 2 runs per 10 minutes and 5 per day per IP. Try again in {math.ceil(retry / 60)} minutes.',
+                                         'text/plain; charset=utf-8', retry_after=retry)
+                    collection = core.collect(client.fetch, options, now=now)
+                    cache.put(key, collection)
+                result = core.decide(collection, options, now=now, draw_timestamp=stamp, cached=cached)
                 result['token'] = uuid.uuid4().hex
                 with lock:
                     if len(exports) >= 100:
@@ -128,6 +160,13 @@ def make_handler(client):
     return Handler
 
 
+def demo_fetch(path, params):
+    filenames = {'/twitter/urls': 'post.json', '/twitter/post/retweeters': 'retweeters.json',
+                 '/twitter/replies/post': 'replies.json'}
+    body = json.loads((pathlib.Path(__file__).parent / 'samples' / filenames[path]).read_text())
+    return 200, body, {}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=8000)
@@ -137,6 +176,7 @@ def main():
         parser.add_argument('--' + name, default=default)
     parser.add_argument('--draw-timestamp', help='ISO UTC timestamp for reproducible draws')
     parser.add_argument('--csv')
+    parser.add_argument('--demo-fixtures', action='store_true', help='Use offline sample responses with --cli')
     args = parser.parse_args()
     try:
         rules = dict(winners=args.winners, min_tags=args.min_tags, min_account_age_days=args.min_account_age_days,
@@ -144,11 +184,15 @@ def main():
                      must_repost=args.mode in ('repost', 'both'), must_reply=args.mode in ('reply', 'both'))
         if args.cli is not None:
             core.validate(args.cli, **rules)
-            result = core.pick(Client(api_key()).fetch, args.cli, draw_timestamp=args.draw_timestamp, **rules)
+            core.draw_time(args.draw_timestamp, dt.datetime.now(dt.timezone.utc))
+            fetch = demo_fetch if args.demo_fixtures else Client(api_key()).fetch
+            result = core.pick(fetch, args.cli, draw_timestamp=args.draw_timestamp, **rules)
             print(json.dumps(result, indent=2))
             if args.csv:
                 pathlib.Path(args.csv).write_text(core.to_csv(result['entrants']))
             return 1 if result.get('error') else 0
+        if args.demo_fixtures:
+            raise ValueError('--demo-fixtures requires --cli')
         server = ThreadingHTTPServer(('127.0.0.1', args.port), make_handler(Client(api_key())))
         print(f'http://127.0.0.1:{args.port}', file=sys.stderr)
         server.serve_forever()
