@@ -101,7 +101,8 @@ def test_empty_or_no_new_ids_stops_and_reports_shortfall(stop_users, reported):
     result = core.collect(fake, core.validate('9000'), now=NOW)
     assert len(fake.calls) == 3
     assert set(result['reposters']) == {'1'}
-    assert ('first 25 pages of reposters only (1 collected; more remain)' in result['notices']) == (reported > 1)
+    assert 'first 25 pages of reposters only (1 collected; more remain)' not in result['notices']
+    assert ('1 of 2 reposters collected; more may remain' in result['notices']) == (reported > 1)
     assert ('1 of 2 reported reposts returned; deleted, protected or uncollected accounts do not appear' in result['notices']) == (reported > 1)
 
 
@@ -110,6 +111,19 @@ def test_null_cursor():
     pick(fake)
     assert len(fake.calls) == 2
     assert fake.calls[0] == ('/twitter/urls', {'urls': 'https://x.com/i/status/9000'})
+
+
+@pytest.mark.parametrize('page_count', [1, 25])
+def test_reposter_coverage_notices_are_mutually_exclusive(page_count):
+    fake = Fake(pages=[{'users': [user(i + 1)], 'next_cursor': str(i)}
+                       for i in range(page_count - 1)] +
+                      [{'users': [user(page_count)], 'next_cursor': None}])
+    result = core.collect(fake, core.validate('9000'), now=NOW)
+    cap_notice = f'first 25 pages of reposters only ({page_count} collected; more remain)'
+    shortfall_notice = f'{page_count} of 100 reposters collected; more may remain'
+    assert (cap_notice in result['notices']) == (page_count == 25)
+    assert (shortfall_notice in result['notices']) == (page_count < 25)
+    assert f'{page_count} of 100 reported reposts returned; deleted, protected or uncollected accounts do not appear' in result['notices']
 
 
 def test_repeat_and_dedupe():

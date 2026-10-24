@@ -102,7 +102,7 @@ Actual output from the offline command in Run:
   ],
   "seed": "900001234567890:2026-10-23T00:00:00Z",
   "notices": [
-    "first 25 pages of reposters only (1 collected; more remain)",
+    "1 of 2 reposters collected; more may remain",
     "from the latest ~1 replies the API returned (post shows 1 replies)",
     "1 of 2 reported reposts returned; deleted, protected or uncollected accounts do not appear"
   ],
@@ -123,7 +123,7 @@ The seed is the post id plus `:` plus the ISO UTC draw timestamp. Python `random
 
 Post resolution uses `/twitter/urls` first. An empty result stops with "post not found or not public" and no reposter or reply calls. A failed resolution raises an error.
 
-Reposters follow `next_cursor` until null, a repeated cursor, an empty users page, a page with no new user ids, or the 25-page cap. The API does not document a page size. When fewer unique reposters are collected than the post reports, or the 25-page cap is reached and the last page still adds new ids, the app shows "first 25 pages of reposters only (N collected; more remain)", where N is the number of unique reposters collected. Each failed page is retried once, then collection stops and the draw uses accounts collected so far with a notice. Users without ids are skipped and duplicate ids are merged.
+Reposters follow `next_cursor` until null, a repeated cursor, an empty users page, a page with no new user ids, or the 25-page cap. The API does not document a page size. When the 25-page cap is reached and the last page still adds new ids, the app shows "first 25 pages of reposters only (N collected; more remain)". Otherwise, when fewer unique reposters are collected than the post reports, it shows "N of R reposters collected; more may remain". N is the number of unique reposters collected and R is the reported retweet count. These two notices are mutually exclusive. Each failed page is retried once, then collection stops and the draw uses accounts collected so far with a notice. Users without ids are skipped and duplicate ids are merged.
 
 Replies use one call only. A notice reports "from the latest ~N replies" alongside the reported reply count. The coverage line compares returned repost and reply counts with reported counts. When fewer reposters return than reported, an additional notice explains that deleted, protected, or uncollected accounts do not appear.
 

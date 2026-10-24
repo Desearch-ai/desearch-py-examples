@@ -133,8 +133,10 @@ def collect(fetch, options, *, now=None):
                 notices.append('reposter collection stopped early: repeated cursor')
                 break
             seen.add(cursor)
-        if len(reposters) < source.get('retweet_count', 0) or cap_with_new_ids:
+        if cap_with_new_ids:
             notices.append(f'first 25 pages of reposters only ({len(reposters)} collected; more remain)')
+        elif len(reposters) < source.get('retweet_count', 0):
+            notices.append(f"{len(reposters)} of {source['retweet_count']} reposters collected; more may remain")
     if options['must_reply']:
         try:
             body = request('/twitter/replies/post', {'post_id': post_id, 'count': options['count']})
