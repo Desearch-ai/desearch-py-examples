@@ -102,6 +102,7 @@ def collect(fetch, options, *, now=None):
     reposters, replies = {}, []
     if options['must_repost']:
         cursor, seen = None, set()
+        cap_with_new_ids = False
         for page in range(MAX_RETWEETER_PAGES):
             params = {'id': post_id}
             if cursor is not None:
@@ -118,19 +119,22 @@ def collect(fetch, options, *, now=None):
             if body is None:
                 notices.append('reposter collection stopped early after a failed page and retry')
                 break
+            previous_count = len(reposters)
             for user in body['users']:
                 if user.get('id') is not None:
                     reposters.setdefault(str(user['id']), user)
-            cursor = body.get('next_cursor')
-            if cursor is None:
+            if len(reposters) == previous_count:
                 break
-            if page + 1 == MAX_RETWEETER_PAGES:
-                notices.append(f'first 25 pages of reposters only ({len(reposters)} collected; more remain)')
+            cap_with_new_ids = page + 1 == MAX_RETWEETER_PAGES
+            cursor = body.get('next_cursor')
+            if cursor is None or cap_with_new_ids:
                 break
             if cursor in seen:
                 notices.append('reposter collection stopped early: repeated cursor')
                 break
             seen.add(cursor)
+        if len(reposters) < source.get('retweet_count', 0) or cap_with_new_ids:
+            notices.append(f'first 25 pages of reposters only ({len(reposters)} collected; more remain)')
     if options['must_reply']:
         try:
             body = request('/twitter/replies/post', {'post_id': post_id, 'count': options['count']})

@@ -64,12 +64,45 @@ def test_not_found():
 
 
 def test_page_cap():
-    fake = Fake(pages=[{'users': [user(1)], 'next_cursor': str(i)} for i in range(25)])
+    fake = Fake(pages=[{'users': [user(i + 1)], 'next_cursor': str(i)} for i in range(25)],
+                posts=[dict(POST, retweet_count=25)])
     result = pick(fake)
     assert len(fake.calls) == 26
     assert len([p for p, _ in fake.calls if p.endswith('retweeters')]) == 25
-    assert 'first 25 pages of reposters only (1 collected; more remain)' in result['notices']
-    assert len(result['entrants']) == 1
+    assert 'first 25 pages of reposters only (25 collected; more remain)' in result['notices']
+    assert len(result['entrants']) == 25
+
+
+@pytest.mark.parametrize('sizes', [[2, 1], [20] * 9 + [18, 18]])
+def test_replayed_pages_stop_with_fresh_cursors(sizes):
+    unique_pages = []
+    next_id = 1
+    for size in sizes:
+        unique_pages.append([user(uid) for uid in range(next_id, next_id + size)])
+        next_id += size
+    replay = unique_pages + unique_pages + [[], [], []]
+    pages = [{'users': users, 'next_cursor': str(i)} for i, users in enumerate(replay)]
+    fake = Fake(pages=pages, posts=[dict(POST, retweet_count=next_id - 1)])
+    result = core.collect(fake, core.validate('9000'), now=NOW)
+    retweeter_calls = [params for path, params in fake.calls if path.endswith('retweeters')]
+    assert len(retweeter_calls) == len(sizes) + 1
+    assert len(result['reposters']) == next_id - 1
+    assert not any('more remain' in notice for notice in result['notices'])
+    assert result['cost_usd'] == pytest.approx((len(sizes) + 2) * 0.001)
+
+
+@pytest.mark.parametrize('stop_users', [[], [user(1)]])
+@pytest.mark.parametrize('reported', [0, 1, 2])
+def test_empty_or_no_new_ids_stops_and_reports_shortfall(stop_users, reported):
+    fake = Fake(pages=[{'users': [user(1)], 'next_cursor': 'a'},
+                       {'users': stop_users, 'next_cursor': 'b'},
+                       {'users': [user(2)], 'next_cursor': 'c'}],
+                posts=[dict(POST, retweet_count=reported)])
+    result = core.collect(fake, core.validate('9000'), now=NOW)
+    assert len(fake.calls) == 3
+    assert set(result['reposters']) == {'1'}
+    assert ('first 25 pages of reposters only (1 collected; more remain)' in result['notices']) == (reported > 1)
+    assert ('1 of 2 reported reposts returned; deleted, protected or uncollected accounts do not appear' in result['notices']) == (reported > 1)
 
 
 def test_null_cursor():
@@ -256,12 +289,12 @@ def test_three_pages_and_missing_ids():
 
 @pytest.mark.parametrize('cursor', [None, 'remaining'])
 def test_exact_page_boundary(cursor):
-    pages = [{'users': [user(1)], 'next_cursor': str(i)} for i in range(24)]
-    pages.append({'users': [user(2)], 'next_cursor': cursor})
-    fake = Fake(pages=pages)
+    pages = [{'users': [user(i + 1)], 'next_cursor': str(i)} for i in range(24)]
+    pages.append({'users': [user(25)], 'next_cursor': cursor})
+    fake = Fake(pages=pages, posts=[dict(POST, retweet_count=25)])
     result = pick(fake)
     assert len(fake.calls) == 26
-    assert ('first 25 pages of reposters only (2 collected; more remain)' in result['notices']) == (cursor is not None)
+    assert 'first 25 pages of reposters only (25 collected; more remain)' in result['notices']
 
 
 def test_fake_id_guard_and_resolve_http_failure():
