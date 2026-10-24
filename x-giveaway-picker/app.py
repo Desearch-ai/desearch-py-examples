@@ -39,7 +39,8 @@ class Client:
 
     def fetch(self, path, params):
         request = urllib.request.Request(BASE + path + '?' + urllib.parse.urlencode(params),
-                                         headers={'Authorization': self.key})
+                                         headers={'Authorization': self.key,
+                                                  'User-Agent': 'desearch-x-giveaway-picker/1.0'})
         try:
             response = urllib.request.urlopen(request, timeout=60)
         except urllib.error.HTTPError as error:
@@ -53,7 +54,13 @@ class Client:
                             self.total += float(value)
                     except ValueError:
                         pass
-            return response.code, json.loads(response.read().decode()), headers
+            try:
+                body = json.loads(response.read().decode())
+            except (json.JSONDecodeError, UnicodeDecodeError):
+                if response.code == 200:
+                    raise RuntimeError('Desearch returned a non-JSON response (HTTP 200)') from None
+                body = None
+            return response.code, body, headers
 
 
 def render(result=None, error=None):

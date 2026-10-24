@@ -19,6 +19,8 @@ python3 -m pip install -r x-giveaway-picker/requirements.txt
 
 For API-backed runs, configure `DESEARCH_API_KEY` or `DESEARCH_API_KEY_FILE` in your environment. The latter names an explicitly configured credential file. No default credential files are read. Offline fixture runs require neither variable.
 
+The client sends its own User-Agent header; requests with the default Python urllib User-Agent are refused with HTTP 403.
+
 ## Run
 
 From the repository root:

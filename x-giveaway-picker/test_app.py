@@ -10,6 +10,7 @@ import socket
 import subprocess
 import sys
 import threading
+import urllib.error
 import urllib.parse
 from http.server import ThreadingHTTPServer
 
@@ -18,6 +19,52 @@ import pytest
 spec = importlib.util.spec_from_file_location('giveaway_app', pathlib.Path(__file__).with_name('app.py'))
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
+
+
+def test_client_request_headers(monkeypatch):
+    def urlopen(request, timeout):
+        assert request.get_header('User-agent') == 'desearch-x-giveaway-picker/1.0'
+        assert request.get_header('Authorization') == 'test-secret-key'
+        response = io.BytesIO(b'[]')
+        response.code = 200
+        response.headers = {'X-Test': 'preserved'}
+        return response
+
+    monkeypatch.setattr(app.urllib.request, 'urlopen', urlopen)
+    assert app.Client('test-secret-key').fetch('/twitter/urls', {'urls': '9000'}) == (
+        200, [], {'X-Test': 'preserved'})
+
+
+def test_client_plain_text_403_cli(monkeypatch, capsys):
+    key = 'test-secret-key'
+
+    def urlopen(request, timeout):
+        raise urllib.error.HTTPError(request.full_url, 403, 'Forbidden',
+                                     {'X-Test': 'preserved'}, io.BytesIO(b'error code: 1010'))
+
+    monkeypatch.setattr(app.urllib.request, 'urlopen', urlopen)
+    assert app.Client(key).fetch('/twitter/urls', {}) == (403, None, {'X-Test': 'preserved'})
+    monkeypatch.setenv('DESEARCH_API_KEY', key)
+    monkeypatch.setattr(sys, 'argv', ['app.py', '--cli', '9000'])
+    with pytest.raises(SystemExit) as error:
+        app.main()
+    assert error.value.code == 1
+    output = capsys.readouterr()
+    assert output.err == 'Desearch returned HTTP 403\n'
+    assert key not in output.out + output.err
+
+
+@pytest.mark.parametrize('body', [b'not JSON', b'\xff'])
+def test_client_non_json_200(monkeypatch, body):
+    def urlopen(request, timeout):
+        response = io.BytesIO(body)
+        response.code = 200
+        response.headers = {}
+        return response
+
+    monkeypatch.setattr(app.urllib.request, 'urlopen', urlopen)
+    with pytest.raises(RuntimeError, match=r'^Desearch returned a non-JSON response \(HTTP 200\)$'):
+        app.Client('test-secret-key').fetch('/twitter/urls', {})
 
 
 @pytest.fixture(autouse=True)
