@@ -10,9 +10,9 @@ Use Python 3.10 or newer. No packages are required. Set `DESEARCH_API_KEY` in yo
 
 ```sh
 cd topic-to-rss
-python topic_rss.py 'bittensor' -o feed.xml
-python topic_rss.py 'bittensor' --days 7 --count 20
-python topic_rss.py 'bittensor' -o feed.xml --no-cache
+python3 topic_rss.py 'bittensor' -o feed.xml
+python3 topic_rss.py 'bittensor' --days 7 --count 20
+python3 topic_rss.py 'bittensor' -o feed.xml --no-cache
 ```
 
 Without `-o`, XML goes to stdout. Cost and latency go to stderr. Example output:
@@ -27,7 +27,7 @@ cost_usd=0 latency_s=0.001 cache_hit=True
 ## Local server
 
 ```sh
-python topic_rss.py --serve --port 8000
+python3 topic_rss.py --serve --port 8000
 curl 'http://127.0.0.1:8000/feed?topic=bittensor'
 ```
 
@@ -43,6 +43,7 @@ Each uncached refresh at count 20 cost $0.01 in our test on 2026-10-23. Costs ma
 
 ## Limits
 
+- Translation proxy links are unwrapped when possible and dropped when their original URL cannot be recovered.
 - Results are the newest dated pages the search returns, not every new article.
 - A made-up topic still returns 20 loosely related results and is billed.
 - Syndicated copies of one story may appear under different URLs.
@@ -54,7 +55,7 @@ Each uncached refresh at count 20 cost $0.01 in our test on 2026-10-23. Costs ma
 From `topic-to-rss`:
 
 ```sh
-python -m unittest discover -s tests
+python3 -m unittest discover -s tests
 ```
 
 Tests mock the upstream API and exercise HTTP handlers with in-memory requests, without network access.

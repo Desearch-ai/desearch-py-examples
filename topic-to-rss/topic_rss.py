@@ -84,6 +84,24 @@ def fetch_results(topic, api_key, days=7, count=20, today=None,
     return results, meta
 
 
+def unwrap_translate_url(url):
+    parts = urllib.parse.urlsplit(url)
+    host = parts.hostname or ""
+    if re.fullmatch(r"(?:www\.)?translate\.google\.[a-z.]+", host) and parts.path in ("/translate", "/website"):
+        target = urllib.parse.parse_qs(parts.query).get("u", [""])[0]
+        original = urllib.parse.urlsplit(target)
+        return target if original.scheme in ("http", "https") and original.netloc else None
+    if host.endswith(".translate.goog"):
+        host = re.sub(r"--|-", lambda match: "-" if match[0] == "--" else ".",
+                      host[:-len(".translate.goog")])
+        if not host or "." not in host:
+            return None
+        query = urllib.parse.urlencode([(k, v) for k, v in urllib.parse.parse_qsl(
+            parts.query, keep_blank_values=True) if not k.startswith("_x_tr_")])
+        return urllib.parse.urlunsplit((parts.scheme, host, parts.path, query, ""))
+    return url
+
+
 def normalized_url(url):
     parts = urllib.parse.urlsplit(url)
     host = parts.netloc.lower()
@@ -99,7 +117,10 @@ def normalize(results):
             published = date.fromisoformat(result["published_date"])
         except (ValueError, TypeError, KeyError):
             continue
-        url = normalized_url(result.get("url", ""))
+        url = unwrap_translate_url(result.get("url", ""))
+        if url is None:
+            continue
+        url = normalized_url(url)
         title = re.split(r"\s+[|]\s*|\s+-\s+", result.get("title", "").strip().lower())[0].strip()
         if not url or url in urls or title in titles:
             continue

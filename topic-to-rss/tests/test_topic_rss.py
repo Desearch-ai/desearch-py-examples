@@ -52,6 +52,46 @@ class Tests(unittest.TestCase):
         self.assertEqual(items[1]['url'], 'https://example.com/a?keep=1')
         self.assertEqual(len(app.normalize(FIXTURE['results'])), 6)
 
+    def test_unwrap_translate_query(self):
+        for host in ('translate.google.com', 'www.translate.google.org', 'translate.google.co.uk'):
+            for path in ('/translate', '/website'):
+                with self.subTest(host=host, path=path):
+                    self.assertEqual(app.unwrap_translate_url(
+                        f'https://{host}{path}?hl=en&u=https://example.org/a'),
+                        'https://example.org/a')
+        for query in ('', '?u=', '?u=relative', '?u=ftp://example.org/a'):
+            with self.subTest(query=query):
+                self.assertIsNone(app.unwrap_translate_url(
+                    'https://translate.google.com/translate' + query))
+
+    def test_unwrap_translate_host(self):
+        self.assertEqual(app.unwrap_translate_url(
+            'https://my--site-example-org.translate.goog/a?keep=1&_x_tr_sl=auto&empty=&_x_tr_tl=en&keep=2#part'),
+            'https://my-site.example.org/a?keep=1&empty=&keep=2')
+        self.assertEqual(app.unwrap_translate_url(
+            'https://www-example-org.translate.goog/a'), 'https://www.example.org/a')
+        self.assertIsNone(app.unwrap_translate_url('https://example.translate.goog/a'))
+
+    def test_normalize_drops_missing_translate_target(self):
+        self.assertEqual(app.normalize([dict(
+            url='https://translate.google.com/translate?hl=en',
+            title='A page', published_date='2026-10-23')]), [])
+
+    def test_normalize_deduplicates_translate_copy(self):
+        for translated in ('https://translate.google.com/translate?u=https://example.org/a/',
+                           'https://example-org.translate.goog/a/?_x_tr_sl=auto'):
+            with self.subTest(translated=translated):
+                items = app.normalize([
+                    dict(url=translated, title='First page', published_date='2026-10-20'),
+                    dict(url='https://example.org/a', title='Second page', published_date='2026-10-23')])
+                self.assertEqual(len(items), 1)
+                self.assertEqual(items[0]['url'], 'https://example.org/a')
+                self.assertEqual(items[0]['title'], 'First page')
+
+    def test_unwrap_normal_url(self):
+        url = 'https://example.com/a/?keep=1#part'
+        self.assertEqual(app.unwrap_translate_url(url), url)
+
     def test_rss(self):
         now = datetime(2026, 10, 23, tzinfo=timezone.utc)
         root = ET.fromstring(app.build_rss('bittensor', app.normalize(FIXTURE['results']), now, self_url='https://example.com/feed'))
