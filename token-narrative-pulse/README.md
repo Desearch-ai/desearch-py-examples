@@ -52,21 +52,21 @@ A live run writes these files under `output/`:
 
 ## Sample output
 
-The unchanged [`sample-output.md`](sample-output.md) and [`mentions-2026-10-03.png`](mentions-2026-10-03.png) in this folder come from a 2026-10-03 run of the earlier version, which read Reddit through AI Search.
+The [`sample-output.md`](sample-output.md) and [`mentions-2026-10-26.png`](mentions-2026-10-26.png) in this folder come from a 2026-10-26 run of this version. They were re-rendered with `--from-raw` from that run's raw file. Account handles in the sample are replaced with neutral labels.
 
 Excerpt:
 
 ```
 | Token | Mentions | Unique authors |
 |---|---|---|
-| TAO | 45 | 42 |
-| Bittensor | 31 | 29 |
-| Desearch (SN22) | 1 | 1 |
-| Chutes (SN64) | 3 | 2 |
+| TAO | 48 | 41 |
+| Bittensor | 42 | 38 |
+| Desearch (SN22) | 2 | 2 |
+| Chutes (SN64) | 5 | 4 |
 
-Posts returned: 94; unique: 85; inside window: 63; outside window (dropped): 22
+Posts returned: 94; unique: 78; inside window: 69; outside window (dropped): 9
 
-Total spend this run: $0.0260
+Total spend this run: $0.0191
 ```
 
 ## Known limits
