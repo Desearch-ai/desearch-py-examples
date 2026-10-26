@@ -82,12 +82,16 @@ def normalize_media(item):
 
 
 def normalize_profile(obj):
-    return {key: obj.get(source) for key, source in [('username', 'username'), ('full_name', 'fullName'), ('followers', 'followersCount'), ('following', 'followingCount'), ('posts', 'postsCount'), ('verified', 'isVerified'), ('private', 'isPrivate'), ('external_url', 'externalUrl')]} | {'biography': collapse(obj.get('biography'))}
+    obj = dict(obj)
+    for primary, fallback in [('followers', 'followersCount'), ('following', 'followingCount'), ('verified', 'isVerified'), ('private', 'isPrivate')]:
+        if obj.get(primary) is None:
+            obj[primary] = obj.get(fallback)
+    return {key: obj.get(source) for key, source in [('username', 'username'), ('full_name', 'fullName'), ('followers', 'followers'), ('following', 'following'), ('posts', 'postsCount'), ('verified', 'verified'), ('private', 'private'), ('external_url', 'externalUrl')]} | {'biography': collapse(obj.get('biography'))}
 
 
 def normalize_comment(obj):
     raw = obj.get('createTime')
-    return dict(id=obj.get('id'), text=collapse(obj.get('text')), created_at=to_iso(raw), created_raw=raw, likes=obj.get('likeCount'), replies=len(obj.get('replies') or []))
+    return dict(id=obj.get('id'), text=collapse(obj.get('text')), created_at=to_iso(raw), created_raw=raw, likes=obj.get('likes') if obj.get('likes') is not None else obj.get('likeCount'), replies=len(obj.get('replies') or []))
 
 
 def normalize_search(obj):

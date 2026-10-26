@@ -63,3 +63,35 @@ def test_empty_and_billing():
     assert c.items_of({'data': None}) == []
     assert c.billing({}) == dict(cost_usd=0.0, usage_count=None, service=None, currency=None, next_cursor=None)
     assert c.billing({'X-DESEARCH-COST-USD': '.02', 'X-Desearch-Usage-Count': '2', 'X-Desearch-Next-Cursor': 'opaque+ /', 'X-Desearch-Service': 'instagram', 'X-Desearch-Currency': 'USD'}) == dict(cost_usd=.02, usage_count=2, service='instagram', currency='USD', next_cursor='opaque+ /')
+
+
+def test_profile_live_fields():
+    profile = c.normalize_profile(dict(id='1', username='natgeo', fullName='National Geographic', biography='Explore', avatar='avatar.jpg', verified=True, private=False, followers=268283644, following=195, postsCount=32115, externalUrl='https://example.com'))
+    assert list(profile) == ['username', 'full_name', 'followers', 'following', 'posts', 'verified', 'private', 'external_url', 'biography']
+    assert profile['followers'] == 268283644
+    assert profile['following'] == 195
+    assert profile['posts'] == 32115
+    assert profile['verified'] is True
+    assert profile['private'] is False
+
+
+@pytest.mark.parametrize('primary,fallback,value,old', [
+    ('followers', 'followersCount', 0, 12),
+    ('following', 'followingCount', 0, 34),
+    ('verified', 'isVerified', False, True),
+    ('private', 'isPrivate', False, True),
+])
+def test_profile_fallback(primary, fallback, value, old):
+    assert c.normalize_profile({fallback: old})[primary] == old
+    assert c.normalize_profile({primary: None, fallback: old})[primary] == old
+    result = c.normalize_profile({primary: value, fallback: old})[primary]
+    assert result == value and type(result) is type(value)
+
+
+@pytest.mark.parametrize('fields,expected', [
+    ({'likes': 7}, 7), ({'likes': 0}, 0),
+    ({'likeCount': 9}, 9), ({'likes': None, 'likeCount': 9}, 9),
+    ({'likes': 0, 'likeCount': 9}, 0), ({'likes': 7, 'likeCount': 9}, 7),
+])
+def test_comment_likes(fields, expected):
+    assert c.normalize_comment(fields)['likes'] == expected

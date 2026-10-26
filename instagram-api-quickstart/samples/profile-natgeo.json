@@ -6,11 +6,11 @@
   "item": {
     "username": "natgeo",
     "full_name": "National Geographic",
-    "followers": null,
-    "following": null,
+    "followers": 268283323,
+    "following": 195,
     "posts": 32115,
-    "verified": null,
-    "private": null,
+    "verified": true,
+    "private": false,
     "external_url": "http://visitstore.bio/natgeo",
     "biography": "Step into wonder and find your inner explorer with National Geographic 🌎"
   }

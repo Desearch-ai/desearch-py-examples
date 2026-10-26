@@ -113,10 +113,11 @@ def test_bad_input(monkeypatch, args):
 
 @pytest.mark.parametrize('authors', [False, True])
 def test_comment_authors(monkeypatch, capsys, authors):
-    setup_cli(monkeypatch, [Response([{'author': {'username': 'example_brand'}, 'text': ' example '}])])
+    setup_cli(monkeypatch, [Response([{'id': '1', 'mediaId': '2', 'author': {'username': 'example_brand'}, 'text': ' example ', 'createTime': '2024-01-01T00:00:00Z', 'likes': 7, 'replies': []}, {'id': '3', 'mediaId': '2', 'author': {'username': 'example_brand'}, 'text': 'Another', 'createTime': '2024-01-01T00:00:00Z', 'likes': 0, 'replies': []}])])
     assert ig.main(['comments', 'AbC123xyz_-'] + (['--with-authors'] if authors else [])) == 0
     result, _ = output(capsys)
-    assert ('author' in result['items'][0]) == authors
+    assert [item['likes'] for item in result['items']] == [7, 0]
+    assert all(('author' in item) == authors for item in result['items'])
 
 
 def test_hashtag_date(monkeypatch, capsys):
@@ -183,3 +184,38 @@ def test_stdout_is_indented_json(monkeypatch, capsys, command, body, status):
     assert stdout == json.dumps(parsed, indent=2, ensure_ascii=False) + '\n'
     assert '\n  "' in stdout
     assert '🌎' in stdout
+
+
+def test_profile_live_fields(monkeypatch, capsys):
+    body = dict(id='1', username='natgeo', fullName='National Geographic', biography='Explore', avatar='avatar.jpg', verified=True, private=False, followers=268283644, following=195, postsCount=32115, externalUrl='https://example.com')
+    calls = setup_cli(monkeypatch, [Response(body)])
+    assert ig.main(['profile', 'natgeo']) == 0
+    result, _ = output(capsys)
+    assert len(calls) == result['calls'] == 1
+    assert result['item']['followers'] == 268283644
+    assert result['item']['following'] == 195
+    assert result['item']['verified'] is True
+    assert result['item']['private'] is False
+
+
+@pytest.mark.parametrize('command', ['posts', 'comments'])
+@pytest.mark.parametrize('before,after', [
+    (['--max-cost', '0.001'], []),
+    ([], ['--max-cost', '0.001']),
+    (['--max-cost', '0.10'], ['--max-cost', '0.001']),
+])
+def test_budget_position(monkeypatch, capsys, command, before, after):
+    calls = setup_cli(monkeypatch, [])
+    assert ig.main(before + [command, 'example_brand', '--count', '5'] + after) == 0
+    result, err = output(capsys)
+    assert calls == [] and result['calls'] == 0
+    assert 'Stopped paging' in err
+
+
+@pytest.mark.parametrize('value', ['-1', 'nan', 'inf'])
+def test_invalid_budget_after_command(monkeypatch, capsys, value):
+    calls = setup_cli(monkeypatch, [])
+    with pytest.raises(SystemExit) as exc:
+        ig.main(['profile', 'natgeo', '--max-cost', value])
+    assert exc.value.code == 2 and calls == []
+    assert 'max-cost must be a finite nonnegative number' in capsys.readouterr().err

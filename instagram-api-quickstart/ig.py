@@ -101,6 +101,7 @@ def main(argv=None):
     for command in ('profile', 'posts', 'media', 'comments', 'hashtag', 'search'):
         sub = subs.add_parser(command)
         sub.add_argument('target')
+        sub.add_argument('--max-cost', type=float, default=argparse.SUPPRESS)
         if command in ('posts', 'comments', 'hashtag', 'search'):
             sub.add_argument('--count', default='10')
         if command in ('posts', 'comments', 'hashtag'):

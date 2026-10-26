@@ -3,6 +3,13 @@ Made by Desearch, https://desearch.ai
 
 Read public profiles, posts, comments and hashtag media from Instagram with code and one Desearch API key. You do not create an Instagram app; you call the Desearch API with your Desearch key. No Instagram app review is needed on your side. The CLI uses only the standard library.
 
+## Get the code
+
+```sh
+git clone https://github.com/Desearch-ai/desearch-py-examples
+cd desearch-py-examples/instagram-api-quickstart
+```
+
 ## Get a key
 
 Sign up at https://console.desearch.ai and create an API key.
@@ -56,7 +63,12 @@ print("x-desearch-next-cursor:", cursor)
 | `hashtag TAG [--count N --pages P --cursor C]` | `GET /desearch/instagram/hashtag/{tag}` |
 | `search QUERY [--count N]` | `POST /desearch/instagram/search` |
 
-Global flags go before the command: `--key-file`, `--log-dir` (saves each call with the key redacted), `--raw` (keeps response fields), and `--max-cost` (default 0.10 USD; stops paging before a page whose estimate would go over).
+`--key-file`, `--log-dir` (saves each call with the key redacted) and `--raw` (keeps response fields) go before the command. `--max-cost` works before or after the command (default 0.10 USD; stops paging before a page whose estimate would go over).
+
+```sh
+python3 ig.py --max-cost 0.05 profile natgeo
+python3 ig.py profile natgeo --max-cost 0.05
+```
 
 ```sh
 python3 ig.py profile natgeo
