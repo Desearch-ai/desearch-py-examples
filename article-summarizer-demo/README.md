@@ -12,7 +12,7 @@ The server calls `GET https://api.desearch.ai/web/extract` with `url`, `format=t
 
 A run with one extract cost $0.0005, measured on 2026-10-26. Two extracts can cost $0.001. Cost comes from the case-insensitive cost header, then JSON `cost_usd`, then `DEMO_FALLBACK_COST_USD`. The fallback reserves $0.001 before extraction and is adjusted to known total cost. If any cost is unknown, the total is at least the fallback. Failed adjustments retain the reservation. Checks and reservations are separate operations, so concurrency or a run exceeding remaining capacity can exceed the cap.
 
-Pages under 150 words return a near-empty notice and a preview of up to 400 characters. Other pages return up to five key sentences and up to eight sentences containing figures. Bare years are skipped. Handles are hidden. Full article text is never returned, cached or logged.
+Pages under 150 words return a near-empty notice and a preview of up to 400 characters. Other pages return up to five key sentences and up to eight sentences containing figures. Bare years are skipped. Footnote markers such as [1] do not count as figures. Short navigation notes, such as "For other uses, see ..." lines, are skipped. Handles are hidden. Full article text is never returned, cached or logged.
 
 ## Limits and cache
 
