@@ -111,14 +111,17 @@ def test_verify_and_replay(tmp_path, monkeypatch):
     assert 'Extract cost: $0.000500' in (tmp_path / 'replay-summary.md').read_text()
 
 
-@pytest.mark.parametrize('failure,exit_code', [(Response('missing', 404), 0), (Response('unavailable', 500), 0),
-                                               (requests.Timeout('timed out'), 0),
+@pytest.mark.parametrize('failure,exit_code', [(Response('missing', 404), 0), (Response('unavailable', 500), 3),
+                                               (requests.Timeout('timed out'), 3),
                                                (Response('credits required', 402), 2),
                                                (Response('unauthorized', 401), 2)])
 def test_extract_errors(tmp_path, monkeypatch, failure, exit_code):
     code, _ = run(tmp_path, monkeypatch, [web(), failure])
     assert code == exit_code
-    assert list(csv.DictReader((tmp_path / 'web-matches.csv').open())) == []
+    if exit_code == 0:
+        assert list(csv.DictReader((tmp_path / 'web-matches.csv').open())) == []
+    else:
+        assert_no_reports(tmp_path)
     records = [json.loads(line) for line in (tmp_path / 'web-calls.jsonl').read_text().splitlines()]
     assert 'error' in records[-1]
 
@@ -226,3 +229,110 @@ def test_plan_flushed_before_requests(tmp_path, monkeypatch):
     code, session = run(tmp_path, monkeypatch, [web(), Response('missing', 404)])
     assert code == 0
     assert len(session.calls) == 2
+
+
+def assert_no_reports(path, name='web'):
+    for suffix in ('summary.md', 'matches.csv', 'sentences.csv'):
+        assert not (path / f'{name}-{suffix}').exists()
+
+
+def assert_no_key(path, captured):
+    assert 'fixture-key' not in captured.out + captured.err
+    for file in path.rglob('*'):
+        if file.is_file() and file.name != 'key':
+            assert 'fixture-key' not in file.read_text()
+
+
+@pytest.mark.parametrize('contains', [True, False])
+def test_page_cross_check_and_replay(tmp_path, monkeypatch, contains):
+    second = 'Mountain hikers discover beautiful remote valleys during peaceful autumn adventures.'
+    unrelated = Response({'data': [dict(link='https://unrelated.example', snippet='Ocean waves.')]})
+    page = second + (' ' + TEXT if contains else '')
+    code, session = run(tmp_path, monkeypatch, [unrelated, web(second), Response(page)],
+                        ['--text', TEXT + ' ' + second])
+    assert code == 0
+    assert len(session.calls) == 3
+    assert sum(url.endswith('/extract') for url, _ in session.calls) == 1
+    sentences = list(csv.DictReader((tmp_path / 'web-sentences.csv').open()))
+    assert [r['found_online'] for r in sentences] == (['yes', 'yes'] if contains else ['no', 'yes'])
+    rows = list(csv.DictReader((tmp_path / 'web-matches.csv').open()))
+    cross = [r for r in rows if r['query_style'] == 'page-cross-check']
+    assert len(cross) == int(contains)
+    if contains:
+        row, = cross
+        assert row['sentence_index'] == '1'
+        assert row['verified_on_page'] == 'yes'
+        assert row['rank'] == row['snippet_score'] == row['published_date'] == ''
+        assert row['title'] == 'Garden notes'
+        assert sentences[0]['best_canonical_url'] == 'https://garden.example/a'
+        assert sentences[0]['matching_results'] == '1'
+        report = (tmp_path / 'web-summary.md').read_text()
+        assert '| 1 | ' + TEXT + ' | yes | 1.000 | https://garden.example/a |' in report
+    monkeypatch.setattr(pc, 'SearchClient', lambda *a, **k: pytest.fail('Network in replay'))
+    assert pc.main(['--text', TEXT + ' ' + second, '--replay', str(tmp_path / 'web-raw'),
+                    '--out', str(tmp_path), '--run-name', 'replay']) == 0
+    for suffix in ('matches.csv', 'sentences.csv'):
+        assert (tmp_path / ('web-' + suffix)).read_text() == (tmp_path / ('replay-' + suffix)).read_text()
+
+
+@pytest.mark.parametrize('failure,expected', [
+    (Response({'detail': 'Forbidden fixture-key'}, 403), 2),
+    (Response({'detail': 'Unauthorized fixture-key'}, 401), 2),
+    (Response({'detail': 'Credits fixture-key'}, 402), 2),
+    (Response({'detail': 'Busy fixture-key'}, 429), 3),
+    (Response({'detail': 'Failure fixture-key'}, 500), 3),
+    (requests.ConnectionError('connection fixture-key'), 3),
+    (requests.Timeout('timeout fixture-key'), 3),
+])
+def test_search_failure_stops(tmp_path, monkeypatch, capsys, failure, expected):
+    status = getattr(failure, 'status_code', None)
+    second_call = status in (429, 500)
+    second = 'Mountain hikers discover beautiful remote valleys during peaceful autumn adventures.'
+    responses = [web(), failure] if second_call else [failure]
+    code, session = run(tmp_path, monkeypatch, responses, ['--text', TEXT + ' ' + second])
+    assert code == expected
+    assert len(session.calls) == (2 if second_call else 1)
+    assert_no_reports(tmp_path)
+    captured = capsys.readouterr()
+    assert 'No report was written' in captured.err
+    assert 'Matching sources found on the web' not in captured.out
+    assert pc.NO_MATCH not in captured.out
+    assert 'Total cost:' not in captured.out
+    if status in (401, 402, 403):
+        assert str(status) in captured.err and 'console.desearch.ai' in captured.err
+    if second_call:
+        assert 'sentence 2' in captured.err
+    assert_no_key(tmp_path, captured)
+
+
+@pytest.mark.parametrize('failure,expected', [
+    (Response('Forbidden fixture-key', 403), 2),
+    (Response('Unavailable fixture-key', 503), 3),
+    (Response('Busy fixture-key', 429), 3),
+    (requests.ConnectionError('connection fixture-key'), 3),
+    (Response('Missing fixture-key', 404), 0),
+])
+def test_extract_failure_reports(tmp_path, monkeypatch, capsys, failure, expected):
+    code, session = run(tmp_path, monkeypatch, [web(), failure])
+    assert code == expected
+    assert len(session.calls) == 2
+    if expected:
+        assert_no_reports(tmp_path)
+    else:
+        for suffix in ('summary.md', 'matches.csv', 'sentences.csv'):
+            assert (tmp_path / ('web-' + suffix)).exists()
+    assert_no_key(tmp_path, capsys.readouterr())
+
+
+def test_replay_saved_search_error(tmp_path, monkeypatch, capsys):
+    code, _ = run(tmp_path, monkeypatch, [Response({'detail': 'Forbidden fixture-key'}, 403)])
+    assert code == 2
+    capsys.readouterr()
+    monkeypatch.setattr(pc, 'SearchClient', lambda *a, **k: pytest.fail('Network in replay'))
+    assert pc.main(['--text', TEXT, '--replay', str(tmp_path / 'web-raw'),
+                    '--out', str(tmp_path), '--run-name', 'replay']) == 3
+    assert_no_reports(tmp_path, 'replay')
+    captured = capsys.readouterr()
+    assert 'saved search response' in captured.err and 'No report was written' in captured.err
+    assert 'Matching sources found on the web' not in captured.out
+    assert_no_key(tmp_path, captured)

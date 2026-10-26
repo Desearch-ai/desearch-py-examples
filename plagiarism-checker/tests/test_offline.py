@@ -238,7 +238,7 @@ def test_no_matches(runner,capsys):
     assert pc.NO_MATCH in (root/'out/trial-summary.md').read_text().splitlines()
 
 
-@pytest.mark.parametrize('status,expected,calls', [(422,0,2),(429,0,2),(500,0,2),(401,2,1),(402,2,1)])
+@pytest.mark.parametrize('status,expected,calls', [(422,3,1),(429,3,1),(500,3,1),(401,2,1),(402,2,1),(403,2,1)])
 def test_http_errors(runner,status,expected,calls,capsys):
     run, session, root = runner
     session.responses[0] = FakeResponse({'detail':'fixture failure'}, status)
@@ -252,8 +252,8 @@ def test_http_errors(runner,status,expected,calls,capsys):
 def test_timeout(runner):
     run, session, root = runner
     session.responses[0] = requests.Timeout('fixture timeout')
-    assert run(['--yes'], SENTENCE+' '+SECOND) == 0
-    assert len(session.calls) == 2
+    assert run(['--yes'], SENTENCE+' '+SECOND) == 3
+    assert len(session.calls) == 1
     records = [json.loads(line) for line in (root/'out/trial-calls.jsonl').read_text().splitlines()]
     assert records[0]['http_status'] is None
     assert 'timeout' in records[0]['error']
@@ -291,7 +291,7 @@ def test_threshold(runner):
 def test_secret_echo_redacted(runner,capsys):
     run, session, root = runner
     session.responses = [FakeResponse({'detail':KEY},422)]
-    assert run(['--yes']) == 0
+    assert run(['--yes']) == 3
     captured = capsys.readouterr()
     assert KEY not in captured.out+captured.err
     for path in (root/'out').rglob('*'):

@@ -286,6 +286,19 @@ class SearchClient:
         return self.redact(record), self.redact(text)
 
 
+def api_failure(record, context):
+    status, detail = record.get('http_status'), record['error']
+    if status in (401, 402, 403):
+        message = (f'the Desearch API refused the request (HTTP {status}: {detail}). '
+                   'Check your API key and balance at console.desearch.ai.')
+    elif status is None:
+        message = f'could not reach the Desearch API ({detail}).'
+    else:
+        message = f'the Desearch API returned HTTP {status} for {context}: {detail}.'
+    print(f'Error: {message} No report was written.', file=sys.stderr)
+    return 2 if status in (401, 402, 403) else 3
+
+
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('file', nargs='?')
@@ -426,7 +439,6 @@ def main(argv=None):
                 saved_calls = [json.loads(line) for line in saved_log.read_text(encoding='utf-8').splitlines()]
             except (OSError, ValueError):
                 saved_calls = []
-    exit_code = 0
     with (nullcontext(None) if args.replay else (out / (args.run_name+'-calls.jsonl')).open('a', encoding='utf-8')) as log:
         for index, sentence, style, body in plan:
             if args.replay:
@@ -456,7 +468,10 @@ def main(argv=None):
             if record['elapsed_ms'] > 20000:
                 print('Warning: slow response', file=sys.stderr)
             if 'error' in record:
-                print(f"API error ({record['http_status']}): {record['error']}", file=sys.stderr)
+                if args.replay:
+                    print(f"Error: saved search response for sentence {index}: {record['error']}. No report was written.", file=sys.stderr)
+                    return 3
+                return api_failure(record, f'the search for sentence {index}')
             else:
                 for rank, result in enumerate(raw.get('data' if args.engine == 'web' else 'results') or [], 1):
                     evidence = (max((score_snippet(text, result.get('snippet') or '')
@@ -470,10 +485,7 @@ def main(argv=None):
                             title=result.get('title',''), published_date='' if args.engine == 'web' else result.get('published_date'), **evidence))
                     if evidence['score'] >= args.threshold:
                         matches.append(all_results[-1])
-            if record['http_status'] in (401, 402):
-                exit_code = 2
-                break
-        if args.engine == 'web' and not exit_code and args.verify_pages:
+        if args.engine == 'web' and args.verify_pages:
             source_dir = Path(args.replay) if args.replay else rawdir
             extracts = {}
             if args.replay and (source_dir / 'extracts.json').exists():
@@ -499,15 +511,26 @@ def main(argv=None):
                     log.write(json.dumps(record, ensure_ascii=False) + '\n')
                     log.flush()
                     if 'error' in record:
-                        print(f"Extract error ({record['http_status']}): {record['error']}", file=sys.stderr)
-                        if record['http_status'] in (401, 402):
-                            exit_code = 2
-                            break
+                        status = record['http_status']
+                        if status is None or status in (401, 402, 403, 429) or status >= 500:
+                            return api_failure(record, f'the extraction of {url}')
+                        print(f"Extract error ({status}): {record['error']}", file=sys.stderr)
                         continue
                     filename = f'extract-{len(extracts) + 1}.txt'
                     (rawdir / filename).write_text(page, encoding='utf-8')
                     extracts[url] = filename
                     (rawdir / 'extracts.json').write_text(json.dumps(extracts, indent=2), encoding='utf-8')
+                source = next((r for r in all_results if r['canonical_url'] == canonical and r['url'] == url), {})
+                for index, sentence in sampled:
+                    if any(r['sentence_index'] == index and r['canonical_url'] == canonical for r in all_results):
+                        continue
+                    evidence = score_result(sentence, {'page_text': page})
+                    if evidence['score'] >= args.partial_threshold:
+                        all_results.append(dict(sentence_index=index, sentence=sentence,
+                            query_style='page-cross-check', rank='', url=url, canonical_url=canonical,
+                            title=source.get('title', ''), published_date='', snippet_score='',
+                            page_score=evidence['score'],
+                            verified_on_page='yes' if evidence['score'] >= args.threshold else 'no', **evidence))
                 for row in all_results:
                     if row['canonical_url'] == canonical:
                         evidence = score_result(row['sentence'], {'page_text': page})
@@ -526,7 +549,7 @@ def main(argv=None):
     print(f"{'cost of the original run' if args.replay else 'Total cost'}: ${summary['cost']:.6f} USD; {summary['calls']} calls; slowest {summary['slowest']:.2f} s; empty-result calls {summary['empty_calls']} (${summary['empty_cost']:.6f}).")
     if not summary['found']:
         print(NO_MATCH)
-    return exit_code
+    return 0
 
 
 if __name__ == '__main__':
