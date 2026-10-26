@@ -1,0 +1,188 @@
+"""Shared demo endpoint. State is shared through Redis unless memory is explicitly selected."""
+import json
+import math
+import os
+import re
+import time
+from pathlib import Path
+import socket
+import threading
+from urllib.parse import parse_qs, urlsplit
+import core
+from .client import Client, connection_status
+from .guards import DailyCap, RateLimiter, TTLCache
+from . import state
+from .urlguard import validate_url, URLValidationError, URLUnreachableError
+
+NO_STORE = 'no-store'
+MAX_MARKDOWN = 200 * 1024
+FAST_404_SECONDS = 3.0
+
+
+def _site_blocked(body):
+    """Inspect API error fields only, never extracted page content."""
+    def visit(value, error_field=False):
+        if isinstance(value, str):
+            return error_field and bool(re.search(
+                r'\b(blocked|forbidden by site|access denied|captcha|bot protection|robots)\b',
+                value, re.IGNORECASE))
+        if isinstance(value, dict):
+            return any(visit(v, error_field or k in ('error', 'detail', 'message'))
+                       for k, v in value.items() if k not in ('html', 'text', 'content'))
+        if isinstance(value, list):
+            return any(visit(v, error_field) for v in value)
+        return False
+    return visit(body)
+
+
+def _site_unreachable(body):
+    """Inspect non-success API bodies for DNS and connection refusal reports."""
+    if isinstance(body, dict):
+        return any(_site_unreachable(value) for value in body.values())
+    if isinstance(body, list):
+        return any(_site_unreachable(value) for value in body)
+    return isinstance(body, str) and bool(re.search(
+        r'name or service not known|nodename nor servname|getaddrinfo|enotfound|'
+        r'err_name_not_resolved|\bdns\b|could not resolve|connection refused|'
+        r'econnrefused|err_connection_refused|failed to establish a new connection',
+        body, re.IGNORECASE))
+
+
+def _env_float(name, default):
+    try:
+        value = float(os.environ.get(name, default))
+        return value if math.isfinite(value) and value >= 0 else default
+    except ValueError:
+        return default
+
+
+class Converter:
+    def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None, resolver=None, clock=time.monotonic):
+        self._client = client
+        self.clock = clock
+        injected_state = any(item is not None for item in (limiter, cap, cache))
+        memory_requested = os.environ.get('DEMO_STATE') == 'memory'
+        self._memory_refused = memory_requested and bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV')) and not injected_state
+        memory = injected_state or (memory_requested and not self._memory_refused)
+        redis = state.RedisREST() if not memory else None
+        self.limiter = limiter if limiter is not None else (
+            RateLimiter if memory else lambda **kw: state.Limiter(redis, **kw))(
+                per_ip=int(_env_float('DEMO_PER_IP_10MIN', 5)),
+                per_ip_day=int(_env_float('DEMO_PER_IP_DAY', 15)),
+                global_window=int(_env_float('DEMO_GLOBAL_10MIN', 30)))
+        self.cap = cap if cap is not None else (DailyCap(_env_float('DEMO_DAILY_CAP_USD', 1))
+            if memory else state.DailyCap(redis, _env_float('DEMO_DAILY_CAP_USD', 1)))
+        self.cache = cache if cache is not None else (TTLCache() if memory else state.Cache(redis))
+        self.live = os.environ.get('DEMO_LIVE', '1').lower() in ('1', 'true') if live is None else live
+        self.fallback_cost = _env_float('DEMO_FALLBACK_COST_USD', .0005)
+        self.resolver = resolver or socket.getaddrinfo
+        self.lock = threading.Lock()
+        self.sample = json.loads((Path(__file__).resolve().parents[1] / 'public/sample.json').read_text())
+
+    def handle(self, query, ip):
+        with self.lock:
+            try:
+                if self._memory_refused:
+                    raise state.StateUnavailable()
+                return self._handle(query, ip)
+            except state.StateUnavailable:
+                return 503, {'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': NO_STORE,
+                             'X-Content-Type-Options': 'nosniff'}, json.dumps({**self.sample,
+                    'status': 'paused', 'error': 'The live demo is paused. See the saved sample below.',
+                    'message': 'The live demo is paused. See the saved sample below.',
+                    'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0}, ensure_ascii=False)
+
+    def _handle(self, query, ip):
+        def out(code, obj):
+            return code, {'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': NO_STORE,
+                          'X-Content-Type-Options': 'nosniff'}, json.dumps(obj, ensure_ascii=False)
+        def sample(code, status, message):
+            return out(code, {**self.sample, 'status': status, 'error': message, 'message': message,
+                              'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0})
+        if not self.limiter.allow(ip or 'unknown'):
+            return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
+        try:
+            url = validate_url(query.get('url'), self.resolver)
+        except URLUnreachableError:
+            return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
+        except URLValidationError as e:
+            return sample(400, 'invalid', str(e))
+        if not self.live:
+            return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        hit = self.cache.get(url)
+        if hit:
+            return out(200, {**hit, 'cached': True, 'cost_usd_this_request': 0})
+        if not self.cap.ok():
+            return sample(503, 'paused', "Today's demo budget is used up. See the saved sample below.")
+        try:
+            if self._client is None:
+                self._client = Client(os.environ.get('DESEARCH_API_KEY', '').strip())
+            started = self.clock()
+            try:
+                st, body, rec = self._client.extract(url)
+            finally:
+                elapsed = self.clock() - started
+        except RuntimeError:
+            return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        except OSError as e:
+            st, body, rec = connection_status(e), '', {'cost': 0, 'cost_known': False}
+        unreachable = st not in (200, 598) and _site_unreachable(body)
+        cost = 0 if st in (401, 402, 403, 404, 598) or unreachable else (rec['cost'] if rec.get('cost_known') else self.fallback_cost)
+        self.cap.add(cost)
+        try:
+            candidates = [rec.get('final_url')]
+            if isinstance(body, dict):
+                candidates += [body.get(k) for k in ('final_url', 'redirect_url', 'url')]
+                for key in ('data', 'result'):
+                    if isinstance(body.get(key), dict):
+                        candidates += [body[key].get(k) for k in ('final_url', 'redirect_url', 'url')]
+            for candidate in candidates:
+                if candidate:
+                    validate_url(candidate, self.resolver)
+        except URLValidationError:
+            return sample(400, 'invalid', 'The page redirected to an unsafe address. Try another link.')
+        if st in (401, 402, 403):
+            return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        if st not in (200, 598) and _site_blocked(body):
+            return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
+        if unreachable:
+            return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
+        if st in (408, 504, 599) or (st == 404 and elapsed >= FAST_404_SECONDS):
+            return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
+        if st == 404:
+            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
+        if st != 200:
+            return sample(502, 'error', "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
+        content = body
+        if isinstance(content, dict):
+            content = content.get('data', content.get('result', content))
+            if isinstance(content, dict):
+                content = content.get('html', content.get('text', content.get('content', '')))
+        if not isinstance(content, str):
+            content = ''
+        title, md, _ = core.html_to_markdown(content, url)
+        words = core.word_count(md)
+        note = '\n\n[Output truncated at 200 KB.]'
+        truncated = len(md.encode()) > MAX_MARKDOWN
+        if truncated:
+            md = md.encode()[:MAX_MARKDOWN - len(note.encode())].decode('utf-8', 'ignore') + note
+        result = dict(title=title, markdown=md, status='empty' if words < 20 else 'ok', words=words,
+                      message='This page looks empty (JavaScript-heavy). Try another link.' if words < 20 else '',
+                      truncated=truncated, calls=1, cost_usd=cost)
+        self.cache.put(url, result)
+        return out(200, {**result, 'cached': False, 'cost_usd_this_request': cost})
+
+
+def client_ip(headers, fallback=''):
+    headers = {key.lower(): value for key, value in headers.items()}
+    for name in ('x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip'):
+        value = headers.get(name) or ''
+        if name != 'x-real-ip':
+            value = value.split(',')[0]
+        if value.strip():
+            return value.strip()
+    return fallback.strip()
+
+
+def parse_query(path):
+    return {k: v[0] for k, v in parse_qs(urlsplit(path).query, keep_blank_values=True).items()}

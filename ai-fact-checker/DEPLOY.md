@@ -5,12 +5,13 @@ Made by Desearch | https://desearch.ai
 Layout Vercel uses: `public/index.html` (static page), `api/check.py` (Python function at `/api/check`), `vercel.json` (function `maxDuration` 60 s, `includeFiles: factcheck/**`, security headers). No build step and no third-party packages (there is no `requirements.txt`, so Vercel installs nothing; `pytest` is in `requirements-dev.txt` for local tests only).
 
 ## 1. Project
+
 | Setting | Value |
 |---|---|
 | Project name | `desearch-ai-fact-checker` |
 | Git repo / Root Directory | `Desearch-ai/desearch-py-examples`, root directory `ai-fact-checker` |
 | Framework preset | Other. Build command: none. Output directory: default (Vercel serves `public/`). Install command: default (nothing to install). |
-| Runtime | Vercel Python runtime (default version), function `api/check.py` with `maxDuration` 60 s from `vercel.json`. One live check took about 10 s on 2026-10-19. |
+| Runtime | Vercel Python runtime (default version), function `api/check.py` with `maxDuration` 60 s from `vercel.json`. A check normally takes about 10 to 15 seconds; allow up to 40 seconds with X enabled. |
 | Domain | `fact-checker.demos.desearch.ai` (add it under Project → Domains; DNS: `CNAME fact-checker.demos` → `cname.vercel-dns.com` (or the exact target Vercel shows on the Domains page), unless `demos.desearch.ai` already uses Vercel nameservers or a wildcard, then Vercel adds it automatically) |
 
 ## 2. Upstash Redis (shared counters)
@@ -31,6 +32,7 @@ On Vercel, where `VERCEL` is set or `VERCEL_ENV` is `production` or `preview`, t
 |---|---|---|
 | `DESEARCH_API_KEY` | the Desearch key | Server-side only. Never add a `NEXT_PUBLIC_`/client prefix. |
 | `DEMO_LIVE` | `1` | `0` = kill switch: no API calls, the page points to `/sample.json`. |
+| `DEMO_X_ENABLED` | `0` | Default off: no `/twitter` call and no X section. Only `1` or `true` (case-insensitive) enables X. |
 | `DEMO_DAILY_CAP_USD` | `1.0` | Shared via Upstash, UTC day. |
 | `DEMO_PER_IP_10MIN` | `5` | Shared, fixed 10 min window. |
 | `DEMO_PER_IP_DAY` | `15` | Shared, UTC day. |
@@ -41,27 +43,31 @@ On Vercel, where `VERCEL` is set or `VERCEL_ENV` is `production` or `preview`, t
 | `KV_REST_API_TOKEN` | from the Upstash integration | Server-side only. Preferred REST token. Never log it. |
 | `UPSTASH_REDIS_REST_URL` | alias of the URL | Accepted when `KV_REST_API_URL` is unset. Server-side only. |
 | `UPSTASH_REDIS_REST_TOKEN` | alias of the token | Accepted when `KV_REST_API_TOKEN` is unset. Server-side only. Never log it. |
+
 Only `DESEARCH_API_KEY` must be set for a local run. On Vercel, also set a Redis URL and token or `/api/check` returns 503 (see section 2). The other demo settings fall back to the defaults above when unset. Do not set `FACTCHECK_LOG_DIR` in production (it writes raw responses to disk). Vercel applies env changes only to new deployments, so redeploy after any change.
+
+With X off, one check costs $0.004, or $0.008 with Wikipedia. X adds $0.0015 when enabled. Cached checks cost nothing. Keeping X off skips the approximately 30 second X call. In three runs on October 21, 2026, `ai/search` took 9.4 to 10.1 seconds and each X call took approximately 30.2 seconds with 0 posts.
 
 ## 4. What protects the key and the balance
 - The key is read in `factcheck/client.py` and only sent in the `Authorization` header to `api.desearch.ai`. Responses never include it; the client refuses to write any file that contains it; the function logs one line per paid check (`calls`, `cost`, `spent_today`) and never the claim text, the IP, or the Redis token.
 - Result responses carry `Cache-Control: public, max-age=0, s-maxage=21600`, so the Vercel CDN answers repeat requests for the exact same URL for 6 hours without running the function (the in-memory cache also catches the same claim written with different case or punctuation, inside one warm instance). Errors, 429 and 503 are `no-store`.
 - Limits and the daily cap live in Upstash Redis (section 2), so every warm instance shares them. The in-memory result cache is still per instance. The hard outer limit is the key's balance; keep it small.
+- A Desearch 401, 402 or 403 (invalid key or out of balance) is treated like the kill switch: the response is 503 with a demo paused message and `"sample": "/sample.json"`, and those calls count $0 against the daily cap.
 - The per-IP limit uses the first `X-Forwarded-For` address. Vercel overwrites that header with the real client IP, so callers cannot spoof it there (locally they can). That address is hashed (SHA-256 with `DEMO_IP_SALT`, or the built-in fallback salt) before it is used in a Redis key.
 
-## 5. Smoke test after deploy (about $0.006)
+## 5. Smoke test after deploy ($0.004 with X off)
 ```bash
 U=https://<demo-host>
 curl -s -o /dev/null -w "%{http_code}\n" $U/                                   # 200
 curl -s -i "$U/api/check?claim=" | head -1                                     # 400, no cost
 curl -s -D - "$U/api/check?claim=Octopuses+have+three+hearts+and+blue+blood" -o r1.json | grep -i -E "^HTTP|cache-control|x-vercel-cache"
-python3 -c "import json;d=json.load(open('r1.json'));print(d['calls'],d['cost_usd'],len(d['sources']))"   # 2 0.0055 10
+python3 -c "import json;d=json.load(open('r1.json'));print(d['calls'],d['cost_usd'],len(d['sources']))"   # 1 0.004 10
 curl -s -D - "$U/api/check?claim=Octopuses+have+three+hearts+and+blue+blood" -o /dev/null | grep -i x-vercel-cache   # HIT on repeat
 grep -c "$(cut -c1-8 <<<"$DESEARCH_API_KEY")" r1.json                           # 0
 ```
 Then set `DEMO_LIVE=0`, redeploy (env changes only reach new deployments), and confirm `/api/check?claim=Honey+never+spoils+if+stored` returns 503 with `"sample": "/sample.json"`. Set it back to `1`.
 
-Per-IP limit (about $0.028 for five paid checks; the sixth is refused). Use a different claim each time so the CDN does not answer from cache. The first five lines are HTTP 200. The sixth is HTTP 429 with `Cache-Control: no-store`.
+Per-IP limit (about $0.02 for five paid checks at $0.004 each with X off; the sixth is refused). Use a different claim each time so the CDN does not answer from cache. The first five lines are HTTP 200. The sixth is HTTP 429 with `Cache-Control: no-store`.
 ```bash
 for i in 1 2 3 4 5 6; do
   echo "check $i"

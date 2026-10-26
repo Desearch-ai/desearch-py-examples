@@ -5,3 +5,9 @@ runs/
 *.key
 .env
 output/
+out/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+*api_key*
