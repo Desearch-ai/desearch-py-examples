@@ -1,0 +1,33 @@
+{
+  "status": "ok",
+  "sample": true,
+  "cached": false,
+  "url": "https://example.com/news/town-reading-room",
+  "domain": "example.com",
+  "words": 218,
+  "label": "Extractive summary: key sentences quoted from the article",
+  "key_points": [
+    "The town opened a new reading room beside the public garden on Monday.",
+    "The reading room has 40 seats and a separate space for group activities.",
+    "Volunteers will lead weekly reading sessions for residents throughout the winter.",
+    "The council said the room would remain open during the evening twice a week.",
+    "Residents can borrow books and suggest titles for the next collection."
+  ],
+  "numbers": [
+    {
+      "figures": [
+        "40"
+      ],
+      "sentence": "The reading room has 40 seats and a separate space for group activities."
+    }
+  ],
+  "calls": {
+    "extract": 1
+  },
+  "cost_usd_this_request": 0,
+  "limits": {
+    "per_ip": 5,
+    "per_ip_day": 15,
+    "global_window": 30
+  }
+}
