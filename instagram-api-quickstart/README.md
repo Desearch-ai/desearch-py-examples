@@ -112,7 +112,6 @@ Search has one page. Sending a cursor to search returned 422 with `cursor is not
 | Posts, hashtag, comments, search | $0.00207 per returned item |
 | `count=3` | $0.00621 |
 | Comments with `count=5` | $0.01035 |
-| 404 for an unknown username | $0 |
 | 422 for a bad cursor | $0 |
 
 Prices can change: https://desearch.ai/pricing.
