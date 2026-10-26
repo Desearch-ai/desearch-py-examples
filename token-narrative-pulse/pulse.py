@@ -10,6 +10,7 @@ Usage:
 """
 import argparse, asyncio, collections, datetime as dt, json, os, re, sys, time
 from email.utils import parsedate_to_datetime
+from urllib.parse import urlsplit
 
 import pandas as pd
 import matplotlib
@@ -90,16 +91,19 @@ async def collect(count, outdir, raw_dir):
                                    ds.x_search(query=query, sort=sort, count=count,
                                                start_date=start_date, include_metadata=True))
                 x_raw[f"{label}|{sort}"] = dump(data) or []
-        print("AI Search (POST /desearch/ai/search via desearch-py ai_search):")
         terms = " OR ".join(q for q, _ in WATCHLIST.values())
-        for tools in (["reddit"], ["twitter", "reddit"]):
-            data = await timed(costs, f"ai_search tools={tools}",
-                               ds.ai_search(prompt=f"What are people saying in the last 24 hours about {terms}?",
-                                            tools=tools, date_filter="PAST_24_HOURS",
-                                            result_type="LINKS_WITH_FINAL_SUMMARY",
-                                            system_message=SYSTEM_MESSAGE, count=10,
-                                            include_metadata=True))
-            ai_raw["+".join(tools)] = dump(data) or {}
+        print("Reddit (GET /web via desearch-py web_search):")
+        data = await timed(costs, "web_search site:reddit.com",
+                           ds.web_search(query=f"site:reddit.com {terms}", start=0, include_metadata=True))
+        ai_raw["web"] = dump(data) or {}
+        print("AI Search (POST /desearch/ai/search via desearch-py ai_search):")
+        data = await timed(costs, "ai_search tools=['twitter']",
+                           ds.ai_search(prompt=f"What are people saying in the last 24 hours about {terms}?",
+                                        tools=["twitter"], date_filter="PAST_24_HOURS",
+                                        result_type="LINKS_WITH_FINAL_SUMMARY",
+                                        system_message=SYSTEM_MESSAGE, count=10,
+                                        include_metadata=True))
+        ai_raw["twitter"] = dump(data) or {}
     json.dump({"generated_utc": now.isoformat(), "x": x_raw, "ai": ai_raw, "costs": costs},
               open(os.path.join(raw_dir, f"raw-{now:%Y-%m-%d}.json"), "w"), indent=1, default=str)
     return now, since, x_raw, ai_raw, costs
@@ -184,7 +188,8 @@ def analyse(now, since, x_raw, ai_raw, costs, outdir):
 
     # AI search checks: are cited links among the returned sources? do sources carry dates?
     ai_sections = []
-    for key, data in ai_raw.items():
+    for key in ("twitter",):
+        data = ai_raw.get(key) or {}
         comp = data.get("completion") or ""
         src_links = set()
         for k, v in data.items():
@@ -196,18 +201,25 @@ def analyse(now, since, x_raw, ai_raw, costs, outdir):
                                 src_links.add(it[f].rstrip("/"))
         cited = sorted(set(l.rstrip("/").rstrip(".,") for l in URL_RE.findall(comp)))
         unmatched = [c for c in cited if c not in src_links]
-        reddit = data.get("reddit_search") or data.get("search") or []
-        dated = sum(1 for it in reddit if any(k in it for k in ("created_at", "published_date", "date")))
         has_sections = all(s.lower() in comp.lower() for s in ("bullish", "bearish", "neutral"))
         tweets_ai = data.get("tweets") or []
         tw_out = sum(1 for t in tweets_ai if (parse_ts(t.get("created_at")) or now) < since)
-        ai_sections.append((key, comp, reddit, cited, unmatched, dated, has_sections, len(tweets_ai), tw_out))
+        ai_sections.append((key, comp, cited, unmatched, has_sections, len(tweets_ai), tw_out))
+    reddit_results = (ai_raw.get("web") or {}).get("data") or []
+    reddit = []
+    for it in reddit_results:
+        try:
+            host = urlsplit(it.get("link") or "").hostname or ""
+        except ValueError:
+            continue
+        if host == "reddit.com" or host.endswith(".reddit.com"):
+            reddit.append(it)
 
     spend = sum(c["cost_usd"] or 0 for c in costs)
     L = []
     L.append(f"# Token Narrative Pulse, {day}\n")
     L.append("Made by Desearch ([desearch.ai](https://desearch.ai))\n")
-    L.append(f"Window: {since:%Y-%m-%d %H:%M} to {now:%Y-%m-%d %H:%M} UTC. Source: Desearch API (X search + AI Search with Reddit).\n")
+    L.append(f"Window: {since:%Y-%m-%d %H:%M} to {now:%Y-%m-%d %H:%M} UTC. Sources: Desearch API (X search, AI Search on X, and web search limited to reddit.com).\n")
     L.append("## Mentions (X, deduplicated, inside the 24h window)\n")
     L.append("| Token | Mentions | Unique authors |\n|---|---|---|")
     for label in WATCHLIST:
@@ -237,19 +249,17 @@ def analyse(now, since, x_raw, ai_raw, costs, outdir):
     L.append("## Language mix\n")
     L.append(", ".join(f"{k}: {v}" for k, v in lang_mix.items()) + "\n")
     L.append("## AI Search narrative (bull / bear / neutral)\n")
-    L.append("> Note: Reddit links come back without a post date, and in testing many were older than the requested 24h window. "
-             "Treat Reddit points as background unless you confirm the thread date yourself.\n")
-    for key, comp, reddit, cited, unmatched, dated, has_sections, n_tw, tw_out in ai_sections:
+    for key, comp, cited, unmatched, has_sections, n_tw, tw_out in ai_sections:
         L.append(f"### tools = {key}\n")
         L.append((comp.strip() or "_(no completion returned)_") + "\n")
-        L.append(f"Checks: {len(reddit)} Reddit links returned, {dated} of them carry a date field; "
-                 f"{n_tw} X posts returned, {tw_out} older than 24h; {len(cited)} links cited in the summary, "
+        L.append(f"Checks: {n_tw} X posts returned, {tw_out} older than 24h; {len(cited)} links cited in the summary, "
                  f"{len(unmatched)} not found among returned sources; bull/bear/neutral sections present: {has_sections}.\n")
-        if reddit:
-            L.append("Reddit sources returned:\n")
-            for it in reddit[:10]:
-                L.append(f"- [{(it.get('title') or '').strip()[:90]}]({it.get('link')})")
-            L.append("")
+    L.append("## Reddit threads (web search, site:reddit.com)\n")
+    L.append(f"Results returned: {len(reddit_results)}; kept from reddit.com or its subdomains: {len(reddit)}.\n")
+    L.append("> Note: Web search results carry no post date, so confirm a thread's date before quoting it.\n")
+    for it in reddit[:10]:
+        L.append(f"- [{(it.get('title') or '').strip()[:90]}]({it.get('link')})")
+    L.append("")
     L.append("## Cost and latency per call\n")
     L.append("| Call | Latency (s) | Cost (USD, X-Desearch-Cost-Usd) | Usage units | Error |\n|---|---|---|---|---|")
     for c in costs:

@@ -32,7 +32,7 @@ Options: `--related` (one extra ai-search call), `--bullets` (key sentences to k
 1. `extract` with `format: "text"` and `js: false` on your link. If the page comes back with no content, it tries once more.
 2. If the text is under 150 words (a login page or an app shell, for example), it says so and stops instead of guessing.
 3. Picks the opening sentence plus the 4 sentences that share the most words with the rest of the article, in article order.
-4. Lists the sentences that carry figures written as digits (amounts, percentages, counts). Bare years are skipped.
+4. Lists the sentences that carry figures written as digits (amounts, percentages, counts). Bare years are skipped. Footnote markers such as [1] do not count as figures. Short navigation notes, such as "For other uses, see ..." lines, are skipped.
 5. With `--related`: `ai-search` with `tools: ["web"]`, `result_type: "ONLY_LINKS"` and the words from the link, then shows up to 3 links from other sites.
 
 ## Sample output (2026-10-18)
