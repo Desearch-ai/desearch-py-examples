@@ -7,16 +7,20 @@ means a case-insensitive whole-word match for shop, store, official, retailer,
 brand, inc, ltd, llc, or co. in the channel name, handle, or bio. URLs and
 email addresses are removed from the bio first. Handles also match official,
 shop, or store as substrings. Low_score means score <60. Flags are review hints.
+Exit codes: 0 completed; 1 not confirmed; 2 API, key or input error, or task
+ended not completed; 3 timeout; 4 estimate above --max-cost.
 Call logs record redacted query params under params ({} when absent).
 Polling and final results are deduplicated by handle, falling back to ID,
 URL, or row content when no handle is present.
 """
 import argparse
+import calendar
 from collections import Counter
 import csv
-from datetime import datetime
+from datetime import date, datetime
 import io
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -29,8 +33,47 @@ import requests
 
 BASE = 'https://api.desearch.ai'
 TASKS = '/desearch/people/tasks/'
-COLUMNS = 'handle,name,channel_url,score,subscribers,videos,views,country,email,website,top_video_url,top_video_title,reasons,quality_flags'.split(',')
+COLUMNS = 'handle,name,channel_url,score,subscribers,videos,views,last_upload,country,email,website,top_video_url,top_video_title,reasons,quality_flags'.split(',')
 TERMINAL = {'completed', 'failed', 'cancelled', 'expired'}
+
+
+# https://desearch.ai/pricing (checked 2026-10-26). Observed count 5 reserved
+# and billed $0.25 on 2026-10-23 and 2026-10-26.
+PRICE_PER_CREATOR_USD = 0.05
+MIN_BILLED_CREATORS = 3
+
+
+def estimate_cost(count):
+    reserved = round(count * PRICE_PER_CREATOR_USD, 4)
+    return dict(reserved_usd=reserved, min_billed_usd=round(min(count, MIN_BILLED_CREATORS) * PRICE_PER_CREATOR_USD, 4), max_billed_usd=reserved)
+
+
+def format_estimate(count, max_cost):
+    cost = estimate_cost(count)
+    return (f"Cost estimate: this search reserves ${cost['reserved_usd']:.2f} ({count} creators x $0.05). "
+            f"It bills ${cost['min_billed_usd']:.2f} to ${cost['max_billed_usd']:.2f} if it finds creators (minimum 3), "
+            f"$0 if it finds none; the unused part of the reservation is returned. Spend cap (--max-cost): ${max_cost:.2f}.")
+
+
+def today():
+    return datetime.now(ZoneInfo('Asia/Tbilisi')).date()
+
+
+def months_before(day, months):
+    year, month = divmod(day.year * 12 + day.month - 1 - months, 12)
+    return date(year, month + 1, min(day.day, calendar.monthrange(year, month + 1)[1]))
+
+
+def last_upload(videos):
+    dates = []
+    for video in videos:
+        value = video.get('published_at')
+        if isinstance(value, str):
+            try:
+                dates.append(datetime.fromisoformat(value[:-1] + '+00:00' if value.endswith('Z') else value).date())
+            except ValueError:
+                pass
+    return max(dates).isoformat() if dates else 'unknown'
 
 
 def load_excludes(filename):
@@ -94,11 +137,14 @@ def parse_creator(row):
                   top_video_url=top.get('url'), top_video_title=top.get('title'), reasons=' | '.join(str(x) for x in scoring.get('reasons') or []))
     if not result['website']:
         result['website'] = next((c.get('value') for c in contacts if c.get('type') == 'website'), None)
+    result['last_upload'] = last_upload(videos)
     result['quality_flags'] = ' | '.join(quality_flags(result, row.get('bio') or ''))
+    if result['last_upload'] == 'unknown':
+        result['quality_flags'] += (' | ' if result['quality_flags'] else '') + 'upload_date_unknown'
     return result
 
 
-def summarize(task, creators, request, creation=None):
+def summarize(task, creators, request, creation=None, max_inactive_months=12, inactive_dropped=0):
     creation = creation or {}
     duration = None
     try:
@@ -109,6 +155,7 @@ def summarize(task, creators, request, creation=None):
         pass
     flags = Counter(f for c in creators for f in c['quality_flags'].split(' | ') if f)
     data = {'query': task.get('query', request.get('query')), 'request': task.get('request', request), 'task_status': task.get('status'), 'completion_reason': task.get('completion_reason'), 'stop_reason': (task.get('progress') or {}).get('stop_reason'), 'coverage_limited': task.get('coverage_limited'), 'warnings': task.get('warnings', []), 'errors': task.get('errors', []), 'counts': {'downloaded': len(creators), 'result_count': task.get('result_count'), **(task.get('progress') or {})}, 'emails_count': sum(bool(c['email']) for c in creators), 'flags_counts': dict(flags), 'reserved_cost_usd': task.get('reserved_cost_usd', creation.get('reserved_cost_usd', creation.get('cost_usd'))), 'final_cost_usd': task.get('final_cost_usd'), 'refunded_usd': task.get('refunded_usd'), 'duration_seconds': duration, 'creation': creation}
+    data.update(max_inactive_months=max_inactive_months, inactive_dropped=inactive_dropped, last_upload_unknown=sum(c['last_upload'] == 'unknown' for c in creators), note='last_upload is the newest matching-video date in the Desearch response; a channel may have uploaded other videos since. Dropped creators are still billed.')
     return '# YouTube Creator Finder\n\n' + '\n\n'.join(f'{k}: {json.dumps(v, ensure_ascii=False)}' for k, v in data.items()) + '\n'
 
 
@@ -187,6 +234,9 @@ def parser():
         p.add_argument('--' + name, action='store_true')
     for name in ['exclude-file', 'idempotency-key', 'task-id']:
         p.add_argument('--' + name)
+    p.add_argument('--max-cost', type=float, default=0.25, help='maximum reservation in USD, greater than zero (default: 0.25)')
+    p.add_argument('--yes', action='store_true', help='start the paid search without asking')
+    p.add_argument('--max-inactive-months', type=int, default=12, help='maximum inactivity in calendar months; 0 turns off')
     p.add_argument('--poll-seconds', type=float, default=5)
     p.add_argument('--max-wait', type=float, default=600)
     p.add_argument('--out', default='output/')
@@ -205,9 +255,34 @@ def main(argv=None, session=None):
         p.error('subscriber limits must be nonnegative')
     if args.min_subscribers is not None and args.max_subscribers is not None and args.min_subscribers > args.max_subscribers:
         p.error('min-subscribers must not exceed max-subscribers')
+    if not math.isfinite(args.max_cost) or args.max_cost <= 0:
+        p.error('max-cost must be greater than zero')
+    if args.max_inactive_months < 0:
+        p.error('max-inactive-months must be nonnegative')
     client = None
     try:
         body = build_request_body(args)
+        estimate = estimate_cost(args.count)
+        if not args.task_id:
+            print(format_estimate(args.count, args.max_cost), file=sys.stderr)
+            if estimate['reserved_usd'] > args.max_cost:
+                if args.dry_run:
+                    print('Note: a real run would be refused by the spend cap --max-cost.', file=sys.stderr)
+                else:
+                    print(f"Error: the estimate (${estimate['reserved_usd']:.2f} reserved for count {args.count}) is above your spend cap --max-cost ${args.max_cost:.2f}. Lower --count or raise --max-cost. Nothing was sent.", file=sys.stderr)
+                    return 4
+            if not args.dry_run and not args.yes:
+                if not sys.stdin.isatty():
+                    print('Error: this search costs money and needs confirmation. Run it in a terminal to confirm, or pass --yes to start it without asking. Nothing was sent.', file=sys.stderr)
+                    return 1
+                print('Start this paid search? [y/N] ', end='', file=sys.stderr, flush=True)
+                try:
+                    answer = input()
+                except EOFError:
+                    answer = ''
+                if answer.strip().lower() not in ('y', 'yes'):
+                    print('Cancelled. Nothing was sent.', file=sys.stderr)
+                    return 1
         if args.dry_run:
             print(json.dumps(body, indent=2))
             return 0
@@ -230,13 +305,20 @@ def main(argv=None, session=None):
             except APIError:
                 client.set_log(out / 'create-error-calls.jsonl')
                 raise
+            reserved = task.get('reserved_cost_usd', task.get('cost_usd'))
+            if isinstance(reserved, (int, float)) and abs(reserved - estimate['reserved_usd']) > 0.0001:
+                print(client.redact(f"Warning: the API reserved ${reserved:.2f}, the estimate was ${estimate['reserved_usd']:.2f}; check https://desearch.ai/pricing."), file=sys.stderr)
             task_id = quote(str(task['task_id']), safe='')
             client.set_log(out / f'{task_id}-calls.jsonl')
             creation = {'status_code': response.status_code, 'cost_usd': task.get('cost_usd'), 'reserved_cost_usd': task.get('reserved_cost_usd', task.get('cost_usd')), 'cost_header': response.headers.get('X-Desearch-Cost-Usd')}
             print(client.redact(f'Task {task_id}: {json.dumps(creation)}'), file=sys.stderr)
         creators, seen = [], set()
+        inactive_dropped = 0
+        cutoff = months_before(today(), args.max_inactive_months) if args.max_inactive_months else None
+        inactive_path = out / f'{task_id}-inactive.csv'
+        inactive_path.unlink(missing_ok=True)
         def save_summary():
-            (out / f'{task_id}-summary.md').write_text(client.redact(summarize(task, creators, body, creation)), encoding='utf-8')
+            (out / f'{task_id}-summary.md').write_text(client.redact(summarize(task, creators, body, creation, args.max_inactive_months, inactive_dropped)), encoding='utf-8')
         with (out / f'{task_id}-creators.csv').open('w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=COLUMNS)
             writer.writeheader()
@@ -249,6 +331,14 @@ def main(argv=None, session=None):
                         continue
                     seen.add(identity)
                     creator = json.loads(client.redact(json.dumps(parse_creator(row))))
+                    if cutoff and creator['last_upload'] != 'unknown' and date.fromisoformat(creator['last_upload']) < cutoff:
+                        with inactive_path.open('a' if inactive_dropped else 'w', newline='', encoding='utf-8') as inactive:
+                            inactive_writer = csv.DictWriter(inactive, fieldnames=COLUMNS)
+                            if not inactive_dropped:
+                                inactive_writer.writeheader()
+                            inactive_writer.writerow(creator)
+                        inactive_dropped += 1
+                        continue
                     creators.append(creator)
                     writer.writerow(creator)
                     f.flush()
@@ -264,6 +354,11 @@ def main(argv=None, session=None):
                     return 3
                 time.sleep(min(args.poll_seconds, remaining))
                 _, task = client.call('GET', TASKS + task_id)
+        unknown = sum(c['last_upload'] == 'unknown' for c in creators)
+        if cutoff:
+            print(f'Inactivity filter (--max-inactive-months {args.max_inactive_months}): dropped {inactive_dropped} of {len(seen)} creators with no matching upload since {cutoff}' + (f' (see {inactive_path.name})' if inactive_dropped else '') + f'; {unknown} with unknown upload date kept.', file=sys.stderr)
+        else:
+            print(f'Inactivity filter (--max-inactive-months 0): off; {unknown} with unknown upload date kept.', file=sys.stderr)
         save_summary()
         response, _ = client.call('GET', TASKS + task_id + '/export', params={'format': 'csv'})
         (out / f'{task_id}-export.csv').write_bytes(response.content)

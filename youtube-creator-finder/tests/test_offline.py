@@ -41,7 +41,7 @@ class Session:
 def cli(tmp_path):
     key = tmp_path / 'secret.key'
     key.write_text('  secret-credential-123\n')
-    return ['--query', 'coffee creators', '--key-file', str(key), '--out', str(tmp_path / 'out')]
+    return ['--query', 'coffee creators', '--key-file', str(key), '--out', str(tmp_path / 'out'), '--yes']
 
 
 def test_minimal_body():
@@ -78,7 +78,7 @@ def test_parse_sample(row):
 
 
 def test_missing_fields():
-    assert app.parse_creator({})['quality_flags'] == 'views_missing | no_contact'
+    assert app.parse_creator({})['quality_flags'] == 'views_missing | no_contact | upload_date_unknown'
 
 
 @pytest.mark.parametrize('changes,flag', [({'views': None}, 'views_missing'), ({'videos': 1}, 'few_videos'), ({'email': '', 'website': ''}, 'no_contact'), ({'name': 'Official coffee'}, 'possible_brand_or_store'), ({'score': 59}, 'low_score')])
@@ -149,13 +149,15 @@ def test_timeout(cli, capsys, cancel):
 
 def test_dry_run_no_key(capsys):
     assert app.main(['--query', 'coffee', '--dry-run', '--key-file', '/missing'], Session()) == 0
-    assert json.loads(capsys.readouterr().out) == {'query': 'coffee', 'count': 5}
+    captured = capsys.readouterr()
+    assert json.loads(captured.out) == {'query': 'coffee', 'count': 5}
+    assert 'Cost estimate:' in captured.err
 
 
 def test_api_key_env_ignored(monkeypatch, capsys):
     monkeypatch.setenv('DESEARCH_API_KEY', 'forbidden-env-secret')
     s = Session()
-    assert app.main(['--query', 'coffee', '--key-file', '/missing'], s) == 2
+    assert app.main(['--query', 'coffee', '--key-file', '/missing', '--yes'], s) == 2
     assert not s.calls
     assert 'forbidden-env-secret' not in str(capsys.readouterr())
 
@@ -284,3 +286,133 @@ def test_contact_fields_do_not_flag():
 @pytest.mark.parametrize('term', ['shop', 'STORE', 'Official', 'retailer', 'brand', 'inc', 'ltd', 'llc', 'co.'])
 def test_bio_brand_words(term):
     assert 'possible_brand_or_store' in app.quality_flags({}, f'https://example.com {term}')
+
+
+def assert_no_key(tmp_path, captured):
+    assert 'secret-credential-123' not in captured.out + captured.err
+    for path in (tmp_path / 'out').glob('*'):
+        assert 'secret-credential-123' not in path.read_text()
+
+
+def test_estimate_cost():
+    assert app.estimate_cost(5) == dict(reserved_usd=.25, min_billed_usd=.15, max_billed_usd=.25)
+    assert app.estimate_cost(20)['reserved_usd'] == 1.0
+
+
+def test_cap_before_key(tmp_path, capsys):
+    s = Session()
+    assert app.main(['--query', 'coffee', '--count', '10', '--key-file', str(tmp_path / 'missing'), '--out', str(tmp_path / 'out')], s) == 4
+    captured = capsys.readouterr()
+    assert 'estimate' in captured.err and '--max-cost' in captured.err
+    assert not s.calls and not (tmp_path / 'out').exists()
+    assert_no_key(tmp_path, captured)
+
+
+def test_higher_cap_and_warning(cli, tmp_path, capsys):
+    s = Session(Response(dict(TASK, reserved_cost_usd=.75)), Response(RESULTS), Response('csv'))
+    assert app.main(cli + ['--count', '10', '--max-cost', '.5'], s) == 0
+    assert s.calls[0][0] == 'POST'
+    captured = capsys.readouterr()
+    assert 'Warning: the API reserved $0.75, the estimate was $0.50' in captured.err
+    assert_no_key(tmp_path, captured)
+
+
+@pytest.mark.parametrize('interactive,answer,expected', [(False, '', 1), (True, 'n', 1), (True, None, 1), (True, 'y', 0), (True, 'YES', 0)])
+def test_confirmation(cli, tmp_path, monkeypatch, capsys, interactive, answer, expected):
+    monkeypatch.setattr(sys.stdin, 'isatty', lambda: interactive)
+    def respond():
+        if answer is None:
+            raise EOFError()
+        return answer
+    monkeypatch.setattr('builtins.input', respond)
+    s = Session(Response(TASK), Response(RESULTS), Response('csv'))
+    assert app.main([x for x in cli if x != '--yes'], s) == expected
+    captured = capsys.readouterr()
+    if expected:
+        assert not s.calls
+        assert ('Cancelled.' if interactive else '--yes') in captured.err
+    else:
+        assert s.calls[0][0] == 'POST'
+    assert_no_key(tmp_path, captured)
+
+
+def test_dry_run_above_cap(tmp_path, capsys):
+    s = Session()
+    assert app.main(['--query', 'coffee', '--count', '20', '--dry-run', '--key-file', str(tmp_path / 'missing')], s) == 0
+    captured = capsys.readouterr()
+    assert json.loads(captured.out)['count'] == 20
+    assert 'Cost estimate:' in captured.err and 'real run would be refused' in captured.err
+    assert not s.calls
+    assert_no_key(tmp_path, captured)
+
+
+def test_free_task_no_confirmation(cli, tmp_path, capsys):
+    s = Session(Response(TASK), Response(RESULTS), Response('csv'))
+    assert app.main([x for x in cli if x != '--yes'] + ['--task-id', TASK['task_id'], '--count', '20'], s) == 0
+    captured = capsys.readouterr()
+    assert 'Cost estimate:' not in captured.err
+    assert all(c[0] == 'GET' for c in s.calls)
+    assert_no_key(tmp_path, captured)
+
+
+@pytest.mark.parametrize('field', ['evidence', 'videos'])
+def test_last_upload(field):
+    row = {field: [{'published_at': '2025-01-03T06:53:53-08:00'}, {'published_at': '2026-09-23T23:30:00-08:00'}, {'published_at': '2026-09-22T12:00:00Z'}, {'type': 'channel', 'published_at': '2026-10-26'}]}
+    assert app.parse_creator(row)['last_upload'] == '2026-09-23'
+    assert app.parse_creator({field: [{'published_at': '2026-09-22T12:00:00Z'}]})['last_upload'] == '2026-09-22'
+
+
+@pytest.mark.parametrize('value', [None, '', 'garbage', 123])
+def test_unknown_upload(value):
+    row = {'attributes': {'joined': 'Joined Jan 6, 2020'}, 'evidence': [{}, {'published_at': value}]}
+    parsed = app.parse_creator(row)
+    assert parsed['last_upload'] == 'unknown'
+    assert 'upload_date_unknown' in parsed['quality_flags']
+
+
+@pytest.mark.parametrize('off', [False, True])
+def test_inactivity(cli, tmp_path, capsys, monkeypatch, off):
+    import csv
+    monkeypatch.setattr(app, 'today', lambda: app.date(2026, 10, 26))
+    rows = copy.deepcopy(RESULTS['results'][:3])
+    for row, value in zip(rows, ['2019-03-17T00:00:00Z', '2026-09-23T00:00:00Z', None]):
+        row['evidence'] = [{'type': 'video', 'published_at': value}]
+    s = Session(Response(TASK), Response({'results': rows + [rows[0]], 'has_more': False}), Response('csv'))
+    assert app.main(cli + (['--max-inactive-months', '0'] if off else []), s) == 0
+    captured = capsys.readouterr()
+    out = tmp_path / 'out'
+    saved = list(csv.DictReader(next(out.glob('*-creators.csv')).open()))
+    assert len(saved) == (3 if off else 2)
+    assert 'upload_date_unknown' in saved[-1]['quality_flags']
+    if off:
+        assert not list(out.glob('*-inactive.csv'))
+        assert 'off;' in captured.err
+    else:
+        dropped = list(csv.DictReader(next(out.glob('*-inactive.csv')).open()))
+        assert len(dropped) == 1 and dropped[0]['handle'] == rows[0]['handle']
+        assert rows[0]['handle'] not in captured.out
+        assert 'dropped 1 of 3' in captured.err and '2025-10-26' in captured.err
+        summary = next(out.glob('*-summary.md')).read_text()
+        assert 'inactive_dropped: 1' in summary and 'last_upload_unknown: 1' in summary
+    assert_no_key(tmp_path, captured)
+
+
+def test_task_fetch_removes_stale_inactive_csv(cli, tmp_path):
+    out = tmp_path / 'out'
+    out.mkdir()
+    inactive_path = out / f'{TASK["task_id"]}-inactive.csv'
+    inactive_path.write_text('stale\n')
+    s = Session(Response(TASK), Response(RESULTS), Response('csv'))
+    assert app.main(cli + ['--task-id', TASK['task_id'], '--max-inactive-months', '0'], s) == 0
+    assert not inactive_path.exists()
+
+
+def test_month_clamp():
+    assert app.months_before(app.date(2026, 3, 31), 1) == app.date(2026, 2, 28)
+
+
+@pytest.mark.parametrize('option,value', [('--max-cost', '0'), ('--max-cost', '-1'), ('--max-cost', 'nan'), ('--max-inactive-months', '-1')])
+def test_new_option_validation(option, value):
+    with pytest.raises(SystemExit) as exc:
+        app.main(['--query', 'coffee', '--dry-run', option, value], Session())
+    assert exc.value.code == 2
