@@ -112,7 +112,8 @@ What we saw on 2026-10-26:
 - `createTime` is a Unix integer in seconds on profile posts and media lookup, but an ISO 8601 string on hashtag media and comments. The CLI adds `created_at` in ISO UTC and keeps `created_raw`.
 - The first profile posts page held 3 posts older than the posts on page 2, likely pinned posts. There is no pinned flag. Sort by `created_at` if you need newest first.
 - For like and comment counts, use the profile posts or hashtag routes.
-- Comments need the shortcode from the post URL. A numeric media id returned 404.
+- Use the post shortcode as your key across routes.
+- Comments take the shortcode from the post URL.
 - Search returns profiles with type `"profile"`.
 - Calls took about 2 to 16 seconds each in our runs: media and comments about 2 to 4 seconds; profile, posts, hashtag and search about 9 to 16 seconds. Use a timeout of 60 seconds or more.
 
