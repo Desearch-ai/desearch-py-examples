@@ -126,7 +126,7 @@ What we saw on 2026-10-26:
 - Use the post shortcode as your key across routes.
 - Comments take the shortcode from the post URL.
 - Search returns profiles with type `"profile"`.
-- Calls took about 2 to 16 seconds each in our runs: media and comments about 2 to 4 seconds; profile, posts, hashtag and search about 9 to 16 seconds. Use a timeout of 60 seconds or more.
+- Successful calls took roughly 2 to 22 seconds each in our runs on 2026-10-26: media and comments about 2 to 4 seconds; profile, posts, hashtag and search about 9 to 22 seconds. Use a timeout of 60 seconds or more.
 
 ## Privacy
 
