@@ -278,6 +278,7 @@ def test_partial_cli_collects_once(monkeypatch, capsys, tmp_path, tty, answer, f
     assert app.main() == code
     output = capsys.readouterr()
     result = json.loads(output.out)
+    assert result['draw_pending_confirmation'] == (not drawn)
     assert result['drawn'] == drawn and len(result['winners']) == int(drawn)
     assert 'Only 1 of 39' in output.err and len(calls) == 2
     assert 'two' in csv.read_text()
@@ -327,7 +328,7 @@ def test_web_partial_confirmation_cache_and_modes():
     repost = socketless_request(handler, dict(post='1', must_repost='on'))
     assert 'Replies:' not in repost
     reply = socketless_request(handler, dict(post='1', must_reply='on', count='20'))
-    assert 'Replies: 1 returned by the API of 39 the post shows (1 unique authors).' in reply
+    assert 'Replies: 1 returned by the API of 39 the post shows (1 unique author).' in reply
     assert len(fake.calls) == 3 and len(limiter.runs['127.0.0.1']) == 1
 
 
@@ -398,8 +399,8 @@ def test_public_copy_has_no_em_dash():
 
 @pytest.mark.parametrize('exclusions,expected', [
     ({'post author': 1, 'must repost': 2, 'reply not returned': 39},
-     'Not eligible: reply not returned (39), must repost (2), post author (1).'),
-    ({'z <tag>': 2, 'a & b': 2}, 'Not eligible: a &amp; b (2), z &lt;tag&gt; (2).'),
+     'Not eligible: 42 accounts (counted once, by the first rule each failed): reply not returned (39), must repost (2), post author (1).'),
+    ({'z <tag>': 2, 'a & b': 2}, 'Not eligible: 4 accounts (counted once, by the first rule each failed): a &amp; b (2), z &lt;tag&gt; (2).'),
     ({}, '')])
 def test_render_readable_exclusions(exclusions, expected):
     result = app.core.pick(Client().fetch, '9000', must_repost=True)
@@ -418,3 +419,116 @@ def test_render_readable_exclusions(exclusions, expected):
 def test_key_refusal_messages(status, body):
     assert str(app.core.APIError(status, body)) == (
         f'Desearch refused the API key (HTTP {status}). Check the key at console.desearch.ai.')
+
+
+def test_warning_separate_forms_and_changed_rules():
+    class Partial:
+        calls = 0
+        def fetch(self, path, params):
+            self.calls += 1
+            if path == '/twitter/urls':
+                return 200, [{'id': '1', 'reply_count': 2}], {}
+            if path.endswith('retweeters'):
+                return 200, {'users': [{'id': '2', 'followers_count': 10, 'created_at': '2018-01-01T00:00:00Z'}]}, {}
+            return 200, [{'user': {'id': '2'}, 'text': '@a'}], {}
+    client = Partial()
+    handler = app.make_handler(client, clock=Clock())
+    fields = dict(post='1', must_repost='on', must_reply='on', winners='3', min_tags='1', min_account_age_days='1', min_followers='1', count='20', draw_timestamp='2026-10-23T00:00:00Z')
+    page = socketless_request(handler, fields)
+    forms = re.findall(r'<form.*?</form>', page, re.S)
+    assert len(forms) == 2
+    assert 'Collect and draw' in forms[0] and 'confirm_partial_replies' not in forms[0]
+    assert page.index('Only 1 of 2 replies') < page.index('<button>Draw anyway')
+    assert page.count('Only 1 of 2 replies') == 1
+    for key, value in dict(fields, confirm_partial_replies='1').items():
+        assert f'type="hidden" name="{key}" value="{value}"' in forms[1]
+    fields.pop('must_reply')
+    changed = socketless_request(handler, fields)
+    assert 'Winners drawn: 1' in changed and client.calls == 3
+    assert 'Draw pending confirmation' not in changed
+
+
+def test_cli_no_replies_notice_and_draw_state(monkeypatch, capsys):
+    def fetch(path, params):
+        if path == '/twitter/urls':
+            return 200, [{'id': '1', 'reply_count': 0}], {}
+        return 503, {'detail': 'No replies. You were not charged.'}, {}
+    monkeypatch.setattr(app, 'demo_fetch', fetch)
+    monkeypatch.setattr(sys, 'argv', ['app.py', '--cli', '1', '--demo-fixtures', '--mode', 'reply'])
+    assert app.main() == 0
+    output = capsys.readouterr()
+    assert output.err.index('You were not charged.') < output.err.index('No accounts met the rules')
+    result = json.loads(output.out)
+    assert not result['drawn'] and not result['draw_pending_confirmation']
+    assert '~0 replies' not in output.out
+
+
+def test_web_and_cli_range_error(monkeypatch, capsys):
+    page = socketless_request(app.make_handler(Client()), dict(post='1', must_repost='on', winners='11'))
+    assert '400 Bad Request' in page and 'Winners must be from 1 to 10.' in page
+    monkeypatch.setattr(sys, 'argv', ['app.py', '--cli', '1', '--winners', '11'])
+    with pytest.raises(SystemExit) as error:
+        app.main()
+    assert error.value.code == 1
+    assert capsys.readouterr().err == 'Winners must be from 1 to 10.\n'
+
+
+def test_warning_hidden_values_escaped():
+    result = app.core.pick(Client().fetch, '1')
+    result.update(token='test', partial_reply_warning='Warning', draw_pending_confirmation=True)
+    page = app.render(result, values=dict(post='"<>&', must_repost=False, must_reply=True))
+    confirmation = re.findall(r'<form.*?</form>', page, re.S)[1]
+    assert 'value="&quot;&lt;&gt;&amp;"' in confirmation
+    assert 'name="must_repost"' not in confirmation
+
+
+def test_web_optional_cached_replies_display_only(monkeypatch):
+    class Fake:
+        def __init__(self):
+            self.calls = []
+        def fetch(self, path, params):
+            self.calls.append(path)
+            if path == '/twitter/urls':
+                body = [{'id': '1', 'retweet_count': 2, 'reply_count': 2}]
+            elif path.endswith('retweeters'):
+                body = {'users': [{'id': '2'}, {'id': '3'}]}
+            else:
+                body = [{'user': {'id': '4', 'username': 'reply_only'}}]
+            return 200, body, {'X-Desearch-Cost-Usd': '0.001'}
+
+    exports = []
+    to_csv = app.core.to_csv
+    def capture(rows):
+        csv = to_csv(rows)
+        exports.append(csv)
+        return csv
+    monkeypatch.setattr(app.core, 'to_csv', capture)
+    clock = Clock()
+    cache = app.core.CollectionCache(clock=clock)
+    limiter = app.core.RateLimiter(clock)
+    fake = Fake()
+    handler = app.make_handler(fake, cache=cache, limiter=limiter, clock=clock)
+    fields = dict(post='1', must_repost='on', count='20')
+    socketless_request(handler, dict(fields, must_reply='on'))
+    calls = len(fake.calls)
+    page = socketless_request(handler, fields)
+    assert 'Replies: 1 returned, not used in repost-only mode.' in page
+    assert 'Accounts collected: 2; Accounts qualified: 2' in page
+    assert 'Reported request cost (USD): 0.0' in page
+    assert 'from the latest' not in page and 'Only 1 of 2' not in page
+    assert len(fake.calls) == calls == 3
+    assert len(limiter.runs['127.0.0.1']) == 1
+    cached_csv = exports[-1]
+    assert 'reply_only' not in cached_csv
+
+    fresh = socketless_request(app.make_handler(Fake(), clock=clock), fields)
+    assert 'Replies:' not in fresh
+    assert 'Accounts collected: 2; Accounts qualified: 2' in fresh
+    assert exports[-1] == cached_csv
+    mismatch = socketless_request(handler, dict(fields, count='21'))
+    assert 'Replies:' not in mismatch and len(fake.calls) == calls
+    # Refresh only required parts, leaving the optional reply part expired.
+    clock.value += cache.ttl
+    expired = socketless_request(handler, fields)
+    assert 'Replies:' not in expired
+    assert fake.calls[calls:] == ['/twitter/urls', '/twitter/post/retweeters']

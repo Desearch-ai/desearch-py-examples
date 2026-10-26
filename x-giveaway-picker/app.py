@@ -105,8 +105,6 @@ def render(result=None, error=None, values=None):
             return tag[:-1] + (' checked>' if defaults[name] else '>')
         return tag[:-1] + ' value="' + escape(defaults.get(name, '')) + '">'
     page = re.sub(r'<input\b[^>]*>', fill, page)
-    if result and result.get('partial_reply_warning') and not result['drawn']:
-        page = page.replace('<button>Collect and draw</button>', '<p>Press Draw anyway to draw from the replies that came back. This uses the cached list, so it makes no new API calls and does not use a run.</p><input type="hidden" name="confirm_partial_replies" value="1"><button>Draw anyway</button>')
     if error:
         page += '<p>' + escape(error) + '</p>'
     if result:
@@ -114,10 +112,19 @@ def render(result=None, error=None, values=None):
             page += '<p>' + escape(result['error']) + '</p>'
         else:
             page += '<p>' + escape(result.get('partial_reply_warning', '')) + '</p>'
+            if result.get('draw_pending_confirmation'):
+                page += '<form method="post" action="/pick">'
+                for name, value in defaults.items():
+                    if name in ('must_repost', 'must_reply'):
+                        if not value:
+                            continue
+                        value = 'on'
+                    page += '<input type="hidden" name="' + escape(name) + '" value="' + escape(value) + '">'
+                page += '<input type="hidden" name="confirm_partial_replies" value="1"><p>Press Draw anyway to draw from the replies that came back. This uses the cached list, so it makes no new API calls and does not use a run.</p><button>Draw anyway</button></form>'
             rules, counts = result['rules'], result['counts']
             if rules['must_reply']:
                 rc = result['reply_coverage']
-                page += f"<p>Replies: {rc['returned']} returned by the API of {rc['reported']} the post shows ({rc['unique_authors']} unique authors).</p>"
+                page += f"<p>Replies: {rc['returned']} returned by the API of {rc['reported']} the post shows ({rc['unique_authors']} unique {core.plural(rc['unique_authors'], 'author')}).</p>"
             rule_labels = [('entry_mode', 'Entry mode'), ('winners', 'Winners requested'),
                            ('min_tags', 'Minimum tags'), ('min_account_age_days', 'Minimum account age days'),
                            ('min_followers', 'Minimum followers'), ('count', 'Reply count'),
@@ -127,12 +134,13 @@ def render(result=None, error=None, values=None):
             summary = result['message']
             if result['exclusions']:
                 reasons = sorted(result['exclusions'].items(), key=lambda item: (-item[1], item[0]))
-                exclusions = 'Not eligible: ' + ', '.join(f'{name} ({count})' for name, count in reasons) + '.'
+                total = sum(result['exclusions'].values())
+                exclusions = f"Not eligible: {total} {core.plural(total, 'account')} (counted once, by the first rule each failed): " + ', '.join(f'{name} ({count})' for name, count in reasons) + '.'
                 summary = ' '.join(part for part in (summary, exclusions) if part)
             if summary:
                 page += '<p>' + escape(summary) + '</p>'
             page += '<p>' + escape(result['coverage']) + '</p><p>Seed: ' + escape(result['seed']) + '</p>'
-            winner_text = ', '.join('@' + row['username'] for row in result['winners']) or ('No eligible accounts' if result['drawn'] else 'Draw pending confirmation')
+            winner_text = ', '.join('@' + row['username'] for row in result['winners']) or ('Draw pending confirmation' if result['draw_pending_confirmation'] else 'No eligible accounts')
             page += '<p>Winners: ' + escape(winner_text) + '</p>'
             page += '<p>' + escape(' | '.join(result['notices'])) + '</p>'
             page += '<p>Reported request cost (USD): ' + escape(result['cost_usd']) + '</p>'
@@ -196,7 +204,7 @@ def make_handler(client, *, limiter=None, cache=None, clock=None):
                 if not cached:
                     allowed, retry = limiter.allow(self.client_address[0])
                     if not allowed:
-                        message = f'Rate limit reached: 2 uncached runs per 10 minutes and 5 per day per IP. Try again in about {math.ceil(retry / 60)} minutes. Cached posts can still be re-drawn.'
+                        message = f"Rate limit reached: 2 uncached runs per 10 minutes and 5 per day per IP. Try again in about {math.ceil(retry / 60)} {core.plural(math.ceil(retry / 60), 'minute')}. Cached posts can still be re-drawn."
                         return self.send(429, render(error=message, values=values), retry_after=retry)
                 collection = cache.collect(client.fetch, options, parts, now)
                 warning = core.partial_reply_warning(collection, options)
@@ -259,6 +267,9 @@ def main():
                 elif not accepted:
                     print('Re-run with --accept-partial-replies to draw anyway.', file=sys.stderr)
             result = core.decide(collection, options, now=now, draw_timestamp=args.draw_timestamp, perform_draw=accepted)
+            for notice in result['notices']:
+                if notice.startswith(('The post has no replies', 'reply collection failed')):
+                    print(notice, file=sys.stderr)
             if result.get('message'):
                 print(result['message'], file=sys.stderr)
             print(json.dumps(result, indent=2))

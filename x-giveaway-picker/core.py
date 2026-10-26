@@ -63,12 +63,19 @@ def clean_post(value):
     return re.sub(r'^http://', 'https://', value, flags=re.I)
 
 
+def plural(n, singular, multiple=None):
+    return singular if n == 1 else multiple or singular + 's'
+
+
 def integer(value, name, minimum, maximum=None):
-    if isinstance(value, bool) or not re.fullmatch(r'[0-9]+', str(value)):
+    name = {'winners': 'Winners', 'min_tags': 'Minimum tags',
+            'min_account_age_days': 'Minimum account age days',
+            'min_followers': 'Minimum followers', 'count': 'Reply count'}.get(name, name)
+    if isinstance(value, bool) or not re.fullmatch(r'-?[0-9]+', str(value)):
         raise ValueError(f'{name} must be an integer.')
     value = int(value)
     if value < minimum or (maximum is not None and value > maximum):
-        raise ValueError(f'{name} is out of range.')
+        raise ValueError(f'{name} must be from {minimum} to {maximum}.' if maximum is not None else f'{name} must be {minimum} or more.')
     return value
 
 
@@ -176,14 +183,16 @@ def collect(fetch, options, *, now=None):
         if cap_with_new_ids:
             notices.append(f'first 25 pages of reposters only ({len(reposters)} collected; more remain)')
         elif len(reposters) < source.get('retweet_count', 0):
-            notices.append(f"{len(reposters)} of {source['retweet_count']} reposters collected; more may remain")
+            notices.append(f"{len(reposters)} of {source['retweet_count']} {plural(source['retweet_count'], 'reposter')} collected; more may remain")
     if options['must_reply']:
+        no_replies = False
         try:
             body = request('/twitter/replies/post', {'post_id': post_id, 'count': options['count']})
             replies = body if isinstance(body, list) else body.get('tweets', body.get('replies', []))
         except APIError as error:
             if error.status == 503 and (source.get('reply_count', 0) == 0 or
                     re.search(r'no replies|replies.*not found', error.detail, re.I)):
+                no_replies = True
                 notices.append('The post has no replies the API could find: ' + error.detail)
             else:
                 failed_parts.append('replies')
@@ -191,9 +200,10 @@ def collect(fetch, options, *, now=None):
         except Exception as error:
             failed_parts.append('replies')
             notices.append('reply collection failed: ' + str(error))
-        notices.append(f"from the latest ~{len(replies)} replies the API returned (post shows {source.get('reply_count', 0)} replies)")
+        if not no_replies:
+            notices.append(f"from the latest ~{len(replies)} {plural(len(replies), 'reply', 'replies')} the API returned (post shows {source.get('reply_count', 0)} {plural(source.get('reply_count', 0), 'reply', 'replies')})")
     if options['must_repost'] and len(reposters) < source.get('retweet_count', 0):
-        notices.append(f"{len(reposters)} of {source['retweet_count']} reported reposts returned; deleted, protected or uncollected accounts do not appear")
+        notices.append(f"{len(reposters)} of {source['retweet_count']} reported {plural(source['retweet_count'], 'repost')} returned; deleted, protected or uncollected accounts do not appear")
     return dict(source=source, reposters=reposters, replies=replies,
                 notices=notices, failed_parts=failed_parts, cost_usd=cost, collected_at=now.isoformat(),
                 reply_coverage=reply_coverage(replies, source))
@@ -209,19 +219,20 @@ def decide(collection, options, *, now=None, draw_timestamp=None, cached=False, 
     source = collection['source']
     post_id, author = str(source['id']), source.get('user') or {}
     reposters, replies = collection['reposters'], collection['replies']
-    notices = list(collection['notices'])
+    notices = [n for n in collection['notices'] if options['must_reply'] or not n.startswith(('from the latest ~', 'The post has no replies', 'reply collection failed'))]
     cost = 0.0 if cached else collection['cost_usd']
     if cached:
         collected = local_time(collection['collected_at'])
         notices.append(f'reused the list collected at {collected}; no new API calls')
-    users = dict(reposters)
+    users = dict(reposters) if options['must_repost'] else {}
     reply_tags = {}
     for reply in replies:
         user = reply.get('user') or {}
         if user.get('id') is None:
             continue
         uid = str(user['id'])
-        users.setdefault(uid, user)
+        if options['must_reply']:
+            users.setdefault(uid, user)
         tags = {m.lower() for m in re.findall(r'(?<![\w@])@([A-Za-z0-9_]{1,15})\b', reply.get('text') or '')}
         tags.discard(str(author.get('username', '')).lower().lstrip('@'))
         # A single reply must meet the tag requirement; do not combine replies.
@@ -248,22 +259,34 @@ def decide(collection, options, *, now=None, draw_timestamp=None, cached=False, 
                          account_created_at=user.get('created_at', ''), reposted=reposted, replied=replied,
                          tags=reply_tags.get(uid, 0), eligible=not reasons, reason='; '.join(reasons)))
     seed = f"{post_id}:{stamp.isoformat().replace('+00:00', 'Z')}"
-    coverage = f"Picked from {len(reposters)} reposts and {len(replies)} replies the API returned (post shows {source.get('retweet_count', 0)} reposts, {source.get('reply_count', 0)} replies)."
+    used, reported = [], []
+    for enabled, number, total, noun, multiple in (
+            (options['must_repost'], len(reposters), source.get('retweet_count', 0), 'repost', 'reposts'),
+            (options['must_reply'], len(replies), source.get('reply_count', 0), 'reply', 'replies')):
+        if enabled:
+            used.append(f"{number} {plural(number, noun, multiple)}")
+            reported.append(f"{total} {plural(total, noun, multiple)}")
+    coverage = f"Picked from {' and '.join(used)} the API returned (post shows {', '.join(reported)})."
+    if not options['must_reply'] and replies:
+        coverage += f" Replies: {len(replies)} returned, not used in repost-only mode."
     eligible = [r for r in rows if r['eligible']]
     winners = draw(eligible, options['winners'], seed) if perform_draw else []
     message = ''
     if not eligible:
         message = 'No accounts met the rules, so no winners were drawn.'
     elif len(eligible) < options['winners'] and perform_draw:
-        message = f"Only {len(eligible)} accounts met the rules, so {len(winners)} winners were drawn instead of {options['winners']}."
-    exclusions = {}
+        message = f"Only {len(eligible)} {plural(len(eligible), 'account')} met the rules, so {len(winners)} {plural(len(winners), 'winner')} {plural(len(winners), 'was', 'were')} drawn instead of {options['winners']}."
+    exclusions, exclusions_all = {}, {}
     for row in rows:
-        for reason in filter(None, row['reason'].split('; ')):
-            exclusions[reason] = exclusions.get(reason, 0) + 1
+        reasons = list(filter(None, row['reason'].split('; ')))
+        if reasons:
+            exclusions[reasons[0]] = exclusions.get(reasons[0], 0) + 1
+        for reason in reasons:
+            exclusions_all[reason] = exclusions_all.get(reason, 0) + 1
     rules = dict(options, entry_mode='both' if options['must_repost'] and options['must_reply'] else 'reply' if options['must_reply'] else 'repost', draw_timestamp=stamp.isoformat().replace('+00:00', 'Z'))
-    return dict(entrants=rows, winners=winners, drawn=perform_draw,
+    return dict(entrants=rows, winners=winners, drawn=bool(winners), draw_pending_confirmation=not perform_draw,
                 rules=rules, counts=dict(entrants=len(rows), eligible=len(eligible), winners_requested=options['winners'], winners_drawn=len(winners)),
-                message=message, exclusions=exclusions, reply_coverage=reply_coverage(replies, source),
+                message=message, exclusions=exclusions, exclusions_all=exclusions_all, reply_coverage=reply_coverage(replies, source),
                 partial_reply_warning=partial_reply_warning(collection, options),
                 seed=seed, notices=notices, coverage=coverage, cost_usd=cost,
                 returned_reposters=len(reposters), reported_reposts=source.get('retweet_count', 0))
@@ -277,7 +300,7 @@ def reply_coverage(replies, source):
 def partial_reply_warning(collection, options):
     coverage = reply_coverage(collection['replies'], collection.get('source') or {})
     if options['must_reply'] and coverage['returned'] < coverage['reported']:
-        return (f"Only {coverage['returned']} of {coverage['reported']} replies came back from the API. "
+        return (f"Only {coverage['returned']} of {coverage['reported']} {plural(coverage['reported'], 'reply', 'replies')} came back from the API. "
                 "People whose reply was not returned are marked 'reply not returned' and cannot win. Consider repost-only mode.")
     return ''
 
@@ -350,7 +373,13 @@ class CollectionCache:
         return [(pid, 'post')] + ([(pid, 'reposters')] if options['must_repost'] else []) + ([(pid, 'replies', options['count'])] if options['must_reply'] else [])
 
     def snapshot(self, options):
-        return {key: self.get(key) for key in self.needed(options)}
+        parts = {key: self.get(key) for key in self.needed(options)}
+        if not options['must_reply']:
+            key = (post_id(options['url']), 'replies', options['count'])
+            part = self.get(key)
+            if part is not None:
+                parts[key] = part
+        return parts
 
     def collect(self, fetch, options, parts, now):
         """Replay cached responses through the same collector, billing only new fetches.
@@ -375,6 +404,14 @@ class CollectionCache:
             records.setdefault(key, []).append(copy.deepcopy(response))
             return response
         collection = collect(wrapped, options, now=now)
+        if not options['must_reply'] and not collection.get('error'):
+            # Optional display data: never fetch it or make it a required part.
+            part = parts.get((post_id(options['url']), 'replies', options['count']))
+            if part is not None:
+                status, body, _ = part['responses'][0]
+                if status == 200:
+                    collection['replies'] = copy.deepcopy(body if isinstance(body, list) else body.get('tweets', body.get('replies', [])))
+                    collection['reply_coverage'] = reply_coverage(collection['replies'], collection['source'])
         if not collection.get('error'):
             for key, responses in records.items():
                 if parts[key] is None and key[1] not in collection.get('failed_parts', []):

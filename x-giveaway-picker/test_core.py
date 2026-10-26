@@ -1,7 +1,9 @@
 """Fully offline tests. No credentials or filesystem credential lookup."""
+import ast
 import datetime as dt
 import importlib.util
 import pathlib
+import re
 import pytest
 
 # Use a unique module name so neighboring examples' core modules cannot collide.
@@ -10,6 +12,25 @@ core = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(core)
 NOW = dt.datetime(2026, 10, 23, tzinfo=dt.timezone.utc)
 POST = {'id': '9000', 'user': {'id': '0', 'username': 'demo_brand'}, 'retweet_count': 100, 'reply_count': 90}
+
+
+@pytest.mark.parametrize('filename', ['app.py', 'core.py', 'test_app.py', 'test_core.py'])
+def test_f_strings_use_python_310_compatible_replacement_fields(filename):
+    source = pathlib.Path(__file__).with_name(filename).read_text(encoding='utf-8')
+    tree = ast.parse(source, filename=filename, feature_version=(3, 10))
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.JoinedStr):
+            continue
+        segment = ast.get_source_segment(source, node)
+        opening = re.match(r"(?i:[fr]*)(['\"])", segment)
+        if opening is None:
+            # Format specifications are also JoinedStr nodes, without quotes.
+            continue
+        opening_quote = opening.group(1)
+        # These files use simple fields; skip doubled braces in literal text.
+        for field in re.findall(r'(?<!\{)\{(?!\{)(.*?)\}', segment, re.DOTALL):
+            assert opening_quote not in field, (filename, node.lineno, field)
+            assert '\\' not in field, (filename, node.lineno, field)
 
 
 def user(uid, **extra):
@@ -202,7 +223,7 @@ def test_validation_before_calls(rules):
 
 def test_coverage_csv_and_cost():
     result = pick()
-    assert result['coverage'] == 'Picked from 1 reposts and 0 replies the API returned (post shows 100 reposts, 90 replies).'
+    assert result['coverage'] == 'Picked from 1 repost the API returned (post shows 100 reposts).'
     assert result['returned_reposters'] == 1 and result['reported_reposts'] == 100
     assert result['cost_usd'] == pytest.approx(0.002)
     assert core.to_csv(result['entrants']).splitlines()[0] == 'user_id,username,followers,account_created_at,reposted,replied,tags,eligible,reason'
@@ -370,7 +391,7 @@ def test_reply_coverage_rules_counts_and_reasons():
     assert 'Only 2 of 90' in result['partial_reply_warning']
     assert not result['drawn'] and not result['winners']
     few = pick(winners=5)
-    assert '1 winners were drawn instead of 5' in few['message']
+    assert '1 winner was drawn instead of 5' in few['message']
 
 
 @pytest.mark.parametrize('status,reported,detail,no_replies', [
@@ -430,3 +451,47 @@ def test_cache_local_time_zone_and_invalid_fallback(monkeypatch):
     assert 'UTC' in core.local_time(NOW.isoformat())
     monkeypatch.delenv('GIVEAWAY_TZ')
     assert 'UTC' in core.local_time(NOW.isoformat())
+
+
+@pytest.mark.parametrize('n', [1, 4])
+def test_plural_draw_and_coverage(n):
+    result = pick(Fake(pages=[{'users': [user(i + 1) for i in range(n)]}]), winners=10)
+    assert result['message'] == f"Only {n} {core.plural(n, 'account')} met the rules, so {n} {core.plural(n, 'winner')} {core.plural(n, 'was', 'were')} drawn instead of 10."
+    assert f"{n} {core.plural(n, 'repost')} the API" in result['coverage']
+    assert core.plural(n, 'minute') == ('minute' if n == 1 else 'minutes')
+    assert core.plural(n, 'author') == ('author' if n == 1 else 'authors')
+
+
+def test_exclusions_first_failure_and_all_reasons():
+    result = pick(must_reply=True, min_followers=101)
+    assert result['entrants'][0]['reason'] == 'reply not returned; not enough followers or unknown'
+    assert result['exclusions'] == {'reply not returned': 1}
+    assert result['exclusions_all'] == {'reply not returned': 1, 'not enough followers or unknown': 1}
+    assert sum(result['exclusions'].values()) == result['counts']['entrants'] - result['counts']['eligible']
+    assert not result['drawn'] and not result['draw_pending_confirmation']
+
+
+def test_unused_collection_parts_coverage_and_notices():
+    collection = core.collect(Fake(replies=[{'user': user(2)}]), core.validate('9000', must_reply=True), now=NOW)
+    repost = core.decide(collection, core.validate('9000'), now=NOW)
+    assert repost['coverage'] == 'Picked from 1 repost the API returned (post shows 100 reposts). Replies: 1 returned, not used in repost-only mode.'
+    assert not any(n.startswith('from the latest') for n in repost['notices'])
+    assert [row['user_id'] for row in repost['entrants']] == ['1']
+    assert 'entrant_02' not in core.to_csv(repost['entrants'])
+    reply = core.decide(collection, core.validate('9000', must_repost=False, must_reply=True), now=NOW)
+    assert reply['coverage'] == 'Picked from 1 reply the API returned (post shows 90 replies).'
+    assert [row['user_id'] for row in reply['entrants']] == ['2']
+    assert 'entrant_01' not in core.to_csv(reply['entrants'])
+
+
+@pytest.mark.parametrize('field,value,message', [
+    ('winners', 11, 'Winners must be from 1 to 10.'),
+    ('min_tags', 6, 'Minimum tags must be from 0 to 5.'),
+    ('count', 101, 'Reply count must be from 1 to 100.'),
+    ('min_followers', -1, 'Minimum followers must be 0 or more.'),
+    ('min_account_age_days', -1, 'Minimum account age days must be 0 or more.'),
+    ('min_followers', 'x', 'Minimum followers must be an integer.'),
+    ('min_account_age_days', 'x', 'Minimum account age days must be an integer.')])
+def test_readable_validation_labels(field, value, message):
+    with pytest.raises(ValueError, match=message):
+        core.validate('1', **{field: value})

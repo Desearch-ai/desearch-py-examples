@@ -125,6 +125,7 @@ Actual output from the offline command in Run (exit code 0, no stderr):
     }
   ],
   "drawn": true,
+  "draw_pending_confirmation": false,
   "rules": {
     "url": "https://x.com/i/status/900001234567890",
     "winners": 1,
@@ -145,6 +146,7 @@ Actual output from the offline command in Run (exit code 0, no stderr):
   },
   "message": "",
   "exclusions": {},
+  "exclusions_all": {},
   "reply_coverage": {
     "returned": 1,
     "reported": 1,
@@ -154,10 +156,10 @@ Actual output from the offline command in Run (exit code 0, no stderr):
   "seed": "900001234567890:2026-10-23T00:00:00Z",
   "notices": [
     "1 of 2 reposters collected; more may remain",
-    "from the latest ~1 replies the API returned (post shows 1 replies)",
+    "from the latest ~1 reply the API returned (post shows 1 reply)",
     "1 of 2 reported reposts returned; deleted, protected or uncollected accounts do not appear"
   ],
-  "coverage": "Picked from 1 reposts and 1 replies the API returned (post shows 2 reposts, 1 replies).",
+  "coverage": "Picked from 1 repost and 1 reply the API returned (post shows 2 reposts, 1 reply).",
   "cost_usd": 0.0,
   "returned_reposters": 1,
   "reported_reposts": 2
@@ -166,7 +168,7 @@ Actual output from the offline command in Run (exit code 0, no stderr):
 
 ## How the draw works
 
-Each user id has one entry. Repost mode requires a repost, reply mode requires a reply, and both requires both. The post author is excluded. Tags are distinct handles in a single reply, excluding the author's handle; separate replies are not combined. Missing age or follower data fails an enabled filter. Results include the rules used (entry mode, winners requested, tags, account age, followers, requested reply count and draw timestamp/seed) and counts for entrants, eligible accounts, winners requested and winners drawn. When fewer accounts qualify than requested winners, all eligible accounts are returned with an explicit message such as "Only 5 accounts met the rules, so 5 winners were drawn instead of 10." When none qualify, the result says "No accounts met the rules, so no winners were drawn." Exclusion counts identify which rules rejected accounts. The web page shows the draw message first, followed by a readable "Not eligible: reason (count), ..." sentence sorted by count descending, then reason name. It omits that sentence when there are no exclusions. The CLI also prints these draw messages to stderr.
+Each user id has one entry. Repost mode requires a repost, reply mode requires a reply, and both requires both. The post author is excluded. Tags are distinct handles in a single reply, excluding the author's handle; separate replies are not combined. Missing age or follower data fails an enabled filter. Results include the rules used (entry mode, winners requested, tags, account age, followers, requested reply count and draw timestamp/seed) and counts for entrants, eligible accounts, winners requested and winners drawn. When fewer accounts qualify than requested winners, all eligible accounts are returned with an explicit message such as "Only 5 accounts met the rules, so 5 winners were drawn instead of 10." When none qualify, the result says "No accounts met the rules, so no winners were drawn." Each ineligible account is counted once in `exclusions`, by its first failed rule in rule-check order. `exclusions_all` preserves overlapping counts for every failed rule in JSON. The CSV `reason` lists every failed rule. The web page shows the draw message first, followed by a readable "Not eligible: 44 accounts (counted once, by the first rule each failed): reply not returned (40), not enough followers or unknown (4)." sentence sorted by count descending, then reason name. It omits that sentence when there are no exclusions. The CLI also prints these draw messages to stderr.
 
 The seed is the post id plus `:` plus the ISO UTC draw timestamp. Python `random.Random` draws from eligible accounts sorted by user id. This is a seeded, reproducible draw: the same seed and same eligible list reproduce it. Eligibility rules must also match when repeating a draw.
 
@@ -180,7 +182,7 @@ Replies use one call only. `reply_coverage.returned` counts reply items returned
 
 In reply mode, fewer returned reply items than reported replies produces a warning before the draw. Accounts without a returned reply are marked "reply not returned" in entrants and CSV and cannot win. Accounts absent from all collected lists cannot appear in the export. Consider repost-only mode when reply coverage is incomplete.
 
-The web page first shows the warning, rules and counts, with CSV export and a "Draw anyway" button. Above the button it explains: "Press Draw anyway to draw from the replies that came back. This uses the cached list, so it makes no new API calls and does not use a run." That button resubmits the same values with `confirm_partial_replies=1`, reusing the cached collection with no API calls or rate-limit run. The CLI prints the warning to stderr. On a TTY it asks "Draw anyway? [y/N]" and draws only for y/yes. `--accept-partial-replies` accepts the warning explicitly. Without a TTY, that flag is required to draw. Refusal prints JSON with empty winners and `drawn: false`, still writes `--csv` if supplied, and exits with code 3. Collection happens once.
+The main form always keeps its "Collect and draw" button so changed rules can be submitted normally. Below the warning text, a separate form has a "Draw anyway" button, followed by rules, counts and CSV export. Above the button it explains: "Press Draw anyway to draw from the replies that came back. This uses the cached list, so it makes no new API calls and does not use a run." That button resubmits the same values with `confirm_partial_replies=1`, reusing the cached collection with no API calls or rate-limit run. The CLI prints the warning to stderr. On a TTY it asks "Draw anyway? [y/N]" and draws only for y/yes. `--accept-partial-replies` accepts the warning explicitly. Without a TTY, that flag is required to draw. Refusal prints JSON with empty winners and `drawn: false` and `draw_pending_confirmation: true`, still writes `--csv` if supplied, and exits with code 3. Collection happens once.
 
 A replies HTTP 503 with zero reported replies, or detail saying no replies were found, says plainly that the post has no replies the API could find and includes the API detail, for example "X search found no replies for this post. You were not charged." It does not say collection stopped early. Other reply failures show "reply collection failed (HTTP status): detail". When fewer reposters return than reported, an additional notice explains that deleted, protected, or uncollected accounts do not appear.
 
@@ -192,3 +194,9 @@ API results can change between runs. Expired collections are fetched again, so a
 Numeric post ids and http(s) X post links are accepted. Scheme-less `x.com/user/status/id`, `www.x.com/...`, `twitter.com/...`, `mobile.twitter.com/...` and `mobile.x.com/...` links are normalized to HTTPS before API calls. Profile links, other domains and arbitrary text are rejected.
 
 API errors show readable messages in the CLI without a traceback and on the normal web page with HTTP 502. HTTP 401 and JSON HTTP 403 explain that Desearch refused the key and point to console.desearch.ai. A non-JSON HTTP 403 says: "Desearch refused the request at the edge (HTTP 403). This is not a key problem; check the client's User-Agent and network." HTTP 402 is labeled payment required and preserves the API detail (including credits or balance guidance when supplied). HTTP 429 asks the user to wait, 5xx identifies a Desearch server error and preserves detail, and other statuses include the status and detail. Missing or unreadable explicitly configured key files show their path without raw OS errors or key contents. Network errors explain that Desearch could not be reached and suggest checking the connection.
+
+`drawn` is true only when at least one winner was drawn. `draw_pending_confirmation` is true only when partial-reply confirmation held the draw; when nobody qualifies, both fields are false. The CLI exits 0 when nobody qualifies, 3 when confirmation is declined or not accepted, and 1 on error. No-replies and reply-collection-failure notices also print to stderr before the draw message. A no-replies notice does not also claim that the latest ~0 replies were returned.
+
+Coverage describes only the entry modes used. For example: "Picked from 44 reposts the API returned (post shows 47 reposts). Replies: 4 returned, not used in repost-only mode." If no replies were fetched, the extra reply sentence is omitted. Reply-only coverage similarly does not claim reposts were used. Reply collection notices are omitted in repost-only mode.
+
+Validation names the field and its range on both the web (HTTP 400) and CLI: "Winners must be from 1 to 10.", "Minimum tags must be from 0 to 5.", "Reply count must be from 1 to 100.", "Minimum account age days must be 0 or more.", and "Minimum followers must be 0 or more." Noninteger values use the same readable field labels with "must be an integer."
