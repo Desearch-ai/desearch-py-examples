@@ -33,8 +33,8 @@ import requests
 
 BASE = 'https://api.desearch.ai'
 TASKS = '/desearch/people/tasks/'
-COLUMNS = 'handle,name,channel_url,score,subscribers,videos,views,newest_matching_video,inactive,country,email,website,top_video_url,top_video_title,reasons,quality_flags'.split(',')
-INACTIVE_FLAG_MONTHS = 12
+COLUMNS = 'handle,name,channel_url,score,subscribers,videos,views,newest_matching_video,no_recent_matching_video,country,email,website,top_video_url,top_video_title,reasons,quality_flags'.split(',')
+NO_RECENT_MATCHING_VIDEO_MONTHS = 12
 TERMINAL = {'completed', 'failed', 'cancelled', 'expired'}
 
 
@@ -123,7 +123,7 @@ def quality_flags(creator, bio=''):
     return flags
 
 
-def parse_creator(row, inactive_flag_months=INACTIVE_FLAG_MONTHS):
+def parse_creator(row):
     metrics = row.get('metrics') or {}
     score = row.get('score')
     scoring = score if isinstance(score, dict) else {}
@@ -139,15 +139,15 @@ def parse_creator(row, inactive_flag_months=INACTIVE_FLAG_MONTHS):
     if not result['website']:
         result['website'] = next((c.get('value') for c in contacts if c.get('type') == 'website'), None)
     result['newest_matching_video'] = newest_matching_video(videos)
-    result['inactive'] = ('unknown' if result['newest_matching_video'] == 'unknown' else
-                          str(date.fromisoformat(result['newest_matching_video']) < months_before(today(), inactive_flag_months)).lower())
+    result['no_recent_matching_video'] = ('unknown' if result['newest_matching_video'] == 'unknown' else
+                                        str(date.fromisoformat(result['newest_matching_video']) < months_before(today(), NO_RECENT_MATCHING_VIDEO_MONTHS)).lower())
     result['quality_flags'] = ' | '.join(quality_flags(result, row.get('bio') or ''))
     if result['newest_matching_video'] == 'unknown':
         result['quality_flags'] += (' | ' if result['quality_flags'] else '') + 'matching_video_date_unknown'
     return result
 
 
-def summarize(task, creators, request, creation=None, max_inactive_months=None, inactive_dropped=0):
+def summarize(task, creators, request, creation=None):
     creation = creation or {}
     duration = None
     try:
@@ -158,7 +158,7 @@ def summarize(task, creators, request, creation=None, max_inactive_months=None, 
         pass
     flags = Counter(f for c in creators for f in c['quality_flags'].split(' | ') if f)
     data = {'query': task.get('query', request.get('query')), 'request': task.get('request', request), 'task_status': task.get('status'), 'completion_reason': task.get('completion_reason'), 'stop_reason': (task.get('progress') or {}).get('stop_reason'), 'coverage_limited': task.get('coverage_limited'), 'warnings': task.get('warnings', []), 'errors': task.get('errors', []), 'counts': {'downloaded': len(creators), 'result_count': task.get('result_count'), **(task.get('progress') or {})}, 'emails_count': sum(bool(c['email']) for c in creators), 'flags_counts': dict(flags), 'reserved_cost_usd': task.get('reserved_cost_usd', creation.get('reserved_cost_usd', creation.get('cost_usd'))), 'final_cost_usd': task.get('final_cost_usd'), 'refunded_usd': task.get('refunded_usd'), 'duration_seconds': duration, 'creation': creation}
-    data.update(inactive_flag_months=max_inactive_months or INACTIVE_FLAG_MONTHS, inactive_flagged=sum(c['inactive'] == 'true' for c in creators), max_inactive_months=max_inactive_months, inactive_dropped=inactive_dropped, newest_matching_video_unknown=sum(c['newest_matching_video'] == 'unknown' for c in creators), note='newest_matching_video is the newest publish date among the videos that matched the search, not the channel\'s latest upload; Desearch returns no channel-level upload date. Dropped creators are still billed.')
+    data.update(no_recent_matching_video_months=NO_RECENT_MATCHING_VIDEO_MONTHS, no_recent_matching_video_count=sum(c['no_recent_matching_video'] == 'true' for c in creators), newest_matching_video_unknown=sum(c['newest_matching_video'] == 'unknown' for c in creators), note='newest_matching_video is the newest publish date among the videos that matched the search, not the channel\'s latest upload; Desearch returns no channel-level upload date. no_recent_matching_video only looks at those matching videos.')
     return '# YouTube Creator Finder\n\n' + '\n\n'.join(f'{k}: {json.dumps(v, ensure_ascii=False)}' for k, v in data.items()) + '\n'
 
 
@@ -239,7 +239,6 @@ def parser():
         p.add_argument('--' + name)
     p.add_argument('--max-cost', type=float, default=0.25, help='maximum reservation in USD, greater than zero (default: 0.25)')
     p.add_argument('--yes', action='store_true', help='start the paid search without asking')
-    p.add_argument('--max-inactive-months', type=int, default=None, help='optional: drops creators whose newest matching video is older than N calendar months; without it they are only flagged (inactive=true) using 12 months; 0 = flag only, same as not passing it')
     p.add_argument('--poll-seconds', type=float, default=5)
     p.add_argument('--max-wait', type=float, default=600)
     p.add_argument('--out', default='output/')
@@ -260,8 +259,6 @@ def main(argv=None, session=None):
         p.error('min-subscribers must not exceed max-subscribers')
     if not math.isfinite(args.max_cost) or args.max_cost <= 0:
         p.error('max-cost must be greater than zero')
-    if args.max_inactive_months is not None and args.max_inactive_months < 0:
-        p.error('max-inactive-months must be nonnegative')
     client = None
     try:
         body = build_request_body(args)
@@ -316,13 +313,9 @@ def main(argv=None, session=None):
             creation = {'status_code': response.status_code, 'cost_usd': task.get('cost_usd'), 'reserved_cost_usd': task.get('reserved_cost_usd', task.get('cost_usd')), 'cost_header': response.headers.get('X-Desearch-Cost-Usd')}
             print(client.redact(f'Task {task_id}: {json.dumps(creation)}'), file=sys.stderr)
         creators, seen = [], set()
-        inactive_dropped = 0
-        flag_months = args.max_inactive_months or INACTIVE_FLAG_MONTHS
-        cutoff = months_before(today(), flag_months)
-        inactive_path = out / f'{task_id}-inactive.csv'
-        inactive_path.unlink(missing_ok=True)
+        cutoff = months_before(today(), NO_RECENT_MATCHING_VIDEO_MONTHS)
         def save_summary():
-            (out / f'{task_id}-summary.md').write_text(client.redact(summarize(task, creators, body, creation, args.max_inactive_months, inactive_dropped)), encoding='utf-8')
+            (out / f'{task_id}-summary.md').write_text(client.redact(summarize(task, creators, body, creation)), encoding='utf-8')
         with (out / f'{task_id}-creators.csv').open('w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=COLUMNS)
             writer.writeheader()
@@ -334,15 +327,7 @@ def main(argv=None, session=None):
                     if identity in seen:
                         continue
                     seen.add(identity)
-                    creator = json.loads(client.redact(json.dumps(parse_creator(row, flag_months))))
-                    if args.max_inactive_months and creator['inactive'] == 'true':
-                        with inactive_path.open('a' if inactive_dropped else 'w', newline='', encoding='utf-8') as inactive:
-                            inactive_writer = csv.DictWriter(inactive, fieldnames=COLUMNS)
-                            if not inactive_dropped:
-                                inactive_writer.writeheader()
-                            inactive_writer.writerow(creator)
-                        inactive_dropped += 1
-                        continue
+                    creator = json.loads(client.redact(json.dumps(parse_creator(row))))
                     creators.append(creator)
                     writer.writerow(creator)
                     f.flush()
@@ -359,11 +344,8 @@ def main(argv=None, session=None):
                 time.sleep(min(args.poll_seconds, remaining))
                 _, task = client.call('GET', TASKS + task_id)
         unknown = sum(c['newest_matching_video'] == 'unknown' for c in creators)
-        if args.max_inactive_months:
-            print(f'Inactivity filter (--max-inactive-months {args.max_inactive_months}): dropped {inactive_dropped} of {len(seen)} creators with no matching video since {cutoff}' + (f' (see {inactive_path.name})' if inactive_dropped else '') + f'; {unknown} with unknown matching video date kept.', file=sys.stderr)
-        else:
-            flagged = sum(c['inactive'] == 'true' for c in creators)
-            print(f'Inactive flag: {flagged} of {len(seen)} creators have no matching video since {cutoff} (inactive=true, kept); {unknown} unknown. Pass --max-inactive-months N to drop them.', file=sys.stderr)
+        flagged = sum(c['no_recent_matching_video'] == 'true' for c in creators)
+        print(f'no_recent_matching_video: {flagged} of {len(seen)} creators have no matching video since {cutoff} (all kept); {unknown} unknown.', file=sys.stderr)
         save_summary()
         response, _ = client.call('GET', TASKS + task_id + '/export', params={'format': 'csv'})
         (out / f'{task_id}-export.csv').write_bytes(response.content)

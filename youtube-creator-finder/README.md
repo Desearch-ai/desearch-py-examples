@@ -2,7 +2,7 @@
 
 Made by Desearch · https://desearch.ai
 
-Describe the YouTube creators you want in plain words, and this Python CLI uses the Desearch API People Search to build a CSV of creators who match. Each row has the channel URL, subscribers, videos, views, newest_matching_video, inactive, country, a public email or website when the creator lists one, a fit score with reasons, the top matching video, and a few local quality flags.
+Describe the YouTube creators you want in plain words, and this Python CLI uses the Desearch API People Search to build a CSV of creators who match. Each row has the channel URL, subscribers, videos, views, newest_matching_video, no_recent_matching_video, country, a public email or website when the creator lists one, a fit score with reasons, the top matching video, and a few local quality flags.
 
 You get creators matching your description, with public contacts when the creator lists one. It is not a full list of every creator, and emails are not verified.
 
@@ -36,7 +36,7 @@ Start this paid search? [y/N]
 
 `--max-cost` defaults to $0.25, the cost of the default count 5. A reservation above the cap exits 4 before any call or key read. For count 20, use `--count 20 --max-cost 1.00`. Pass `--yes` to skip the prompt; it is required in scripts, cron or CI, otherwise the script exits 1 without spending. Only the creation POST is paid; task status, results, export and cancel are free. `--dry-run` prints the body and estimate without a key or prompt, even above the cap.
 
-Options: `--max-cost` (positive USD reservation cap, default 0.25), `--yes` (start without asking), `--max-inactive-months N` (optional: drop creators with matching videos older than N months; 0 = flag only, same as not passing it), `--count` (5 to 200), `--min-score`, `--min-subscribers`, `--max-subscribers`, `--country` (repeatable), `--require-contact`, `--keyword` / `--exclude-keyword` (repeatable), `--exclude-file` (handles you already contacted, one per line or a previous output CSV), `--idempotency-key` (sending the same key again returns the first search), `--task-id` (fetch an existing search, free), `--dry-run` (print the request body, no key needed).
+Options: `--max-cost` (positive USD reservation cap, default 0.25), `--yes` (start without asking), `--count` (5 to 200), `--min-score`, `--min-subscribers`, `--max-subscribers`, `--country` (repeatable), `--require-contact`, `--keyword` / `--exclude-keyword` (repeatable), `--exclude-file` (handles you already contacted, one per line or a previous output CSV), `--idempotency-key` (sending the same key again returns the first search), `--task-id` (fetch an existing search, free), `--dry-run` (print the request body, no key needed).
 
 Exit codes: 0 completed; 1 not confirmed (declined or non-interactive without `--yes`); 2 API, key or input error, or task ended not completed; 3 timeout; 4 estimate above `--max-cost`.
 
@@ -44,21 +44,21 @@ Endpoints used: `POST /desearch/people/search/youtube`, `GET /desearch/people/ta
 
 ## Output (in `output/`)
 
-- `<task_id>-creators.csv`: handle, name, channel_url, score, subscribers, videos, views, newest_matching_video, inactive, country, email, website, top_video_url, top_video_title, reasons, quality_flags
-- `<task_id>-inactive.csv`: same columns, created only when the inactivity filter drops creators
+- `<task_id>-creators.csv`: handle, name, channel_url, score, subscribers, videos, views, newest_matching_video, no_recent_matching_video, country, email, website, top_video_url, top_video_title, reasons, quality_flags
 - `<task_id>-export.csv`: the API's own CSV export
 - `<task_id>-summary.md`: request, why the search stopped, warnings, cost reserved, billed and refunded
 - `<task_id>-calls.jsonl`: every HTTP call with status, timing, cost headers and body (no key)
 
 `newest_matching_video` is the newest publish date among the videos that matched your search, not the channel's latest upload, because Desearch returns no channel-level upload date.
+`no_recent_matching_video` is `true` when the newest matching video is older than 12 calendar months, `false` when it is newer, and `unknown` when there is no date; it only looks at videos that matched the search, not the channel's latest upload, and nothing is removed because of it.
 
-Dates use the timestamp's own date. Missing dates are `unknown` and kept with the `matching_video_date_unknown` flag. The `inactive` column is `true` for dates older than 12 calendar months before today in Asia/Tbilisi (same day, clamped to month end), `false` for dates within that threshold, and `unknown` for missing dates. By default all creators stay in creators.csv and stdout, and no inactive.csv is written. Pass `--max-inactive-months N` with N > 0 to change the threshold and drop creators with `inactive=true` into `<task_id>-inactive.csv`. With 0, flags use the default 12 months and nothing is dropped.
+Dates use the timestamp's own date. Missing dates are `unknown` and kept with the `matching_video_date_unknown` flag. The 12 calendar month cutoff uses today in Asia/Tbilisi (same day, clamped to month end). All creators stay in creators.csv and stdout.
 
 Quality flags are computed locally: `matching_video_date_unknown`, `views_missing`, `few_videos` (1 video or fewer), `no_contact` (no email and no website), `possible_brand_or_store` (name, handle or bio mentions shop, store, official, brand and similar words), `low_score` (under 60). Review the flagged rows before outreach.
 
 ## Cost
 
-YouTube Creator Search costs $0.05 per qualified creator, with a minimum of 3 creators ($0.15) when it finds anyone, and $0 when it finds none. It reserves count x $0.05 at the start and returns the unused part when the search ends. Source: https://desearch.ai/pricing, checked 2026-10-26. Observed runs on 2026-10-23 and 2026-10-26 with count 5 reserved and billed $0.25 (POST cost_usd and X-Desearch-Cost-Usd both 0.25). Creators removed by the inactivity filter are still billed.
+YouTube Creator Search costs $0.05 per qualified creator, with a minimum of 3 creators ($0.15) when it finds anyone, and $0 when it finds none. It reserves count x $0.05 at the start and returns the unused part when the search ends. Source: https://desearch.ai/pricing, checked 2026-10-26. Observed runs on 2026-10-23 and 2026-10-26 with count 5 reserved and billed $0.25 (POST cost_usd and X-Desearch-Cost-Usd both 0.25).
 
 ## Sample
 

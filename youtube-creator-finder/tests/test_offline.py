@@ -367,48 +367,34 @@ def test_unknown_upload(value):
     row = {'attributes': {'joined': 'Joined Jan 6, 2020'}, 'evidence': [{}, {'published_at': value}]}
     parsed = app.parse_creator(row)
     assert parsed['newest_matching_video'] == 'unknown'
+    assert parsed['no_recent_matching_video'] == 'unknown'
     assert 'matching_video_date_unknown' in parsed['quality_flags']
 
 
-@pytest.mark.parametrize('months', [None, 0, 12, 6])
-def test_inactivity(cli, tmp_path, capsys, monkeypatch, months):
+def test_default_run_keeps_old_matching_video(cli, tmp_path, capsys, monkeypatch):
     import csv
     monkeypatch.setattr(app, 'today', lambda: app.date(2026, 10, 26))
     rows = copy.deepcopy(RESULTS['results'][:4])
-    for row, value in zip(rows, ['2019-03-17T00:00:00Z', '2026-09-23T00:00:00Z', None, '2026-02-26']):
+    for row, value in zip(rows, ['2019-03-17T00:00:00Z', '2026-09-23T00:00:00Z', None, '2025-10-26']):
         row['evidence'] = [{'type': 'video', 'published_at': value}]
     s = Session(Response(TASK), Response({'results': rows + [rows[0]], 'has_more': False}), Response('csv'))
-    assert app.main(cli + (['--max-inactive-months', str(months)] if months is not None else []), s) == 0
+    assert app.main(cli, s) == 0
     captured = capsys.readouterr()
     out = tmp_path / 'out'
-    saved = list(csv.DictReader(next(out.glob('*-creators.csv')).open()))
-    dropped_count = 2 if months == 6 else 1 if months == 12 else 0
-    assert len(saved) == 4 - dropped_count
-    by_handle = {row['handle']: row for row in saved}
-    assert by_handle[rows[1]['handle']]['inactive'] == 'false'
-    assert by_handle[rows[2]['handle']]['inactive'] == 'unknown'
-    assert 'matching_video_date_unknown' in by_handle[rows[2]['handle']]['quality_flags']
+    with next(out.glob('*-creators.csv')).open() as f:
+        saved = list(csv.DictReader(f))
     streamed = [json.loads(line) for line in captured.out.splitlines()]
-    assert streamed == saved or [r['handle'] for r in streamed] == [r['handle'] for r in saved]
-    if dropped_count:
-        dropped = list(csv.DictReader(next(out.glob('*-inactive.csv')).open()))
-        assert len(dropped) == dropped_count
-        assert all(row['inactive'] == 'true' for row in dropped)
-        assert rows[0]['handle'] not in captured.out
-        assert f'dropped {dropped_count} of 4' in captured.err
-    else:
-        assert by_handle[rows[0]['handle']]['inactive'] == 'true'
-        assert by_handle[rows[3]['handle']]['inactive'] == 'false'
-        assert not list(out.glob('*-inactive.csv'))
-        assert 'Inactive flag: 1 of 4' in captured.err
-        assert '--max-inactive-months N' in captured.err
+    assert [r['handle'] for r in streamed] == [r['handle'] for r in saved] == [r['handle'] for r in rows]
+    assert [r['no_recent_matching_video'] for r in saved] == ['true', 'false', 'unknown', 'false']
+    assert [r['no_recent_matching_video'] for r in streamed] == ['true', 'false', 'unknown', 'false']
+    assert 'matching_video_date_unknown' in saved[2]['quality_flags']
+    assert not any('in' + 'active' in path.name for path in out.iterdir())
+    assert 'no_recent_matching_video: 1 of 4 creators have no matching video since 2025-10-26 (all kept); 1 unknown.' in captured.err
     summary = next(out.glob('*-summary.md')).read_text()
-    assert f'inactive_dropped: {dropped_count}' in summary
-    assert f'inactive_flagged: {0 if dropped_count else 1}' in summary
-    assert f'inactive_flag_months: {months or 12}' in summary
-    assert f'max_inactive_months: {"null" if months is None else months}' in summary
+    assert 'no_recent_matching_video_count: 1' in summary
+    assert 'no_recent_matching_video_months: 12' in summary
     assert 'newest_matching_video_unknown: 1' in summary
-    assert ('2026-04-26' if months == 6 else '2025-10-26') in captured.err
+    assert "newest_matching_video is the newest publish date among the videos that matched the search, not the channel's latest upload; Desearch returns no channel-level upload date. no_recent_matching_video only looks at those matching videos." in summary
     obsolete = 'last' + '_upload'
     assert obsolete not in captured.out
     for path in out.iterdir():
@@ -416,21 +402,23 @@ def test_inactivity(cli, tmp_path, capsys, monkeypatch, months):
     assert_no_key(tmp_path, captured)
 
 
-def test_task_fetch_removes_stale_inactive_csv(cli, tmp_path):
-    out = tmp_path / 'out'
-    out.mkdir()
-    inactive_path = out / f'{TASK["task_id"]}-inactive.csv'
-    inactive_path.write_text('stale\n')
-    s = Session(Response(TASK), Response(RESULTS), Response('csv'))
-    assert app.main(cli + ['--task-id', TASK['task_id'], '--max-inactive-months', '0'], s) == 0
-    assert not inactive_path.exists()
+def test_removed_option_rejected():
+    with pytest.raises(SystemExit) as exc:
+        app.main(['--query', 'coffee', '--max-in' + 'active-months', '12'], Session())
+    assert exc.value.code == 2
 
 
 def test_month_clamp():
     assert app.months_before(app.date(2026, 3, 31), 1) == app.date(2026, 2, 28)
 
 
-@pytest.mark.parametrize('option,value', [('--max-cost', '0'), ('--max-cost', '-1'), ('--max-cost', 'nan'), ('--max-inactive-months', '-1')])
+@pytest.mark.parametrize('published,flag', [('2023-02-27', 'true'), ('2023-02-28', 'false'), ('2023-03-01', 'false')])
+def test_flag_month_clamp(monkeypatch, published, flag):
+    monkeypatch.setattr(app, 'today', lambda: app.date(2024, 2, 29))
+    assert app.parse_creator({'videos': [{'published_at': published}]})['no_recent_matching_video'] == flag
+
+
+@pytest.mark.parametrize('option,value', [('--max-cost', '0'), ('--max-cost', '-1'), ('--max-cost', 'nan')])
 def test_new_option_validation(option, value):
     with pytest.raises(SystemExit) as exc:
         app.main(['--query', 'coffee', '--dry-run', option, value], Session())
