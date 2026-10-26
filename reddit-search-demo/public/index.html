@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reddit search</title>
+<style>
+*{box-sizing:border-box;min-width:0}body{font:16px/1.6 system-ui,sans-serif;max-width:900px;margin:3rem auto;padding:0 1rem;background:white;color:#20352c;overflow-wrap:anywhere}form{display:flex;gap:.75rem;align-items:end;flex-wrap:wrap}.prompt{flex:1 1 300px}label{display:block}input,select,button{font:inherit;padding:.6rem;border:1px solid #7b998c;border-radius:6px;max-width:100%}input{width:100%}button{cursor:pointer;background:#146b4a;color:white}button:disabled{opacity:.6}li{padding:1rem 0;border-bottom:1px solid #dce5df;overflow-wrap:anywhere}a{color:#146b4a}p{margin:.5rem 0}ol{padding-left:1.5rem}.domain,time,#limits,footer{font-size:.9rem}footer{margin-top:3rem}h1{line-height:1.2}
+</style>
+<h1>Reddit search</h1>
+<p>Type a topic and get up to 10 public Reddit threads about it, with the subreddit, thread title and link. One Desearch web search, limited to reddit.com.</p>
+<form id="form" novalidate><div class="prompt"><label for="topic">Topic</label><input id="topic" type="text" maxlength="200" required placeholder="keeping houseplants alive in winter"></div><button id="submit">Search</button></form>
+<p id="limits">Limits: 5 requests per network per 10 minutes and 15 per day. Repeat requests are served from a cache at no cost.</p>
+<p id="status" role="status" aria-live="polite"></p>
+<p id="sample-label" hidden>Saved sample: 2026-10-26.</p>
+<div id="results"></div>
+<footer><a href="https://github.com/Desearch-ai/desearch-py-examples/tree/main/reddit-search-demo">View the code</a> · Made by <a href="https://desearch.ai">Desearch</a></footer>
+<script>
+const $=id=>document.getElementById(id);
+const unavailable='Desearch could not search Reddit right now. Try again in a minute.';
+function clear(){$('results').replaceChildren();$('sample-label').hidden=true;}
+function add(tag,text,parent=$('results')){const node=document.createElement(tag);node.textContent=text;parent.append(node);return node;}
+function render(data){
+ if(data.sample){$('sample-label').textContent='Saved sample: '+data.sample_date+'.';}
+ if(data.status==='empty'){add('p',data.message);return;}
+ if(!(data.threads || []).length)return;
+ const list=add('ol','');
+ for(const row of data.threads || []){
+  const item=add('li','',list);add('p',row.subreddit,item);
+  let safe=false;try{const url=new URL(row.link);safe=url.protocol==='https:' && url.host==='www.reddit.com';}catch{}
+  const link=add(safe?'a':'span',row.title,item);
+  if(safe){link.href=row.link;link.target='_blank';link.rel='noopener noreferrer';}
+  if(row.snippet)add('p',row.snippet,item);
+  if(row.title_from_link)add('p','Title rebuilt from the link',item);
+  add('p','Date: not shown',item);
+ }
+ add('p','Links only. Open a thread to read it on Reddit. Poster names are not shown.');
+}
+$('form').onsubmit=async event=>{
+ event.preventDefault();clear();const topic=$('topic').value.replace(/\s+/g,' ').trim();
+ if(!topic){$('status').textContent='Type a topic to search Reddit.';return;}
+ if(topic.length>200){$('status').textContent='Use 200 characters or fewer.';return;}
+ $('status').textContent='Searching...';$('submit').disabled=true;
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),55000);
+ try{
+  const response=await fetch('/api/search?'+new URLSearchParams({topic}),{signal:controller.signal});
+  const data=await response.json();
+  if(data.limits)$('limits').textContent=`Limits: ${data.limits.per_ip} requests per network per 10 minutes and ${data.limits.per_ip_day} per day. Repeat requests are served from a cache at no cost.`;
+  if(!response.ok){$('status').textContent=typeof data.error==='string'?data.error:unavailable;
+   if(response.status===503 && data.sample){$('sample-label').hidden=false;render(data);}return;}
+  render(data);$('status').textContent=data.cached?'Served from cache at no cost.':'Cost of this run: $'+data.cost_usd_this_request;
+ }catch{clear();$('status').textContent=unavailable;}
+ finally{clearTimeout(timer);$('submit').disabled=false;}
+};
+</script>
+</html>
