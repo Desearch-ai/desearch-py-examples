@@ -172,7 +172,7 @@ def test_sentence_split_after_attached_footnotes(marker):
     "For the related topic, see the index.",
     "For a related topic, see the index.",
     "For more information, see the topic index.",
-    "This article is about the subject with 12 names.",
+    "This article is about the subject with 12 names. For other uses, see the topic index.",
     "Not to be confused with the other subject.",
     "Main article: The history of this subject.",
     "Main articles: The history of this subject.",
@@ -187,16 +187,42 @@ def test_hatnote_lines_are_skipped(hatnote):
     assert asum.numbers_mentioned(text) == []
 
 
+@pytest.mark.parametrize("line,figures", [
+    ("For more than a decade, the city has spent $40 million a year on road repairs, according to the transport department.", ["$40 million"]),
+    ("For the first time since 2015, inflation fell below 2% in March, the statistics office said.", ["2%"]),
+    ("For a family of four, the new tariff adds about $30 to the monthly bill.", ["$30"]),
+])
+def test_news_for_prefix_is_kept(line, figures):
+    opening = "The software collects public information from websites."
+    text = opening + "\n" + line
+    assert asum.sentences(text) == [opening, line]
+    assert asum.numbers_mentioned(text) == [{"figures": figures, "sentence": line}]
+
+
+@pytest.mark.parametrize("line", [
+    "For more than a decade, the city has spent $40 million a year on road repairs, according to the transport department.",
+    "For the first time since 2015, inflation fell below 2% in March, the statistics office said.",
+    "For a family of four, the new tariff adds about $30 to the monthly bill.",
+])
+def test_news_for_prefix_alone_is_kept(line):
+    assert asum.sentences(line) == [line]
+
+
+def test_this_article_is_about_without_navigation_is_kept():
+    line = "This article is about the history of the city's road budget and its effects."
+    assert asum.sentences(line) == [line]
+
+
 def test_long_paragraph_and_case_sensitive_hatnote_check():
     opening = "For the first time, revenue rose 12%."
     paragraph = opening + " " + "The company reported steady growth across its stores during the year. " * 4
     assert len(paragraph.split()) > 40
     assert asum.key_sentences(paragraph, 1) == [opening]
     assert asum.numbers_mentioned(paragraph) == [{"figures": ["12%"], "sentence": opening}]
-    ordinary = "For broader coverage, " + "read " * 36 + "on."
+    ordinary = "For broader coverage, see also " + "read " * 34 + "on."
     assert len(ordinary.split()) == 40
     assert asum.sentences(ordinary) == []
-    ordinary = "For broader coverage, " + "read " * 37 + "on."
+    ordinary = "For broader coverage, see also " + "read " * 35 + "on."
     assert asum.sentences(ordinary) == [ordinary]
     lower = "for other uses, consult the topic index."
     assert asum.sentences(lower) == [lower]

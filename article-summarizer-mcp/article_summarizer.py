@@ -24,7 +24,7 @@ MIN_WORDS = 150  # below this the page is treated as near-empty (login wall, app
 HANDLE_RE = re.compile(r"(?<![\w/@.])@\w{1,15}\b")
 NUMBER_RE = re.compile(r"(?:[$£€]\s?)?\d[\d,.]*(?:\s?(?:%|percent|bn|billion|million|m\b|k\b|trillion))?", re.I)
 FOOTNOTE_RE = re.compile(r"\[(?:\d+|[a-z]|note \d+|citation needed)\]")
-HATNOTE_RE = re.compile(r"^(?:For broader coverage|For other uses|For the |For a |For more |This article is about|Not to be confused with|Main article:|Main articles:|See also:|Further information:)|^.*redirects here\.")
+HATNOTE_RE = re.compile(r"^(?:(?:For broader coverage|For other uses|For the |For a |For more ).*(?:, see |[sS]ee also)|.*redirects here\.|Main articles?:|See also:|Further information:|Not to be confused with|This article is about.*\bFor\b.*, see )")
 STOP = set("""a about above after again against all also am an and any are as at be because been before being
 below between both but by can could did do does doing down during each few for from further had has have having
 he her here hers him his how i if in into is it its itself just me more most my no nor not now of off on once only
