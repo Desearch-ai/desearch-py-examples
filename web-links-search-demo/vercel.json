@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "functions": {
+    "api/search.py": {
+      "maxDuration": 60,
+      "includeFiles": "{weblinks/**,public/sample.json}"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    }
+  ]
+}
