@@ -37,6 +37,9 @@ def make_handler(engine):
             ctype = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
             self._send(200, {"Content-Type": ctype + ("; charset=utf-8" if ctype.startswith("text") or ctype.endswith("json") else "")}, f.read_bytes())
 
+        def log_request(self, code="-", size="-"):
+            pass
+
         def log_message(self, fmt, *args):
             pass
     return H
@@ -89,7 +92,8 @@ def main(argv=None):
     if not key:
         print("Set DESEARCH_API_KEY_FILE or DESEARCH_API_KEY, or pass --key-file", file=sys.stderr)
         return 2
-    engine = Engine(client=Client(key, a.log_dir))
+    os.environ.setdefault("DEMO_STATE", "memory")
+    engine = Engine(client=Client(key, a.log_dir, quiet=True))
     if a.cli is None:
         print(f"http://127.0.0.1:{a.port}", file=sys.stderr)
         ThreadingHTTPServer(("127.0.0.1", a.port), make_handler(engine)).serve_forever()
