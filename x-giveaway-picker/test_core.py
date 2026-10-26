@@ -240,14 +240,11 @@ def test_rate_windows_and_independent_ips():
 
 def cached_run(cache, fake, clock, post='9000', stamp='2026-10-23T00:00:00Z', **rules):
     options = core.validate(post, **rules)
-    key = cache.key(options)
-    collection = cache.get(key)
-    hit = collection is not None
+    parts = cache.snapshot(options)
     now = dt.datetime.fromtimestamp(clock(), dt.timezone.utc)
-    if not hit:
-        collection = core.collect(fake, options, now=now)
-        cache.put(key, collection)
-    return core.decide(collection, options, now=now, draw_timestamp=stamp, cached=hit)
+    collection = cache.collect(fake, options, parts, now)
+    return core.decide(collection, options, now=now, draw_timestamp=stamp)
+
 
 
 def test_cache_expiry_and_redraw_rules():
@@ -336,7 +333,9 @@ def test_separate_cache_collections(post, rules):
     cached_run(cache, Fake(), clock)
     fake = Fake()
     result = cached_run(cache, fake, clock, post=post, **rules)
-    assert fake.calls and result['cost_usd'] > 0
+    expected_paths = ['/twitter/urls', '/twitter/post/retweeters'] if post == '9001' else ['/twitter/replies/post'] if rules.get('must_reply') else []
+    assert [path for path, _ in fake.calls] == expected_paths
+    assert (result['cost_usd'] > 0) == bool(expected_paths)
     calls = len(fake.calls)
     assert cached_run(cache, fake, clock, post=post, **rules)['cost_usd'] == 0
     assert len(fake.calls) == calls
@@ -349,3 +348,85 @@ def test_limiter_concurrent_calls():
         results = list(pool.map(limiter.allow, ['same_ip'] * 20))
     assert sum(allowed for allowed, _ in results) == 2
     assert len(limiter.runs['same_ip']) == 2
+
+
+@pytest.mark.parametrize('host', ['x.com', 'www.x.com', 'twitter.com', 'mobile.twitter.com', 'mobile.x.com'])
+@pytest.mark.parametrize('scheme', ['', 'http://', 'https://'])
+def test_schemeless_and_mobile_links(host, scheme):
+    assert core.clean_post(scheme + host + '/demo/status/123') == 'https://' + host + '/demo/status/123'
+
+
+def test_reply_coverage_rules_counts_and_reasons():
+    fake = Fake(replies=[{'user': user(2)}, {'user': user(2)}])
+    collection = core.collect(fake, core.validate('9000', must_reply=True), now=NOW)
+    assert collection['reply_coverage'] == dict(returned=2, reported=90, unique_authors=1)
+    result = core.decide(collection, core.validate('9000', must_reply=True, winners=5), now=NOW, perform_draw=False)
+    assert result['counts'] == dict(entrants=2, eligible=0, winners_requested=5, winners_drawn=0)
+    assert result['rules']['entry_mode'] == 'both'
+    assert result['rules']['count'] == 50 and result['rules']['draw_timestamp'] == '2026-10-23T00:00:00Z'
+    assert result['exclusions'] == {'reply not returned': 1, 'must repost': 1}
+    assert 'reply not returned' in core.to_csv(result['entrants'])
+    assert 'No accounts met the rules' in result['message']
+    assert 'Only 2 of 90' in result['partial_reply_warning']
+    assert not result['drawn'] and not result['winners']
+    few = pick(winners=5)
+    assert '1 winners were drawn instead of 5' in few['message']
+
+
+@pytest.mark.parametrize('status,reported,detail,no_replies', [
+    (503, 0, 'X search found no replies for this post. You were not charged.', True),
+    (503, 12, 'No replies were found', True),
+    (503, 12, 'maintenance', False),
+    (429, 0, 'slow down', False)])
+def test_reply_failure_detail_and_cache(status, reported, detail, no_replies):
+    calls = []
+    def fetch(path, params):
+        calls.append(path)
+        if path == '/twitter/urls':
+            return 200, [dict(POST, reply_count=reported)], {}
+        return status, {'detail': detail}, {}
+    clock = Clock()
+    cache = core.CollectionCache(clock=clock)
+    options = core.validate('9000', must_repost=False, must_reply=True)
+    collection = cache.collect(fetch, options, cache.snapshot(options), NOW)
+    notice = ' '.join(collection['notices'])
+    assert detail in notice and 'stopped early' not in notice
+    assert ('post has no replies the API could find' in notice) == no_replies
+    if not no_replies:
+        assert f'reply collection failed (HTTP {status})' in notice
+    parts = cache.snapshot(options)
+    assert parts[('9000', 'post')] is not None
+    assert (parts[('9000', 'replies', 50)] is not None) == no_replies
+    cache.collect(fetch, options, parts, NOW)
+    assert calls.count('/twitter/urls') == 1
+    assert calls.count('/twitter/replies/post') == (1 if no_replies else 2)
+
+
+def test_part_cache_missing_parts_cost_expiry_and_failed_repost():
+    clock = Clock()
+    cache = core.CollectionCache(clock=clock)
+    fake = Fake(pages=[{'users': [user(1)]}] * 3)
+    def run(**rules):
+        options = core.validate('9000', **rules)
+        return cache.collect(fake, options, cache.snapshot(options), NOW)
+    assert run()['cost_usd'] == pytest.approx(.002)
+    assert run(must_reply=True)['cost_usd'] == pytest.approx(.001)
+    assert len(fake.calls) == 3
+    assert run(must_repost=False, must_reply=True)['cost_usd'] == 0
+    assert run(must_repost=False, must_reply=True, count=20)['cost_usd'] == pytest.approx(.001)
+    clock.value += 3600
+    assert run()['cost_usd'] == pytest.approx(.002)
+    failure = Fake(pages=[OSError(), OSError()])
+    cache = core.CollectionCache(clock=clock)
+    options = core.validate('9000')
+    cache.collect(failure, options, cache.snapshot(options), NOW)
+    assert cache.snapshot(options)[('9000', 'reposters')] is None
+
+
+def test_cache_local_time_zone_and_invalid_fallback(monkeypatch):
+    monkeypatch.setenv('GIVEAWAY_TZ', 'Asia/Tbilisi')
+    assert core.local_time('2026-10-26T11:49:12.123456Z') == '2026-10-26 15:49 (Asia/Tbilisi, UTC+04:00)'
+    monkeypatch.setenv('GIVEAWAY_TZ', 'Invalid/Zone')
+    assert 'UTC' in core.local_time(NOW.isoformat())
+    monkeypatch.delenv('GIVEAWAY_TZ')
+    assert 'UTC' in core.local_time(NOW.isoformat())

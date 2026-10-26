@@ -11,19 +11,56 @@ import random
 import re
 import threading
 import time
+import os
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 MAX_RETWEETER_PAGES = 25
 CSV_FIELDS = ['user_id', 'username', 'followers', 'account_created_at',
               'reposted', 'replied', 'tags', 'eligible', 'reason']
 
 
+class APIError(RuntimeError):
+    def __init__(self, status, body=None):
+        self.status = status
+        self.detail = str(body.get('detail', '')) if isinstance(body, dict) else ''
+        detail = self.detail or 'No detail provided'
+        if status == 403 and body is None:
+            message = "Desearch refused the request at the edge (HTTP 403). This is not a key problem; check the client's User-Agent and network."
+        elif status in (401, 403):
+            message = f'Desearch refused the API key (HTTP {status}). Check the key at console.desearch.ai.'
+        elif status == 402:
+            message = f'Desearch returned HTTP 402 (payment required): {detail}'
+        elif status == 429:
+            message = 'Desearch rate limited this request (HTTP 429). Wait and try again.'
+        elif 500 <= status < 600:
+            message = f'Desearch had a server error (HTTP {status}): {detail}'
+        else:
+            message = f'Desearch returned HTTP {status}: {detail}'
+        super().__init__(message)
+
+
+def local_time(value):
+    stamp = parse_time(value)
+    name = os.environ.get('GIVEAWAY_TZ')
+    try:
+        zone = ZoneInfo(name) if name else None
+    except (ZoneInfoNotFoundError, ValueError):
+        zone = None
+    local = stamp.astimezone(zone)
+    label = name if zone else local.tzname()
+    offset = local.strftime('%z')
+    return f"{local:%Y-%m-%d %H:%M} ({label}, UTC{offset[:3]}:{offset[3:]})"
+
+
 def clean_post(value):
     value = str(value or '').strip()
     if re.fullmatch(r'[0-9]+', value):
         return f'https://x.com/i/status/{value}'
-    if not re.fullmatch(r'https?://(?:www\.)?(?:x|twitter)\.com/[A-Za-z0-9_]{1,15}/status/[0-9]+/?(?:\?[^#\s]*)?', value, re.I):
+    if not re.match(r'https?://', value, re.I):
+        value = 'https://' + value
+    if not re.fullmatch(r'https?://(?:(?:www|mobile)\.)?(?:x|twitter)\.com/[A-Za-z0-9_]{1,15}/status/[0-9]+/?(?:\?[^#\s]*)?', value, re.I):
         raise ValueError('Enter an X post URL or numeric post id.')
-    return value
+    return re.sub(r'^http://', 'https://', value, flags=re.I)
 
 
 def integer(value, name, minimum, maximum=None):
@@ -79,6 +116,7 @@ def collect(fetch, options, *, now=None):
     now = now or dt.datetime.now(dt.timezone.utc)
     now = now.replace(tzinfo=dt.timezone.utc) if now.tzinfo is None else now.astimezone(dt.timezone.utc)
     notices, cost = [], 0.0
+    failed_parts = []
 
     def request(path, params):
         nonlocal cost
@@ -90,7 +128,7 @@ def collect(fetch, options, *, now=None):
                 except (ValueError, TypeError):
                     pass
         if status != 200:
-            raise RuntimeError(f'Desearch returned HTTP {status}')
+            raise APIError(status, body)
         return body
 
     posts = request('/twitter/urls', {'urls': options['url']})
@@ -114,10 +152,12 @@ def collect(fetch, options, *, now=None):
                     if not isinstance(body, dict) or not isinstance(body.get('users'), list):
                         raise ValueError('Invalid retweeter response')
                     break
-                except Exception:
+                except Exception as error:
+                    failure_message = str(error)
                     body = None
             if body is None:
-                notices.append('reposter collection stopped early after a failed page and retry')
+                failed_parts.append('reposters')
+                notices.append('reposter collection stopped early after a failed page and retry' + (': ' + failure_message if failure_message else ''))
                 break
             previous_count = len(reposters)
             for user in body['users']:
@@ -141,16 +181,25 @@ def collect(fetch, options, *, now=None):
         try:
             body = request('/twitter/replies/post', {'post_id': post_id, 'count': options['count']})
             replies = body if isinstance(body, list) else body.get('tweets', body.get('replies', []))
-        except Exception:
-            notices.append('reply collection stopped early')
+        except APIError as error:
+            if error.status == 503 and (source.get('reply_count', 0) == 0 or
+                    re.search(r'no replies|replies.*not found', error.detail, re.I)):
+                notices.append('The post has no replies the API could find: ' + error.detail)
+            else:
+                failed_parts.append('replies')
+                notices.append(f'reply collection failed (HTTP {error.status}): {error.detail or "No detail provided"}')
+        except Exception as error:
+            failed_parts.append('replies')
+            notices.append('reply collection failed: ' + str(error))
         notices.append(f"from the latest ~{len(replies)} replies the API returned (post shows {source.get('reply_count', 0)} replies)")
     if options['must_repost'] and len(reposters) < source.get('retweet_count', 0):
         notices.append(f"{len(reposters)} of {source['retweet_count']} reported reposts returned; deleted, protected or uncollected accounts do not appear")
     return dict(source=source, reposters=reposters, replies=replies,
-                notices=notices, cost_usd=cost, collected_at=now.isoformat())
+                notices=notices, failed_parts=failed_parts, cost_usd=cost, collected_at=now.isoformat(),
+                reply_coverage=reply_coverage(replies, source))
 
 
-def decide(collection, options, *, now=None, draw_timestamp=None, cached=False):
+def decide(collection, options, *, now=None, draw_timestamp=None, cached=False, perform_draw=True):
     now = now or parse_time(collection['collected_at'])
     now = now.replace(tzinfo=dt.timezone.utc) if now.tzinfo is None else now.astimezone(dt.timezone.utc)
     stamp = draw_time(draw_timestamp, now)
@@ -163,7 +212,7 @@ def decide(collection, options, *, now=None, draw_timestamp=None, cached=False):
     notices = list(collection['notices'])
     cost = 0.0 if cached else collection['cost_usd']
     if cached:
-        collected = parse_time(collection['collected_at']).isoformat().replace('+00:00', 'Z')
+        collected = local_time(collection['collected_at'])
         notices.append(f'reused the list collected at {collected}; no new API calls')
     users = dict(reposters)
     reply_tags = {}
@@ -187,7 +236,7 @@ def decide(collection, options, *, now=None, draw_timestamp=None, cached=False):
         if options['must_repost'] and not reposted:
             reasons.append('must repost')
         if options['must_reply'] and not replied:
-            reasons.append('must reply')
+            reasons.append('reply not returned')
         if options['must_reply'] and reply_tags.get(uid, 0) < options['min_tags']:
             reasons.append('not enough tags')
         if options['min_account_age_days'] is not None and (created is None or (now - created).total_seconds() < options['min_account_age_days'] * 86400):
@@ -200,9 +249,37 @@ def decide(collection, options, *, now=None, draw_timestamp=None, cached=False):
                          tags=reply_tags.get(uid, 0), eligible=not reasons, reason='; '.join(reasons)))
     seed = f"{post_id}:{stamp.isoformat().replace('+00:00', 'Z')}"
     coverage = f"Picked from {len(reposters)} reposts and {len(replies)} replies the API returned (post shows {source.get('retweet_count', 0)} reposts, {source.get('reply_count', 0)} replies)."
-    return dict(entrants=rows, winners=draw([r for r in rows if r['eligible']], options['winners'], seed),
+    eligible = [r for r in rows if r['eligible']]
+    winners = draw(eligible, options['winners'], seed) if perform_draw else []
+    message = ''
+    if not eligible:
+        message = 'No accounts met the rules, so no winners were drawn.'
+    elif len(eligible) < options['winners'] and perform_draw:
+        message = f"Only {len(eligible)} accounts met the rules, so {len(winners)} winners were drawn instead of {options['winners']}."
+    exclusions = {}
+    for row in rows:
+        for reason in filter(None, row['reason'].split('; ')):
+            exclusions[reason] = exclusions.get(reason, 0) + 1
+    rules = dict(options, entry_mode='both' if options['must_repost'] and options['must_reply'] else 'reply' if options['must_reply'] else 'repost', draw_timestamp=stamp.isoformat().replace('+00:00', 'Z'))
+    return dict(entrants=rows, winners=winners, drawn=perform_draw,
+                rules=rules, counts=dict(entrants=len(rows), eligible=len(eligible), winners_requested=options['winners'], winners_drawn=len(winners)),
+                message=message, exclusions=exclusions, reply_coverage=reply_coverage(replies, source),
+                partial_reply_warning=partial_reply_warning(collection, options),
                 seed=seed, notices=notices, coverage=coverage, cost_usd=cost,
                 returned_reposters=len(reposters), reported_reposts=source.get('retweet_count', 0))
+
+
+def reply_coverage(replies, source):
+    return dict(returned=len(replies), reported=source.get('reply_count', 0),
+                unique_authors=len({str(r['user']['id']) for r in replies if (r.get('user') or {}).get('id') is not None}))
+
+
+def partial_reply_warning(collection, options):
+    coverage = reply_coverage(collection['replies'], collection.get('source') or {})
+    if options['must_reply'] and coverage['returned'] < coverage['reported']:
+        return (f"Only {coverage['returned']} of {coverage['reported']} replies came back from the API. "
+                "People whose reply was not returned are marked 'reply not returned' and cannot win. Consider repost-only mode.")
+    return ''
 
 
 def pick(fetch, post, *, now=None, draw_timestamp=None, **rules):
@@ -257,7 +334,7 @@ class CollectionCache:
             return copy.deepcopy(entry[1]) if entry else None
 
     def put(self, key, collection):
-        if collection.get('error'):
+        if collection.get('error') or collection.get('failed_parts'):
             return
         with self.lock:
             now = self.clock()
@@ -266,6 +343,45 @@ class CollectionCache:
             if len(self.entries) >= self.max_entries:
                 del self.entries[min(self.entries, key=lambda k: self.entries[k][0])]
             self.entries[key] = (now, copy.deepcopy(collection))
+
+    @staticmethod
+    def needed(options):
+        pid = post_id(options['url'])
+        return [(pid, 'post')] + ([(pid, 'reposters')] if options['must_repost'] else []) + ([(pid, 'replies', options['count'])] if options['must_reply'] else [])
+
+    def snapshot(self, options):
+        return {key: self.get(key) for key in self.needed(options)}
+
+    def collect(self, fetch, options, parts, now):
+        """Replay cached responses through the same collector, billing only new fetches.
+
+        Store all pages of a part together so incomplete failures cannot become hits.
+        Replaying keeps each part's pagination and notices identical on a redraw.
+        """
+        records = {}
+        reused = []
+        def wrapped(path, params):
+            kind = {'/twitter/urls': 'post', '/twitter/post/retweeters': 'reposters', '/twitter/replies/post': 'replies'}[path]
+            key = next(k for k in parts if k[1] == kind)
+            part = parts[key]
+            if part is not None:
+                index = records.get(key, 0)
+                records[key] = index + 1
+                if index == 0:
+                    reused.append(part['collected_at'])
+                status, body, _ = part['responses'][index]
+                return status, copy.deepcopy(body), {}
+            response = fetch(path, params)
+            records.setdefault(key, []).append(copy.deepcopy(response))
+            return response
+        collection = collect(wrapped, options, now=now)
+        if not collection.get('error'):
+            for key, responses in records.items():
+                if parts[key] is None and key[1] not in collection.get('failed_parts', []):
+                    self.put(key, dict(responses=responses, collected_at=now.isoformat()))
+        for stamp in sorted(set(reused)):
+            collection['notices'].append(f'reused the list collected at {local_time(stamp)}; no new API calls for cached parts')
+        return collection
 
 
 def to_csv(rows):
