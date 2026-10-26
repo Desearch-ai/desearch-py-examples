@@ -78,7 +78,7 @@ def test_parse_sample(row):
 
 
 def test_missing_fields():
-    assert app.parse_creator({})['quality_flags'] == 'views_missing | no_contact | upload_date_unknown'
+    assert app.parse_creator({})['quality_flags'] == 'views_missing | no_contact | matching_video_date_unknown'
 
 
 @pytest.mark.parametrize('changes,flag', [({'views': None}, 'views_missing'), ({'videos': 1}, 'few_videos'), ({'email': '', 'website': ''}, 'no_contact'), ({'name': 'Official coffee'}, 'possible_brand_or_store'), ({'score': 59}, 'low_score')])
@@ -356,44 +356,63 @@ def test_free_task_no_confirmation(cli, tmp_path, capsys):
 
 
 @pytest.mark.parametrize('field', ['evidence', 'videos'])
-def test_last_upload(field):
+def test_newest_matching_video(field):
     row = {field: [{'published_at': '2025-01-03T06:53:53-08:00'}, {'published_at': '2026-09-23T23:30:00-08:00'}, {'published_at': '2026-09-22T12:00:00Z'}, {'type': 'channel', 'published_at': '2026-10-26'}]}
-    assert app.parse_creator(row)['last_upload'] == '2026-09-23'
-    assert app.parse_creator({field: [{'published_at': '2026-09-22T12:00:00Z'}]})['last_upload'] == '2026-09-22'
+    assert app.parse_creator(row)['newest_matching_video'] == '2026-09-23'
+    assert app.parse_creator({field: [{'published_at': '2026-09-22T12:00:00Z'}]})['newest_matching_video'] == '2026-09-22'
 
 
 @pytest.mark.parametrize('value', [None, '', 'garbage', 123])
 def test_unknown_upload(value):
     row = {'attributes': {'joined': 'Joined Jan 6, 2020'}, 'evidence': [{}, {'published_at': value}]}
     parsed = app.parse_creator(row)
-    assert parsed['last_upload'] == 'unknown'
-    assert 'upload_date_unknown' in parsed['quality_flags']
+    assert parsed['newest_matching_video'] == 'unknown'
+    assert 'matching_video_date_unknown' in parsed['quality_flags']
 
 
-@pytest.mark.parametrize('off', [False, True])
-def test_inactivity(cli, tmp_path, capsys, monkeypatch, off):
+@pytest.mark.parametrize('months', [None, 0, 12, 6])
+def test_inactivity(cli, tmp_path, capsys, monkeypatch, months):
     import csv
     monkeypatch.setattr(app, 'today', lambda: app.date(2026, 10, 26))
-    rows = copy.deepcopy(RESULTS['results'][:3])
-    for row, value in zip(rows, ['2019-03-17T00:00:00Z', '2026-09-23T00:00:00Z', None]):
+    rows = copy.deepcopy(RESULTS['results'][:4])
+    for row, value in zip(rows, ['2019-03-17T00:00:00Z', '2026-09-23T00:00:00Z', None, '2026-02-26']):
         row['evidence'] = [{'type': 'video', 'published_at': value}]
     s = Session(Response(TASK), Response({'results': rows + [rows[0]], 'has_more': False}), Response('csv'))
-    assert app.main(cli + (['--max-inactive-months', '0'] if off else []), s) == 0
+    assert app.main(cli + (['--max-inactive-months', str(months)] if months is not None else []), s) == 0
     captured = capsys.readouterr()
     out = tmp_path / 'out'
     saved = list(csv.DictReader(next(out.glob('*-creators.csv')).open()))
-    assert len(saved) == (3 if off else 2)
-    assert 'upload_date_unknown' in saved[-1]['quality_flags']
-    if off:
-        assert not list(out.glob('*-inactive.csv'))
-        assert 'off;' in captured.err
-    else:
+    dropped_count = 2 if months == 6 else 1 if months == 12 else 0
+    assert len(saved) == 4 - dropped_count
+    by_handle = {row['handle']: row for row in saved}
+    assert by_handle[rows[1]['handle']]['inactive'] == 'false'
+    assert by_handle[rows[2]['handle']]['inactive'] == 'unknown'
+    assert 'matching_video_date_unknown' in by_handle[rows[2]['handle']]['quality_flags']
+    streamed = [json.loads(line) for line in captured.out.splitlines()]
+    assert streamed == saved or [r['handle'] for r in streamed] == [r['handle'] for r in saved]
+    if dropped_count:
         dropped = list(csv.DictReader(next(out.glob('*-inactive.csv')).open()))
-        assert len(dropped) == 1 and dropped[0]['handle'] == rows[0]['handle']
+        assert len(dropped) == dropped_count
+        assert all(row['inactive'] == 'true' for row in dropped)
         assert rows[0]['handle'] not in captured.out
-        assert 'dropped 1 of 3' in captured.err and '2025-10-26' in captured.err
-        summary = next(out.glob('*-summary.md')).read_text()
-        assert 'inactive_dropped: 1' in summary and 'last_upload_unknown: 1' in summary
+        assert f'dropped {dropped_count} of 4' in captured.err
+    else:
+        assert by_handle[rows[0]['handle']]['inactive'] == 'true'
+        assert by_handle[rows[3]['handle']]['inactive'] == 'false'
+        assert not list(out.glob('*-inactive.csv'))
+        assert 'Inactive flag: 1 of 4' in captured.err
+        assert '--max-inactive-months N' in captured.err
+    summary = next(out.glob('*-summary.md')).read_text()
+    assert f'inactive_dropped: {dropped_count}' in summary
+    assert f'inactive_flagged: {0 if dropped_count else 1}' in summary
+    assert f'inactive_flag_months: {months or 12}' in summary
+    assert f'max_inactive_months: {"null" if months is None else months}' in summary
+    assert 'newest_matching_video_unknown: 1' in summary
+    assert ('2026-04-26' if months == 6 else '2025-10-26') in captured.err
+    obsolete = 'last' + '_upload'
+    assert obsolete not in captured.out
+    for path in out.iterdir():
+        assert obsolete not in path.read_text()
     assert_no_key(tmp_path, captured)
 
 
