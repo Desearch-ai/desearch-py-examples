@@ -19,7 +19,7 @@ Alternatively, set DESEARCH_API_KEY_FILE to a key file path or pass `--key-file`
 curl -s https://api.desearch.ai/desearch/instagram/profile/natgeo -H "Authorization: $DESEARCH_API_KEY" -H "User-Agent: my-app/1.0" -D -
 ```
 
-The cost is in the `X-Desearch-Cost-Usd` response header. Send a `User-Agent`: plain Python urllib without one got HTTP 403 with `error code: 1010` in our tests.
+The cost is in the `X-Desearch-Cost-Usd` response header. Always set your own `User-Agent` header.
 
 ## Python example
 
@@ -111,9 +111,9 @@ What we saw on 2026-10-26:
 
 - `createTime` is a Unix integer in seconds on profile posts and media lookup, but an ISO 8601 string on hashtag media and comments. The CLI adds `created_at` in ISO UTC and keeps `created_raw`.
 - The first profile posts page held 3 posts older than the posts on page 2, likely pinned posts. There is no pinned flag. Sort by `created_at` if you need newest first.
-- Media lookup returned an empty `stats` object for a post whose likes and comments were present on the profile posts route. Read stats from posts or hashtag results.
+- For like and comment counts, use the profile posts or hashtag routes.
 - Comments need the shortcode from the post URL. A numeric media id returned 404.
-- Search returns profiles with type `"profile"`. The top exact match came back without followers.
+- Search returns profiles with type `"profile"`.
 - Calls took about 2 to 16 seconds each in our runs: media and comments about 2 to 4 seconds; profile, posts, hashtag and search about 9 to 16 seconds. Use a timeout of 60 seconds or more.
 
 ## Privacy
