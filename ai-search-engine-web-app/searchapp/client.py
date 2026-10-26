@@ -40,6 +40,8 @@ class Client:
         if data is not None:
             hdr["Content-Type"] = "application/json"
         req = urllib.request.Request(url, data=data, method=method, headers=hdr)
+        import math
+        import http.client
         ts = dt.datetime.now().astimezone().isoformat(timespec="seconds")
         t0 = time.perf_counter()
         try:
@@ -47,8 +49,8 @@ class Client:
             st, hd, raw = r.status, dict(r.headers), r.read().decode()
         except urllib.error.HTTPError as e:
             st, hd, raw = e.code, dict(e.headers), e.read().decode()
-        except (urllib.error.URLError, TimeoutError) as e:
-            st, hd, raw = 599, {}, json.dumps({"detail": f"network error: {e}"})
+        except (OSError, urllib.error.URLError, TimeoutError, http.client.HTTPException):
+            st, hd, raw = 599, {}, json.dumps({"detail": "network error"})
         lat = round(time.perf_counter() - t0, 2)
         try:
             body = json.loads(raw)
@@ -61,8 +63,10 @@ class Client:
         cost, cost_known, cost_source = 0.0, False, "none"
         for src, v in (("header", bill.get("x-desearch-cost-usd")), ("body", body_cost)):
             try:
-                cost, cost_known, cost_source = float(v), True, src
-                break
+                value = float(v)
+                if math.isfinite(value) and value >= 0:
+                    cost, cost_known, cost_source = value, True, src
+                    break
             except (TypeError, ValueError):
                 continue
         cost = round(cost, 6)

@@ -36,7 +36,7 @@ python3 -m pytest -q                              # offline tests, no key needed
 |---|---|---|
 | `q` | 2 to 300 characters, at least one letter or number | required |
 | `mode` | `fast`, `balanced` | `fast` |
-| `count` | `10`, `15`, `20` | `10` |
+| `count` | `10` (hosted) | `10` |
 | `range` | `any`, `day`, `week`, `month`, `year` (counted back from today, UTC) | `any` |
 | `from`, `to` | `YYYY-MM-DD` (instead of `range`) | none |
 
@@ -56,18 +56,30 @@ Anything else gets HTTP 400 and makes no API call. `/api/answer` takes `q` only.
 
 The Answer endpoint returns `links` (the answer call's own links), `summary.lines` (sentences whose citations all point at those links), `summary.hidden` (sentences dropped), `no_strong_sources` (fewer than two links hold most of the search words) and `declined` with `declined_text` (the answer service sent its "Closest on-topic source reviewed" reply instead of a summary). The page also says how many answer links are in the search results.
 
-## Demo safety (for the hosted version)
-The key is read on the server only (`DESEARCH_API_KEY`), never sent to the browser, and never written to a response or log line. In front of the paid calls:
-- input checks (no call for blank or junk input);
-- a per-IP limit (10 requests per 10 minutes, 40 per day) and a global limit (60 per 10 minutes);
-- a daily spend cap (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day) summed from each response's cost (`cost_usd` in the body for `POST /search`, which sends no cost header);
-- a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on results, so a CDN serves repeats, plus an in-memory cache keyed by the normalized query and options;
-- a kill switch: `DEMO_LIVE=0` turns off live calls and the page shows the saved run in `public/sample.json`.
-On a serverless host the limit, cap and in-memory cache are per warm instance, so they are best effort; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
+## Hosted demo #10
+
+Live demo: https://ai-search-engine.demos.desearch.ai
+
+The hosted search returns 10 results. Search and Answer share Redis state under `aisearch`: 5 requests per 10 minutes per network, 15 per day, 30 globally per 10 minutes, and a $1/day shared cap (UTC). A fallback $0.005 is reserved before each paid call and adjusted to its reported cost. Repeat searches within 15 minutes are served from cache at no cost. All responses use `Cache-Control: no-store`.
+
+Only `DEMO_LIVE=1` enables paid calls. Missing keys, unavailable shared state and exhausted budgets return 503 with the labelled saved sample. The key stays on the server; hosted calls write no files or request logs. For local web runs, set `DEMO_LIVE=1`; `app.py` defaults to memory state locally. Memory state is refused on Vercel. The CLI supports counts 10, 15 and 20 for self-hosters.
+
+Refresh the saved real run with an environment key, then build offline:
+
+```bash
+python3 tools/refresh_sample.py capture "python 3.14 free threading performance" --range year
+python3 tools/refresh_sample.py build
+python3 -m pytest -q
+```
+
+Capture makes exactly one search and one answer call, saving raw bodies and metadata in `tests/fixtures/sample-search.json` and `tests/fixtures/sample-answer.json`. Build uses the live shaping functions and rejects banned names with the offending field path. Review the generated `public/sample.json` and `samples/<query-slug>.json`. Update `sample-output.md` from `public/sample.json` after each refresh. See `DEPLOY.md` for hosting settings.
 
 ## Files
 - `searchapp/core.py`: input checks, request bodies, result cleanup, citation check, limiter, cap, cache. No network.
 - `searchapp/client.py`: plain-HTTP Desearch client (User-Agent, key redaction guard, cost from header or body).
+- `searchapp/state.py`: shared limits, budget and cache state.
+- `tools/refresh_sample.py`: capture raw fixtures and build the saved sample offline.
+- `tests/`: hosted behavior tests and raw capture fixtures.
 - `searchapp/service.py`: the `/api/search` and `/api/answer` logic shared by local and Vercel.
 - `api/search.py`, `api/answer.py`: Vercel Python functions. `public/index.html`: the page. `vercel.json`: function settings.
 - `app.py`: local server and CLI. `test_core.py`: offline tests. `samples/`: a saved run.
