@@ -1,5 +1,6 @@
 """Validated search with shared cache, paid limits and fail-closed spend accounting."""
 import json
+import logging
 import math
 import os
 from pathlib import Path
@@ -45,6 +46,7 @@ class Search:
         self.cache = cache if cache is not None else (TTLCache() if memory else state.Cache(redis))
         self.live = live
         self.fallback_cost = env_float('DEMO_FALLBACK_COST_USD', .001)
+        self.reserve_amount = max(env_float('DEMO_RESERVE_COST_USD', .005), self.fallback_cost)
         self.lock = threading.Lock()
         self.sample = json.loads((Path(__file__).resolve().parents[1] / 'public/sample.json').read_text())
 
@@ -68,7 +70,8 @@ class Search:
                 return self._handle(q, page, ip)
             except state.StateUnavailable:
                 return self.paused()
-            except Exception:
+            except Exception as exc:
+                logging.getLogger(__name__).warning('search paused: %s', type(exc).__name__)
                 return self.paused()
 
     def _handle(self, q, page, ip):
@@ -87,14 +90,26 @@ class Search:
             return self.paused()
         if not self.limiter.allow(ip):
             return self.out(429, {'status': 'limited', 'error': 'Too many searches. Try again later.'})
-        self.cap.add(self.fallback_cost)
+        reservation = self.cap.reserve(self.reserve_amount)
+        if not reservation:
+            return self.paused()
         try:
             status, results, cost = client.search(q, page)
         except (OSError, TimeoutError):
             status, results, cost = 599, None, None
+        no_response = status == 599 and cost is None and results is None
+        if cost is not None and cost > self.reserve_amount:
+            logging.getLogger(__name__).warning('reservation overrun: %s %s', self.reserve_amount, cost)
+        try:
+            if no_response:
+                self.cap.release(reservation)
+            else:
+                self.cap.settle(reservation, cost)
+        except state.StateUnavailable as exc:
+            logging.getLogger(__name__).warning('search settlement: %s', type(exc).__name__)
+        if no_response:
+            return self.paused(0)
         cost = self.fallback_cost if cost is None else cost
-        if cost != self.fallback_cost:
-            self.cap.add(cost - self.fallback_cost)
         if status != 200 or results is None:
             return self.paused(cost)
         result = {'status': 'ok', 'sample': False, 'query': q, 'page': page, 'results': results}

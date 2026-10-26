@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 def offline(monkeypatch):
     for name in ('DESEARCH_API_KEY', 'VERCEL', 'VERCEL_ENV', 'DEMO_STATE', 'DEMO_LIVE',
                  'DEMO_PER_IP_10MIN', 'DEMO_PER_IP_DAY', 'DEMO_GLOBAL_10MIN',
-                 'DEMO_DAILY_CAP_USD', 'DEMO_FALLBACK_COST_USD',
+                 'DEMO_DAILY_CAP_USD', 'DEMO_FALLBACK_COST_USD', 'DEMO_RESERVE_COST_USD',
                  'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN',
                  'KV_REST_API_URL', 'KV_REST_API_TOKEN'):
         monkeypatch.delenv(name, raising=False)
