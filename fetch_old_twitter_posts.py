@@ -1,10 +1,11 @@
 import asyncio
+import os
 from datetime import datetime
 
 from desearch_py import Desearch
 
-# Placeholder only. Use a key from the Desearch console. Do not commit a real key.
-API_KEY = "your-api-key"
+# Set DESEARCH_API_KEY in your environment to a key from the Desearch console. Do not commit a real key.
+API_KEY = os.environ["DESEARCH_API_KEY"]
 
 TOTAL_TWEETS_TO_FETCH = 100
 
