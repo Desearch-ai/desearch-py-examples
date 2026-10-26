@@ -51,6 +51,10 @@ def call(session, path, params, label):
     return rec
 
 
+def next_cursor(rec):
+    return rec.get("headers", {}).get("x-desearch-next-cursor") or None
+
+
 def posts_of(rec):
     b = rec.get("body")
     if isinstance(b, list): return b
@@ -137,7 +141,7 @@ def build(raw, out_prefix):
         seen = posts.setdefault(name, {})
         got = posts_of(rec)
         new = [p for p in got if str(p.get("id")) not in seen]
-        pagelog.append(f"{name} {rec['label']} cursor_sent={rec['params'].get('cursor')} returned={len(got)} new={len(new)} repeats={len(got) - len(new)}")
+        pagelog.append(f"{name} {rec['label']} cursor_sent={'yes' if 'cursor' in rec['params'] else 'no'} returned={len(got)} new={len(new)} repeats={len(got) - len(new)}")
         pins = pinned_ids(got) if "cursor" not in rec["params"] else set()
         for p in new:
             row = post_row(name, p); row["likely_pinned"] = str(p.get("id")) in pins
@@ -185,8 +189,8 @@ def live(args):
             r.update(profile=name, kind="posts"); raw["calls"].append(r)
             got = posts_of(r)
             if r["status"] != 200 or not got: break
-            b = r["body"]
-            cursor = (b.get("cursor") if isinstance(b, dict) else None) or str(count * page)  # no cursor field returned: send offset
+            cursor = next_cursor(r)
+            if cursor is None: break
     return raw
 
 

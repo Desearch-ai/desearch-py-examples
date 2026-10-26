@@ -32,13 +32,13 @@ Offline, from the saved sample (no key, no cost):
 python tiktok_profile_analytics.py --from-raw samples/sample-raw.json --out output/sample
 ```
 
-Options: `--count` posts per call (capped at 20), `--pages` pages per profile (default 1), `--raw-out` where the raw responses are saved, `--key-file`.
+Options: `--count` posts per call (capped at 20), `--pages` pages per profile (default 1), following the cursor the API returns in the `x-desearch-next-cursor` header and stopping when there is no next page; each page is billed per item. `--raw-out` sets where the raw responses are saved, `--key-file` sets the key file.
 
 ## Notes from testing (2026-10-16)
 
 - Endpoints: `GET /desearch/tiktok/profile/{username}` and `GET /desearch/tiktok/profile/{username}/posts?count=N`.
 - TikTok calls are billed per returned item. Cost is shown in the `X-Desearch-Cost-Usd` response header, and the script prints it per call and in total.
-- Each posts call returned up to 10 posts in testing, even with a higher `count`, and a second page came back empty. Treat results as the latest posts Desearch returned, not a full history.
+- Each posts call returned up to 10 posts in testing even with a higher `count`; for more, use `--pages`, which sends back the `x-desearch-next-cursor` header value unchanged as `cursor` and stops when the header is absent. Treat results as the latest posts Desearch returned, not a full history.
 - Pinned videos are listed first even when they are old. The script flags them and leaves them out of posts per week.
 - Posts per week uses a window of at least 7 days, so a burst of posts in one evening does not read as hundreds per week.
 - An unknown username gets an error status and is skipped; the other profiles still run.

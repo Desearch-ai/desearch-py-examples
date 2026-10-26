@@ -1,4 +1,6 @@
 import csv, json, os, subprocess, sys, tempfile, unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, HERE)
@@ -13,6 +15,48 @@ def post(i, ts, views=1000, likes=100, com=10, sh=5):
 
 
 class Offline(unittest.TestCase):
+    def test_next_cursor(self):
+        cursor = "opaque+/cursor=="
+        self.assertEqual(t.next_cursor({"headers": {"x-desearch-next-cursor": cursor}}), cursor)
+
+    def test_next_cursor_missing_or_empty(self):
+        for rec in ({}, {"headers": {}}, {"headers": {"x-desearch-next-cursor": ""}}):
+            with self.subTest(rec=rec):
+                self.assertIsNone(t.next_cursor(rec))
+
+    def test_live_pagination(self):
+        cursor = "opaque+/cursor=="
+        args = SimpleNamespace(key_file="unused", count=12, pages=5, profiles=["brand"])
+        records = [
+            {"status": 200, "body": {}},
+            {"status": 200, "body": [post(1, 1700000000)],
+             "headers": {"x-desearch-next-cursor": cursor}},
+            {"status": 200, "body": [post(2, 1699999900)], "headers": {}},
+        ]
+        with patch.object(t, "read_key", return_value="fake-key") as read_key, \
+                patch("requests.Session") as session, \
+                patch.object(t, "call", side_effect=records) as call:
+            raw = t.live(args)
+        read_key.assert_called_once_with("unused")
+        self.assertEqual(call.call_count, 3)
+        self.assertEqual(call.call_args_list[1].args,
+                         (session.return_value, "/desearch/tiktok/profile/brand/posts", {"count": 12}, "brand posts p1"))
+        self.assertEqual(call.call_args_list[2].args,
+                         (session.return_value, "/desearch/tiktok/profile/brand/posts", {"count": 12, "cursor": cursor}, "brand posts p2"))
+        self.assertEqual(len(raw["calls"]), 3)
+
+    def test_live_stops_without_first_page_cursor(self):
+        args = SimpleNamespace(key_file="unused", count=12, pages=5, profiles=["brand"])
+        records = [{"status": 200, "body": {}},
+                   {"status": 200, "body": [post(1, 1700000000)], "headers": {}}]
+        with patch.object(t, "read_key", return_value="fake-key"), \
+                patch("requests.Session"), \
+                patch.object(t, "call", side_effect=records) as call:
+            raw = t.live(args)
+        self.assertEqual(call.call_count, 2)
+        self.assertEqual(call.call_args_list[1].args[2], {"count": 12})
+        self.assertEqual(len(raw["calls"]), 2)
+
     def test_sample_rebuild(self):
         with tempfile.TemporaryDirectory() as d:
             rows, summ, _ = t.build(json.load(open(SAMPLE)), os.path.join(d, "x"))

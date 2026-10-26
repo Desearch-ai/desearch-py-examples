@@ -12,6 +12,6 @@ Posts/week and median gap skip videos that look pinned (older posts listed first
 
 ## Pages
 
-- brand_a brand_a posts p1 cursor_sent=None returned=10 new=10 repeats=0
-- brand_b brand_b posts p1 cursor_sent=None returned=10 new=10 repeats=0
-- brand_c brand_c posts p1 cursor_sent=None returned=10 new=10 repeats=0
+- brand_a brand_a posts p1 cursor_sent=no returned=10 new=10 repeats=0
+- brand_b brand_b posts p1 cursor_sent=no returned=10 new=10 repeats=0
+- brand_c brand_c posts p1 cursor_sent=no returned=10 new=10 repeats=0
