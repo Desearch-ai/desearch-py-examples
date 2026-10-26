@@ -147,3 +147,63 @@ def test_main_without_key_file_exits(tmp_path):
 def test_key_fingerprint_is_short_and_not_the_key():
     fp = asum.key_fingerprint("abc123secret")
     assert len(fp) == 4 and fp not in "abc123secret"
+
+
+@pytest.mark.parametrize("marker", ["[1]", "[12]", "[4][5][6]", "[a]", "[note 3]", "[citation needed]"])
+def test_footnote_markers_are_not_figures(marker):
+    text = "The software collects public information from websites." + marker
+    assert asum.sentences(text) == [text]
+    assert asum.numbers_mentioned(text) == []
+    real = "The software collected 40% of the public records." + marker
+    assert asum.numbers_mentioned(real) == [{"figures": ["40%"], "sentence": real}]
+
+
+@pytest.mark.parametrize("marker", ["[1]", "[4][5][6]", "[a]", "[note 3]", "[citation needed]"])
+def test_sentence_split_after_attached_footnotes(marker):
+    first = "The software collects public information from websites." + marker
+    second = "Web scraping software can gather records automatically."
+    assert asum.sentences(first + " " + second) == [first, second]
+
+
+@pytest.mark.parametrize("hatnote", [
+    "For broader coverage of this topic, see Data scraping.",
+    '"Web scraper" redirects here. For websites that scrape content, see Scraper site.',
+    "For other uses, see the topic index.",
+    "For the related topic, see the index.",
+    "For a related topic, see the index.",
+    "For more information, see the topic index.",
+    "This article is about the subject with 12 names.",
+    "Not to be confused with the other subject.",
+    "Main article: The history of this subject.",
+    "Main articles: The history of this subject.",
+    "See also: The history of this subject.",
+    "Further information: The history of this subject.",
+])
+def test_hatnote_lines_are_skipped(hatnote):
+    opening = "The software collects public information from websites."
+    text = "  " + hatnote + "  \n" + opening + "\n" + hatnote
+    assert asum.sentences(text) == [opening]
+    assert asum.key_sentences(text, 1) == [opening]
+    assert asum.numbers_mentioned(text) == []
+
+
+def test_long_paragraph_and_case_sensitive_hatnote_check():
+    opening = "For the first time, revenue rose 12%."
+    paragraph = opening + " " + "The company reported steady growth across its stores during the year. " * 4
+    assert len(paragraph.split()) > 40
+    assert asum.key_sentences(paragraph, 1) == [opening]
+    assert asum.numbers_mentioned(paragraph) == [{"figures": ["12%"], "sentence": opening}]
+    ordinary = "For broader coverage, " + "read " * 36 + "on."
+    assert len(ordinary.split()) == 40
+    assert asum.sentences(ordinary) == []
+    ordinary = "For broader coverage, " + "read " * 37 + "on."
+    assert asum.sentences(ordinary) == [ordinary]
+    lower = "for other uses, consult the topic index."
+    assert asum.sentences(lower) == [lower]
+    embedded = "Readers can look elsewhere. For other uses, consult the topic index."
+    assert len(asum.sentences(embedded)) == 1
+
+
+def test_bare_year_with_footnote_still_skipped():
+    text = "The software was released to the public in 2026.[12]"
+    assert asum.numbers_mentioned(text) == []

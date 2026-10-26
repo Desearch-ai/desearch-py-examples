@@ -9,6 +9,8 @@ HANDLE_RE = re.compile(r"(?<![\w/@.])@\w{1,15}\b")
 
 
 NUMBER_RE = re.compile(r"(?:[$£€]\s?)?\d[\d,.]*(?:\s?(?:%|percent|bn|billion|million|m\b|k\b|trillion))?", re.I)
+FOOTNOTE_RE = re.compile(r"\[(?:\d+|[a-z]|note \d+|citation needed)\]")
+HATNOTE_RE = re.compile(r"^(?:For broader coverage|For other uses|For the |For a |For more |This article is about|Not to be confused with|Main article:|Main articles:|See also:|Further information:)|^.*redirects here\.")
 
 
 STOP = set("""a about above after again against all also am an and any are as at be because been before being
@@ -32,9 +34,10 @@ def sentences(text):
     out = []
     for para in re.split(r"\n\s*\n|\n", text or ""):
         para = para.strip()
-        if not para:
+        if not para or (len(para.split()) <= 40 and HATNOTE_RE.match(para)):
             continue
-        for s in re.split(r"(?<=[.!?\u201d\"])\s+(?=[\u201c\"A-Z0-9$£€])", para):
+        para = re.sub(r'([.!?](?:' + FOOTNOTE_RE.pattern + r')+)\s+(?=[\u201c"A-Z0-9$£€])', r"\1\n", para)
+        for s in re.split(r"\n|(?<=[.!?\u201d\"])\s+(?=[\u201c\"A-Z0-9$£€])", para):
             s = s.strip()
             if 6 <= len(s.split()) <= 60:
                 out.append(s)
@@ -72,7 +75,7 @@ def numbers_mentioned(text, limit=8):
     """Sentences that carry a figure, with the figures found. Bare years (1990-2099) alone do not count."""
     rows, seen = [], set()
     for s in sentences(text):
-        figs = [m.group(0).strip(" ,.") for m in NUMBER_RE.finditer(s)]
+        figs = [m.group(0).strip(" ,.") for m in NUMBER_RE.finditer(FOOTNOTE_RE.sub(" ", s))]
         figs = [f for f in figs if f and not re.fullmatch(r"(19|20)\d\d", f) and not re.fullmatch(r"\d\.\d+\.?", f)]
         if figs and s not in seen:
             seen.add(s)
