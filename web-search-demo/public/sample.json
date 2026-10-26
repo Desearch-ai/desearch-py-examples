@@ -1,0 +1,34 @@
+{
+  "sample": true,
+  "label": "EXAMPLE data: saved sample, not live search results.",
+  "query": "bittensor subnet",
+  "page": 1,
+  "results": [
+    {
+      "title": "Subnets · taostats · Official Block Explorer & Gateway to Bittensor",
+      "link": "https://taostats.io/subnets",
+      "snippet": "Bittensor subnets, emissions, ownership, registration date, immunity and recycle volume data."
+    },
+    {
+      "title": "Top Bittensor Subnets Coins by Market Cap | CoinGecko",
+      "link": "https://www.coingecko.com/en/categories/bittensor-subnets",
+      "snippet": "The Bittensor Subnets market cap today is $1.24 Billion, a 0.3% change in the last 24 hours."
+    },
+    {
+      "title": "Running a subnet - Bittensor Docs",
+      "link": "https://www.bittensor.com/docs/guides/subnets",
+      "snippet": "A subnet owner defines an incentive mechanism: what miners must produce and how validators must score it. The chain side - creating the subnet, tuning its hyperparameters, publishing its identity - is all reachable through the SDK."
+    },
+    {
+      "title": "Subnet Alpha - Subnet Alpha",
+      "link": "https://subnetalpha.ai/",
+      "snippet": "Manifold’s subnet enhances AI by integrating text, images, and audio for improved multimodal processing and predictions ... Decentralized Bittensor subnet pioneering hierarchical AI model training to reach human-level AGI reasoning."
+    },
+    {
+      "title": "Subnet Configuration (Hyperparameters) | Bittensor",
+      "link": "https://docs.learnbittensor.org/subnets/subnet-hyperparameters",
+      "snippet": "Bittensor subnets are configured with a set of state variables (known as hyperparameters) that are recorded on the blockchain. Many of these can be accessed (viewed and set) using the Bittensor CLI btcli, but some of them must be checked or ..."
+    }
+  ],
+  "cost_usd_this_request": 0
+}
