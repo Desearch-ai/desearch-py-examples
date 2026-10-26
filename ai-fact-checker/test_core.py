@@ -2,9 +2,11 @@
 import hashlib, io, json, pathlib, sys, time, urllib.error, urllib.request
 import contextlib, os, tempfile, unittest
 import pytest
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import patch
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from factcheck import core
+from factcheck import core, limits
 from factcheck.service import Checker, client_ip, parse_query
 
 KEY = "dsk-test-SECRET-1234567890"
@@ -189,7 +191,8 @@ def test_upstream_500_still_returns_502():
     assert code == 502 and json.loads(body) == {"error": "Search API returned 500. Try again later."}
 
 
-def test_cap_still_trips_when_cost_headers_are_missing():
+def test_cap_still_trips_when_cost_headers_are_missing(monkeypatch):
+    monkeypatch.setenv("DEMO_RESERVE_COST_USD", "0.005")
     ch = Checker(client=NoCostClient(), live=True, x_enabled=False, cap=core.DailyCap(0.005))
     assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # one call at 0.005 fallback
     assert abs(ch.cap.spent - 0.005) < 1e-9
@@ -257,8 +260,14 @@ class FakeRedis:
 
     def __init__(self, fail=None):
         self.fail, self.values, self.seen = fail, {}, []
+        self.lock = threading.Lock()
+        self.peak = 0.0
 
     def __call__(self, req, timeout=0):
+        with self.lock:
+            return self.execute(req, timeout)
+
+    def execute(self, req, timeout=0):
         body = json.loads(req.data.decode())
         self.seen.append({"url": req.full_url, "body": body, "auth": req.get_header("Authorization")})
         if self.fail == "network":
@@ -269,7 +278,24 @@ class FakeRedis:
         for cmd in body:
             op = cmd[0].upper()
             key = cmd[1]
-            if op == "INCR":
+            if op == "EVAL":
+                script, count, key, *args = cmd[1:]
+                assert count == "1" and all(isinstance(a, str) for a in args)
+                spend = float(self.values.get(key, 0))
+                if script == limits.RESERVE_SCRIPT:
+                    amount, cap = map(float, args)
+                    allowed = spend + amount <= cap + 1e-9
+                    if allowed:
+                        self.values[key] = spend + amount
+                        self.peak = max(self.peak, spend + amount)
+                    result = [int(allowed), str(self.values.get(key, 0))]
+                elif script == limits.SETTLE_SCRIPT:
+                    self.values[key] = max(0, spend + float(args[0]))
+                    result = str(self.values[key])
+                else:
+                    raise AssertionError("unexpected script")
+                out.append({"result": result})
+            elif op == "INCR":
                 self.values[key] = int(self.values.get(key, 0)) + 1
                 out.append({"result": self.values[key]})
             elif op == "INCRBYFLOAT":
@@ -285,7 +311,6 @@ class FakeRedis:
 
 
 def use_store(monkeypatch, fake, *, kv=True, **env):
-    from factcheck import limits
     limits._warned = False
     if kv:
         monkeypatch.setenv("KV_REST_API_URL", "https://kv.example.upstash.io")
@@ -310,7 +335,6 @@ def pin(ch, now=NOW):
 
 
 def test_redis_sixth_request_from_one_ip_is_429(monkeypatch, capsys):
-    from factcheck import limits
     fake = FakeRedis()
     use_store(monkeypatch, fake)
     ch = Checker(client=FakeClient(), live=True)
@@ -336,7 +360,7 @@ def test_redis_sixth_request_from_one_ip_is_429(monkeypatch, capsys):
     assert first[1] == [["INCR", f"factcheck:ip10:{hsh}:{start}"], ["EXPIRE", f"factcheck:ip10:{hsh}:{start}", 600, "NX"]]
     assert first[2][0][1] == f"factcheck:ipday:{hsh}:{day}" and first[2][1][2:] == [86400, "NX"]
     assert first[3] == [["INCR", f"factcheck:g10:{start}"], ["EXPIRE", f"factcheck:g10:{start}", 600, "NX"]]
-    assert [c[0] for c in first[4]] == ["INCRBYFLOAT", "EXPIRE"] and first[4][1][2:] == [86400, "NX"]
+    assert first[4][0][:3] == ["EVAL", limits.RESERVE_SCRIPT, "1"]
     blob = json.dumps(fake.seen)
     assert ip not in blob and other not in blob
     assert all(r["url"] == "https://kv.example.upstash.io/multi-exec" for r in fake.seen)
@@ -362,7 +386,7 @@ def test_redis_global_limit_and_upstash_env_names(monkeypatch):
 
 def test_redis_cap_blocks_once_reached(monkeypatch):
     fake = FakeRedis()
-    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD="0.004")
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD="0.004", DEMO_RESERVE_COST_USD="0.004", DEMO_FALLBACK_COST_USD="0.004")
     ch = Checker(client=FakeClient(), live=True)
     pin(ch)
     assert ch.handle({"claim": claim_n(1)}, "1.1.1.1")[0] == 200
@@ -392,7 +416,6 @@ def test_redis_store_error_is_503_like_the_kill_switch(monkeypatch, capsys):
 
 
 def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
-    from factcheck import limits
     for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN",
                  "DEMO_IP_SALT", "VERCEL"):
         monkeypatch.delenv(name, raising=False)
@@ -416,7 +439,6 @@ def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
 
 
 def test_vercel_without_store_fails_closed(monkeypatch, capsys):
-    from factcheck import limits
     from factcheck.service import PAUSED
     for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
         monkeypatch.delenv(name, raising=False)
@@ -656,3 +678,141 @@ def load_tests(loader, tests, pattern):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@pytest.mark.parametrize("wiki,x,jobs", [(False, False, 1), (True, False, 2), (False, True, 2), (True, True, 3)])
+def test_reserved_before_calls_and_refunded(monkeypatch, wiki, x, jobs):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    ch = Checker(client=FakeClient(), live=True, x_enabled=x)
+    pin(ch)
+    original = ch._client.ai_search
+    def inspect(*args):
+        assert ch.cap.spent == pytest.approx(.01 * jobs)
+        return original(*args)
+    ch._client.ai_search = inspect
+    assert ch.handle({"claim": claim_n(1), "wiki": str(wiki)}, "ip")[0] == 200
+    assert ch.cap.spent == pytest.approx(.004 * (1 + wiki) + .0015 * x)
+
+
+def test_refused_reservation(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD=.009)
+    ch = Checker(client=FakeClient(), live=True)
+    code, headers, body = ch.handle({"claim": claim_n(1)}, "ip")
+    assert code == 503 and headers["Cache-Control"] == "no-store"
+    assert json.loads(body)["sample"] == "/sample.json" and ch._client.calls == 0
+
+
+@pytest.mark.parametrize("shared", [False, True])
+def test_cap_settlement_boundaries(monkeypatch, shared):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    now = [NOW]
+    cap = limits.SharedLimits("https://fake", TOKEN, 100, 100, 100, .01, clock=lambda: now[0]) if shared else core.DailyCap(.01, clock=lambda: now[0])
+    token = cap.reserve(.01)
+    assert token is not None and cap.reserve(.001) is None
+    cap.settle(token, None)
+    assert cap.spent == pytest.approx(.01)
+    cap.settle(token, .004)
+    assert cap.spent == pytest.approx(.004)
+    cap.release(token)
+    assert cap.spent == 0
+    token = cap.reserve(.01)
+    now[0] += 86400
+    new = cap.reserve(.01)
+    cap.release(token)
+    assert cap.ok() is False  # today's reservation is unaffected
+    if shared:
+        assert fake.values[token[0]] == 0
+    cap.release(new)
+
+
+def test_connection_failure_and_partial_billing():
+    ch = mk(x_enabled=True)
+    ch._client.x_search = lambda *a: (_ for _ in ()).throw(OSError("offline"))
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 500
+    assert ch.cap.spent == pytest.approx(.004)
+    ch = mk()
+    ch._client.ai_search = lambda *a: (_ for _ in ()).throw(OSError("offline"))
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 500
+    assert ch.cap.spent == 0
+
+
+def test_settle_error_preserves_success(capsys):
+    ch = mk()
+    def fail(*args):
+        raise limits.StoreError("offline")
+    ch.cap.settle = fail
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 200
+    assert ch.cap.spent == .01
+    assert capsys.readouterr().err.count("[check] shared limit store error on settle") == 1
+
+
+def test_actual_above_reservation(capsys):
+    ch = mk()
+    original = ch._client.ai_search
+    def costly(*args):
+        st, body, rec = original(*args)
+        rec["cost"] = .02
+        return st, body, rec
+    ch._client.ai_search = costly
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 200
+    assert ch.cap.spent == pytest.approx(.02)
+    assert "[check] 0.02 0.01" in capsys.readouterr().err
+
+
+def test_atomic_concurrent_reservations(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD=.03, DEMO_GLOBAL_10MIN=100)
+    gate = threading.Event()
+    clients = []
+    checkers = []
+    for i in range(12):
+        client = FakeClient()
+        original = client.ai_search
+        def blocked(*args, original=original):
+            gate.wait(5)
+            st, body, rec = original(*args)
+            rec["cost"] = .01
+            return st, body, rec
+        client.ai_search = blocked
+        clients.append(client)
+        checkers.append(Checker(client=client, live=True))
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        futures = [pool.submit(ch.handle, {"claim": claim_n(i)}, str(i)) for i, ch in enumerate(checkers)]
+        # Release only after all reservation decisions have reached the fake store.
+        for _ in range(1000):
+            with fake.lock:
+                attempts = sum(cmd[0] == "EVAL" and cmd[1] == limits.RESERVE_SCRIPT for r in fake.seen for cmd in r["body"])
+            if attempts == 12:
+                break
+            time.sleep(.001)
+        gate.set()
+        codes = [f.result()[0] for f in futures]
+    assert fake.peak <= .03 + 1e-9
+    assert sum(c.calls for c in clients) <= 3
+    assert codes.count(200) == 3
+
+
+@pytest.mark.parametrize("raw", [None, [], [1], [2, "0"], [1, "nan"], [1, "bad"], [1, -1]])
+def test_malformed_reservation_result(raw):
+    cap = limits.SharedLimits("https://fake", TOKEN, 1, 1, 1, 1)
+    with patch.object(cap, "_exec", return_value=[raw]):
+        with pytest.raises(limits.StoreError):
+            cap.reserve(.01)
+
+
+@pytest.mark.parametrize("raw", [None, [], "nan", "bad", -1])
+def test_malformed_settlement_result(raw):
+    cap = limits.SharedLimits("https://fake", TOKEN, 1, 1, 1, 1)
+    with patch.object(cap, "_exec", return_value=[raw]):
+        with pytest.raises(limits.StoreError):
+            cap.settle(("day", .01), .004)
+
+
+def test_closed_store_reservations_fail():
+    cap = limits.ClosedStore()
+    for method, args in ((cap.reserve, (.01,)), (cap.settle, (("day", .01), None)), (cap.release, (("day", .01),))):
+        with pytest.raises(limits.StoreError):
+            method(*args)

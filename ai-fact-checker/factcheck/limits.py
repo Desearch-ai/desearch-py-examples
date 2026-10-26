@@ -1,7 +1,7 @@
 """Shared per-IP, global and daily-USD counters in Upstash Redis (REST, stdlib urllib only).
 
 Fixed windows: 10 minute keys are named by the window start, daily keys by the UTC day.
-Each key is one transaction: INCR (or INCRBYFLOAT for the USD cap) and EXPIRE together,
+Each key is one transaction: INCR and EXPIRE, or Lua for USD reservations, together,
 with a TTL equal to that window. The token is sent only in the Authorization header.
 
 If the store is not configured on a local run, `load` returns (None, None) and the
@@ -9,13 +9,26 @@ caller keeps the in-memory limiter and cap. On Vercel (`VERCEL` set, or `VERCEL_
 of production or preview) a missing store fails closed. A configured store that errors
 raises StoreError. This module never logs the token, the claim text or the IP.
 """
-import hashlib, json, os, sys, threading, time, urllib.error, urllib.request
+import hashlib, json, math, os, sys, threading, time, urllib.error, urllib.request
 
 WINDOW = 600
 DAY = 86400
 FALLBACK_IP_SALT = "desearch-ai-fact-checker"
 _warned = False
 _closed_warned = False
+
+
+RESERVE_SCRIPT = """local spend = tonumber(redis.call('GET', KEYS[1]) or '0')
+if spend + tonumber(ARGV[1]) > tonumber(ARGV[2]) + 1e-9 then return {0, tostring(spend)} end
+local total = redis.call('INCRBYFLOAT', KEYS[1], ARGV[1])
+redis.call('EXPIRE', KEYS[1], 86400, 'NX')
+return {1, total}"""
+
+SETTLE_SCRIPT = """local spend = tonumber(redis.call('GET', KEYS[1]) or '0')
+local total = math.max(0, spend + tonumber(ARGV[1]))
+redis.call('INCRBYFLOAT', KEYS[1], tostring(total - spend))
+redis.call('EXPIRE', KEYS[1], 86400, 'NX')
+return tostring(total)"""
 
 
 class StoreError(Exception):
@@ -83,6 +96,15 @@ class ClosedStore:
     def add(self, usd):
         raise StoreError("unconfigured")
 
+    def reserve(self, amount):
+        raise StoreError("unconfigured")
+
+    def settle(self, token, actual):
+        raise StoreError("unconfigured")
+
+    def release(self, token):
+        raise StoreError("unconfigured")
+
 
 def load(per_ip, per_ip_day, global_window, cap_usd):
     """Return (limiter, cap). Redis when configured, closed on Vercel if not, else memory."""
@@ -104,7 +126,7 @@ def _day(now):
 
 
 class SharedLimits:
-    """Rate limits and the daily USD cap. `allow` / `ok` run before a paid call; `add` records cost after it."""
+    """Rate limits and atomic daily USD reservations, reconciled after paid calls."""
 
     def __init__(self, url, token, per_ip, per_ip_day, global_window, cap_usd, clock=time.time, timeout=4):
         self.url, self.token = url.rstrip("/"), token
@@ -137,6 +159,35 @@ class SharedLimits:
         raw = self._exec([["INCRBYFLOAT", key, amount], ["EXPIRE", key, DAY, "NX"]])[0]
         with self.lock:
             self.spent = round(float(raw), 6)
+
+    def _spent_result(self, raw):
+        try:
+            value = float(raw)
+            if not math.isfinite(value) or value < 0:
+                raise ValueError
+        except (TypeError, ValueError, OverflowError):
+            raise StoreError("bad-response") from None
+        with self.lock:
+            self.spent = value
+
+    def reserve(self, amount):
+        key = self._usd_key()
+        amount = max(0.0, float(amount))
+        raw = self._exec([["EVAL", RESERVE_SCRIPT, "1", key, str(amount), str(self.cap)]])[0]
+        if not isinstance(raw, list) or len(raw) != 2 or type(raw[0]) is not int or raw[0] not in (0, 1):
+            raise StoreError("bad-response")
+        self._spent_result(raw[1])
+        return (key, amount) if raw[0] else None
+
+    def settle(self, token, actual):
+        if actual is None:
+            return
+        key, reserved = token
+        raw = self._exec([["EVAL", SETTLE_SCRIPT, "1", key, str(float(actual) - reserved)]])[0]
+        self._spent_result(raw)
+
+    def release(self, token):
+        self.settle(token, 0)
 
     def _usd_key(self):
         return f"factcheck:usd:{_day(self.clock())}"

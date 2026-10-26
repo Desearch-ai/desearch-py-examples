@@ -43,6 +43,7 @@ class Checker:
         self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
         self.cache = cache or core.TTLCache()
         self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
+        self.reserve_per_call = max(_env_float("DEMO_RESERVE_COST_USD", 0.01), self.fallback_cost)
         self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
         self.x_enabled = os.environ.get("DEMO_X_ENABLED", "").strip().lower() in ("1", "true") if x_enabled is None else x_enabled
 
@@ -61,7 +62,7 @@ class Checker:
             self._client = Client(api_key(), log_dir=os.environ.get("FACTCHECK_LOG_DIR"))
         return self._client
 
-    def run(self, claim, wiki=False):
+    def run(self, claim, wiki=False, costs=None):
         """One web call, plus optional Wikipedia and X calls."""
         c = self.client()
         jobs = [("ai", c.ai_search, core.ai_body(claim, "web"))]
@@ -69,13 +70,20 @@ class Checker:
             jobs.append(("x", c.x_search, core.x_params(claim)))
         if wiki:
             jobs.append(("wiki", c.ai_search, core.ai_body(claim, "wikipedia")))
+        costs = [] if costs is None else costs
         calls = {}
         with ThreadPoolExecutor(max_workers=len(jobs)) as ex:   # calls run in parallel
             futs = {name: ex.submit(fn, arg, f"check-{name}") for name, fn, arg in jobs}
+            error = None
             for name, f in futs.items():
-                st, body, rec = f.result()
-                self.cap.add(self.cap_cost(st, rec))
-                calls[name] = {"status": st, "body": body, "cost": rec["cost"], "latency_s": rec["latency_s"]}
+                try:
+                    st, body, rec = f.result()
+                    costs.append(self.cap_cost(st, rec))
+                    calls[name] = {"status": st, "body": body, "cost": rec["cost"], "latency_s": rec["latency_s"]}
+                except Exception as exc:
+                    error = exc
+            if error is not None:
+                raise error
         if calls["ai"]["status"] != 200 or not isinstance(calls["ai"]["body"], dict):
             return calls["ai"]["status"], None, calls
         return 200, core.build_result(claim, calls["ai"], calls.get("x"), calls.get("wiki")), calls
@@ -104,11 +112,28 @@ class Checker:
                 return out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
             if not self.limiter.allow(ip or "unknown"):
                 return out(429, {"error": "Too many checks from your network. Try again in a few minutes."})
-            st, res, _ = self.run(claim, wiki)
+            total = self.reserve_per_call * (1 + int(wiki) + int(self.x_enabled))
+            token = self.cap.reserve(total)
+            if token is None:
+                return out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
+            costs = []
+            try:
+                st, res, _ = self.run(claim, wiki, costs=costs)
+            finally:
+                actual = sum(costs)
+                if actual > total:
+                    print(f"[check] {actual} {total}", file=sys.stderr)
+                try:
+                    if costs:
+                        self.cap.settle(token, actual)
+                    else:
+                        self.cap.release(token)
+                except limits.StoreError:
+                    print("[check] shared limit store error on settle", file=sys.stderr)
         except limits.StoreError:
             print("[check] shared limit store error", file=sys.stderr)
             return out(503, PAUSED)
-        except RuntimeError as e:   # missing key on the server: say so without details
+        except (RuntimeError, OSError) as e:   # missing key on the server: say so without details
             print(f"[check] server error: {type(e).__name__}", file=sys.stderr)
             return out(500, {"error": "The demo is not configured."})
         if st in (401, 402, 403):   # bad key or empty balance: same response as the kill switch

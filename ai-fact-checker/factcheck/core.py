@@ -287,7 +287,25 @@ class DailyCap:
     def add(self, usd):
         with self.lock:
             self._roll()
-            self.spent += float(usd or 0)
+            self.spent = max(0.0, self.spent + float(usd or 0))
+
+    def reserve(self, amount):
+        with self.lock:
+            self._roll()
+            amount = max(0.0, float(amount))
+            if self.spent + amount > self.cap + 1e-9:
+                return None
+            self.spent += amount
+            return (self.day, amount)
+
+    def settle(self, token, actual):
+        with self.lock:
+            self._roll()
+            if actual is not None and token[0] == self.day:
+                self.spent = max(0.0, self.spent + float(actual) - token[1])
+
+    def release(self, token):
+        self.settle(token, 0)
 
 
 class TTLCache:
