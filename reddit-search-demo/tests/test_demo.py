@@ -340,6 +340,10 @@ def test_parity_sample_public():
  assert 'innerHTML' not in html
  assert KEY not in json.dumps(call(demo())[1:])
 
+def test_page_title():
+ html=(ROOT/'public/index.html').read_text()
+ assert re.search(r'<title>.*?</title>',html)[0]=='<title>Reddit search | Made by Desearch</title>'
+
 def test_inline_js():
  node=shutil.which('node')
  if not node:pytest.skip('node unavailable')

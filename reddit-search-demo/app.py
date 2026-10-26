@@ -1,4 +1,4 @@
-"""Local Article searchr demo. Run python app.py."""
+"""Local Reddit search demo. Run python app.py."""
 import argparse
 import os
 import mimetypes
