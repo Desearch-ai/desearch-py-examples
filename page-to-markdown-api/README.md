@@ -8,7 +8,7 @@ It works on pages whose text is in the HTML the server sends (articles, docs, bl
 
 ## Demo
 
-The public Page to Markdown demo provides a URL form, a saved sample, Copy and Download buttons. Run `python app.py` locally or follow [DEPLOY.md](DEPLOY.md) for Vercel. The demo validates public URLs and DNS before one Extract request, never retries, caches conversions for six hours, and applies rate limits and a daily spend cap. Set `DEMO_LIVE=0` for a paused sample preview. The original CLI below retains its existing retry option and output files.
+The public Page to Markdown demo provides a URL form, a saved sample, Copy and Download buttons. Run `python app.py` locally or follow [DEPLOY.md](DEPLOY.md) for Vercel. The demo validates public URLs and DNS before counting a request toward rate limits and making one Extract request, never retries, caches conversions for six hours, and applies rate limits and a daily spend cap. The page reads `DEMO_PER_IP_10MIN` and `DEMO_PER_IP_DAY` limits through the free `GET /api/convert?limits=1` endpoint. Errors clear and hide the result. Set `DEMO_LIVE=0` for a paused sample preview. The original CLI below retains its existing retry option and output files.
 
 ## Setup
 

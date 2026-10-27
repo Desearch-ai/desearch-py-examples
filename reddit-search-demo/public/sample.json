@@ -1,0 +1,101 @@
+{
+  "status": "ok",
+  "sample": true,
+  "sample_date": "2026-10-26",
+  "topic": "keeping houseplants alive in winter",
+  "query": "site:reddit.com keeping houseplants alive in winter",
+  "source": "Desearch web search, limited to reddit.com",
+  "threads": [
+    {
+      "subreddit": "r/houseplants",
+      "title": "How does anyone keep their plants alive in the winter?!?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/houseplants/comments/sbrqzx/how_does_anyone_keep_their_plants_alive_in_the/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/houseplants",
+      "title": "What are the unspoken rules of caring for houseplants in the winter?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/houseplants/comments/17n2iii/what_are_the_unspoken_rules_of_caring_for/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/CasualUK",
+      "title": "How are you lot keeping your house plants alive over winter?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/CasualUK/comments/1hgx98x/how_are_you_lot_keeping_your_house_plants_alive/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/houseplants",
+      "title": "How do you keep tropical plants alive in winter?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/houseplants/comments/1e1ojd8/how_do_you_keep_tropical_plants_alive_in_winter/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/houseplants",
+      "title": "If I can just keep all my house plants alive this winter.",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/houseplants/comments/1gcjop2/if_i_can_just_keep_all_my_house_plants_alive_this/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/houseplants",
+      "title": "keeping sensitive plant alive over the winter",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/houseplants/comments/1fwwm09/keeping_sensitive_plant_alive_over_the_winter/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/IndoorGarden",
+      "title": "Any ideas for keeping my plants warm in winter?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/IndoorGarden/comments/16ix0au/any_ideas_for_keeping_my_plants_warm_in_winter/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/IndoorPlants",
+      "title": "How to keep plants alive in winter",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/IndoorPlants/comments/18ley4i/how_to_keep_plants_alive_in_winter/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/GardeningUK",
+      "title": "How are you lot keeping your house plants alive over winter?",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/GardeningUK/comments/1hgygva/how_are_you_lot_keeping_your_house_plants_alive/",
+      "snippet": "",
+      "date": null
+    },
+    {
+      "subreddit": "r/HouseplantsUK",
+      "title": "How to keep tropical plants warm during winter?!",
+      "title_from_link": false,
+      "link": "https://www.reddit.com/r/HouseplantsUK/comments/18qg8ir/how_to_keep_tropical_plants_warm_during_winter/",
+      "snippet": "",
+      "date": null
+    }
+  ],
+  "count": 10,
+  "calls": {
+    "web_search": 1
+  },
+  "cached": false,
+  "cost_usd_this_request": 0.001,
+  "limits": {
+    "per_ip": 5,
+    "per_ip_day": 15,
+    "global_window": 30
+  }
+}

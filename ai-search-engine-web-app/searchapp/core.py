@@ -256,7 +256,7 @@ class DailyCap:
 
 
 class TTLCache:
-    def __init__(self, ttl=21600, clock=time.monotonic, max_items=500):
+    def __init__(self, ttl=900, clock=time.monotonic, max_items=500):
         self.ttl, self.clock, self.max, self.d, self.lock = ttl, clock, max_items, collections.OrderedDict(), threading.Lock()
 
     def get(self, k):

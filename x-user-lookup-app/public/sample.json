@@ -1,0 +1,28 @@
+{
+  "sample": true,
+  "cached": false,
+  "label": "EXAMPLE data: fictional account and posts, not live results.",
+  "username": "example",
+  "profile": {
+    "name": "Example Community",
+    "username": "example",
+    "bio": "A fictional community account for outreach planning.",
+    "followers": 1200,
+    "following": 240,
+    "posts_total": 85,
+    "created": "2025-01-14",
+    "found": true
+  },
+  "posts": [
+    {
+      "created_utc": "2026-10-20 10:00",
+      "text": "Join our next community conversation.",
+      "likes": 18,
+      "replies": 4,
+      "reposts": 3,
+      "views": 450,
+      "link": "https://x.com/example"
+    }
+  ],
+  "cost_usd_this_request": 0
+}
