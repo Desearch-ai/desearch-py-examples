@@ -1,0 +1,55 @@
+Free
+
+$0
+
+Free for everyone
+
+Unlimited members
+2 teams
+250 issues
+Agent platform
+Linear Agent
+
+Basic
+
+$10 per user/month
+
+Billed yearly
+
+All Free features +
+5 teams
+Unlimited issues
+Unlimited file uploads
+Admin roles
+
+Business
+
+$16 per user/month
+
+Billed yearly
+
+All Basic features +
+Unlimited teams
+Private teams and guests
+Triage Intelligence
+Loops
+Code Intelligence
+Linear Insights
+Linear Asks
+
+Enterprise
+
+Custom
+
+Annual billing only
+
+All Business features +
+Invoice/PO billing
+SAML and SCIM
+Granular admin controls
+Enterprise-grade security
+Advanced org modeling
+Migration & onboarding support
+Priority support
+Account management
+
