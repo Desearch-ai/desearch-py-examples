@@ -192,10 +192,10 @@ def test_upstream_500_still_returns_502():
 
 
 def test_cap_still_trips_when_cost_headers_are_missing(monkeypatch):
-    monkeypatch.setenv("DEMO_RESERVE_COST_USD", "0.005")
-    ch = Checker(client=NoCostClient(), live=True, x_enabled=False, cap=core.DailyCap(0.005))
-    assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # one call at 0.005 fallback
-    assert abs(ch.cap.spent - 0.005) < 1e-9
+    monkeypatch.setenv("DEMO_RESERVE_COST_USD", "0.01")
+    ch = Checker(client=NoCostClient(), live=True, x_enabled=False, cap=core.DailyCap(0.01))
+    assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # one full per-call reservation
+    assert ch.cap.spent == pytest.approx(0.01)
     assert ch.handle({"claim": "Octopuses have three hearts"}, "b")[0] == 503 and ch._client.calls == 1
     assert ch.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.0
 
@@ -693,6 +693,60 @@ def test_reserved_before_calls_and_refunded(monkeypatch, wiki, x, jobs):
     ch._client.ai_search = inspect
     assert ch.handle({"claim": claim_n(1), "wiki": str(wiki)}, "ip")[0] == 200
     assert ch.cap.spent == pytest.approx(.004 * (1 + wiki) + .0015 * x)
+
+
+@pytest.mark.parametrize("shared", [False, True])
+def test_unknown_cost_keeps_full_reservation(monkeypatch, shared):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, VERCEL=1, DEMO_DAILY_CAP_USD=.02,
+              DEMO_RESERVE_COST_USD=.01, DEMO_FALLBACK_COST_USD=.005)
+    if not shared:
+        for name in ("VERCEL", "VERCEL_ENV", "KV_REST_API_URL", "KV_REST_API_TOKEN",
+                     "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
+            monkeypatch.delenv(name, raising=False)
+    client = NoCostClient()
+    ch = Checker(client=client, live=True, x_enabled=False)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "10.0.0.1")[0] == 200
+    assert ch.handle({"claim": claim_n(2)}, "10.0.0.2")[0] == 200
+    code, headers, body = ch.handle({"claim": claim_n(3)}, "10.0.0.3")
+    assert code == 503 and headers["Cache-Control"] == "no-store"
+    assert json.loads(body)["sample"] == "/sample.json"
+    assert client.calls == 2
+    assert ch.cap.spent == pytest.approx(.02)
+    if shared:
+        assert float(fake.values[ch.cap._usd_key()]) == pytest.approx(.02)
+    else:
+        assert isinstance(ch.cap, core.DailyCap) and fake.seen == []
+
+
+def test_mixed_parallel_costs_keep_unknown_job_reservation(monkeypatch):
+    class MixedCostClient(NoCostClient):
+        def ai_search(self, payload, tag=""):
+            status, body, rec = super().ai_search(payload, tag)
+            if tag == "check-ai":
+                rec.update(cost=.002, cost_known=True)
+            return status, body, rec
+
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, VERCEL=1, DEMO_DAILY_CAP_USD=.02,
+              DEMO_RESERVE_COST_USD=.01, DEMO_FALLBACK_COST_USD=.005)
+    client = MixedCostClient()
+    ch = Checker(client=client, live=True, x_enabled=False)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1), "wiki": "1"}, "ip")[0] == 200
+    assert client.calls == 2
+    assert float(fake.values[ch.cap._usd_key()]) == pytest.approx(.002 + .01)
+
+
+@pytest.mark.parametrize("status", [200, 400, 401, 402, 403, 429, 500])
+@pytest.mark.parametrize("known", [False, True])
+def test_cap_cost_status_rules(status, known):
+    ch = mk()
+    expected = .004 if known else (.01 if status < 500 and status != 429 else 0)
+    if status in (401, 402, 403):
+        expected = 0
+    assert ch.cap_cost(status, {"cost": .004, "cost_known": known}) == pytest.approx(expected)
 
 
 def test_refused_reservation(monkeypatch):

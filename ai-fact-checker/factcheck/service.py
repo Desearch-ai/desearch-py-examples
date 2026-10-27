@@ -49,13 +49,14 @@ class Checker:
 
     def cap_cost(self, status, rec):
         """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
-        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so missing headers cannot switch the cap off.
-        A 401, 402 or 403 (invalid key or out of balance) counts $0."""
+        body cost_usd), a call with status < 500 except 429 keeps its full per-call reservation.
+        A 401, 402 or 403 counts $0; unknown 429 and unknown 5xx cost count $0.
+        Otherwise, known cost counts as reported."""
         if status in (401, 402, 403):
             return 0.0
         if rec.get("cost_known", True):
             return rec["cost"]
-        return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
+        return self.reserve_per_call if status < 500 and status != 429 else 0.0
 
     def client(self):
         if self._client is None:
