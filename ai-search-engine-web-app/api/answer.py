@@ -5,7 +5,7 @@ from http.server import BaseHTTPRequestHandler
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from searchapp.service import Engine, client_ip, parse_query  # noqa: E402
 
-ENGINE = Engine()   # module-level: limiter, cap and cache live as long as the warm instance
+ENGINE = Engine()   # shared state lives in Redis
 
 
 class handler(BaseHTTPRequestHandler):
@@ -18,6 +18,9 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(data)))
         self.end_headers()
         self.wfile.write(data)
+
+    def log_request(self, code="-", size="-"):
+        pass
 
     def log_message(self, fmt, *args):   # no request lines in logs (they would contain the search text)
         pass

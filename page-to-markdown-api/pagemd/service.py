@@ -65,10 +65,12 @@ class Converter:
         self._memory_refused = memory_requested and bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV')) and not injected_state
         memory = injected_state or (memory_requested and not self._memory_refused)
         redis = state.RedisREST() if not memory else None
+        self.limits = {'per_10min': int(_env_float('DEMO_PER_IP_10MIN', 5)),
+                       'per_day': int(_env_float('DEMO_PER_IP_DAY', 15))}
         self.limiter = limiter if limiter is not None else (
             RateLimiter if memory else lambda **kw: state.Limiter(redis, **kw))(
-                per_ip=int(_env_float('DEMO_PER_IP_10MIN', 5)),
-                per_ip_day=int(_env_float('DEMO_PER_IP_DAY', 15)),
+                per_ip=self.limits['per_10min'],
+                per_ip_day=self.limits['per_day'],
                 global_window=int(_env_float('DEMO_GLOBAL_10MIN', 30)))
         self.cap = cap if cap is not None else (DailyCap(_env_float('DEMO_DAILY_CAP_USD', 1))
             if memory else state.DailyCap(redis, _env_float('DEMO_DAILY_CAP_USD', 1)))
@@ -82,7 +84,7 @@ class Converter:
     def handle(self, query, ip):
         with self.lock:
             try:
-                if self._memory_refused:
+                if self._memory_refused and query.get('limits') != '1':
                     raise state.StateUnavailable()
                 return self._handle(query, ip)
             except state.StateUnavailable:
@@ -99,14 +101,16 @@ class Converter:
         def sample(code, status, message):
             return out(code, {**self.sample, 'status': status, 'error': message, 'message': message,
                               'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0})
-        if not self.limiter.allow(ip or 'unknown'):
-            return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
+        if query.get('limits') == '1':
+            return out(200, {'limits': self.limits})
         try:
             url = validate_url(query.get('url'), self.resolver)
         except URLUnreachableError:
             return sample(502, 'unreachable', "Couldn't reach this site. Check the link and try again.")
         except URLValidationError as e:
             return sample(400, 'invalid', str(e))
+        if not self.limiter.allow(ip or 'unknown'):
+            return sample(429, 'limited', 'Too many conversions. Try again later; each network has a daily limit too.')
         if not self.live:
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
         hit = self.cache.get(url)

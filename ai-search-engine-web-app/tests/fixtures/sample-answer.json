@@ -1,0 +1,195 @@
+{
+  "query": "python 3.14 free threading performance",
+  "mode": "fast",
+  "count": 10,
+  "start_date": "2025-10-26",
+  "end_date": null,
+  "captured_at": "2026-10-26T14:22:59.313772+00:00",
+  "status": 200,
+  "cost": 0.004,
+  "latency": 12.96,
+  "body": {
+    "search": [
+      {
+        "title": "Python 3.14 Is Here. How Fast Is It? - miguelgrinberg.com",
+        "link": "https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it",
+        "snippet": "miguelgrinberg.com",
+        "highlights": [
+          "Python 3.14 Is Here. How Fast Is It?",
+          "on underIn November of 2024 I wrote a blog post titled \"Is Python Really That Slow?\", in which I tested several versions of Python and noted the steady progress the language has been making in terms of performance.",
+          "Today is the 8th of October 2025, just a day after the official release of Python 3.14. Let's rerun the benchmarks to find out how fast the new version of Python is!",
+          "Yes, even though I'm going to share the results of my benchmark, I feel I have to warn you again, like I did in the previous article, that generic benchmarks like this one are not really very useful. Running these benchmarks is fun, and that is why I do it, but it is really impossible to build an accurate performance profile of something as complex as the Python interpreter just from running a couple of silly little scripts.",
+          "I have designed my tests so that they run only pure Python code, avoiding the use of any dependencies, and in particular any functions that are written in C code. Native code (aside from the Python interpreter itself, that is) is less likely to become faster from one release of Python to the next, so I see no point in including that in the benchmark. But real-world applications do often use a mix of pure Python and native code, be it C, C++ or Rust, so while my test scripts are great to evaluate the performance of pure Python code, I do not consider them to be representative of the applications we normally use.",
+          "In short, have a look at my benchmark, but consider it just one data point and not the last word on Python performance!",
+          "- 6 Python versions, plus recent versions of Pypy, Node.js and Rust:",
+          "- 3 Python interpreters- Standard",
+          "- Free-threading (FT): only for CPython 3.13+",
+          "- 2 threading modes- Single-threaded",
+          "You may think that including Node.js and Rust in my benchmark is an odd choice. Maybe it is, but just the same, I ported the two Python test applications to JavaScript and Rust, so that I can have some reference numbers from outside of the Python ecosystem, just to put things into perspective.",
+          "Please do not assume that these are great examples, because they are not. There are more efficient ways to code these functions if the goal was to make them run as fast as possible. But the goal here is not to have fast functions, but to compare how different Python interpreters run the code. I have chosen these functions mainly because one is recursive and the other is not, so that I have two different coding styles in the test set."
+        ],
+        "published_date": "2025-10-08",
+        "author": "Miguel Grinberg"
+      },
+      {
+        "title": "Python 3.14 Free-Threading: Real Benchmarks, Real Breakage, Real Code - DEV Community",
+        "link": "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+        "snippet": "Python 3.14 drops the GIL for good. Real benchmarks show 3.5x speedups on 4 cores. See which libraries break and how to install the free-threaded build. Tagged with python, freethreading, gil, concurrency.",
+        "highlights": [
+          "Python 3.14 makes free-threading officially supported. You get true thread-level parallelism for CPU-bound work, with up to 3.5x speedups on 4 cores. The single-threaded penalty dropped from ~40% in 3.13 to roughly 5-10%. But the library support isn't fully there yet: any C extension that hasn't opted in will silently re-enable the GIL. Here's how to install it, what actually works, and when it's worth the switch.",
+          "For over three decades, CPython's Global Interpreter Lock has been the answer to \"why can't Python use all my cores?\" The GIL ensures only one thread executes Python bytecode at a time. That keeps things simple but means CPU-bound code can't use multiple cores.",
+          "Python 3.13 introduced an experimental free-threaded build. Python 3.14, released October 2025, promoted it to officially supported status via PEP 779. The implementation described in PEP 703 is now complete. Temporary workarounds in the interpreter have been replaced with permanent solutions, and the single-threaded performance hit has been slashed.",
+          "- Free-threading is supported but not the default build. You still have to opt in.",
+          "How to Install the Free-Threaded Build",
+          "The free-threaded interpreter ships as a separate binary: python3.14t (note the t suffix).",
+          "python --version  # Python 3.14.x (free-threading build)",
+          "If you just read our uv vs pip vs Poetry comparison, you already know uv handles Python version management. The 3.14t variant is a first-class citizen.",
+          "Download from python.org/downloads. On macOS, the installer has an optional checkbox for the free-threaded build. On Windows, use py install 3.14t.",
+          "git clone https://github.com/python/cpython.git",
+          "print(sys._is_gil_enabled())  # False = free-threading active",
+          "I ran three CPU-bound benchmarks comparing python3.14 (GIL build) and python3.14t (free-threaded) on a 4-core machine."
+        ],
+        "published_date": "2026-04-13",
+        "author": "Maksim Danilchenko"
+      },
+      {
+        "title": "Python 3.14 Free-Threading True Parallelism Without the GIL - DEV Community",
+        "link": "https://dev.to/edgar_montano/python-314-free-threading-true-parallelism-without-the-gil-a12",
+        "snippet": "Python's Global Interpreter Lock (GIL) has constrained multi-core CPU utilization for decades. Python... Tagged with python, programming, aws, opensource.",
+        "highlights": [
+          "Python's Global Interpreter Lock (GIL) has constrained multi-core CPU utilization for decades. Python 3.14 changes this with official support for free-threaded builds and the concurrent.interpreters module, enabling true CPU parallelism with up to 4x performance improvements for CPU-bound tasks.",
+          "# Install free-threaded Python 3.14",
+          "$ uv python install 3.14t",
+          "$ uv run --python 3.14t python -VV",
+          "Python 3.14.0 free-threading build (main, Oct 7 2025, 15:35:12)",
+          "Performance Impact: Real Numbers",
+          "I ran benchmarks comparing standard Python 3.14 with the free-threaded build on CPU-intensive tasks:",
+          "data = b\"Python 3.14 benchmark\"",
+          "thread = threading.Thread(target=cpu_intensive_task)",
+          "Free-threaded Python maintains consistent execution time regardless of thread count, achieving near-linear scaling.",
+          "Python 3.14 introduces concurrent.interpreters, exposing functionality that existed in the C-API for 20 years:",
+          "- Separate GIL (or no GIL in free-threaded builds)"
+        ],
+        "published_date": "2025-11-07",
+        "author": "Edgar Montano"
+      },
+      {
+        "title": "Unlocking True Parallelism: A Developer's Guide to Free-Threaded Python 3.14 - DEV Community",
+        "link": "https://dev.to/mechcloud_academy/unlocking-true-parallelism-a-developers-guide-to-free-threaded-python-314-175i",
+        "snippet": "A detailed walkthrough of how to get started with and effectively use the new free-threaded (no-GIL) builds in Python 3.14 to achieve true parallelism for your CPU-bound, multi-threaded applications. Tagged with python.",
+        "highlights": [
+          "For decades, Python developers have worked with a powerful, yet sometimes frustrating, limitation: the Global Interpreter Lock, or GIL. This lock ensured that only one thread could execute Python bytecode at a time, simplifying memory management at the cost of preventing true multi-core parallelism for CPU-bound tasks. To scale, developers turned to multiprocessing, which, while effective, comes with its own overhead and challenges in sharing data.",
+          "With the release of Python 3.14, the landscape of concurrency in Python has fundamentally changed. Building on the experimental work in version 3.13, Python 3.14 officially supports a \"free-threaded\" build, a version of the CPython interpreter compiled without the GIL. This is a landmark change, enabling multiple threads to run Python code on multiple CPU cores simultaneously, all within a single process.",
+          "This post will guide you through what free-threaded Python is, how to get it, how to use it, and the crucial considerations you need to keep in mind as you step into this new era of Python performance.",
+          "Getting Your Hands on Free-Threaded Python",
+          "While free-threaded Python is now officially supported, it is not yet the default build. You'll need to explicitly install or build it.",
+          "The easiest way to get started is with the official installers from the Python website. During the installation process, you'll have an option to customize your installation. Look for a checkbox to include the free-threaded binaries. This will install a separate interpreter that you can use to run your code without the GIL.",
+          "On Windows, you might use a command like py install 3.14t to get the free-threaded version via the new Python install manager. Once installed, you can typically invoke it with a command like python3.14t.",
+          "For Linux users or those who prefer to build from source, the process is straightforward. This gives you maximum control and is the canonical way to ensure you have a free-threaded build.",
+          "- Download the Source: Get the Python 3.14 source code from the official Python website or clone the CPython repository from GitHub.",
+          "Once you have a free-threaded version, you can verify it. Running the interpreter with the -VV flag will show \"free-threading build\" in the version information.",
+          "Python 3.14.0 (main, Oct 7 2025, 10:30:00) [GCC 11.4.0] (free-threading build)",
+          "print(\"This check requires Python 3.13+.\")"
+        ],
+        "published_date": "2025-10-12",
+        "author": "Torque"
+      },
+      {
+        "title": "Python 3.14 free-threaded build is now available in RHEL | Red Hat Developer",
+        "link": "https://developers.redhat.com/articles/2026/09/14/python-314-free-threaded-build-now-available-rhel",
+        "snippet": "Explore free-threaded Python 3.14 on RHEL. Learn how to install python3.14t, manage thread safety, and optimize multi-core CPU performance for your apps.",
+        "highlights": [
+          "Developers on Red Hat Enterprise Linux 9.8 and 10.2 can now test full parallel CPU execution in Python using the new free-threaded Python 3.14 build. In addition to the regular Python 3.14 interpreter, we also provide the free-threaded variant in the Red Hat CodeReady Linux Builder repositories.",
+          "Python 3.14 is the first upstream release where the free-threaded build is officially supported rather than experimental.",
+          "Threading Python without the GIL: What is free-threaded Python?",
+          "The standard CPython interpreter uses the Global Interpreter Lock, usually called the GIL. The GIL prevents multiple Python threads from executing Python bytecode at the same time in one process. While the GIL simplifies CPython internal memory management, it prevents CPU-bound Python code from utilizing multiple CPU cores through threads.",
+          "The free-threaded build removes this limitation. It is built with the GIL disabled and allows Python threads to execute in parallel on multiple CPU cores. This can improve performance for programs that are already designed around threading, especially CPU-bound workloads where multiprocessing is too expensive or too complicated.",
+          "This does not mean that every Python program will become faster automatically. I/O-bound applications, single-threaded programs, and applications limited by external services might see little or no benefit. But for workloads where threads do real CPU work, free-threaded Python allows CPU-bound Python threads to execute across multiple cores in a single process.",
+          "The free-threaded Python 3.14 interpreter is available as the python3.14-freethreading package. It installs the python3.14t executable, so it can be installed next to other Python interpreters without replacing the system Python.",
+          "python3.14tYou can verify that the interpreter supports free-threading with:",
+          "python3.14t -VVThe output should mention that this is a free-threading build. You can also check from Python code:",
+          "python3.14t -c \"import sys, sysconfig; print(sysconfig.get_config_var('Py_GIL_DISABLED')); print(sys._is_gil_enabled())\"The first value tells you whether the interpreter was built with free-threading support. The second tells you whether the GIL is currently enabled in this process.",
+          "If your pure Python code doesn't share state across threads, it will likely run without changes. But if your application implicitly relied on the GIL for thread safety, real race conditions can surface.",
+          "Built-in container types like dict, list, and set use internal locks in the free-threaded build to protect individual operations, similar to the protection the GIL provided. However, sequences of operations are not atomic. For example, checking whether a key exists in a dictionary and then setting it are two separate operations, and another thread can modify the dictionary in between. If your code relies on multiple operations being performed without interleaving, use threading.Lock, queues, or another explicit synchronization mechanism."
+        ],
+        "published_date": "2026-09-14",
+        "author": "Lumír Balhar"
+      },
+      {
+        "title": "What’s new in Python 3.14 — Python 3.15.2 documentation",
+        "link": "https://docs.python.org/3/whatsnew/3.14.html",
+        "snippet": "Editors, Adam Turner and Hugo van Kemenade,. This article explains the new features in Python 3.14, compared to 3.13. Python 3.14 was released on 7 October 2025. For full details, see the changelog...",
+        "highlights": [
+          "What’s new in Python 3.14¶",
+          "This article explains the new features in Python 3.14, compared to 3.13. Python 3.14 was released on 7 October 2025. For full details, see the changelog.",
+          "PEP 745 – Python 3.14 release schedule",
+          "Python 3.14 is a stable release of the Python programming language, with a mix of changes to the language, the implementation, and the standard library. The biggest changes include template string literals, deferred evaluation of annotations, and support for subinterpreters in the standard library.",
+          "This article doesn’t attempt to provide a complete specification of all new features, but instead gives a convenient overview. For full details refer to the documentation, such as the Library Reference and Language Reference. To understand the complete implementation and design rationale for a change, refer to the PEP for a particular new feature; but note that PEPs usually are not kept up-to-date once a feature has been fully implemented. See Porting to Python 3.14 for guidance on upgrading from earlier versions of Python.",
+          "This change is designed to improve performance and usability of annotations in Python in most circumstances. The runtime cost for defining annotations is minimized, but it remains possible to introspect annotations at runtime. It is no longer necessary to enclose annotations in strings if they contain forward references.",
+          "earlier Python versions), the FORWARDREF format",
+          "The CPython runtime supports running multiple copies of Python in the same process simultaneously and has done so for over 20 years. Each of these separate copies is called an ‘interpreter’. However, the feature had been available only through the C-API.",
+          "That limitation is removed in Python 3.14,",
+          "- they support a new (to Python), human-friendly concurrency model",
+          "That especially applies to plain threads (for example, threading),",
+          "Regarding multi-core parallelism: as of Python 3.12, interpreters are now sufficiently isolated from one another to be used in parallel (see PEP 684). This unlocks a variety of CPU-intensive use cases for Python that were limited by the GIL."
+        ],
+        "published_date": "2025-10-07"
+      },
+      {
+        "title": "Python 3.14 Free-Threading: Real Benchmarks and Breakage",
+        "link": "https://www.danilchenko.dev/posts/python-314-free-threading/",
+        "snippet": "Python 3.14's free-threaded build is officially supported. Published benchmarks show ~3x speedups on 4 threads; which libraries break, how to install it.",
+        "highlights": [
+          "Python 3.14 makes free-threading officially supported. You get true thread-level parallelism for CPU-bound work, with roughly 3x speedups on four threads in published benchmarks. The single-threaded penalty dropped from ~40% in 3.13 to 1-8% on the pyperformance suite, depending on platform. But the library support isn’t fully there yet: any C extension that hasn’t opted in will silently re-enable the GIL. Here’s how to install it, what actually works, and when it’s worth the switch.",
+          "For over three decades, CPython’s Global Interpreter Lock has been the answer to “why can’t Python use all my cores?” The GIL ensures only one thread executes Python bytecode at a time. That keeps things simple but means CPU-bound code can’t use multiple cores.",
+          "Python 3.13 introduced an experimental free-threaded build. Python 3.14, released October 2025, promoted it to officially supported status via PEP 779. The implementation described in PEP 703 is now complete. Temporary workarounds in the interpreter have been replaced with permanent solutions, and the single-threaded performance hit has been slashed.",
+          "- Free-threading is supported but not the default build. You still have to opt in.",
+          "How to Install the Free-Threaded Build",
+          "The free-threaded interpreter ships as a separate binary: python3.14t (note the t suffix).",
+          "python --version  # Python 3.14.x (free-threading build)",
+          "If you just read our uv vs pip vs Poetry comparison, you already know uv handles Python version management. The 3.14t variant is a first-class citizen.",
+          "Download from python.org/downloads. On macOS, the installer has an optional checkbox for the free-threaded build. On Windows, use py install 3.14t.",
+          "git clone https://github.com/python/cpython.git",
+          "print(sys._is_gil_enabled())  # False = free-threading active",
+          "Two small CPU-bound scripts you can run on both python3.14 (GIL build) and python3.14t (free-threaded) to see the difference on your own hardware, followed by published numbers."
+        ],
+        "published_date": "2026-04-13",
+        "author": "Maksim Danilchenko"
+      },
+      {
+        "title": "Python 3.14 Is Here: Free Threading Removes the GIL — With Caveats | Stackademic",
+        "link": "https://stackademic.com/blog/python-3-14-is-here-free-threading-removes-the-gil-with-caveats-sep-18-2026",
+        "snippet": "Python 3.14 ships optional no-GIL builds for true multi-threading parallelism. Guido van Rossum warns the change is not a silver bullet for most developers.",
+        "highlights": [
+          "Python 3.14 ships optional no-GIL builds for true multi-threading parallelism. Guido van Rossum warns the change is not a silver bullet for most developers.",
+          "Python 3.14 officially released this week, delivering the most significant concurrency change in the language's modern history: optional free threading that removes the Global Interpreter Lock (GIL) from supported builds.",
+          "For decades, the GIL allowed only one Python thread to execute bytecode at a time per process — simplifying memory management but throttling CPU-bound multi-threaded programs on multi-core hardware. Developers worked around it with multiprocessing, C extensions, or alternative runtimes. Python 3.14 offers a third path: run without the GIL when you opt into the free-threading build.",
+          "Beyond free threading, Python 3.14 bundles concurrent interpreter support, improved debugger tooling, and an optional new interpreter path. The default single-threaded build remains unchanged for compatibility; the official estimate suggests a modest 3–5% performance impact when staying on the traditional build.",
+          "The free-threading build shows the largest gains in CPU-intensive multi-threaded workloads — numerical computing, simulation, certain web server architectures, and parallel data processing. I/O-bound applications see less dramatic improvements because they were never GIL-saturated.",
+          "Trade-offs exist. Single-threaded performance can decline slightly on the no-GIL build. Memory usage may increase. C extension authors face new concurrency guarantees to reason about — a burden that falls heavily on the scientific Python stack's maintainers.",
+          "In a post-release interview, Python creator Guido van Rossum cautioned against overestimating the GIL removal's importance. He argued it primarily serves ultra-large-scale concurrent scenarios while raising complexity for CPython contributors. On AI, he was blunt: the hype is excessive — \"after all, it is still software\" — and he emphasized readable, auditable code over trend-chasing.",
+          "Do not switch production workloads on release week. Wait for your critical dependencies — NumPy, PyTorch, Django, etc. — to publish free-threading compatibility statements.",
+          "Test on free-threading builds in CI if you maintain libraries. Race conditions that lurked harmlessly under the GIL may surface immediately without it.",
+          "Educate teams on threading models. asyncio, multiprocessing, and free-threading serve different shapes of work; 3.14 adds options, not a universal upgrade.",
+          "Python 3.14's no-GIL build is a real capability for teams that need CPU parallelism without multiprocessing overhead — not a mandatory migration. Read Guido's caution alongside Karpathy's enthusiasm, then let your profiler decide. The language continues evolving; most applications continue running fine on the default build they already trust."
+        ],
+        "published_date": "2026-09-18"
+      },
+      {
+        "title": "Medium",
+        "link": "https://python.plainenglish.io/i-benchmarked-python-3-14s-free-threading-on-5-real-tasks-here-s-what-actually-happened-d7088b7e4fed?gi=e896ef5ad793",
+        "snippet": "I Benchmarked Python 3.14’s Free-Threading on 5 Real Tasks. Here’s What Actually Happened. Forty-three seconds down to four-and-a-half. That’s the number that made me close my laptop, walk to …"
+      },
+      {
+        "title": "Medium",
+        "link": "https://medium.com/django-journal/python-3-14-free-threading-in-django-real-benchmarks-for-async-thread-safe-views-no-gil-pain-82edc73a1c20",
+        "snippet": "Python 3.14 Free-Threading in Django: Real Benchmarks for Async + Thread-Safe Views (No GIL Pain) How to actually use Python 3.14’s no-GIL mode with Django’s async views — with real benchmarks …"
+      }
+    ],
+    "completion": "\n\nPython 3.14's free-threading build removes the Global Interpreter Lock (GIL), enabling true parallelism for CPU-bound multi-threaded Python code with up to about 3x speedups on 4 cores compared to the standard GIL build. Single-threaded performance is about 5-10% slower than the GIL build, a significant improvement from ~40% slower in 3.13. Benchmarks show that on 4 threads, free-threaded Python runs Fibonacci calculations roughly 3x faster than the GIL build (e.g., 7.81s vs 24.96s on macOS) and bubble sort with 1.7x to 2.7x speedups depending on workload and platform. However, if a C extension is not marked thread-safe, the GIL is silently re-enabled, negating parallelism. The free-threaded interpreter is a separate binary (python3.14t) and requires explicit use. Library support is improving but not yet complete[2](https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5)[7](https://www.danilchenko.dev/posts/python-314-free-threading/).\n\nIn summary:\n- True parallelism with up to ~3x speedup on 4 cores for CPU-bound tasks\n- Single-threaded overhead reduced to 5-10%\n- Separate interpreter binary python3.14t\n- Silent fallback to GIL if unsafe C extensions are loaded\n- Best for CPU-bound, multi-threaded pure Python workloads\n- Library ecosystem still catching up\n- New concurrent.futures.InterpreterPoolExecutor for isolated interpreters without GIL contention[2](https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5)[7](https://www.danilchenko.dev/posts/python-314-free-threading/).\n\nReferences: [2](https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5), [7](https://www.danilchenko.dev/posts/python-314-free-threading/)",
+    "cost_usd": 0.004,
+    "usage_count": 10,
+    "service": "AI Search",
+    "currency": "USD"
+  }
+}
