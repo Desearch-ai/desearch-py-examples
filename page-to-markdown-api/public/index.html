@@ -14,34 +14,51 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:850px;margin:3rem auto;padding
 <input id="url" type="url" maxlength="2048" placeholder="https://example.com/article" required>
 <button id="convert">Convert</button>
 </form>
+<p id="limits" hidden></p>
 <p><small>Some pages need JavaScript or block visitors from other apps. If a link does not work, try another. Large pages are shortened.</small></p>
 <p id="message" role="status" aria-live="polite">Loading a saved sample...</p>
+<section id="result">
 <h2 id="title">Saved sample</h2>
 <button id="copy" type="button">Copy</button>
 <button id="download" type="button">Download .md</button>
 <pre id="markdown"></pre>
+</section>
 <script>
 const $ = id => document.getElementById(id);
 const fallback = {title:'Saved sample', markdown:'# A small reading garden\n\nChoose a comfortable seat, bring a favorite book, and enjoy a quiet moment.', message:'Saved sample.'};
-let sample = fallback, markdown = fallback.markdown;
+let sample = fallback, markdown = fallback.markdown, submitted = false;
 function render(d, message) {
+  $('result').hidden = false;
   markdown = d.markdown || '';
   $('markdown').textContent = markdown;
   $('title').textContent = d.title || 'Your page';
   $('message').textContent = message || d.message || (d.cached ? 'Ready, from a saved conversion.' : 'Ready to copy or save.');
 }
+function showError(message) {
+  $('result').hidden = true;
+  markdown = '';
+  $('markdown').textContent = '';
+  $('title').textContent = '';
+  $('message').textContent = message;
+}
+fetch('/api/convert?limits=1').then(r => {if (!r.ok) throw Error(); return r.json();}).then(d => {
+  if (!Number.isInteger(d.limits.per_10min) || !Number.isInteger(d.limits.per_day)) throw Error();
+  $('limits').textContent = `Limits: ${d.limits.per_10min} conversions per 10 minutes and ${d.limits.per_day} per day per network.`;
+  $('limits').hidden = false;
+}).catch(() => {$('limits').hidden = true;});
 const ready = fetch('/sample.json').then(r => {if (!r.ok) throw Error(); return r.json();}).then(d => sample = d).catch(() => sample = fallback);
-ready.then(() => {if (!$('convert').disabled) render(sample);});
+ready.then(() => {if (!submitted) render(sample);});
 $('form').onsubmit = async event => {
   event.preventDefault();
+  submitted = true;
   $('convert').disabled = true;
   $('message').textContent = 'Converting your page...';
   try {
     const r = await fetch('/api/convert?' + new URLSearchParams({url:$('url').value}));
     const d = await r.json();
-    if (!r.ok) {await ready; render(sample, d.error || 'Please try another link. Here is a saved sample.');}
+    if (!r.ok || !['ok', 'empty'].includes(d.status)) {showError(d.error || d.message || 'Please try another link.');}
     else render(d);
-  } catch (_) {await ready; render(sample, 'We could not connect. Here is a saved sample. Try again later.');}
+  } catch (_) {showError('We could not connect. Try again later.');}
   finally {$('convert').disabled = false;}
 };
 $('copy').onclick = async () => {
