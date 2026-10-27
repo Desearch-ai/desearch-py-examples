@@ -1,0 +1,3 @@
+Weekend portfolio notes
+
+Every Sunday evening I paste my wallet balances into a spreadsheet tab called ledger-raw and let a few lookup formulas sort them by chain. The tab that tracks staking rewards keeps breaking whenever a validator changes its display name, so I now match rows on the hotkey column instead. My rule for small positions is boring on purpose: anything under two percent of the total gets reviewed once a month and never on a red day. Last week the export from one exchange came through with commas as decimal separators, which quietly turned a modest gain into an alarming loss until I spotted it. Next month I want to replace the copy and paste step with a short script, mostly so I stop fixing the same three typos.
