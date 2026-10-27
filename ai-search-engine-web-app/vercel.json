@@ -1,13 +1,28 @@
 {
   "version": 2,
   "functions": {
-    "api/search.py": { "maxDuration": 30, "includeFiles": "searchapp/**" },
-    "api/answer.py": { "maxDuration": 60, "includeFiles": "searchapp/**" }
+    "api/search.py": {
+      "maxDuration": 30,
+      "includeFiles": "{searchapp/**,public/sample.json}"
+    },
+    "api/answer.py": {
+      "maxDuration": 60,
+      "includeFiles": "{searchapp/**,public/sample.json}"
+    }
   },
   "headers": [
-    { "source": "/(.*)", "headers": [
-      { "key": "X-Content-Type-Options", "value": "nosniff" },
-      { "key": "Referrer-Policy", "value": "no-referrer" }
-    ] }
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    }
   ]
 }

@@ -1,139 +1,160 @@
-"""The /api/search and /api/answer endpoints, shared by the local server (app.py) and the Vercel functions (api/).
+"""Shared, fail-closed hosted search and answer service; direct methods also support the CLI."""
+import json
+import math
+import os
+from pathlib import Path
+import threading
+import urllib.parse
+from . import core, state
+from .client import Client
 
-Safety: the Desearch key is read on the server only and never put in a response or a log line. Requests are validated
-before any paid call; a per-IP limit, a daily spend cap, a cache and a kill switch (DEMO_LIVE=0) sit in front of the
-API. On Vercel the limit, cap and in-memory cache are per warm instance (best effort); the CDN cache
-(Cache-Control s-maxage) serves repeat requests without running the function at all.
-"""
-import json, os, sys, urllib.parse
-from . import core
-from .client import Client, api_key
-
-CACHE_HEADER = "public, max-age=0, s-maxage=21600"
-NO_STORE = "no-store"
+CACHE_HEADER = NO_STORE = 'no-store'
 
 
-def _env_float(name, default):
+def env_float(name, default):
     try:
-        return float(os.environ.get(name, default))
+        value = float(os.getenv(name, default))
+        return value if math.isfinite(value) and value >= 0 else default
     except ValueError:
         return default
 
 
+def shape_search(q, body, mode='fast', count=10, start=None, end=None, cost=0, latency=0):
+    results, stats = core.clean_results(body, start, end)
+    return dict(query=q, mode=mode, count=count, start_date=start, end_date=end,
+                results=results, stats=stats, cost_usd=cost, latency_s=latency)
+
+
+def shape_answer(q, body, search_urls=None, cost=0, latency=0):
+    return dict(core.build_answer(q, body, search_urls), cost_usd=cost, latency_s=latency)
+
+
 class Engine:
     def __init__(self, client=None, limiter=None, cap=None, cache=None, live=None):
-        self._client = client
-        self.limiter = limiter or core.RateLimiter(per_ip=int(_env_float("DEMO_PER_IP_10MIN", 10)),
-                                                   per_ip_day=int(_env_float("DEMO_PER_IP_DAY", 40)),
-                                                   global_window=int(_env_float("DEMO_GLOBAL_10MIN", 60)))
-        self.cap = cap or core.DailyCap(_env_float("DEMO_DAILY_CAP_USD", 1.0))
-        self.cache = cache or core.TTLCache()
-        self.fallback_cost = _env_float("DEMO_FALLBACK_COST_USD", 0.005)
-        self.live = (os.environ.get("DEMO_LIVE", "1") != "0") if live is None else live
-
-    def cap_cost(self, status, rec):
-        """What a call counts against the daily cap. If the API sent no cost (no X-Desearch-Cost-USD header and no
-        body cost_usd), a 2xx/4xx call counts DEMO_FALLBACK_COST_USD so a missing cost cannot switch the cap off."""
-        if rec.get("cost_known", True):
-            return rec["cost"]
-        return self.fallback_cost if status < 500 and status not in (401, 402, 403, 429) else 0.0
+        self._client, self.live = client, live
+        memory = os.getenv('DEMO_STATE') == 'memory' or any(x is not None for x in (limiter, cap, cache))
+        self.refused = memory and bool(os.getenv('VERCEL') or os.getenv('VERCEL_ENV'))
+        redis = state.RedisREST()
+        self.limits = dict(per_ip=int(env_float('DEMO_PER_IP_10MIN', 5)),
+                          per_ip_day=int(env_float('DEMO_PER_IP_DAY', 15)),
+                          global_window=int(env_float('DEMO_GLOBAL_10MIN', 30)))
+        self.limiter = limiter if limiter is not None else (core.RateLimiter(**self.limits) if memory else state.Limiter(redis, **self.limits))
+        budget = env_float('DEMO_DAILY_CAP_USD', 1)
+        self.cap = cap if cap is not None else (core.DailyCap(budget) if memory else state.DailyCap(redis, budget))
+        self.cache = cache if cache is not None else (core.TTLCache(ttl=900) if memory else state.Cache(redis))
+        self.fallback_cost = env_float('DEMO_FALLBACK_COST_USD', .005)
+        self.lock = threading.Lock()
+        self.sample = json.loads((Path(__file__).resolve().parents[1] / 'public/sample.json').read_text())
 
     def client(self):
         if self._client is None:
-            self._client = Client(api_key(), log_dir=os.environ.get("SEARCHAPP_LOG_DIR"), quiet=True)
+            self._client = Client(os.getenv('DESEARCH_API_KEY', '').strip(), quiet=True)
         return self._client
 
-    # paid parts -------------------------------------------------------------------------------------------------
-    def search(self, q, mode="fast", count=10, start=None, end=None):
-        st, body, rec = self.client().search(core.search_body(q, mode, count, start, end), "search")
-        self.cap.add(self.cap_cost(st, rec))
-        if st != 200 or not isinstance(body, dict):
-            return st, None, rec
-        results, stats = core.clean_results(body, start, end)
-        return 200, {"query": q, "mode": mode, "count": count, "start_date": start, "end_date": end,
-                     "results": results, "stats": stats, "cost_usd": rec["cost"], "latency_s": rec["latency_s"]}, rec
+    def cap_cost(self, status, rec):
+        value = rec.get('cost') if rec.get('cost_known', True) else None
+        return value if isinstance(value, (int, float)) and math.isfinite(value) and value >= 0 else self.fallback_cost
+
+    def search(self, q, mode='fast', count=10, start=None, end=None):
+        st, body, rec = self.client().search(core.search_body(q, mode, count, start, end), 'search')
+        return st, shape_search(q, body, mode, count, start, end, rec.get('cost', 0), rec.get('latency_s', 0)) if st == 200 and isinstance(body, dict) else None, rec
 
     def answer(self, q, search_urls=None):
-        st, body, rec = self.client().ai_search(core.answer_body(q), "answer")
-        self.cap.add(self.cap_cost(st, rec))
-        if st != 200 or not isinstance(body, dict):
-            return st, None, rec
-        return 200, {**core.build_answer(q, body, search_urls), "cost_usd": rec["cost"], "latency_s": rec["latency_s"]}, rec
+        st, body, rec = self.client().ai_search(core.answer_body(q), 'answer')
+        return st, shape_answer(q, body, search_urls, rec.get('cost', 0), rec.get('latency_s', 0)) if st == 200 and isinstance(body, dict) else None, rec
 
-    # HTTP layer -------------------------------------------------------------------------------------------------
-    @staticmethod
-    def _out(code, obj, cache=NO_STORE):
-        return code, {"Content-Type": "application/json; charset=utf-8", "Cache-Control": cache,
-                      "X-Content-Type-Options": "nosniff"}, json.dumps(obj, ensure_ascii=False)
+    def redact(self, value):
+        secrets = [os.getenv(name, '') for name in (
+            'DESEARCH_API_KEY', 'KV_REST_API_URL', 'KV_REST_API_TOKEN',
+            'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN')]
+        secrets.append(getattr(self._client, 'key', ''))
+        if isinstance(value, str):
+            for secret in secrets:
+                if isinstance(secret, str) and secret:
+                    value = value.replace(secret, '[redacted]')
+            return value
+        if isinstance(value, dict):
+            return {k: self.redact(v) for k, v in value.items()}
+        if isinstance(value, list):
+            return [self.redact(v) for v in value]
+        return value
 
-    def _gate(self, ip):
-        if not self.live:
-            return self._out(503, {"error": "The live demo is paused. See the saved sample run.", "sample": "/sample.json"})
-        if not self.cap.ok():
-            return self._out(503, {"error": "Today's demo budget is used up. See the saved sample run, or run it yourself.", "sample": "/sample.json"})
-        if not self.limiter.allow(ip or "unknown"):
-            return self._out(429, {"error": "Too many searches from your network. Try again in a few minutes."})
-        return None
+    def out(self, code, body, cost=0):
+        return code, {'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': NO_STORE,
+                      'X-Content-Type-Options': 'nosniff', 'X-Desearch-Cost-Usd': str(cost)}, json.dumps(
+            self.redact({'cached': False, **body, 'cost_usd_this_request': cost, 'limits': self.limits}), allow_nan=False)
 
-    def _run(self, fn, *args):
-        try:
-            return fn(*args)
-        except RuntimeError as e:   # missing key on the server: say so without details
-            print(f"[searchapp] server error: {type(e).__name__}", file=sys.stderr)
-            return None
+    def paused(self, cost=0):
+        return self.out(503, {**self.sample, 'sample': True, 'status': 'paused', 'cached': False,
+            'error': 'The live demo is paused. View the saved sample.', 'sample_url': '/sample.json'}, cost)
 
     def handle_search(self, query, ip):
-        """query: dict of GET params (q, mode, count, range, from, to). Returns (status, headers, json_text)."""
-        try:
-            q = core.clean_query(query.get("q"))
-            mode, count = core.parse_mode(query.get("mode")), core.parse_count(query.get("count"))
-            start, end = core.date_window(query.get("range"), query.get("from"), query.get("to"))
-        except core.FormError as e:
-            return self._out(400, {"error": str(e)})
-        key = core.cache_key("search", q=q, mode=mode, count=count, start=start, end=end)
-        hit = self.cache.get(key)
-        if hit:
-            return self._out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
-        blocked = self._gate(ip)
-        if blocked:
-            return blocked
-        r = self._run(self.search, q, mode, count, start, end)
-        if r is None:
-            return self._out(500, {"error": "The demo is not configured."})
-        st, res, _ = r
-        if st != 200:
-            return self._out(502, {"error": f"Search API returned {st}. Try again later."})
-        self.cache.put(key, res)
-        print(f"[searchapp] search ok cost={res['cost_usd']} spent_today={round(self.cap.spent, 4)}", file=sys.stderr)
-        return self._out(200, {**res, "cached": False, "cost_usd_this_request": res["cost_usd"]}, CACHE_HEADER)
+        return self.handle('search', query, ip)
 
     def handle_answer(self, query, ip):
+        return self.handle('answer', query, ip)
+
+    def handle(self, kind, query, ip):
         try:
-            q = core.clean_query(query.get("q"))
-        except core.FormError as e:
-            return self._out(400, {"error": str(e)})
-        key = core.cache_key("answer", q=q)
-        hit = self.cache.get(key)
-        if hit:
-            return self._out(200, {**hit, "cached": True, "cost_usd_this_request": 0}, CACHE_HEADER)
-        blocked = self._gate(ip)
-        if blocked:
-            return blocked
-        r = self._run(self.answer, q)
-        if r is None:
-            return self._out(500, {"error": "The demo is not configured."})
-        st, res, _ = r
-        if st != 200:
-            return self._out(502, {"error": f"Answer API returned {st}. Try again later."})
-        self.cache.put(key, res)
-        print(f"[searchapp] answer ok cost={res['cost_usd']} spent_today={round(self.cap.spent, 4)}", file=sys.stderr)
-        return self._out(200, {**res, "cached": False, "cost_usd_this_request": res["cost_usd"]}, CACHE_HEADER)
+            if not isinstance(query.get('q'), str):
+                raise core.FormError('Type something to search for.')
+            q = core.clean_query(query.get('q'))
+            args = ()
+            if kind == 'search':
+                if 'count' in query and str(query['count']) != '10':
+                    raise core.FormError('The live demo returns 10 results.')
+                mode = core.parse_mode(query.get('mode'))
+                start, end = core.date_window(query.get('range'), query.get('from'), query.get('to'))
+                args = (mode, 10, start, end)
+        except (core.FormError, ValueError) as error:
+            return self.out(400, {'status': 'invalid', 'error': str(error)})
+        except Exception:
+            return self.paused()
+        cost = 0
+        with self.lock:
+            try:
+                key = core.cache_key(kind, q=q, options=args)
+                hit = self.cache.get(key)
+                if hit is not None:
+                    return self.out(200, {**hit, 'cached': True})
+                live = self.live if self.live is not None else os.getenv('DEMO_LIVE') == '1'
+                if self.refused or not live or not self.cap.ok():
+                    return self.paused()
+                try:
+                    self.client()
+                except RuntimeError:
+                    return self.paused()
+                if not self.limiter.allow(ip):
+                    return self.out(429, {'status': 'limited', 'error': 'Too many requests. Try again later.'})
+                self.cap.add(self.fallback_cost)
+                cost = self.fallback_cost
+                try:
+                    st, result, rec = getattr(self, kind)(q, *args)
+                except (OSError, TimeoutError):
+                    st, result, rec = 599, None, {'cost_known': False}
+                actual = self.cap_cost(st, rec)
+                if actual != cost:
+                    self.cap.add(actual - cost)
+                cost = actual
+                if st != 200 or result is None:
+                    return self.out(502, {'status': 'error', 'error': 'Desearch could not complete this request. Try again later.'}, cost)
+                result.update(status='ok' if result.get('results', result.get('links')) else 'empty', sample=False, cached=False)
+                self.cache.put(key, result)
+                return self.out(200, result, cost)
+            except Exception:
+                return self.paused(cost)
 
 
-def client_ip(headers, fallback=""):
-    fwd = headers.get("x-forwarded-for") or headers.get("X-Forwarded-For") or ""
-    return fwd.split(",")[0].strip() or headers.get("x-real-ip") or fallback
+def client_ip(headers, fallback=''):
+    headers = {k.lower(): v for k, v in headers.items()}
+    for name in ('x-vercel-forwarded-for', 'x-forwarded-for', 'x-real-ip'):
+        value = headers.get(name) or ''
+        if name != 'x-real-ip':
+            value = value.split(',')[0]
+        if value.strip():
+            return value.strip()
+    return fallback.strip()
 
 
 def parse_query(path):
-    return {k: v[0] for k, v in urllib.parse.parse_qs(urllib.parse.urlsplit(path).query).items()}
+    return {k: v[0] for k, v in urllib.parse.parse_qs(urllib.parse.urlsplit(path).query, keep_blank_values=True).items()}
