@@ -1,0 +1,16 @@
+{
+  "task_id": "example-task",
+  "status": "completed",
+  "query": "Creators who review equipment",
+  "request": {
+    "query": "Creators who review equipment",
+    "count": 5
+  },
+  "progress": {
+    "stop_reason": "count_reached"
+  },
+  "result_count": 5,
+  "reserved_cost_usd": 0.25,
+  "created_at": "2026-01-01T00:00:00+00:00",
+  "finished_at": "2026-01-01T00:02:01.203018+00:00"
+}
