@@ -1,0 +1,4 @@
+profile,followers,total_likes,video_count,posts_analyzed,likely_pinned,first_post_utc,last_post_utc,posts_per_week,cadence_window_days,median_gap_days,avg_views,median_views,median_likes,median_comments,median_shares,avg_engagement_rate_pct,median_engagement_rate_pct,views_per_follower_pct,best_weekday,top_post_url
+brand_a,2100000,11100000,56,10,1,2026-09-28,2026-10-10,5.22,12.1,1.24,568517,293205.5,20639.5,451.0,861.5,8.093,7.489,13.96,"Tue (median views 916375, n=2)",https://www.tiktok.com/@brand_a/video/7691683140015820046
+brand_b,18300000,505300000,1204,10,1,2026-10-07,2026-10-13,9.0,6.0,0.69,1487442,600720.5,91825.0,1608.5,6430.5,14.265,15.636,3.28,"Thu (median views 5784513, n=1)",https://www.tiktok.com/@brand_b/video/7694371205087759647
+brand_c,27300000,1200000000,24300,10,3,2026-10-16,2026-10-16,7.0,0.1,0.01,999550,80453.5,6745.5,63.5,196.5,8.897,8.239,0.29,"Mon (median views 3917966, n=2)",https://www.tiktok.com/@brand_c/video/7690608943621623071
