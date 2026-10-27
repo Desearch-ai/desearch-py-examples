@@ -1,5 +1,7 @@
 """Shared demo state over the Upstash Redis REST pipeline API."""
+from dataclasses import dataclass
 import hashlib
+import http.client
 import ipaddress
 import json
 import os
@@ -10,6 +12,12 @@ import urllib.request
 
 class StateUnavailable(Exception):
     """State cannot be trusted. Never include connection details in this error."""
+
+
+@dataclass(frozen=True)
+class Reservation:
+    key: str
+    amount: float
 
 
 class RedisREST:
@@ -32,7 +40,9 @@ class RedisREST:
             if any(not isinstance(entry, dict) or 'error' in entry or 'result' not in entry for entry in entries):
                 raise StateUnavailable()
             return [entry['result'] for entry in entries]
-        except (OSError, TimeoutError, ValueError, TypeError, urllib.error.URLError):
+        except (OSError, TimeoutError, ValueError, TypeError, urllib.error.URLError, http.client.HTTPException):
+            raise StateUnavailable() from None
+        except Exception:
             raise StateUnavailable() from None
 
 
@@ -76,6 +86,40 @@ class Limiter:
 
 
 class DailyCap:
+    RESERVE_SCRIPT = """
+local spend = tonumber(redis.call('GET', KEYS[1]) or '0')
+local amount = tonumber(ARGV[1])
+if spend + amount > tonumber(ARGV[2]) + 0.000000001 then return 0 end
+redis.call('INCRBYFLOAT', KEYS[1], ARGV[1])
+redis.call('EXPIRE', KEYS[1], 172800)
+return 1
+"""
+    SETTLE_SCRIPT = """
+local spend = tonumber(redis.call('GET', KEYS[1]) or '0')
+local total = math.max(0, spend + tonumber(ARGV[1]))
+redis.call('SET', KEYS[1], tostring(total))
+redis.call('EXPIRE', KEYS[1], 172800)
+return 1
+"""
+
+    def reserve(self, amount):
+        reservation = Reservation(self._key(), float(amount))
+        results = self.redis.pipeline([['EVAL', self.RESERVE_SCRIPT, 1, reservation.key,
+            repr(reservation.amount), repr(float(self.cap))]])
+        if not isinstance(results, list) or len(results) != 1 or type(results[0]) is not int or results[0] not in (0, 1):
+            raise StateUnavailable()
+        return reservation if results[0] == 1 else None
+
+    def settle(self, reserved, actual):
+        if actual is None:
+            return
+        results = self.redis.pipeline([['EVAL', self.SETTLE_SCRIPT, 1, reserved.key, repr(float(actual) - reserved.amount)]])
+        if not isinstance(results, list) or len(results) != 1 or type(results[0]) is not int or results[0] != 1:
+            raise StateUnavailable()
+
+    def release(self, reserved):
+        self.settle(reserved, 0)
+
     def __init__(self, redis, cap_usd=1.0, namespace='websearch', clock=time.time):
         self.redis, self.cap, self.namespace, self.clock = redis, cap_usd, namespace, clock
 

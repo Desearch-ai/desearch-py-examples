@@ -148,7 +148,7 @@ class FakeClient:
 
 
 def engine(**kw):
-    return Engine(client=kw.pop("client", FakeClient()), live=kw.pop("live", True), **kw)
+    return Engine(client=kw.pop("client", FakeClient()), live=kw.pop("live", True), cache=kw.pop("cache", core.TTLCache(ttl=900)), **kw)
 
 
 def test_handle_search_validates_before_paying():
@@ -174,7 +174,7 @@ def test_handle_search_ok_then_cache():
 
 def test_handle_kill_switch_cap_limit_and_upstream_error():
     code, _, text = engine(live=False).handle_search({"q": "rate limiting"}, "ip")
-    assert code == 503 and json.loads(text)["sample"] == "/sample.json"
+    assert code == 503 and json.loads(text)["sample"] is True
     capped = engine(cap=core.DailyCap(0.0))
     assert capped.handle_search({"q": "rate limiting"}, "ip")[0] == 503
     lim = engine(limiter=core.RateLimiter(per_ip=1))
@@ -192,11 +192,11 @@ def test_handle_answer():
     assert e._client.calls[0][1]["tools"] == ["web"]
 
 
-def test_missing_key_is_a_clean_500(monkeypatch):
+def test_missing_key_is_a_clean_503(monkeypatch):
     monkeypatch.delenv("DESEARCH_API_KEY", raising=False)
     monkeypatch.delenv("DESEARCH_API_KEY_FILE", raising=False)
     code, _, text = Engine(live=True).handle_search({"q": "rate limiting"}, "ip")
-    assert code == 500 and json.loads(text) == {"error": "The demo is not configured."}
+    assert code == 503 and json.loads(text)["status"] == "paused"
 
 
 class _Resp(io.BytesIO):
@@ -248,8 +248,8 @@ def test_cap_counts_fallback_when_cost_unknown(monkeypatch):
     assert e.handle_search({"q": "second query"}, "b")[0] == 200
     assert abs(e.cap.spent - 0.01) < 1e-9
     assert e.handle_search({"q": "third query"}, "c")[0] == 503 and len(e._client.calls) == 2
-    assert e.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.0
-    assert e.cap_cost(503, {"cost": 0.0, "cost_known": False}) == 0.0
+    assert e.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.005
+    assert e.cap_cost(503, {"cost": 0.0, "cost_known": False}) == 0.005
     assert e.cap_cost(200, {"cost": 0.004, "cost_known": True}) == 0.004
     monkeypatch.setenv("DEMO_FALLBACK_COST_USD", "0.02")
     assert Engine(client=NoCost(), live=True).fallback_cost == 0.02
