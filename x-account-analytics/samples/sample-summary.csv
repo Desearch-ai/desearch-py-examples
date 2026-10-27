@@ -1,0 +1,2 @@
+username,followers,posts_on_profile,posts_analyzed,first_post_utc,last_post_utc,span_days,posts_per_day,originals,replies,threads,quotes,reposts,posts_in_rates,median_engagements,mean_engagements,median_er_per_view_pct,mean_er_per_view_pct,median_er_per_follower_pct,mean_er_per_follower_pct,best_weekday,best_hour,time_zone,excluded
+desearch_ai,1739,690,18,2026-10-01 16:02,2026-10-16 14:05,14.92,1.21,6,0,12,0,0,18,3.5,4.278,4.669,4.576,0.202,0.246,"Thu (median engagements 4, n=9)","16 (median engagements 4, n=5)",UTC,0

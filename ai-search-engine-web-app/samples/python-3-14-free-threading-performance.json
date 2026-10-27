@@ -1,0 +1,235 @@
+{
+  "search": {
+    "query": "python 3.14 free threading performance",
+    "mode": "fast",
+    "count": 10,
+    "start_date": "2025-10-26",
+    "end_date": null,
+    "results": [
+      {
+        "rank": 1,
+        "title": "What’s new in Python 3.15 - documentación de Python - 3.16.0a1",
+        "url": "https://docs.python.org/es/dev/whatsnew/3.15.html",
+        "domain": "docs.python.org",
+        "published_date": "2026-10-09",
+        "passage": "What’s new in Python 3. ... Hugo van Kemenade This article explains the new features in Python 3.15,compared to 3.14. ... PEP 790 - Python 3. ... Python 3.15 is the latest stable release of the Python programming language,with a mix of changes to the language,the implementation,and the standard library. ... See Porting to Python 3. ... PEP 782:A new PyBytesWriter C API to create a Python bytes object -PEP ...",
+        "in_window": true
+      },
+      {
+        "rank": 2,
+        "title": "Free-threaded Python is no longer an experiment. Here's what it unlocked in my workload",
+        "url": "https://www.howtogeek.com/free-threaded-python-is-no-longer-an-experiment-heres-what-it-unlocked-in-my-workload/",
+        "domain": "howtogeek.com",
+        "published_date": "2026-10-17",
+        "passage": "The lock lets only one thread execute Python bytecode at a time within a process.That keeps CPython’s memory management simple and safe,but it also means threads cannot spread CPU-bound work across cores.Developers who wanted real parallelism usually reached for multiprocessing,which spawns separate processes with their own memory,or leaned on C extensions that release the lock.A free-threaded build removes the ...",
+        "in_window": true
+      },
+      {
+        "rank": 3,
+        "title": "Free-threaded Python in production: what actually broke - DEV Community",
+        "url": "https://dev.to/zeybek/free-threaded-python-in-production-what-actually-broke-4mm6",
+        "domain": "dev.to",
+        "published_date": "2026-10-06",
+        "passage": "Everyone worked around it with multiprocessing,Celery workers or a hot loop rewritten in C,or just lived with it. PEP 703 removed the lock behind a build flag in 3.13,and last October 3.14 made the free-threaded build officially supported under PEP 779.The single-threaded overhead was around 40 percent in 3.13,which is why nobody ran it for real.It's now down to single digits on Linux and macOS.It still isn't the ...",
+        "in_window": true
+      },
+      {
+        "rank": 4,
+        "title": "Python 3.14 Free-Threading: Real Benchmarks, Real Breakage, Real Code - DEV Community",
+        "url": "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+        "domain": "dev.to",
+        "published_date": "2026-04-13",
+        "passage": "Python 3.13 introduced an experimental free-threaded build.Python 3.14,released October 2025,promoted it to officially supported status via PEP 779.The implementation described in PEP 703 is now complete.Temporary workarounds in the interpreter have been replaced with permanent solutions,and the single-threaded performance hit has been slashed. Two things to know upfront: Free-threading is supported but not the ...",
+        "in_window": true
+      },
+      {
+        "rank": 5,
+        "title": "Changelog - Python 3.14.9 documentation",
+        "url": "https://docs.python.org/release/3.14.9/whatsnew/changelog.html",
+        "domain": "docs.python.org",
+        "published_date": "2026-10-21",
+        "passage": "gh-158121:Fix missing-sys.monitoring-INSTRUCTIONevents when a-LINEcallback returns-sys.monitoring.DISABLE. gh-106045:Fix standard library discovery in virtual environments created from a Python executable symlink located outside its base installation. gh-156204:Fix a crash in-PyErr_GivenExceptionMatches()when evaluating deeply nested exception tuples.The recursion is now bounded,and exceeding the limit is reported ...",
+        "in_window": true
+      },
+      {
+        "rank": 6,
+        "title": "Python 3.14 Free-Threading Is Production-Ready: What to Know | byteiota",
+        "url": "https://byteiota.com/python-314-free-threading-production-ready/",
+        "domain": "byteiota.com",
+        "published_date": "2026-09-14",
+        "passage": "Is This For You?Free-threading is not a universal upgrade.Be honest about your workload. Strong yes if you’re doing:data processing pipelines where you transform chunks in parallel,ML inference preprocessing(tokenization,feature extraction),web API handlers with real CPU computation(image processing,crypto,compression),or any workload where you currently reach for multiprocessing.Pool to avoid the GIL.That last one ...",
+        "in_window": true
+      },
+      {
+        "rank": 7,
+        "title": "Python 3.14 Free-Threading Is Official - Here’s What Changes Now | byteiota",
+        "url": "https://byteiota.com/python-314-free-threading-officially-supported-2/",
+        "domain": "byteiota.com",
+        "published_date": "2026-08-13",
+        "passage": "python3.14t-W error-c\"import your_library If GIL gets re-enabled,you'll see a warning-or error with-W errorThe official free-threading how-to covers the full compatibility matrix.Read it before committing the free-threaded build to production. T-Strings:The Other Feature Worth Knowing Free-threading gets the headline,but PEP 750 ships something quietly useful:template string literals,or t-strings.The syntax mirrors ...",
+        "in_window": true
+      },
+      {
+        "rank": 8,
+        "title": "Compare Python 3.15's Free-Threaded Builds With Standard CPython",
+        "url": "https://www.c-sharpcorner.com/article/compare-python-3-15s-free-threaded-builds-with-standard-cpython",
+        "domain": "c-sharpcorner.com",
+        "published_date": "2026-10-12",
+        "passage": "for thread in threads: thread.join()The code illustrates shared mutable state.Even when individual built-in operations have internal thread-safety protections,a compound operation such as counter+1 should not be treated as an atomic transaction. If the application requires an exact counter,protect the update with a threading.Lock or use a suitable concurrent design.Benchmarking an incorrect result is not a ...",
+        "in_window": true
+      },
+      {
+        "rank": 9,
+        "title": "No More GIL! Unleash multi thread performance with Python 3.14",
+        "url": "https://www.youtube.com/watch?v=p2wRL9ovI9o",
+        "domain": "youtube.com",
+        "published_date": "2025-11-10",
+        "passage": "Python finally ditched the GIL.After 30+years of single-threaded execution,Python 3.14 gives you real multi-core performance with threading. ... com/bitswired/demos/tree/main/projects/free-threaded-python What You'll Learn: ... ✅ How the Global Interpreter Lock kills multi-threaded performance ✅ Installing Python 3. ... Same performance.The GIL forces single-core execution even on 16-core machines. ... Python 3.14 ...",
+        "in_window": true
+      },
+      {
+        "rank": 10,
+        "title": "Python 3.14 shipped free-threaded builds as an officially supported variant https://lnkd.in/gJutb9Y6 under PEP 779.",
+        "url": "https://www.linkedin.com/feed/update/urn:li:activity:7514223018710204417/",
+        "domain": "linkedin.com",
+        "published_date": "2026-10-09",
+        "passage": "Company:*PLANEKS-Python Web Development Company|*Followers:*2,215 Company URL:*https://ua.linkedin.com/company/planeks [2026-10-09 · reposted from Anton Pavlovych · 5 reactions · image] 🧵 Python 3.14 shipped free-threaded builds as an officially supported variant https://lnkd.in/gJutb9Y6 under PEP 779.Our engineers are excited about it.None of our clients are running it in production yet,and there's a reason. The ...",
+        "in_window": true
+      }
+    ],
+    "stats": {
+      "returned": 10,
+      "shown": 10,
+      "duplicates": 0,
+      "no_date": 0,
+      "outside_window": 0
+    },
+    "cost_usd": 0.005,
+    "latency_s": 0.55
+  },
+  "answer": {
+    "query": "python 3.14 free threading performance",
+    "links": [
+      {
+        "n": 1,
+        "title": "Python 3.14 Is Here. How Fast Is It? - miguelgrinberg.com",
+        "url": "https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it",
+        "domain": "blog.miguelgrinberg.com",
+        "published_date": "2025-10-08",
+        "term_share": 0.4
+      },
+      {
+        "n": 2,
+        "title": "Python 3.14 Free-Threading: Real Benchmarks, Real Breakage, Real Code - DEV Community",
+        "url": "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+        "domain": "dev.to",
+        "published_date": "2026-04-13",
+        "term_share": 0.8
+      },
+      {
+        "n": 3,
+        "title": "Python 3.14 Free-Threading True Parallelism Without the GIL - DEV Community",
+        "url": "https://dev.to/edgar_montano/python-314-free-threading-true-parallelism-without-the-gil-a12",
+        "domain": "dev.to",
+        "published_date": "2025-11-07",
+        "term_share": 0.8
+      },
+      {
+        "n": 4,
+        "title": "Unlocking True Parallelism: A Developer's Guide to Free-Threaded Python 3.14 - DEV Community",
+        "url": "https://dev.to/mechcloud_academy/unlocking-true-parallelism-a-developers-guide-to-free-threaded-python-314-175i",
+        "domain": "dev.to",
+        "published_date": "2025-10-12",
+        "term_share": 0.6
+      },
+      {
+        "n": 5,
+        "title": "Python 3.14 free-threaded build is now available in RHEL | Red Hat Developer",
+        "url": "https://developers.redhat.com/articles/2026/09/14/python-314-free-threaded-build-now-available-rhel",
+        "domain": "developers.redhat.com",
+        "published_date": "2026-09-14",
+        "term_share": 0.8
+      },
+      {
+        "n": 6,
+        "title": "What’s new in Python 3.14 - Python 3.15.2 documentation",
+        "url": "https://docs.python.org/3/whatsnew/3.14.html",
+        "domain": "docs.python.org",
+        "published_date": "2025-10-07",
+        "term_share": 0.4
+      },
+      {
+        "n": 7,
+        "title": "Python 3.14 Free-Threading: Real Benchmarks and Breakage",
+        "url": "https://www.danilchenko.dev/posts/python-314-free-threading/",
+        "domain": "danilchenko.dev",
+        "published_date": "2026-04-13",
+        "term_share": 0.8
+      },
+      {
+        "n": 8,
+        "title": "Python 3.14 Is Here: Free Threading Removes the GIL - With Caveats | Stackademic",
+        "url": "https://stackademic.com/blog/python-3-14-is-here-free-threading-removes-the-gil-with-caveats-sep-18-2026",
+        "domain": "stackademic.com",
+        "published_date": "2026-09-18",
+        "term_share": 0.8
+      },
+      {
+        "n": 9,
+        "title": "Medium",
+        "url": "https://python.plainenglish.io/i-benchmarked-python-3-14s-free-threading-on-5-real-tasks-here-s-what-actually-happened-d7088b7e4fed?gi=e896ef5ad793",
+        "domain": "python.plainenglish.io",
+        "published_date": null,
+        "term_share": 0.8
+      },
+      {
+        "n": 10,
+        "title": "Medium",
+        "url": "https://medium.com/django-journal/python-3-14-free-threading-in-django-real-benchmarks-for-async-thread-safe-views-no-gil-pain-82edc73a1c20",
+        "domain": "medium.com",
+        "published_date": null,
+        "term_share": 0.8
+      }
+    ],
+    "summary": {
+      "lines": [
+        {
+          "text": "Library support is improving but not yet complete.",
+          "cites": [
+            "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+            "https://www.danilchenko.dev/posts/python-314-free-threading/"
+          ]
+        },
+        {
+          "text": "In summary: - True parallelism with up to ~3x speedup on 4 cores for CPU-bound tasks - Single-threaded overhead reduced to 5-10% - Separate interpreter binary python3.14t - Silent fallback to GIL if unsafe C extensions are loaded - Best for CPU-bound, multi-threaded pure Python workloads - Library ecosystem still catching up - New concurrent.futures.InterpreterPoolExecutor for isolated interpreters without GIL contention.",
+          "cites": [
+            "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+            "https://www.danilchenko.dev/posts/python-314-free-threading/"
+          ]
+        },
+        {
+          "text": "References:,",
+          "cites": [
+            "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+            "https://www.danilchenko.dev/posts/python-314-free-threading/"
+          ]
+        }
+      ],
+      "hidden": 5,
+      "cited_urls": [
+        "https://dev.to/dmaxdev/python-314-free-threading-real-benchmarks-real-breakage-real-code-3m5",
+        "https://www.danilchenko.dev/posts/python-314-free-threading/"
+      ]
+    },
+    "strong": 8,
+    "declined": false,
+    "declined_text": "",
+    "no_strong_sources": false,
+    "also_in_search_results": 1,
+    "cost_usd": 0.004,
+    "latency_s": 12.96
+  },
+  "sample": true,
+  "saved_at": "2026-10-26T14:22:46.353452+00:00",
+  "note": "This is a saved real run."
+}
