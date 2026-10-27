@@ -1,0 +1,17 @@
+{
+  "command": "profile",
+  "target": "natgeo",
+  "cost_usd": 0.00207,
+  "calls": 1,
+  "item": {
+    "username": "natgeo",
+    "full_name": "National Geographic",
+    "followers": 268283323,
+    "following": 195,
+    "posts": 32115,
+    "verified": true,
+    "private": false,
+    "external_url": "http://visitstore.bio/natgeo",
+    "biography": "Step into wonder and find your inner explorer with National Geographic 🌎"
+  }
+}

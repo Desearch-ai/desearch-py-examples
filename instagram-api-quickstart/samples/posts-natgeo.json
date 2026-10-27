@@ -1,0 +1,57 @@
+{
+  "command": "posts",
+  "target": "natgeo",
+  "count_requested": 3,
+  "pages_fetched": 1,
+  "returned": 3,
+  "next_cursor": "<opaque cursor from the x-desearch-next-cursor header>",
+  "cost_usd": 0.00621,
+  "calls": 1,
+  "items": [
+    {
+      "shortcode": "DeuOR-CjKE9",
+      "url": "https://www.instagram.com/p/DeuOR-CjKE9/",
+      "type": "image",
+      "created_at": "2026-10-20T16:06:30Z",
+      "created_raw": 1792512390,
+      "likes": 14783,
+      "comments": 208,
+      "views": null,
+      "caption": "Some of the best reasons to travel in 2027 are far from the usual destinations. 🌎 National Geographic’s picks for Best of the World 2027 are here and features 25 destinations across six continents. Whether you're drawn to places steeped in history or the thrill of exploring the w...",
+      "hashtags": [
+        "BestOfTheWorld"
+      ],
+      "author": "natgeo"
+    },
+    {
+      "shortcode": "DehZj9wggt0",
+      "url": "https://www.instagram.com/p/DehZj9wggt0/",
+      "type": "video",
+      "created_at": "2026-10-15T19:00:02Z",
+      "created_raw": 1792090802,
+      "likes": 55413,
+      "comments": 435,
+      "views": 1500120,
+      "caption": "Keeping up with a pack of hunting wolves is just another day at the office for @bertiegregory and his team. #WolvesUpClose with Bertie Gregory premieres Friday, November 6 at 8/7c on National Geographic. Streaming on @DisneyPlus and @hulu.",
+      "hashtags": [
+        "WolvesUpClose"
+      ],
+      "author": "natgeo"
+    },
+    {
+      "shortcode": "DecPSQfoaRe",
+      "url": "https://www.instagram.com/p/DecPSQfoaRe/",
+      "type": "video",
+      "created_at": "2026-10-13T16:30:08Z",
+      "created_raw": 1791909008,
+      "likes": 22673,
+      "comments": 117,
+      "views": null,
+      "caption": "Presented by National Geographic Society in partnership with @Rolex. In the face of a changing world, these explorers are not giving up hope for our seas. Narrated by @auliicravalho, set sail across all five ocean basins in Expedition: Saving Our Seas, premiering Friday, November...",
+      "hashtags": [
+        "PerpetualPlanet"
+      ],
+      "author": "natgeo"
+    }
+  ]
+}
