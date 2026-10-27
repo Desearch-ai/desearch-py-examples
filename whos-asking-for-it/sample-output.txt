@@ -1,0 +1,10 @@
+4 + 22 + 3 posts returned, 29 kept (2026-09-03 to 2026-10-03), first 8 shown
+Rank | Intent | Date | Who | What they said | Link
+1 | High | 2026-09-25 | person #1 | (hidden) | (hidden)
+2 | Medium | 2026-09-13 | person #2 | (hidden) | (hidden)
+3 | Medium | 2026-09-12 | person #3 | (hidden) | (hidden)
+4 | Medium | 2026-09-11 | person #4 | (hidden) | (hidden)
+5 | Low | 2026-10-02 | person #5 | (hidden) | (hidden)
+6 | Low | 2026-10-02 | person #6 | (hidden) | (hidden)
+7 | Low | 2026-10-01 | person #7 | (hidden) | (hidden)
+8 | Low | 2026-09-30 | person #8 | (hidden) | (hidden)
