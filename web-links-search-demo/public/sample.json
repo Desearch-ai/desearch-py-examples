@@ -1,0 +1,32 @@
+{
+  "status": "sample",
+  "sample": true,
+  "cached": false,
+  "label": "Saved sample: fictional examples, not live results.",
+  "prompt": "open source vector databases",
+  "count": 3,
+  "results": [
+    {
+      "title": "A guide to vector collections",
+      "link": "https://example.com/guides/vector-collections",
+      "domain": "example.com",
+      "snippet": "A fictional guide to indexing embeddings and comparing similarity queries.",
+      "date": "2026-10-12"
+    },
+    {
+      "title": "Community vector storage handbook",
+      "link": "https://example.org/handbook",
+      "domain": "example.org",
+      "snippet": "A fictional handbook covering open source storage design and evaluation.",
+      "date": null
+    },
+    {
+      "title": "Building a small similarity index",
+      "link": "https://example.net/tutorials/similarity",
+      "domain": "example.net",
+      "snippet": "A fictional tutorial on creating and testing a local vector index.",
+      "date": "2026-09-28"
+    }
+  ],
+  "cost_usd_this_request": 0
+}

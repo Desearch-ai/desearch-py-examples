@@ -16,6 +16,7 @@ Create an Upstash Redis database and copy its REST URL and token into Vercel's s
 | `DEMO_PER_IP_DAY` | Default `15` |
 | `DEMO_GLOBAL_10MIN` | Default `30` |
 | `DEMO_DAILY_CAP_USD` | Default `1.0` |
+| `DEMO_RESERVE_COST_USD` | Default `0.005`, at least the fallback |
 | `DEMO_FALLBACK_COST_USD` | Default `0.001` |
 | `DEMO_STATE` | Leave unset for Redis; never use `memory` on Vercel |
 
@@ -23,7 +24,9 @@ State copies the reference demos' Upstash REST pipeline protocol and environment
 
 Redis rate limits use fixed 10 minute windows and UTC day windows. Each admission attempt increments all three counters, including denied attempts, and counter expiry is twice the window. Invalid inputs and cache hits never reach the limiter. The local memory limiter uses the reference sliding windows, including a rolling 24 hour network limit. Cache TTL is 600 seconds in both modes. Errors and API responses use `no-store` so HTTP caching does not interfere with cost reporting or limits.
 
-The daily cap reads shared spend before the paid call and adds header cost afterwards, or the $0.001 fallback if the header is unusable. Spend resets by UTC date and expires after 48 hours. As in the reference state implementation, checks and updates do not reserve spend atomically across instances. Concurrent calls or an unexpectedly expensive call can exceed the configured cap; keep the key balance appropriate for the demo. Failed upstream calls are also accounted for using their cost header or fallback. There are no automatic retries. Redis errors at any stage return paused 503; no automatic memory fallback is allowed.
+Before each uncached paid call, the cap reserves the worst-case amount: `DEMO_RESERVE_COST_USD` (default $0.005), or the fallback cost if that is higher. Redis checks the budget and reserves spend atomically through one Lua EVAL in a REST pipeline call. A refused reservation returns paused 503 with the sample, `sample_url`, `Cache-Control: no-store` and cost $0, without calling upstream. Spend uses UTC dates and expires after 48 hours.
+
+After the call, a valid cost header reconciles the reservation to the actual cost, including zero. This refunds any difference and never makes spend negative. A missing or invalid cost header on an HTTP response keeps the full reservation counted, while the reported request cost uses `DEMO_FALLBACK_COST_USD` (default $0.001). Connection failures with no response release the reservation and report $0. If settlement fails after a successful paid call, the result is still returned and the full reservation stays counted. The only remaining source of overshoot is a call whose header cost exceeds its reservation: settlement adds that call's overrun and logs only the reservation and actual cost numbers. Concurrent overruns can each add their own difference. There are no automatic retries. Redis admission errors return paused 503; no automatic memory fallback is allowed.
 
 Smoke checks after deployment:
 

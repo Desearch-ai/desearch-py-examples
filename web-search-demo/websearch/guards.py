@@ -1,5 +1,5 @@
 import collections, threading, time
-from .state import ip_bucket
+from .state import Reservation, ip_bucket
 
 class RateLimiter:
     """Sliding-window per-IP and global limits, in memory. On serverless hosts this is per warm instance only."""
@@ -36,6 +36,23 @@ class DailyCap:
         with self.lock:
             self._roll()
             return self.spent < self.cap
+
+    def reserve(self, amount):
+        with self.lock:
+            self._roll()
+            if self.spent + amount > self.cap + 1e-9:
+                return False
+            self.spent += amount
+            return Reservation(self.day, float(amount))
+
+    def settle(self, reserved, actual):
+        with self.lock:
+            self._roll()
+            if reserved.key == self.day and actual is not None:
+                self.spent = max(0.0, self.spent + actual - reserved.amount)
+
+    def release(self, reserved):
+        self.settle(reserved, 0)
 
     def add(self, usd):
         with self.lock:

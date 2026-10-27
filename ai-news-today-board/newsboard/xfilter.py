@@ -5,6 +5,9 @@ import re
 
 WORDS = ("fuck", "fucking", "fucker", "fucked", "shit", "porn", "pornography", "nsfw", "xxx", "bitch", "fck")
 LINK = re.compile(r"(?:https?://|(?<!\w)(?:t\.co/|www\.))\S+", re.I)
+HANDLE = re.compile(r"(?<![\w@])@[A-Za-z0-9_]+")
+STYLED = re.compile(r"[\U0001D400-\U0001D7FF\uFF10-\uFF19\uFF21-\uFF3A\uFF41-\uFF5A]")
+LIST_ITEM = re.compile(r"^\s*(?:[-*•·]|[0-9]+[.)])(?:\s+|$)(.*)$")
 LEET = str.maketrans({"@": "a", "$": "s", "0": "o", "1": "i", "3": "e", "!": "i", "4": "a", "5": "s", "7": "t"})
 SYNONYMS = {
     "ai": "ai artificial intelligence llm llms gpt openai anthropic claude gemini llama neural machine learning generative chatgpt",
@@ -45,7 +48,7 @@ def politics_or_person(text):
     for handle in re.findall(r"(?<![\w@])@([A-Za-z0-9_]+)", plain):
         if handle.lower() not in ALLOWED_HANDLES:
             return True
-    plain = re.sub(r"(?<![\w@])@[A-Za-z0-9_]+", "", plain)
+    plain = HANDLE.sub("", plain)
     for name in sorted(ALLOWLIST, key=len, reverse=True):
         plain = re.sub(r"\b" + re.escape(name) + r"\b", "", plain, flags=re.I)
     return bool(re.search(r"\b[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?\s+[A-Z][a-z]+\b", plain)
@@ -110,6 +113,12 @@ def keep_post(post, min_engagement=None, tag=None, query=None, topic=None):
     if os.environ.get("DEMO_X_FILTER", "1") == "0":
         return True
     text = decode_text(str(post.get("text") or ""))
+    if STYLED.search(text):
+        return False
+    for line in HANDLE.sub("", text).splitlines():
+        item = LIST_ITEM.match(line)
+        if item and not any(c.isalnum() for c in item.group(1)):
+            return False
     plain = LINK.sub("", text)
     if not any(c.isalnum() for c in plain):
         return False
