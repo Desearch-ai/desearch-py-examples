@@ -1,0 +1,33 @@
+{
+  "command": "search",
+  "target": "national geographic",
+  "count_requested": 3,
+  "pages_fetched": 1,
+  "returned": 3,
+  "next_cursor": null,
+  "cost_usd": 0.00621,
+  "calls": 1,
+  "items": [
+    {
+      "type": "profile",
+      "username": "natgeo",
+      "title": "National Geographic",
+      "url": "https://www.instagram.com/natgeo/",
+      "followers": 268281815
+    },
+    {
+      "type": "profile",
+      "username": "natgeotravel",
+      "title": "National Geographic Travel",
+      "url": "https://www.instagram.com/natgeotravel/",
+      "followers": 44495516
+    },
+    {
+      "type": "profile",
+      "username": "natgeomuseum",
+      "title": "National Geographic Museum of Exploration",
+      "url": "https://www.instagram.com/natgeomuseum/",
+      "followers": 138172
+    }
+  ]
+}
