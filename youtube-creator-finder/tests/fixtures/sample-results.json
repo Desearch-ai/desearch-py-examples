@@ -1,0 +1,170 @@
+{
+  "results": [
+    {
+      "id": "example-1",
+      "handle": "ExampleChannelOne",
+      "name": "Example Channel One",
+      "url": "https://example.com/channels/1",
+      "score": {
+        "value": 76,
+        "reasons": [
+          "Publishes equipment reviews"
+        ]
+      },
+      "metrics": {
+        "subscribers": 10000,
+        "videos": 10,
+        "views": 100000
+      },
+      "attributes": {
+        "country": "Canada"
+      },
+      "links": [
+        {
+          "type": "website",
+          "url": "https://example.com/creators/1"
+        }
+      ],
+      "evidence": [
+        {
+          "type": "video",
+          "url": "https://example.com/videos/1",
+          "title": "Example equipment review"
+        }
+      ]
+    },
+    {
+      "id": "example-2",
+      "handle": "ExampleChannelTwo",
+      "name": "Example Channel Two",
+      "url": "https://example.com/channels/2",
+      "score": {
+        "value": 77,
+        "reasons": [
+          "Publishes equipment reviews"
+        ]
+      },
+      "metrics": {
+        "subscribers": 20000,
+        "videos": 20,
+        "views": 200000
+      },
+      "attributes": {
+        "country": "Canada"
+      },
+      "links": [
+        {
+          "type": "website",
+          "url": "https://example.com/creators/2"
+        }
+      ],
+      "evidence": [
+        {
+          "type": "video",
+          "url": "https://example.com/videos/2",
+          "title": "Example equipment review"
+        }
+      ]
+    },
+    {
+      "id": "example-3",
+      "handle": "ExampleChannelThree",
+      "name": "Example Channel Three",
+      "url": "https://example.com/channels/3",
+      "score": {
+        "value": 78,
+        "reasons": [
+          "Publishes equipment reviews"
+        ]
+      },
+      "metrics": {
+        "subscribers": 30000,
+        "videos": 30,
+        "views": 300000
+      },
+      "attributes": {
+        "country": "Canada"
+      },
+      "links": [
+        {
+          "type": "website",
+          "url": "https://example.com/creators/3"
+        }
+      ],
+      "evidence": [
+        {
+          "type": "video",
+          "url": "https://example.com/videos/3",
+          "title": "Example equipment review"
+        }
+      ]
+    },
+    {
+      "id": "example-4",
+      "handle": "ExampleChannelFour",
+      "name": "Example Channel Four",
+      "url": "https://example.com/channels/4",
+      "score": {
+        "value": 79,
+        "reasons": [
+          "Publishes equipment reviews"
+        ]
+      },
+      "metrics": {
+        "subscribers": 40000,
+        "videos": 40,
+        "views": 400000
+      },
+      "attributes": {
+        "country": "Canada"
+      },
+      "links": [
+        {
+          "type": "website",
+          "url": "https://example.com/creators/4"
+        }
+      ],
+      "evidence": [
+        {
+          "type": "video",
+          "url": "https://example.com/videos/4",
+          "title": "Example equipment review"
+        }
+      ]
+    },
+    {
+      "id": "example-5",
+      "handle": "ExampleChannelFive",
+      "name": "Example Channel Five",
+      "url": "https://example.com/channels/5",
+      "score": {
+        "value": 80,
+        "reasons": [
+          "Publishes equipment reviews"
+        ]
+      },
+      "metrics": {
+        "subscribers": 50000,
+        "videos": 50,
+        "views": 500000
+      },
+      "attributes": {
+        "country": "Canada"
+      },
+      "links": [
+        {
+          "type": "website",
+          "url": "https://example.com/creators/5"
+        }
+      ],
+      "evidence": [
+        {
+          "type": "video",
+          "url": "https://example.com/videos/5",
+          "title": "Example equipment review"
+        }
+      ]
+    }
+  ],
+  "has_more": false
+}

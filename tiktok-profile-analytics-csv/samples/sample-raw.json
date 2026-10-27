@@ -1,0 +1,867 @@
+{
+ "started": "2026-10-16T15:40:21+04:00",
+ "count": 12,
+ "calls": [
+  {
+   "label": "brand_a profile",
+   "path": "/desearch/tiktok/profile/brand_a",
+   "params": {},
+   "at": "2026-10-16T15:40:21+04:00",
+   "seconds": 1.45,
+   "status": 200,
+   "cost_usd": "0.00207",
+   "usage_count": "1",
+   "headers": {
+    "x-desearch-cost-usd": "0.00207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Lookup",
+    "x-desearch-usage-count": "1"
+   },
+   "body": {
+    "id": "7664638705177150477",
+    "username": "brand_a",
+    "nickname": "brand_a",
+    "verified": true,
+    "following": 23,
+    "followers": 2100000,
+    "heart": 11100000,
+    "bio": "Making the seemingly impossible, possible.\u2728",
+    "videoCount": 56,
+    "digCount": 0,
+    "cost_usd": 0.00207,
+    "usage_count": 1,
+    "service": "TikTok Profile Lookup",
+    "currency": "USD",
+    "mentions": []
+   },
+   "profile": "brand_a",
+   "kind": "profile"
+  },
+  {
+   "label": "brand_a posts p1",
+   "path": "/desearch/tiktok/profile/brand_a/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-16T15:40:23+04:00",
+   "seconds": 3.7,
+   "status": 200,
+   "cost_usd": "0.0207",
+   "usage_count": "10",
+   "headers": {
+    "x-desearch-cost-usd": "0.0207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Posts",
+    "x-desearch-usage-count": "10"
+   },
+   "body": [
+    {
+     "id": "7665075736742530317",
+     "url": "https://www.tiktok.com/@brand_a/video/7665075736742530317",
+     "text": "Something big just landed on TikTok.",
+     "createTime": 1784664542,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 1613842,
+      "digCount": 104439,
+      "commentCount": 3051,
+      "shareCount": 3268,
+      "collectCount": 7589
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 25169,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7695090484124929293",
+     "url": "https://www.tiktok.com/@brand_a/video/7695090484124929293",
+     "text": "brand_a\u2019s mission reached across the globe and beyond this week \ud83d\ude80\n\u2744\ufe0f Inspiration Tour heads to Alaska\u2028\ud83c\udf0e brand_a leads at IAC in Antalya\u2028\ud83e\uddd1\u200d\ud83d\ude80 Crew-12 returns home\u2028\ud83c\udf15 Artemis II science data released\n\nHere\u2019s what's new in your brand_a Minute!",
+     "createTime": 1791652888,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 149894,
+      "digCount": 8033,
+      "commentCount": 286,
+      "shareCount": 312,
+      "collectCount": 573
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 122423,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7695060950394703118",
+     "url": "https://www.tiktok.com/@brand_a/video/7695060950394703118",
+     "text": "We just released hundreds of new images and hours of new audio from our Artemis Il mission around the Moon this spring.\n\nCheck out our link in bio for the Artemis II Preliminary Lunar Science Report.",
+     "createTime": 1791646017,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 321271,
+      "digCount": 28859,
+      "commentCount": 1834,
+      "shareCount": 1195,
+      "collectCount": 1845
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 43834,
+     "videoWidth": 718,
+     "videoHeight": 1276
+    },
+    {
+     "id": "7694341613870501150",
+     "url": "https://www.tiktok.com/@other_account/video/7694341613870501150",
+     "text": "You\u2019d need to line up 100 million Moons just to stretch across the black hole TON 618 \ud83e\udd2f Get more mind-blowing space facts with [account] Search \n\n#SpaceWeek #SpaceFacts ",
+     "createTime": 1791478543,
+     "author": {
+      "id": "6949137531950842886",
+      "username": "other_account",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 146837,
+      "digCount": 11117,
+      "commentCount": 271,
+      "shareCount": 528,
+      "collectCount": 1245
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 19552,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7694283957839400206",
+     "url": "https://www.tiktok.com/@brand_a/video/7694283957839400206",
+     "text": "A LOT of Artemis II data just dropped! \ud83c\udf16 \u00a0\n\n814GB of observations. 996 new images. 521min of never-before-released crew audio.",
+     "createTime": 1791465142,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 528884,
+      "digCount": 75644,
+      "commentCount": 547,
+      "shareCount": 2672,
+      "collectCount": 5880
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 89373,
+     "videoWidth": 576,
+     "videoHeight": 1024
+    },
+    {
+     "id": "7692161454694206733",
+     "url": "https://www.tiktok.com/@brand_a/video/7692161454694206733",
+     "text": "It was a big week in low Earth orbit at brand_a!\n\n\ud83e\uddd1\u200d\ud83d\ude80 Crew-13 reaches the ISS\u2028\ud83d\udef0\ufe0f Crew-14 announced\u2028\ud83d\ude80 Starliner prepares to fly again\u2028\ud83c\udf15 Artemis III SLS booster stacking completed\u2028\u2708\ufe0f X-59 hits Mach 1.53\n\nHere\u2019s what\u2019s new in your brand_a Minute!",
+     "createTime": 1790970924,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 265140,
+      "digCount": 12420,
+      "commentCount": 355,
+      "shareCount": 440,
+      "collectCount": 998
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 136700,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7691727731800673549",
+     "url": "https://www.tiktok.com/@brand_a/video/7691727731800673549",
+     "text": "Off Earth, working for Earth.\ud83d\ude80\ud83e\uddd1\u200d\ud83d\ude80\n\nCrew-13 is headed to the ISS to conduct research and test new technologies in microgravity!",
+     "createTime": 1790869952,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 589889,
+      "digCount": 61007,
+      "commentCount": 953,
+      "shareCount": 2272,
+      "collectCount": 3863
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 16114,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7691683140015820046",
+     "url": "https://www.tiktok.com/@brand_a/video/7691683140015820046",
+     "text": "Suited up. Next stop: the International Space Station. \ud83d\ude80\n\nCrew-13 is targeting liftoff today at 11:10 a.m. EDT! Watch coverage starting at 9:20 a.m. EDT on brand_a+ or brand_a\u2019s YouTube.",
+     "createTime": 1790859588,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 1614536,
+      "digCount": 163510,
+      "commentCount": 1905,
+      "shareCount": 3783,
+      "collectCount": 10252
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 28281,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7691066504380452110",
+     "url": "https://www.tiktok.com/@brand_a/video/7691066504380452110",
+     "text": "Earth\u2019s camera roll goes hard. \ud83c\udf0e\n\n60 images from 60 months in orbit. Here\u2019s a glimpse of our home planet through the eyes of the Landsat 9 satellite.",
+     "createTime": 1790722800,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 218908,
+      "digCount": 10026,
+      "commentCount": 228,
+      "shareCount": 323,
+      "collectCount": 757
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 60034,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7690609551275494670",
+     "url": "https://www.tiktok.com/@brand_a/video/7690609551275494670",
+     "text": "Replying to [account] \ud83c\uddff\ud83c\udde6 Look who\u2019s back \ud83d\udc40\n\nBrand x [account] continues. Thanks for looking up, Cleveland.\u2728",
+     "createTime": 1790609603,
+     "author": {
+      "id": "7664638705177150477",
+      "username": "brand_a",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 235969,
+      "digCount": 9505,
+      "commentCount": 262,
+      "shareCount": 78,
+      "collectCount": 565
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 6013,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    }
+   ],
+   "profile": "brand_a",
+   "kind": "posts"
+  },
+  {
+   "label": "brand_b profile",
+   "path": "/desearch/tiktok/profile/brand_b",
+   "params": {},
+   "at": "2026-10-16T15:40:26+04:00",
+   "seconds": 1.66,
+   "status": 200,
+   "cost_usd": "0.00207",
+   "usage_count": "1",
+   "headers": {
+    "x-desearch-cost-usd": "0.00207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Lookup",
+    "x-desearch-usage-count": "1"
+   },
+   "body": {
+    "id": "6917704832925746181",
+    "username": "brand_b",
+    "nickname": "brand_b",
+    "verified": true,
+    "following": 317,
+    "followers": 18300000,
+    "heart": 505300000,
+    "bio": "educated girl autumn \ud83c\udf83\ud83e\udd89",
+    "videoCount": 1204,
+    "digCount": 0,
+    "cost_usd": 0.00207,
+    "usage_count": 1,
+    "service": "TikTok Profile Lookup",
+    "currency": "USD",
+    "mentions": []
+   },
+   "profile": "brand_b",
+   "kind": "profile"
+  },
+  {
+   "label": "brand_b posts p1",
+   "path": "/desearch/tiktok/profile/brand_b/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-16T15:40:28+04:00",
+   "seconds": 3.38,
+   "status": 200,
+   "cost_usd": "0.0207",
+   "usage_count": "10",
+   "headers": {
+    "x-desearch-cost-usd": "0.0207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Posts",
+    "x-desearch-usage-count": "10"
+   },
+   "body": [
+    {
+     "id": "7514320905909194030",
+     "url": "https://www.tiktok.com/@brand_b/video/7514320905909194030",
+     "text": "Rook-ies welcome!\u265f\ufe0f Chess lessons are here on iOS! #brand_b",
+     "createTime": 1749564234,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 3740802,
+      "digCount": 168167,
+      "commentCount": 19532,
+      "shareCount": 8718,
+      "collectCount": 14629
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 21249,
+     "videoWidth": 576,
+     "videoHeight": 1024
+    },
+    {
+     "id": "7696211706317409550",
+     "url": "https://www.tiktok.com/@brand_b/video/7696211706317409550",
+     "text": "clean my litter box or do your lesson \ud83c\udfa8: [account] ",
+     "createTime": 1791913939,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 2112484,
+      "digCount": 438738,
+      "commentCount": 6604,
+      "shareCount": 80054,
+      "collectCount": 49351
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 12143,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7695843389211708702",
+     "url": "https://www.tiktok.com/@brand_b/video/7695843389211708702",
+     "text": "am i sugoi now? \ud83e\udd7a\n\ud83c\udfa8: [account] ",
+     "createTime": 1791828189,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 588217,
+      "digCount": 94186,
+      "commentCount": 1614,
+      "shareCount": 26330,
+      "collectCount": 9140
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 12875,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7695766121307196686",
+     "url": "https://www.tiktok.com/@brand_b/video/7695766121307196686",
+     "text": "what role does falstaff play (wrong answers only) #duotv ",
+     "createTime": 1791810221,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 95402,
+      "digCount": 3968,
+      "commentCount": 261,
+      "shareCount": 133,
+      "collectCount": 512
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 84673,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7695132961343147278",
+     "url": "https://www.tiktok.com/@brand_b/video/7695132961343147278",
+     "text": "interviewing the real FEARLESS ones [account] SSERAFIM #LE_SSERAFIM",
+     "createTime": 1791662788,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 143415,
+      "digCount": 13893,
+      "commentCount": 421,
+      "shareCount": 371,
+      "collectCount": 1383
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 45603,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7694839158510062861",
+     "url": "https://www.tiktok.com/@brand_b/video/7694839158510062861",
+     "text": "made my night, i\u2019m literally an owl #LE_SSERAFIM ",
+     "createTime": 1791594380,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 613224,
+      "digCount": 77062,
+      "commentCount": 1603,
+      "shareCount": 3981,
+      "collectCount": 8216
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 21570,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7694698943971855630",
+     "url": "https://www.tiktok.com/@brand_b/video/7694698943971855630",
+     "text": "duo the konbini owner. what could go wrong? \n\nfirst episode drops 10.12.26",
+     "createTime": 1791561744,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 123693,
+      "digCount": 5323,
+      "commentCount": 347,
+      "shareCount": 256,
+      "collectCount": 610
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 14635,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7694483304183090445",
+     "url": "https://www.tiktok.com/@brand_b/video/7694483304183090445",
+     "text": "dialing 1-800-hot-n-fun, a new 25-year old YUNJIN is here [account] SSERAFIM #LE_SSERAFIM",
+     "createTime": 1791511521,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 451976,
+      "digCount": 89464,
+      "commentCount": 804,
+      "shareCount": 4143,
+      "collectCount": 11374
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 14976,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7694371205087759647",
+     "url": "https://www.tiktok.com/@brand_b/video/7694371205087759647",
+     "text": "i'm literally not talking like anything",
+     "createTime": 1791485410,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 5784513,
+      "digCount": 833650,
+      "commentCount": 4968,
+      "shareCount": 190743,
+      "collectCount": 55749
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 10542,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7693985888535186702",
+     "url": "https://www.tiktok.com/@brand_b/video/7693985888535186702",
+     "text": "time to do your streakity",
+     "createTime": 1791395730,
+     "author": {
+      "id": "6917704832925746181",
+      "username": "brand_b",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 1220695,
+      "digCount": 180826,
+      "commentCount": 3665,
+      "shareCount": 59685,
+      "collectCount": 23503
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 7406,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    }
+   ],
+   "profile": "brand_b",
+   "kind": "posts"
+  },
+  {
+   "label": "brand_c profile",
+   "path": "/desearch/tiktok/profile/brand_c",
+   "params": {},
+   "at": "2026-10-16T15:40:31+04:00",
+   "seconds": 1.41,
+   "status": 200,
+   "cost_usd": "0.00207",
+   "usage_count": "1",
+   "headers": {
+    "x-desearch-cost-usd": "0.00207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Lookup",
+    "x-desearch-usage-count": "1"
+   },
+   "body": {
+    "id": "134941634731003904",
+    "username": "brand_c",
+    "nickname": "brand_c",
+    "verified": true,
+    "following": 267,
+    "followers": 27300000,
+    "heart": 1200000000,
+    "bio": "The 2026-27 brand_c season tips off Tuesday, Oct. 20 on NBC and Peacock! \n\ud83c\udfc0 3:00pm/et: Celtics/Pistons \n\ud83c\udfc0 7:00pm/et: 76ers/Knicks \n\ud83c\udfc0 9:30pm/et: Thunder/Spurs",
+    "videoCount": 24300,
+    "digCount": 0,
+    "cost_usd": 0.00207,
+    "usage_count": 1,
+    "service": "TikTok Profile Lookup",
+    "currency": "USD",
+    "mentions": []
+   },
+   "profile": "brand_c",
+   "kind": "profile"
+  },
+  {
+   "label": "brand_c posts p1",
+   "path": "/desearch/tiktok/profile/brand_c/posts",
+   "params": {
+    "count": 12
+   },
+   "at": "2026-10-16T15:40:33+04:00",
+   "seconds": 11.58,
+   "status": 200,
+   "cost_usd": "0.0207",
+   "usage_count": "10",
+   "headers": {
+    "x-desearch-cost-usd": "0.0207",
+    "x-desearch-currency": "USD",
+    "x-desearch-service": "TikTok Profile Posts",
+    "x-desearch-usage-count": "10"
+   },
+   "body": [
+    {
+     "id": "7693329153680035102",
+     "url": "https://www.tiktok.com/@brand_c/video/7693329153680035102",
+     "text": "Jaylen Brown knocks down the smooth fadeaway for his first preseason bucket as a 76er \ud83d\ude24 #brand_c #basketball #Philly #76ers #JaylenBrown ",
+     "createTime": 1791242794,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 2852422,
+      "digCount": 253851,
+      "commentCount": 896,
+      "shareCount": 4889,
+      "collectCount": 9103
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 10567,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7690608943621623071",
+     "url": "https://www.tiktok.com/@brand_c/video/7690608943621623071",
+     "text": "No name plate necessary for the Scoring King! \ud83d\udc51 #brand_c #basketball #LeBron #LeBronJames #sixers ",
+     "createTime": 1790609462,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 4983511,
+      "digCount": 548125,
+      "commentCount": 5922,
+      "shareCount": 32285,
+      "collectCount": 27267
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 7134,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7689500686601489694",
+     "url": "https://www.tiktok.com/@brand_c/video/7689500686601489694",
+     "text": "Y\u2019all know the meme \ud83d\ude2d\ud83d\ude2d\ud83d\ude2d #brand_c #basketball #KyrieIrving #DallasMavericks #NBAMediaDay ",
+     "createTime": 1790351421,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 1765977,
+      "digCount": 190865,
+      "commentCount": 1204,
+      "shareCount": 4455,
+      "collectCount": 9320
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 9937,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697106035655380255",
+     "url": "https://www.tiktok.com/@brand_c/video/7697106035655380255",
+     "text": "Quick rewind \u23ee\ufe0f. Full recap. Here\u2019s everything from tonight [account] Thunder vs. [account] \ud83c\udfc0 #brand_c #Basketball #Thunder #Rockets",
+     "createTime": 1792122171,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 95482,
+      "digCount": 6850,
+      "commentCount": 49,
+      "shareCount": 143,
+      "collectCount": 210
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 82900,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697095264707841311",
+     "url": "https://www.tiktok.com/@brand_c/video/7697095264707841311",
+     "text": "Quick rewind, full recap. Here\u2019s everything from tonight\u2019s [account] vs. [account] York Knicks matchup \u23ea\ud83c\udfc0 #brand_c #Basketball #TorontoRaptors #NewYorkKnicks",
+     "createTime": 1792119660,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 26883,
+      "digCount": 1552,
+      "commentCount": 21,
+      "shareCount": 18,
+      "collectCount": 56
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 86067,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697089759482596639",
+     "url": "https://www.tiktok.com/@brand_c/video/7697089759482596639",
+     "text": "Brunson and the fans in MSG can\u2019t wait \ud83d\udd25 #brand_c #Basketball #JalenBrunson #NewYorkKnicks ",
+     "createTime": 1792118377,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 92250,
+      "digCount": 11358,
+      "commentCount": 125,
+      "shareCount": 377,
+      "collectCount": 583
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 16300,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697086899915214110",
+     "url": "https://www.tiktok.com/@brand_c/video/7697086899915214110",
+     "text": "Time froze in the Garden \ud83d\ude32 #brand_c #Basketball #TylerKolek #NewYorkKnicks",
+     "createTime": 1792117713,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 50343,
+      "digCount": 3233,
+      "commentCount": 49,
+      "shareCount": 44,
+      "collectCount": 102
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 11500,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697084402873978142",
+     "url": "https://www.tiktok.com/@brand_c/video/7697084402873978142",
+     "text": "\u201cJust in case you forgot\u2026\u201d\ud83d\udd25\ud83d\ude2e\u200d\ud83d\udca8#brand_c #Basketball #OGAnunoby #NewYorkKnicks",
+     "createTime": 1792117133,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 16058,
+      "digCount": 1102,
+      "commentCount": 23,
+      "shareCount": 9,
+      "collectCount": 27
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 10500,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697082470235245854",
+     "url": "https://www.tiktok.com/@brand_c/video/7697082470235245854",
+     "text": "Shai weaving through the defense for the basket \ud83d\udd25 #brand_c #Basketball #ShaiGilgeousAlexander",
+     "createTime": 1792116673,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 68657,
+      "digCount": 6641,
+      "commentCount": 78,
+      "shareCount": 250,
+      "collectCount": 253
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 9867,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    },
+    {
+     "id": "7697080324932586782",
+     "url": "https://www.tiktok.com/@brand_c/video/7697080324932586782",
+     "text": "He was soaring \ud83e\udd2f #brand_c #Basketball #AlperenSengun #HoustonRockets",
+     "createTime": 1792116175,
+     "author": {
+      "id": "134941634731003904",
+      "username": "brand_c",
+      "nickname": "Brand"
+     },
+     "stats": {
+      "playCount": 43917,
+      "digCount": 2961,
+      "commentCount": 45,
+      "shareCount": 72,
+      "collectCount": 94
+     },
+     "hashtags": [],
+     "mentions": [],
+     "videoDuration": 9667,
+     "videoWidth": 720,
+     "videoHeight": 1280
+    }
+   ],
+   "profile": "brand_c",
+   "kind": "posts"
+  }
+ ]
+}
