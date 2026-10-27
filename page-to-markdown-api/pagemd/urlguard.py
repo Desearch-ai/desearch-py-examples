@@ -60,12 +60,15 @@ def validate_url(value, resolver=socket.getaddrinfo):
             reject()
         try:
             addresses = resolver(host, default_port, type=socket.SOCK_STREAM)
-        except socket.gaierror as e:
+        except OSError as e:
             raise URLUnreachableError('Could not resolve hostname') from e
         if not addresses:
             raise URLUnreachableError('Could not resolve hostname')
-        for record in addresses:
-            ip = ipaddress.ip_address(record[4][0])
+        resolved = [ipaddress.ip_address(record[4][0]) for record in addresses]
+        benchmark = ipaddress.ip_network('198.18.0.0/15')
+        if any(ip.version == 4 and ip in benchmark for ip in resolved):
+            raise URLUnreachableError('Could not resolve hostname')
+        for ip in resolved:
             if not ip.is_global or ip.is_multicast or ip.is_reserved or getattr(ip, 'ipv4_mapped', None):
                 reject()
         return urlunsplit((p.scheme.lower(), host, p.path.rstrip('/'), p.query, ''))

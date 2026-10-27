@@ -42,9 +42,9 @@ def converter(request):
 ])
 def test_shared_per_ip_limit(converter, first, same, separate):
     for ip in [first, same, first, same, first]:
-        assert response(converter, 'invalid', ip=ip)[0] == 400
+        assert response(converter, ip=ip)[0] == 200
     assert response(converter, ip=same)[0] == 429
-    assert response(converter, 'invalid', ip=separate)[0] == 400
+    assert response(converter, ip=separate)[0] == 200
 
 
 def test_redis_keys_hash_bucket():
@@ -61,5 +61,5 @@ def test_redis_keys_hash_bucket():
 
 
 def test_invalid_values_share_limit(converter):
-    statuses = [response(converter, 'invalid', ip=ip)[0] for ip in INVALID_IPS]
-    assert statuses == [400] * 5 + [429] * (len(INVALID_IPS) - 5)
+    statuses = [response(converter, ip=ip)[0] for ip in INVALID_IPS]
+    assert statuses == [200] * 5 + [429] * (len(INVALID_IPS) - 5)
