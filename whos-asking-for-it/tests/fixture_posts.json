@@ -1,0 +1,7 @@
+[
+ {"url": "https://x.com/i/status/3", "text": "Check out the latest issue of my newsletter", "created_at": "Thu Oct 01 19:16:42 +0000 2026", "user": {"username": "user_c"}},
+ {"url": "https://x.com/i/status/2", "text": "Which newsletter app do you all use?", "created_at": "Wed Sep 30 10:00:00 +0000 2026", "user": {"username": "user_b"}},
+ {"url": "https://x.com/i/status/1", "text": "Can anyone recommend a newsletter tool? Thinking of switching from my current one", "created_at": "Mon Sep 28 08:00:00 +0000 2026", "user": {"username": "user_a"}},
+ {"url": "https://x.com/i/status/1", "text": "duplicate", "created_at": "Mon Sep 28 08:00:00 +0000 2026", "user": {"username": "user_a"}},
+ {"url": "https://x.com/i/status/9", "text": "Can anyone recommend a newsletter tool?", "created_at": "Mon Aug 03 08:00:00 +0000 2026", "user": {"username": "user_old"}}
+]

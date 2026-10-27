@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.desearch_api_key
+*.key
+.env
+output/raw-*.json

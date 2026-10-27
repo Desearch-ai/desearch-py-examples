@@ -1,0 +1,891 @@
+{
+ "started": "2026-10-19T09:28:02+04:00",
+ "topic": "stablecoin adoption",
+ "question": "What is driving stablecoin adoption?",
+ "start_date": "2026-09-19",
+ "end_date": "2026-10-19",
+ "mode": "balanced",
+ "count": 20,
+ "calls": [
+  {
+   "tag": "overview",
+   "params": {
+    "query": "What is driving stablecoin adoption?",
+    "mode": "balanced",
+    "count": 20,
+    "highlights": true,
+    "page_text": true,
+    "start_date": "2026-09-19",
+    "end_date": "2026-10-19"
+   },
+   "at": "2026-10-19T09:28:02+04:00",
+   "seconds": 0.5,
+   "status": 200,
+   "cost_usd": 0.01,
+   "body": {
+    "cost_usd": 0.01,
+    "usage_count": 20,
+    "service": "Search API",
+    "currency": "USD",
+    "results": [
+     {
+      "url": "https://www.bitira.com/stablecoin-crypto-adoption/",
+      "title": "What Stablecoin Demand Says About Crypto Adoption | BitIRA®",
+      "published_date": "2026-10-08",
+      "highlights": [
+       "Chainalysis also found that,like in Argentina,stablecoins consistently represented the majority of crypto purchased with Turkish lira.As you’d expect,the volume of stablecoin purchases were closely correlated with inflation rates.\nCorrelation isn’t necessarily causation.Chainalysis itself noted that a spike in stablecoin buying in March 2024 may also have reflected broader crypto-market activity as bitcoin reached a new high.\nStill,Turkey and Argentina fit a larger pattern the BIS identified:In economies where dollar access is crucial,stablecoins provide an important on-ramp.\nWhat stablecoins actually offer\nHere’s why people in Argentina and Turkey are buying stablecoins instead of bitcoin…\nThe whole point of a stablecoin is to keep being worth$1(or whatever it’s pegged to).\nThe utility comes from what users can do with it.\nStablecoins provide dollar-denominated value that moves over blockchain around the world,around the clock.They’re faster and cheaper than the options traditional finance offers(Western Union,bank wires).That makes stablecoins incredibly useful for savings,payments,settlement and moving money between countries.\nIn fact,the BIS estimates that roughly 98%of stablecoin value is dollar-denominated,illustrating just how closely today’s stablecoin market is tied to global demand for the dollar.That’s no surprise,considering the dollar’s role as global reserve currency.\nBut those advantages come with risks of their own.\nA stablecoin’s value depends on factors including the quality and liquidity of the assets backing it,redemption arrangements,the issuer and,in some cases,the financial institutions holding its reserves."
+      ],
+      "page_text": "As you’d expect, the volume of stablecoin purchases were closely correlated with inflation rates.",
+      "page_text_chars": 8848
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-issuer-circle-push-40-092605107.html",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n \nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 2580
+     },
+     {
+      "url": "https://www.investing.com/news/stock-market-news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-4953459",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says By Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Warsh avoids rate guidance;Tesla’s Roadster turns in air-what’s moving markets\nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n\"We’re kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3708
+     },
+     {
+      "url": "https://phemex.com/vi/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nTuyên bố miễn trừ trách nhiệm:Nội dung được cung cấp trên Phemex News chỉ nhằm mục đích cung cấp thông tin.Chúng tôi không đảm bảo chất lượng,độ chính xác hoặc tính đầy đủ của thông tin có nguồn từ các bài viết của bên thứ ba.Nội dung trên trang này không cấu thành lời khuyên về tài chính hoặc đầu tư.Chúng tôi đặc biệt khuyến khích bạn tự tiến hành nghiên cứu và tham khảo ý kiến của cố vấn tài chính đủ tiêu chuẩn trước khi đưa ra bất kỳ quyết định đầu tư nào."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1416
+     },
+     {
+      "url": "https://www.analyticsinsight.net/cryptocurrency-analytics-insight/top-countries-leading-stablecoin-adoption-and-usage",
+      "title": "Top Countries Leading Stablecoin Adoption and Usage",
+      "published_date": "2026-10-07",
+      "highlights": [
+       "2.Why is Nigeria important for stablecoin adoption?Nigeria ranked first globally for both domestic P2P activity and cross-border crypto flows.Stablecoins provide users with an alternative for international transfers,digital-dollar access and wallet-to-wallet payments.\n3.How significant is stablecoin adoption in India?India ranked sixth globally,second for total service flows and third for on-chain balances.However,it ranked 16th for domestic P2P and cross-border activity,showing a different adoption pattern.\n4.How much of global P2P crypto activity involves stablecoins?Stablecoins represented approximately 96%of measured domestic P2P crypto activity.Overall domestic P2P value increased 302.9%,rising from USD 56.8 billion to USD 228.7 billion.\n5.Why are stablecoins increasingly used for cross-border payments?Stablecoins can enable digital-dollar transfers without relying entirely on traditional international payment infrastructure.Their growing usage for remittances and commercial payments is particularly visible in markets facing currency volatility or costly cross-border transfers.\nJoin our WhatsApp Channel to get the latest news,exclusives and videos on WhatsApp\nDisclaimer:Analytics Insight does not provide financial advice or guidance on cryptocurrencies and stocks.Also note that the cryptocurrencies mentioned/listed on the website could potentially be risky,i.e.designed to induce you to invest financial resources that may be lost forever and not be recoverable once investments are made.This article is provided for informational purposes and does not constitute investment advice.You are responsible for conducting your own research(DYOR)before making any investments."
+      ],
+      "page_text": "Why is Nigeria important for stablecoin adoption?",
+      "page_text_chars": 5313
+     },
+     {
+      "url": "https://phemex.com/es/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nAviso legal:El contenido de Phemex News es únicamente informativo.No garantizamos la calidad,precisión ni integridad de la información procedente de artículos de terceros.El contenido de esta página no constituye asesoramiento financiero ni de inversión.Le recomendamos encarecidamente que realice su propia investigación y consulte con un asesor financiero cualificado antes de tomar cualquier decisión de inversión."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1370
+     },
+     {
+      "url": "https://srnnews.com/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says - SRN News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "By Selena Li BANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.“We’re kind of going through an inflection point…a transition right[…]\nScience\nStablecoin issuer Circle to push into 40 new markets,CEO says\n  \nAudio By Carbonatix\n  Enlarge\nBy Selena Li\nBANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n“We’re kind of going through an inflection point…a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,”said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%."
+      ],
+      "page_text": "By Selena Li BANGKOK, Oct 16 (Reuters) – Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3550
+     },
+     {
+      "url": "https://reuters.com/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n\nBy Selena Li\n\nOctober 16,2026 2:25 AM PDT Updated 11 hours ago\n\n \n\nJeremy Allaire,CEO and co-founder of Circle Internet Group,the issuer of one of the world's biggest stablecoins,attends an interview,on the day of his company's IPO at the New York Stock Exchange(NYSE),in New York City,U.S.,June 5,2025.REUTERS/Brendan McDermid\n\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle(CRCL.N)is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\n\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\n\"When the Genius Act goes into law,the world will have legal digital dollars.That is a watershed moment,\"Allaire said.\n\nCircle's U.S.dollar-backed stablecoin USDC saw a 19%year-over-year rise in circulation to \\$73.3 billion in the second quarter this year.\n\nBanking coalitions in the U.S.and European markets are moving rapidly to develop and deploy their own stablecoins and digital asset solutions,which Allaire said was a sign of a healthy and competitive market."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle(CRCL.N) is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3522
+     },
+     {
+      "url": "https://www.forbes.com/sites/alexlazarow/2026/10/12/three-buyers-three-continents-stablecoins-have-a-proven-exit-market/?ss=fintech",
+      "title": "Three Buyers, Three Continents: Stablecoins Have A Proven Exit Market",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "Over the last 2 years,three different buyers paid over$3b for three different stablecoin operators around the world.\nFirst,Stripe bought Bridge in the United States,followed by Mastercard buying London’s BVNK and more recently Circle,which is buying Singapore’s Tazapay.\n\n ... \n\n\nThe State Of Play\nA number of things are driving this interest in stablecoins today.\nStablecoin use has exploded.Adjusted transaction volume grew 91%in 2025 to$10.9 trillion,approaching Visa’s$14.2 trillion,and real-world payments more than doubled to about$390 billion.\n\n ... \n\n\nProfile 1:Bridge Acquired By Stripe\nBridge is the first of the large stablecoin acquisitions,scaling from founding to exit in 2.5 years.\nFounders Zach Abrams and Sean Yu started the company in 2022.\n\n ... \n\nAt exit,the company reportedly had billions in volume.Stripe acquired the company for just over$1b in an exit announced October 2024.Patrick Collison said at the time stablecoins are“room-temperature superconductors for financial services.”Since then,volume has reportedly continued to scale,and Stripe launched Open Standard,a stablecoin consortium including Visa and 140+businesses.\nProfile 2:BVNK Acquired By Mastercard\n\n\n ... \n\n\nThe Pattern And What’s Evolving\nThese are three different transactions,in different geographies with different buyer types.\n\n ... \n\nSequoia was an investor in both Bridge and Stripe.And Visa(ironically not the ultimate buyer)was an investor in BVNK.\nA few observations that may be evolving in the category:stablecoin issuers are purchasing more of the associated infrastructure,or building it.Clearly Circle is the example here.A Fluent portfolio company(the fund I work at)is Avenia,which in many ways is the Bridge of Brazil and operates the largest Brazilian domestic currency stablecoin.The trend is going the other direction too,with rails becoming the issuer.Stripe and Bridge launched Open Issuance and its consortium.\nNew Models Emerging From These Rails\n\n\n ... \n\n\nStablecoins are also changing the game in cards.For example,Rain issues stablecoin-powered cards.They raised a$250M Series C at just under$2b earlier this year,working across 200+companies.In remittances,players like Félix Pago,a Miami-based startup,raised$200m in equity and credit at a reported$1.\n\n ... \n\n\nWe are still early in the game.However,I expect a proliferation of exits of“local”Bridge/BVNK players globally,and with this a number of players built on stablecoin rails too.\nWhat do you think?"
+      ],
+      "page_text": "Over the last 2 years, three different buyers paid over $3b for three different stablecoin operators around the world.",
+      "page_text_chars": 5524
+     },
+     {
+      "url": "https://www.channelnewsasia.com/business/stablecoin-issuer-circle-push-40-new-markets-ceo-says-6465526",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says - CNA",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "S.,June 5,2025.REUTERS/Brendan McDermid\n\n16 Oct 2026 05:26PM\n\nBANGKOK,Oct 16:Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25 per cent of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60 per cent.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\n\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 : Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3477
+     },
+     {
+      "url": "https://www.reuters.com/5f374b32b07b/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\n\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\n\"When the Genius Act goes into law,the world will have legal digital dollars.That is a watershed moment,\"Allaire said.\n\nCircle's U.S.dollar-backed stablecoin USDC saw a 19%year-over-year rise in circulation to \\$73.3 billion in the second quarter this year."
+      ],
+      "page_text": "Circle, the world’s largest regulated stablecoin issuer, is accelerating its global expansion, backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.",
+      "page_text_chars": 3305
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-giant-circle-expands-40-133225553.html",
+      "title": "Stablecoin Giant Circle Expands Into 40 Emerging Markets Amid Global Adoption",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "He spoke on the sidelines of the IMF and World Bank meetings in Bangkok and said blockchain is moving from the early adopter phase into mainstream scaling.\nDemand is rising in Southeast Asia,Latin America,Africa and the Middle East where individuals and businesses want to join an internet-based economy.\nAllaire said stablecoin adoption is happening mostly outside the United States.\nCircle is backing the push with deals.\nIt bought Tazapay for$400 million and got a$100 million investment from Binance.\nIn July,it became one of the first stablecoin issuers to hold a federal bank charter.\nCRCL Stock Revenue,EBIT and Free Cash Flow Estimates in Billion USD(TIKR)\nCircle is the world's largest regulated stablecoin issuer and holds about 25%of the market.Rival Tether's USDT has nearly 60%.\nUSDC circulation hit$73.3 billion in Q2,up 19%from a year ago.\nThe U.S.Genius Act takes effect next January,and Allaire called it a\"watershed moment\"because the world will have legal digital dollars.\nWhat the Market Is Telling Us About Circle Stock\nCircle's Arc system has been adopted by firms like BlackRock,Visa,and Standard Chartered.\nOn the earnings AMA,Allaire said Arc's public Mainnet launches on September 16 and also said AI agents are driving use.\nThey make tiny payments,often fractions of a cent,for web research and data.\nFor Circle stock,the story is a bigger global footprint.Circle earns income from the reserves behind USDC."
+      ],
+      "page_text": "Allaire said stablecoin adoption is happening mostly outside the United States.",
+      "page_text_chars": 16109
+     },
+     {
+      "url": "https://phemex.com/pt/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nAviso Legal:O conteúdo disponibilizado no Phemex News é apenas para fins informativos.Não garantimos a qualidade,precisão ou integridade das informações provenientes de artigos de terceiros.Este conteúdo não constitui aconselhamento financeiro ou de investimento.Recomendamos fortemente que você realize suas próprias pesquisas e consulte um consultor financeiro qualificado antes de tomar decisões de investimento."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1371
+     },
+     {
+      "url": "https://www.kucoin.com/news/flash/circle-targets-40-new-markets-as-stablecoin-demand-grows",
+      "title": "Circle Targets 40 New Markets as Stablecoin Demand Grows | KuCoin",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle,the company behind the world's second-largest stablecoin,USDC,plans to expand into about 50 emerging and developing markets as demand for digital dollars increases.\nCEO Jeremy Allaire told Reuters in an interview Friday that businesses and individuals across Southeast Asia,Latin America and the Middle East are increasingly turning to stablecoins for payments and other financial services.\n\"We're kind of going through an inflection point.a transition right now,\"Allaire said.\"That transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase.\nThe expansion comes as stablecoins,cryptocurrencies designed to maintain a fixed 1:1 value against traditional currencies,move beyond crypto trading into everyday payments and international money transfers.For Circle,entering more markets means competing directly with banks and payment companies for a share of the cross-border money market.\nCircle’s USDC has about$72.6 billion in circulation,according to CoinDesk data.It controls roughly a quarter of the stablecoin market,compared with nearly 60%for Tether's USDT.\nCircle has already agreed to buy Singapore-based payments firm Tazapay for$400 million,giving it access to local banking and payment networks across more than 100 markets.The deal could help Circle expand in countries where Tether's USDT has traditionally dominated.The company also launched its own blockchain,Arc,designed for payments and financial transactions,and secured U.S.federal trust bank approval in July.\nAllaire said clearer regulations,including the U.S.GENIUS Act governing stablecoins,are encouraging wider adoption."
+      ],
+      "page_text": "Circle , the company behind the world's second-largest stablecoin, USDC, plans to expand into about 50 emerging and developing markets as demand for digital dollars increases.",
+      "page_text_chars": 2148
+     },
+     {
+      "url": "https://www.marketscreener.com/news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-ce785cdadb89f226",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | MarketScreener",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "BANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\"When the Genius Act goes into law,the world will have legal digital dollars."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3088
+     },
+     {
+      "url": "https://phemex.com/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nDisclaimer:The content provided on Phemex News is for informational purposes only.We do not guarantee the quality,accuracy,or completeness of the information sourced from third-party articles.The content on this page does not constitute financial or investment advice.We strongly encourage you to conduct you own research and consult with a qualified financial advisor before making any investment decisions."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1365
+     }
+    ]
+   }
+  },
+  {
+   "tag": "latest",
+   "params": {
+    "query": "Latest news and announcements on stablecoin adoption",
+    "mode": "balanced",
+    "count": 20,
+    "highlights": true,
+    "page_text": true,
+    "start_date": "2026-09-19",
+    "end_date": "2026-10-19"
+   },
+   "at": "2026-10-19T09:28:03+04:00",
+   "seconds": 0.24,
+   "status": 200,
+   "cost_usd": 0.01,
+   "body": {
+    "cost_usd": 0.01,
+    "usage_count": 20,
+    "service": "Search API",
+    "currency": "USD",
+    "results": [
+     {
+      "url": "https://phemex.com/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nDisclaimer:The content provided on Phemex News is for informational purposes only.We do not guarantee the quality,accuracy,or completeness of the information sourced from third-party articles.The content on this page does not constitute financial or investment advice.We strongly encourage you to conduct you own research and consult with a qualified financial advisor before making any investment decisions."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1222
+     },
+     {
+      "url": "https://www.marketscreener.com/news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-ce785cdadb89f226",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | MarketScreener",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "BANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\"When the Genius Act goes into law,the world will have legal digital dollars."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3088
+     },
+     {
+      "url": "https://www.channelnewsasia.com/business/stablecoin-issuer-circle-push-40-new-markets-ceo-says-6465526",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says - CNA",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\nStablecoin issuer Circle to push into 40 new markets,CEO says\n\n \n\nJeremy Allaire,CEO and co-founder of Circle Internet Group,the issuer of one of the world's biggest stablecoins,attends an interview,on the day of his company's IPO at the New York Stock Exchange(NYSE),in New York City,U.S.,June 5,2025.REUTERS/Brendan McDermid\n\n16 Oct 2026 05:26PM\n\nBANGKOK,Oct 16:Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25 per cent of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60 per cent."
+      ],
+      "page_text": "BANGKOK, Oct 16 : Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3477
+     },
+     {
+      "url": "https://www.globenewswire.com/news-release/2026/10/15/3381484/0/en/lotus-and-wasabicard-explored-enterprise-driven-stablecoin-payment-use-cases-during-token2049-singapore.html",
+      "title": "Lotus and WasabiCard Explored Enterprise‑Driven Stablecoin",
+      "published_date": "2026-10-15",
+      "highlights": [
+       "Lotus Tech CFO participated in TOKEN2049 side‑event,discussing the conditions needed for wider stablecoin adoption in real-world payments.\nBoth parties highlighted that broad stablecoin adoption hinges on compliance,security and resolution of real‑world operational challenges.\nNEW YORK,Oct.15,2026(GLOBE NEWSWIRE)-Lotus Technology Inc.(Nasdaq:LOT)(“Lotus Tech”or the“Company”),a leading global intelligent and luxury mobility provider,today announced that Dr.Daxue Wang,Chief Financial Officer,attended Stablecoin&Payments:Funds Flow,a TOKEN2049 Singapore side event hosted by WasabiCard on October 6,2026.\nDr.Wang discussed customer-led innovation,payment security and the conditions needed for wider stablecoin adoption from the perspective of a global consumer brand,evaluating how emerging payment technologies could respond to changing customer expectations.\nLotus has expanded its product portfolio and technology choices in response to changing customer needs,a principle that could be applied to payments when customers ask for new ways to transact.\n“We are seeing meaningful interest from prospective customers for expanded payment alternatives,including the potential use‑case of stablecoins for vehicle purchases,”said Dr.Daxue Wang,Chief Financial Officer of Lotus Tech.\n“This remains an area of ongoing exploration guided by customer demand,security safeguards,regulatory considerations and practical implementation.Industry dialogue around stablecoin‑enabled payments is growing more practical,yet wider adoption will depend on how stakeholders effectively tackle security,regulatory clarity,user costs,sustainability and genuine business applications.\n“WasabiCard brought people from different industries and backgrounds into one focused discussion,and we welcome continued engagement as market participants resolve detailed operational questions in developing real‑world stablecoin applications.”\n"
+      ],
+      "page_text": "Dr. Wang discussed customer-led innovation, payment security and the conditions needed for wider stablecoin adoption from the perspective of a global consumer brand, evaluating how emerging payment technologies could respond to changing customer expectations.",
+      "page_text_chars": 5394
+     },
+     {
+      "url": "https://www.digitaltoday.co.kr/en/view/115805/stablecoin-market-grows-to-306-billion-dollars-daily-payment-adoption-still-a-challenge",
+      "title": "Stablecoin market grows to $306 billion, daily payment adoption still a challenge",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "  \nThe tokenised asset market is growing,but investor demand and liquidity are still not keeping up.Cointelegraph reported on Oct.16 that tokenisation,stablecoin payments,on-chain trading infrastructure and venture investment exits were presented as key tasks at the Connect event in Singapore.\nAn imbalance between supply and demand was cited as a key issue in the real-world asset(RWA)tokenisation market.Alex Taaffe,chief revenue officer at GSR,said access to pre-IPO shares,commodities and global equities trading is improving.He added that investor demand is not keeping pace with the rise in issuance of fully tokenised RWAs.Another point raised was that liquidity fragmentation is worsening as asset issuers and blockchains increase.Lingling Jiang,a partner at DWF Labs,pointed to the challenge of the same underlying asset being split into different liquidity pools depending on the issuer.\nIn stablecoins,connectivity for everyday payments emerged as a more important task than cross-border remittances.Mike Silagadze,founder and CEO of EtherFi,said stablecoins have made it easier to move money,but their spread depends on whether consumers can actually use them to pay living expenses and bills.He cited Singapore,saying that even if someone holds USDC,they still need local currency to pay bills.\nUser experience and regulatory response were also presented as key conditions.Yvonne Chia,head of communications at USDD,said it should feel so natural that users are not even aware they are using stablecoins.Ashna Vaghela,chief customer officer at Mercuryo,said payments should be completed without leaving the app,like Apple Pay."
+      ],
+      "page_text": "Cointelegraph reported on Oct. 16 that tokenisation, stablecoin payments, on-chain trading infrastructure and venture investment exits were presented as key tasks at the Connect event in Singapore.",
+      "page_text_chars": 3194
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-giant-circle-expands-40-133225553.html",
+      "title": "Stablecoin Giant Circle Expands Into 40 Emerging Markets Amid Global Adoption",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "He spoke on the sidelines of the IMF and World Bank meetings in Bangkok and said blockchain is moving from the early adopter phase into mainstream scaling.\nDemand is rising in Southeast Asia,Latin America,Africa and the Middle East where individuals and businesses want to join an internet-based economy.\nAllaire said stablecoin adoption is happening mostly outside the United States.\nCircle is backing the push with deals.\nIt bought Tazapay for$400 million and got a$100 million investment from Binance.\nIn July,it became one of the first stablecoin issuers to hold a federal bank charter.\nCRCL Stock Revenue,EBIT and Free Cash Flow Estimates in Billion USD(TIKR)\nCircle is the world's largest regulated stablecoin issuer and holds about 25%of the market.Rival Tether's USDT has nearly 60%.\nUSDC circulation hit$73.3 billion in Q2,up 19%from a year ago.\nThe U.S.Genius Act takes effect next January,and Allaire called it a\"watershed moment\"because the world will have legal digital dollars.\nWhat the Market Is Telling Us About Circle Stock\nCircle's Arc system has been adopted by firms like BlackRock,Visa,and Standard Chartered.\nOn the earnings AMA,Allaire said Arc's public Mainnet launches on September 16 and also said AI agents are driving use.\nThey make tiny payments,often fractions of a cent,for web research and data.\nFor Circle stock,the story is a bigger global footprint.Circle earns income from the reserves behind USDC."
+      ],
+      "page_text": "Allaire said stablecoin adoption is happening mostly outside the United States.",
+      "page_text_chars": 16109
+     },
+     {
+      "url": "https://www.mexc.com/learn/article/mexc-on-chain-daily-report-mastercard-connects-stablecoin-balances-to-hundreds-of-millions-of-merchant-locations",
+      "title": "MEXC On-Chain Daily Report: Mastercard Connects Stablecoin Balances to Hundreds of Millions of Merchant Locations",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Updated:October 16,2026,09:30(UTC+8)|Author:MEXC\nMastercard stablecoin platform connects to hundreds of millions of merchants \n-OCC plans final GENIUS Act rules by end-October \n-Ripple Prime launches RWA perpetual contracts \n-Brazil launches blockchain tokenized securities pilot \n-Stripe and Plasma develop multi-currency stablecoin card \nAccording to Odaily Planet Daily,NeoSoul said it will allocate a dedicated DNA airdrop quota to the StandX community to reward contributors who have supported the StandX ecosystem over the long term.Detailed eligibility rules and the claim portal will be announced after the DNA TGE.NeoSoul also expressed support for the StandX team and said it is willing to communicate further on additional community-support initiatives.The specific airdrop size,eligibility snapshot,and claim schedule have not yet been disclosed and will be subject to the project’s official post-TGE rules.\nAccording to Odaily Planet Daily,chip stocks have recently lost about$1 trillion in market value,while ETF capital has continued to flow into the sector.The$72 billion VanEck Semiconductor ETF attracted more than$430 million over the past three trading days and is on track for its strongest weekly inflow since early September.The Direxion Daily Semiconductor Bull 3X ETF has received about$3.8 billion despite falling nearly 21%this week.The Philadelphia Semiconductor Index has declined 12%over the past six trading days,highlighting growing volatility driven by concerns over AI spending,valuations,and interest rates.\nAccording to Odaily Planet Daily,Australia is proposing new legislation to strengthen tax reporting requirements and international information sharing for crypto asset transactions."
+      ],
+      "page_text": "- Stripe and Plasma develop multi-currency stablecoin card",
+      "page_text_chars": 19205
+     },
+     {
+      "url": "https://cryptobriefing.com/mastercard-launches-open-usd-stablecoin-on-solana-for-cross-border-payments/",
+      "title": "Mastercard launches Open USD stablecoin on Solana for cross-border payments",
+      "published_date": "2026-10-13",
+      "highlights": [
+       "Mastercard has announced the launch of the Open USD(OUSD)stablecoin on the Solana blockchain,aimed at enhancing cross-border payment efficiency by reducing multi-day delays and opaque transaction fees.This initiative involves collaboration with major partners including Visa,Coinbase,Stripe,and Shopify,indicating a significant push towards stablecoin adoption in the financial sector.The introduction of OUSD is part of Mastercard’s broader strategy to offer financial institutions and enterprises a more efficient payment and settlement infrastructure,utilizing BVNK to facilitate these transactions.The move could potentially increase the utility and adoption of Solana,given its role in hosting the stablecoin.\nKey Takeaways\nMastercard’s launch of the Open USD stablecoin on Solana suggests increased adoption of blockchain-based payment solutions.\nMarket pricing currently reflects a modest 15%probability of Solana reaching$130 in October 2026,suggesting tempered expectations for a significant price increase.\nThe deployment of OUSD is consistent with increased interest in leveraging blockchain technology for cross-border and enterprise transactions.\nWhat to Watch\nObservers should monitor further developments from Mastercard and its partners regarding the rollout and reception of OUSD in the market.Key indicators will include any regulatory actions or endorsements that could influence stablecoin adoption,particularly by major financial institutions.Additionally,Solana’s upcoming Alpenglow upgrade on October 21,promising faster transaction speeds,may impact market perceptions and activity around Solana’s blockchain utility and investment potential."
+      ],
+      "page_text": "This initiative involves collaboration with major partners including Visa, Coinbase, Stripe, and Shopify, indicating a significant push towards stablecoin adoption in the financial sector.",
+      "page_text_chars": 1693
+     },
+     {
+      "url": "https://srnnews.com/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says - SRN News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "By Selena Li BANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.“We’re kind of going through an inflection point…a transition right[…]\nScience\nStablecoin issuer Circle to push into 40 new markets,CEO says\n  \nAudio By Carbonatix\n  Enlarge\nBy Selena Li\nBANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n“We’re kind of going through an inflection point…a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,”said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%."
+      ],
+      "page_text": "By Selena Li BANGKOK, Oct 16 (Reuters) – Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3550
+     },
+     {
+      "url": "https://www.investing.com/news/stock-market-news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-4953459",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says By Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Warsh avoids rate guidance;Tesla’s Roadster turns in air-what’s moving markets\nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n\"We’re kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3708
+     },
+     {
+      "url": "https://www.reuters.com/5f374b32b07b/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n\nBy Selena Li\n\nOctober 16,2026 2:25 AM PDT Updated 5 mins ago\n\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle(CRCL.N),opens new tab is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\n\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.\n\n ... \n\nCircle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\n ... \n\n\n\nCircle's U.S.dollar-backed stablecoin USDC saw a 19%year-over-year rise in circulation to \\$73.3 billion in the second quarter this year.\n\n ... \n\nS.and European markets are moving rapidly to develop and deploy their own stablecoins and digital asset solutions,which Allaire said was a sign of a healthy and competitive market.\n\n\"There's a very,very long time where the banking industry fought successfully to keep other people out,and I think they are no longer in charge,and the innovators are having their day,\"he said.\n\nMajor financial institutions and payment firms are moving past pilot programs to embed stablecoins for cross-border settlements and asset transfers.\n\n ... \n\nN),opens new tab and Standard Chartered(STAN.\n\n ... \n\n\n\nThe executive also warned that the rapid expansion of AI brings heightened security vulnerabilities,noting that financial infrastructure providers face escalating threats from sophisticated actors and automated agent swarms."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle(CRCL.N), opens new tab is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3305
+     },
+     {
+      "url": "https://reuters.com/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n\nBy Selena Li\n\nOctober 16,2026 2:25 AM PDT Updated 11 hours ago\n\n \n\nJeremy Allaire,CEO and co-founder of Circle Internet Group,the issuer of one of the world's biggest stablecoins,attends an interview,on the day of his company's IPO at the New York Stock Exchange(NYSE),in New York City,U.S.,June 5,2025.REUTERS/Brendan McDermid\n\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle(CRCL.N)is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle(CRCL.N) is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3522
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-issuer-circle-push-40-092605107.html",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n \nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 2580
+     },
+     {
+      "url": "https://phemex.com/tr/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nSorumluluk Reddi:Phemex Haberler'de sunulan içerik yalnızca bilgilendirme amaçlıdır.Üçüncü taraf makalelerden alınan bilgilerin kalitesi,doğruluğu veya eksiksizliğini garanti etmiyoruz.Bu sayfadaki içerik finansal veya yatırım tavsiyesi niteliği taşımaz.Yatırım kararları vermeden önce kendi araştırmanızı yapmanızı ve nitelikli bir finans danışmanına başvurmanızı şiddetle tavsiye ederiz."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1202
+     },
+     {
+      "url": "https://phemex.com/vi/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nTuyên bố miễn trừ trách nhiệm:Nội dung được cung cấp trên Phemex News chỉ nhằm mục đích cung cấp thông tin.Chúng tôi không đảm bảo chất lượng,độ chính xác hoặc tính đầy đủ của thông tin có nguồn từ các bài viết của bên thứ ba.Nội dung trên trang này không cấu thành lời khuyên về tài chính hoặc đầu tư.Chúng tôi đặc biệt khuyến khích bạn tự tiến hành nghiên cứu và tham khảo ý kiến của cố vấn tài chính đủ tiêu chuẩn trước khi đưa ra bất kỳ quyết định đầu tư nào."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1273
+     }
+    ]
+   }
+  },
+  {
+   "tag": "numbers",
+   "params": {
+    "query": "stablecoin adoption data, statistics and market size",
+    "mode": "balanced",
+    "count": 20,
+    "highlights": true,
+    "page_text": true,
+    "start_date": "2026-09-19",
+    "end_date": "2026-10-19"
+   },
+   "at": "2026-10-19T09:28:03+04:00",
+   "seconds": 0.37,
+   "status": 200,
+   "cost_usd": 0.01,
+   "body": {
+    "cost_usd": 0.01,
+    "usage_count": 20,
+    "service": "Search API",
+    "currency": "USD",
+    "results": [
+     {
+      "url": "https://kalkinemedia.com/news/cryptocurrency/standard-chartered-moves-2-trillion-stablecoin-call-to-2030",
+      "title": "Standard Chartered Moves $2 Trillion Stablecoin Call to 2030",
+      "published_date": "2026-10-15",
+      "highlights": [
+       "Highlights\nStandard Chartered now expects the stablecoin market to reach$2 trillion by 2030,two years later than its earlier timeline of 2028.\nTotal stablecoin supply has moved within a$300 billion to$320 billion band for a year and now sits near$309 billion.\nUsage keeps rising,with monthly transfer value averaging just under$10 trillion in 2026,up from$4 trillion in 2025.\nStandard Chartered has not given up on its$2 trillion call for stablecoins.It has simply moved the finishing line.In a report released on 14 October 2026,the bank said it now expects the market to reach that size by 2030 rather than 2028,after supply growth across the Crypto sector stalled this year.\nGeoffrey Kendrick,the bank's global head of digital assets research,sees the pause as part of a cycle,not a permanent shift.In his view,it reflects a quiet period for crypto markets rather than a lasting change in demand.\nThe more interesting part of the report may be what is happening beneath the headline number.Supply has flattened,yet stablecoins are moving between wallets far more often than they did a year ago.\nWhy Has the Timeline Slipped by Two Years?The simple answer is that the supply of stablecoins has stopped climbing.Over the past 12 months it has barely left a band of$300 billion to$320 billion,and Kendrick put the current figure at roughly$309 billion.\nHe pointed out that this has happened before.In earlier spells when supply went sideways or shrank,it picked up again as soon as crypto prices found their footing,which is why the bank has kept its$2 trillion estimate intact and only pushed back the date."
+      ],
+      "page_text": "In a report released on 14 October 2026, the bank said it now expects the market to reach that size by 2030 rather than 2028, after supply growth across the Crypto sector stalled this year.",
+      "page_text_chars": 5116
+     },
+     {
+      "url": "https://phemex.com/ru/news/article/stablecoin-payment-volume-surges-45-to-482b-as-supply-growth-stalls-100147",
+      "title": "Stablecoin Payments Hit $482B in 2026 as AI & Card Usage Soa | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin payment volume reached$482 billion in the first nine months of 2026,marking a 45%increase despite total supply growing only 0.4%to$305 billion.Transaction count jumped 71%to 1.04 billion during the period,while average transaction size declined from$544 to$462.September set a new monthly record with$72 billion in volume,contributing to a 51%year-over-year gain in Q3.\nMarket dynamics shifted as major issuers Tether,Circle,and Ethena saw supply contractions this year,while smaller issuers added a combined net $6.9 billion.Emerging use cases accelerated significantly in Q3,with AI agent payment transactions doubling to 68.3 million and stablecoin card spending expanding tenfold to$3.9 billion.\nStablecoin Payment Volume Surges 45%to$482B as Supply Growth Stalls\n  CIRCLE-2.10%\n  ENA-5.57%\nОтказ от ответственности:Контент,представленный на сайте Phemex News,предназначен исключительно для информационных целей.Мы не гарантируем качество,точность и полноту информации,полученной из статей третьих лиц.Содержание этой страницы не является финансовым или инвестиционным советом.Мы настоятельно рекомендуем вам провести собственное исследование и проконсультироваться с квалифицированным финансовым консультантом,прежде чем принимать какие-либо инвестиционные решения."
+      ],
+      "page_text": "Stablecoin payment volume reached $482 billion in the first nine months of 2026, marking a 45% increase despite total supply growing only 0.4% to $305 billion.",
+      "page_text_chars": 1311
+     },
+     {
+      "url": "https://ambcrypto.com/stablecoin-supply-has-stalled-in-2026-but-payments-rose-by-45-to-480b-report/",
+      "title": "Stablecoin supply has stalled in 2026, but payments rose by 45% to $480B: Report - AMBCrypto",
+      "published_date": "2026-10-17",
+      "highlights": [
+       "According to the report,stablecoin payment volumes received by businesses increased by 37%from$179B to$246B.\nFrom a payment categories perspective,businesses dominated 64%of the volumes.\nConsumer-to-business transaction count nearly doubled as average payment size fell,while B2B value grew faster than count.Transfers between consumers gained share,but payments involving businesses still accounted for 64%of dollars moved.\nWhen zoomed down to a quarterly basis,Q3 saw a record$72B in stablecoin payment volumes,with card-based spending exploding by 10x.\nIn fact,AMBCrypto had previously reported how stablecoin card spending was becoming a key adoption driver.\nThe Allium report also acknowledged how crucial cards are in stablecoin adoption,especially for micro payments(spending of small amounts).\nPurchases under$50 accounted for 84%of the increase in visible card purchases,giving holders a way to spend small amounts without merchants adopting stablecoins.\nStablecoin supply remains flat above$300B\nDespite the incredible growth in the payment verticals,however,the overall stablecoin supply closed September at around$304B.At the time of writing,the market cap stood at$302.9B,translating to less than 1%growth in 2026.\nThe market is expected to hit$2T by 2028 and experts believe that stablecoin yield may be the missing catalyst to accelerate adoption.In fact,Ava Labs’Olivia Vande Woude echoed a similar position,stating,\n305B in stablecoins,and most of it earns nothing.The fix:fintechs plug into ready-made vaults that connect USDC,USDT,and EURC to diversified RWAs,with daily liquidity and on-chain transparency."
+      ],
+      "page_text": "The market is expected to hit $2T by 2028 and experts believe that stablecoin yield may be the missing catalyst to accelerate adoption.",
+      "page_text_chars": 2831
+     },
+     {
+      "url": "https://www.digitaltoday.co.kr/en/view/115805/stablecoin-market-grows-to-306-billion-dollars-daily-payment-adoption-still-a-challenge",
+      "title": "Stablecoin market grows to $306 billion, daily payment adoption still a challenge",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "User experience and regulatory response were also presented as key conditions.Yvonne Chia,head of communications at USDD,said it should feel so natural that users are not even aware they are using stablecoins.Ashna Vaghela,chief customer officer at Mercuryo,said payments should be completed without leaving the app,like Apple Pay.Ilya Podoinitsyn,co-founder and CEO of Finhaven,explained that infrastructure and compliance systems need to be adjusted to meet different rules in each country.Stablecoin market capitalisation stood at$306 billion,up about 2 percent from a year earlier and about 74 percent over the most recent 12 months.\nIn on-chain trading infrastructure,tracking liquidity by blockchain and managing counterparty risk were cited as challenges.Austin Federa,co-founder of DoubleZero,said shifting liquidity between blockchains is more difficult than in traditional financial markets,and liquidity fragmentation is not only an execution issue but also a data problem.Miguel Morel,founder and CEO of Arkham Intelligence,explained that on-chain data can be used to identify counterparty risk and the sources of deposit inflows,helping with price quotes and compliance decisions.\nDifficulties in the venture investment exit market also continued.Pulkit Gupta of Nomad Capital said liquidity in the cryptocurrency market has been particularly weak over the past three months,and even that was concentrated in major cryptocurrencies.Sonia Shaw,CEO of OneAsset,said as the market matures it has shifted to a stage where startups need to prove stronger business foundations.Aleksandr Nechayev,a partner at Funders VC,pointed to the expertise of founding teams and their ability to respond as key to investment decisions amid rapid market change."
+      ],
+      "page_text": "Stablecoin market capitalisation stood at $306 billion, up about 2 percent from a year earlier and about 74 percent over the most recent 12 months.",
+      "page_text_chars": 3194
+     },
+     {
+      "url": "https://phemex.com/tr/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nSorumluluk Reddi:Phemex Haberler'de sunulan içerik yalnızca bilgilendirme amaçlıdır.Üçüncü taraf makalelerden alınan bilgilerin kalitesi,doğruluğu veya eksiksizliğini garanti etmiyoruz.Bu sayfadaki içerik finansal veya yatırım tavsiyesi niteliği taşımaz.Yatırım kararları vermeden önce kendi araştırmanızı yapmanızı ve nitelikli bir finans danışmanına başvurmanızı şiddetle tavsiye ederiz."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1345
+     },
+     {
+      "url": "https://coincentral.com/stablecoin-statistics-2026-market-size-usage-and-payments/",
+      "title": "Stablecoin Statistics 2026: Market Size, Usage and Payments - CoinCentral",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "CoinDesk Data,Global Digital Asset Adoption Index and tokenized asset data\nrwa.xyz,tokenized real-world asset data\nTether,transparency and attestation reports(BDO)\nCircle,USDC transparency and reserve reports\nGemini,GUSD attestation reports\nWorld Bank,Remittance Prices Worldwide\nEY-Parthenon,2025 stablecoin adoption survey\nEuropean Central Bank(ECB),euro stablecoin research\nVisa,stablecoin settlement updates\nStatista,Stablecoin statistics and facts\nHinkal,15 Cross-Border Stablecoin Statistics 2026(April 2026)\nFXC Intelligence,cross-border payments market data\nDeutsche Bank Research,digital money research\nCoinGecko,Bitcoin market capitalisation\nCiti,stablecoin market forecast"
+      ],
+      "page_text": "In South Asia, stablecoin-driven crypto volumes rose 80% to $300 billion between January and July 2025, according to a report from Hinkal citing industry data.",
+      "page_text_chars": 17771
+     },
+     {
+      "url": "https://www.inxy.io/news/stablecoin-market-report-september-2026",
+      "title": "Stablecoin Market Report September 2026 | INXY",
+      "published_date": "2026-10-06",
+      "highlights": [
+       "\nRegulation is becoming part of the market structure\nThis may be one of the most important changes in the report.At the end of September,the report classified about a quarter of the market under each major framework.Both cohorts grew during the month.\nThe report is careful to note that these are market-data classifications,not legal determinations.That distinction matters.\nStill,the direction is clear.Regulation is no longer something that sits outside the stablecoin market.It is becoming part of how the market itself is measured and compared.\nSeptember also brought more regulatory activity across the US,Europe,Singapore and other markets,with reserve,capital,deposit,and recognition rules all under discussion.\nThis is a necessary stage of market maturity.The next phase of stablecoin adoption will depend less on whether the technology works and more on whether businesses,banks,and institutions know how to use it inside clear rules.\nStablecoins are still overwhelmingly dollars\nAt the end of September,99.64%of Base Supply was USD-pegged.That leaves almost no meaningful alternative-currency segment.\nThis is one of the clearest signals in the report.\nStablecoin adoption is global.Stablecoin currency exposure is not.The market is still essentially a digital dollar market.\nThis creates both an opportunity and a limitation.For global businesses,dollar stablecoins are extremely useful for cross-border settlement.\nBut the small size of non-USD stablecoins also shows how much room remains for euro and other local-currency digital money to develop."
+      ],
+      "page_text": "The report is careful to note that these are market-data classifications, not legal determinations.",
+      "page_text_chars": 7348
+     },
+     {
+      "url": "https://lookonchain.com/feeds/76903",
+      "title": "Standard Chartered pushes back its $2 trillion stablecoin market forecast to 2030. - Lookonchain - Looking for smartmoney onchain",
+      "published_date": "2026-10-14",
+      "highlights": [
+       "Standard Chartered pushes back its$2 trillion stablecoin market forecast to 2030.\n28 minutes ago\nStandard Chartered Global Head of Digital Assets Research Geoffrey Kendrick said in a Wednesday report that he still forecasts the stablecoin market capitalization will hit$2 trillion,but the timeline for reaching that target has been pushed back from 2028 to 2030 due to stalled supply growth this year.Over the past 12 months,stablecoin supply has hovered roughly between$300 billion and$320 billion,and currently stands at around$309 billion.Kendrick attributes the slowdown to cyclical rather than structural factors,linked to the weak crypto market,noting that similar historical phases are typically followed by expansion as market conditions recover.The report also highlights that stablecoin usage continues to grow:this year’s average monthly on-chain transaction volume is nearly$10 trillion,up from$4 trillion in 2025,with a record of around$19 trillion logged in May alone.Average monthly turnover has risen from roughly 15 times in 2025 to around 30 times currently.USDT has an average monthly turnover of about 7 times,and is mostly used for U.S.dollar savings in emerging markets.USDC’s average monthly turnover has climbed from around 45 times to roughly 80 times,with the stablecoin increasingly utilized for payments,financial transactions,and payments between early-stage AI agents.\nOpenAI accuses a former employee of leaking confidential data before joining Apple,as the intellectual property rights dispute escalates once more.\n17 minutes ago\nOndo’s tokenized assets hit$4 billion in TVL."
+      ],
+      "page_text": "Standard Chartered pushes back its $2 trillion stablecoin market forecast to 2030.",
+      "page_text_chars": 3250
+     },
+     {
+      "url": "https://phemex.com/vi/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nTuyên bố miễn trừ trách nhiệm:Nội dung được cung cấp trên Phemex News chỉ nhằm mục đích cung cấp thông tin.Chúng tôi không đảm bảo chất lượng,độ chính xác hoặc tính đầy đủ của thông tin có nguồn từ các bài viết của bên thứ ba.Nội dung trên trang này không cấu thành lời khuyên về tài chính hoặc đầu tư.Chúng tôi đặc biệt khuyến khích bạn tự tiến hành nghiên cứu và tham khảo ý kiến của cố vấn tài chính đủ tiêu chuẩn trước khi đưa ra bất kỳ quyết định đầu tư nào."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1416
+     },
+     {
+      "url": "https://www.kucoin.com/news/flash/stablecoin-payment-volume-hits-482b-in-2026-up-45-yoy",
+      "title": "Stablecoin payment volume reaches $482B in 2026, up 45% YoY | KuCoin",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "According to CoinDesk,data from blockchain analytics firm Allium shows that stablecoin payment volume reached$482 billion in the first nine months of 2026,a 45%year-over-year increase,with the number of transactions rising 71%to over 1 billion;during the same period,the total circulating market cap of stablecoins was approximately$305 billion,growing just 0.4%year over year.Stablecoin-linked card spending reached$3.9 billion,a tenfold increase year over year,with payments under$50 accounting for 84%of new card transactions.\nStablecoin payment volume reaches$482B in 2026,up 45%YoY\n  TechFlow\nShare\n \n1.000%\n \nStablecoin trading volume reached$482 billion in the first nine months of 2026,a 45%year-over-year increase,according to Allium.Transaction volume surpassed 1 billion,rising 71%.The total stablecoin market value remained near$305 billion,with just 0.4%growth.Stablecoin-linked card spending reached$3.9 billion,a tenfold increase,with 84%of new card transactions under$50.\nSource:Show original\nDisclaimer:The information on this page may have been obtained from third parties and does not necessarily reflect the views or opinions of KuCoin.This content is provided for general informational purposes only,without any representation or warranty of any kind,nor shall it be construed as financial or investment advice.KuCoin shall not be liable for any errors or omissions,or for any outcomes resulting from the use of this information.\nInvestments in digital assets can be risky.Please carefully evaluate the risks of a product and your risk tolerance based on your own financial circumstances."
+      ],
+      "page_text": "According to CoinDesk, data from blockchain analytics firm Allium shows that stablecoin payment volume reached $482 billion in the first nine months of 2026, a 45% year-over-year increase, with the number of transactions rising 71% to over 1 billion; during the same period, the total circulating market cap of stablecoins was approximately $305 billion, growing just 0.4% year over year.",
+      "page_text_chars": 1734
+     },
+     {
+      "url": "https://investinglive.com/education/stablecoins-have-stopped-growing-so-why-is-usage-still-rising/",
+      "title": "Stablecoins have stopped growing. So why is usage still rising?",
+      "published_date": "2026-10-14",
+      "highlights": [
+       "Crypto trading:USDC and Ethena’s USDe hold strong positions.\nPayments between AI agents:a much smaller market,also led by USDC.\nThis matters because“the stablecoin market”is often treated as one race between USDT and USDC.On the bank’s framing,the two largest tokens are mostly doing different jobs for different users.\nWhy reserve yield could decide the winners\nIssuers typically hold their reserves in cash and short-term government debt,which earns interest.Kendrick argues that how issuers and payment networks share that income could determine who gains market share.\nHe expects the fiercest competition in developed-market payments,where challengers such as USDG,M^0 and stablecoin networks run by groups of banks are building alternatives to existing payment rails.A network that passes more of the yield on to the businesses using it has a clear selling point.\nThe regulatory calendar\nThe US rulebook is still being written.Since the GENIUS Act passed in 2025,regulators have proposed rules covering issuance,reserves and consumer protection.\nThree proposals stand out:\nTreasury licensing:an August proposal would restrict US stablecoin issuance to federally or state-authorised issuers,with licensing expected to take effect in January 2027.\nDeposit insurance:a Federal Deposit Insurance Corporation(FDIC)proposal would exclude stablecoin holders from pass-through deposit insurance,meaning their holdings would not be treated like insured bank deposits.\nAccounting:the Financial Accounting Standards Board(FASB),which sets US accounting standards,proposed an update in August that could change how companies report some stablecoins on their balance sheets."
+      ],
+      "page_text": "This matters because “the stablecoin market” is often treated as one race between USDT and USDC.",
+      "page_text_chars": 5938
+     },
+     {
+      "url": "https://ambcrypto.com/what-stablecoin-card-adoption-numbers-actually-measure/",
+      "title": "What stablecoin card adoption numbers actually measure - AMBCrypto",
+      "published_date": "2026-10-06",
+      "highlights": [
+       "What stablecoin card adoption numbers actually measure\n  \nA stablecoin card can work at millions of shops without those shops ever receiving stablecoins.It can also reach that scale before many customers have used it.The acceptance network already exists;the new card connects to it.Actual use leaves different evidence:completed purchases,repeat customers,and spending over a stated period.A launch announcement may establish where a card could work while leaving unanswered how often people use it and what currency merchants receive.\nIn its April 30,2025 announcement,Visa said cards issued through its arrangement with Bridge could be used at more than 150 million merchant locations accepting Visa.That figure described the existing network’s reach at the time.The release announced a way to spend stablecoin balances through that network,rather than retailers introducing cryptocurrency checkouts.It gave no completed-purchase total for the new card product and no count of regular users.The merchant number could therefore remain unchanged,even as use of those cards grew.\nAt the checkout\nA grocery purchase can begin with a stablecoin balance while the supermarket processes an ordinary card sale.The customer selects the card,and the store charges for the groceries.The stablecoins can be converted into ordinary currency,so the merchant receives local currency,according to AlphaWire.The store can complete the sale without asking the customer to send tokens to a wallet.In this arrangement,stablecoins fund the purchase on the customer’s side;the retailer does not need to retain them."
+      ],
+      "page_text": "What stablecoin card adoption numbers actually measure",
+      "page_text_chars": 5921
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-giant-circle-expands-40-133225553.html",
+      "title": "Stablecoin Giant Circle Expands Into 40 Emerging Markets Amid Global Adoption",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "He spoke on the sidelines of the IMF and World Bank meetings in Bangkok and said blockchain is moving from the early adopter phase into mainstream scaling.\nDemand is rising in Southeast Asia,Latin America,Africa and the Middle East where individuals and businesses want to join an internet-based economy.\nAllaire said stablecoin adoption is happening mostly outside the United States.\nCircle is backing the push with deals.\nIt bought Tazapay for$400 million and got a$100 million investment from Binance.\nIn July,it became one of the first stablecoin issuers to hold a federal bank charter.\nCRCL Stock Revenue,EBIT and Free Cash Flow Estimates in Billion USD(TIKR)\nCircle is the world's largest regulated stablecoin issuer and holds about 25%of the market.Rival Tether's USDT has nearly 60%.\nUSDC circulation hit$73.3 billion in Q2,up 19%from a year ago.\nThe U.S.Genius Act takes effect next January,and Allaire called it a\"watershed moment\"because the world will have legal digital dollars.\nWhat the Market Is Telling Us About Circle Stock\nCircle's Arc system has been adopted by firms like BlackRock,Visa,and Standard Chartered.\nOn the earnings AMA,Allaire said Arc's public Mainnet launches on September 16 and also said AI agents are driving use.\nThey make tiny payments,often fractions of a cent,for web research and data.\nFor Circle stock,the story is a bigger global footprint.Circle earns income from the reserves behind USDC."
+      ],
+      "page_text": "Allaire said stablecoin adoption is happening mostly outside the United States.",
+      "page_text_chars": 16109
+     },
+     {
+      "url": "https://phemex.com/es/news/article/visa-and-coinshares-surveys-reveal-rising-stablecoin-interest-in-apac-and-high-crypto-adoption-among-wealthy-investors-98838",
+      "title": "Visa & CoinShares: Rising Stablecoin Use in APAC, Wealthy Cr | Phemex News",
+      "published_date": "2026-10-05",
+      "highlights": [
+       "New surveys from Visa and CoinShares highlight growing cryptocurrency engagement across consumer and institutional segments.Visa's research indicates that 46%of Asia-Pacific consumers may use stablecoins within five years,with 16%having used them in the past year.While 66%of respondents are aware of stablecoins,only 6%fully understand their mechanics,and 38%of non-users cite fraud concerns as a barrier to adoption.\nCoinShares data shows significant digital asset penetration among wealthy investors across seven markets,with ownership ranging from 54%in Sweden to 70%in the U.S.,U.K.,and Germany.Portfolio allocations typically center around 10%,with 80%of investors holding Bitcoin.At least 85%of existing investors plan to increase exposure in 2026,while only 6%identify primarily as short-term traders.\nVisa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors\nAviso legal:El contenido de Phemex News es únicamente informativo.No garantizamos la calidad,precisión ni integridad de la información procedente de artículos de terceros.El contenido de esta página no constituye asesoramiento financiero ni de inversión.Le recomendamos encarecidamente que realice su propia investigación y consulte con un asesor financiero cualificado antes de tomar cualquier decisión de inversión."
+      ],
+      "page_text": "Visa and CoinShares Surveys Reveal Rising Stablecoin Interest in APAC and High Crypto Adoption Among Wealthy Investors",
+      "page_text_chars": 1370
+     },
+     {
+      "url": "https://www.marketscreener.com/news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-ce785cdadb89f226",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | MarketScreener",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "BANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\"When the Genius Act goes into law,the world will have legal digital dollars."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3088
+     }
+    ]
+   }
+  },
+  {
+   "tag": "players",
+   "params": {
+    "query": "Companies and projects leading stablecoin adoption",
+    "mode": "balanced",
+    "count": 20,
+    "highlights": true,
+    "page_text": true,
+    "start_date": "2026-09-19",
+    "end_date": "2026-10-19"
+   },
+   "at": "2026-10-19T09:28:03+04:00",
+   "seconds": 0.29,
+   "status": 200,
+   "cost_usd": 0.01,
+   "body": {
+    "cost_usd": 0.01,
+    "usage_count": 20,
+    "service": "Search API",
+    "currency": "USD",
+    "results": [
+     {
+      "url": "https://www.paymentsdive.com/news/stablecoin-startups-advance-payments/832871/",
+      "title": "Stablecoin startups advance payments | Payments Dive",
+      "published_date": "2026-10-13",
+      "highlights": [
+       "Witt and his business partner,Amit Chu,created a venture fund two years ago to invest in stablecoin startups and it has since drawn$40 million,he said,allowing the fund to purchase minority stakes in about two dozen companies globally.\nIt’s a real change from when Witt first started to raise money for the fund in 2024 and people thought he was“completely crazy,”he said.\nThe Verda portfolio includes the fintech Yellow Card focused on payments in Africa as well as the blockchain infrastructure services company Capa,which operates in Latin America.\nTwo other companies the fund invested in have already been sold,specifically Kulipa and Beam.In addition,digital processor Stripe is circling another possible purchase,Witt said,declining to name it.\nRain evolves into stablecoin services\nRain’s holding company,Signify,began as a different business and then morphed into the one branded as Rain today.It has collected about$338 million in equity investments along the way,according to a spokesperson for the company.\nAmong the private company’s investors are San Francisco investment firm Iconiq Capital,Sapphire Ventures and Coinbase’s former chief technology officer,Balaji Srinivasan,with a quarter of a billion dollars raised in the most recent round disclosed in January.\nRain provides stablecoin infrastructure services that enable corporate customers to bridge stablecoin payments so that money can move from the digital assets to traditional payment rails.Corporate clients embed the technology in their services for consumer use,letting consumers tap stablecoins in a way that’s less invisible to users."
+      ],
+      "page_text": "Witt and his business partner, Amit Chu, created a venture fund two years ago to invest in stablecoin startups and it has since drawn $40 million, he said, allowing the fund to purchase minority stakes in about two dozen companies globally.",
+      "page_text_chars": 6622
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-giant-circle-expands-40-133225553.html",
+      "title": "Stablecoin Giant Circle Expands Into 40 Emerging Markets Amid Global Adoption",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "He spoke on the sidelines of the IMF and World Bank meetings in Bangkok and said blockchain is moving from the early adopter phase into mainstream scaling.\nDemand is rising in Southeast Asia,Latin America,Africa and the Middle East where individuals and businesses want to join an internet-based economy.\nAllaire said stablecoin adoption is happening mostly outside the United States.\nCircle is backing the push with deals.\nIt bought Tazapay for$400 million and got a$100 million investment from Binance.\nIn July,it became one of the first stablecoin issuers to hold a federal bank charter.\nCRCL Stock Revenue,EBIT and Free Cash Flow Estimates in Billion USD(TIKR)\nCircle is the world's largest regulated stablecoin issuer and holds about 25%of the market.Rival Tether's USDT has nearly 60%.\nUSDC circulation hit$73.3 billion in Q2,up 19%from a year ago.\nThe U.S.Genius Act takes effect next January,and Allaire called it a\"watershed moment\"because the world will have legal digital dollars.\nWhat the Market Is Telling Us About Circle Stock\nCircle's Arc system has been adopted by firms like BlackRock,Visa,and Standard Chartered.\nOn the earnings AMA,Allaire said Arc's public Mainnet launches on September 16 and also said AI agents are driving use.\nThey make tiny payments,often fractions of a cent,for web research and data.\nFor Circle stock,the story is a bigger global footprint.Circle earns income from the reserves behind USDC."
+      ],
+      "page_text": "Allaire said stablecoin adoption is happening mostly outside the United States.",
+      "page_text_chars": 16109
+     },
+     {
+      "url": "https://phemex.com/pt/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nAviso Legal:O conteúdo disponibilizado no Phemex News é apenas para fins informativos.Não garantimos a qualidade,precisão ou integridade das informações provenientes de artigos de terceiros.Este conteúdo não constitui aconselhamento financeiro ou de investimento.Recomendamos fortemente que você realize suas próprias pesquisas e consulte um consultor financeiro qualificado antes de tomar decisões de investimento."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1228
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-startups-advance-payments-155700012.html",
+      "title": "Update: Mastercard CEO Says Cross-Border Payments Is Currently Stablecoin's Best Use Case",
+      "published_date": "2026-10-13",
+      "highlights": [
+       "The 3.75%yield on Coinbase Virtual Accounts deserves a caveat.It is a platform incentive – Coinbase paying users to hold stablecoins in its accounts – not a return generated by the underlying asset.The balances are not FDIC-insured,and the rate is presumably subject to change as Coinbase adjusts its acquisition costs.It is a subsidy,not a savings account.But subsidies reveal strategy:Coinbase is willing to pay for the liquidity that stablecoin-denominated accounts generate,and Citi is providing the regulated banking infrastructure to make those accounts function like traditional bank accounts.\nThe structural picture is now legible.Reserve layer,settlement rails,ERP integration,merchant acceptance – each was built by a different pair of institutions,but they are converging into a single stack.Citi's move to wire stablecoin acceptance into its$6 trillion payment network is not the beginning of the story.It is the layer that makes the rest of the stack matter to the 150 million people who already hold stablecoins and the merchants who have been waiting for a compliant way to accept them.\nInstitutional stablecoin adoption has long been a scavenger hunt for viable infrastructure,a series of bypasses built around the legacy banking system.We have seen the plumbing emerge in fits and starts:SoFiUSD on Mastercard,Visa's$20 billion annualized stablecoin settlement,Stripe's$1.2 billion in September card volume,and the atomic precision of Solana DvP.These are impressive,yet peripheral.The landscape shifted on October 6,2026,at SAP Connect in Las Vegas,when the company unveiled SAP Pay."
+      ],
+      "page_text": "Institutional stablecoin adoption has long been a scavenger hunt for viable infrastructure, a series of bypasses built around the legacy banking system.",
+      "page_text_chars": 23861
+     },
+     {
+      "url": "https://phemex.com/vi/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nTuyên bố miễn trừ trách nhiệm:Nội dung được cung cấp trên Phemex News chỉ nhằm mục đích cung cấp thông tin.Chúng tôi không đảm bảo chất lượng,độ chính xác hoặc tính đầy đủ của thông tin có nguồn từ các bài viết của bên thứ ba.Nội dung trên trang này không cấu thành lời khuyên về tài chính hoặc đầu tư.Chúng tôi đặc biệt khuyến khích bạn tự tiến hành nghiên cứu và tham khảo ý kiến của cố vấn tài chính đủ tiêu chuẩn trước khi đưa ra bất kỳ quyết định đầu tư nào."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1273
+     },
+     {
+      "url": "https://www.reuters.com/5f374b32b07b/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\n\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\n\"When the Genius Act goes into law,the world will have legal digital dollars.That is a watershed moment,\"Allaire said.\n\nCircle's U.S.dollar-backed stablecoin USDC saw a 19%year-over-year rise in circulation to \\$73.3 billion in the second quarter this year.\n\nBanking coalitions in the U.S.and European markets are moving rapidly to develop and deploy their own stablecoins and digital asset solutions,which Allaire said was a sign of a healthy and competitive market.\n\n\"There's a very,very long time where the banking industry fought successfully to keep other people out,and I think they are no longer in charge,and the innovators are having their day,\"he said."
+      ],
+      "page_text": "Circle, the world’s largest regulated stablecoin issuer, is accelerating its global expansion, backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.",
+      "page_text_chars": 3305
+     },
+     {
+      "url": "https://finance.yahoo.com/markets/crypto/articles/stablecoin-issuer-circle-push-40-092605107.html",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n \nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 2580
+     },
+     {
+      "url": "https://reuters.com/technology/stablecoin-issuer-circle-push-into-40-new-markets-ceo-says-2026-10-16/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Stablecoin issuer Circle to push into 40 new markets,CEO says\n\nBy Selena Li\n\nOctober 16,2026 2:25 AM PDT Updated 11 hours ago\n\n \n\nJeremy Allaire,CEO and co-founder of Circle Internet Group,the issuer of one of the world's biggest stablecoins,attends an interview,on the day of his company's IPO at the New York Stock Exchange(NYSE),in New York City,U.S.,June 5,2025.REUTERS/Brendan McDermid\n\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle(CRCL.N)is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\n\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\n\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a \\$400 million acquisition of Tazapay and a \\$100 million strategic investment from Binance.\n\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle(CRCL.N) is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3522
+     },
+     {
+      "url": "https://cryptobriefing.com/stripe-mastercard-circle-stablecoin-acquisitions/",
+      "title": "Stripe, Mastercard and Circle agree to pay up to $3.3 billion for stablecoin operators",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "  \nstripe logo.jpg\nStripe,Mastercard and Circle agree to pay up to$3.3 billion for stablecoin operators\nThree acquisitions of Bridge,BVNK and Tazapay show payment giants would rather buy stablecoin infrastructure than build it\nStablecoin startups now have something founders crave even more than funding:a clear way out.Stripe,Mastercard and Circle have together agreed to buy three stablecoin payments operators in deals worth approximately$3.3 billion.\nThe buyers are Bridge,BVNK and Tazapay.Collectively,the deals suggest that the plumbing behind digital dollars has become a strategic asset that large payment companies are willing to pay for.\nThe three deals,one by one\nStripe and Bridge.Stripe’s acquisition of Bridge closed in February 2025 for$1.1 billion.Bridge handles stablecoin orchestration,which strengthens Stripe’s cross-border payment capabilities.\nStripe has also announced plans to expand stablecoin-backed cards to more than 100 countries by the end of 2026.\nMastercard and BVNK.Mastercard agreed to pay up to$1.8 billion for BVNK.The deal closed on August 3,2026,and it is Mastercard’s largest digital-asset acquisition.\nBVNK helps businesses move between fiat currency and stablecoins in more than 130 countries.The purchase centers on on-chain settlement and interoperability.\nThe“up to”wording matters.It means the full$1.8 billion is a ceiling.Part of the price likely depends on conditions being met,so the approximately$3.3 billion combined total should be read as a maximum rather than cash already spent."
+      ],
+      "page_text": "Stablecoin startups now have something founders crave even more than funding: a clear way out.",
+      "page_text_chars": 3671
+     },
+     {
+      "url": "https://srnnews.com/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says/",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says - SRN News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "By Selena Li BANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.“We’re kind of going through an inflection point…a transition right[…]\nScience\nStablecoin issuer Circle to push into 40 new markets,CEO says\n  \nAudio By Carbonatix\n  Enlarge\nBy Selena Li\nBANGKOK,Oct 16(Reuters)– Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n“We’re kind of going through an inflection point…a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,”said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%."
+      ],
+      "page_text": "By Selena Li BANGKOK, Oct 16 (Reuters) – Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3550
+     },
+     {
+      "url": "https://www.marketscreener.com/news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-ce785cdadb89f226",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says | MarketScreener",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "BANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company's CEO and chairman Jeremy Allaire told Reuters.\n\"We're kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world's largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter.\n\"When the Genius Act goes into law,the world will have legal digital dollars."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company's CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3088
+     },
+     {
+      "url": "https://www.kucoin.com/news/flash/mastercard-visa-stripe-expand-stablecoin-payment-services-as-usage-grows",
+      "title": "Mastercard, Visa, Stripe Expand Stablecoin Payment Services as Usage Grows | KuCoin",
+      "published_date": "2026-10-18",
+      "highlights": [
+       "Allium recorded$97.9 trillion in raw stablecoin transfers through September.Allium classified just$2.4 trillion,or 2.5%,as end-user activity after filtering out exchange,decentralized finance and automated transactions.Allium said the$482 billion payments estimate comes from that smaller pool.Allium estimated that second-quarter spending through stablecoin-linked cards amounted to just 0.03%of Visa's$4 trillion in payment volume.\nNuvei CEO Phil Fayer said stablecoins are becoming part of how businesses move money across borders and currencies.Fayer said global commerce depends on money moving freely across borders,currencies and,increasingly,between traditional and digital forms of money.\nPatrick Mollard,co-founder and CEO of Paris-based stablecoin-powered business payments firm Fipto,said companies increasingly want stablecoins integrated into existing financial operations.Mollard said businesses do not want separate infrastructure for digital assets alongside existing financial operations.Mollard said businesses want to move between fiat currencies and stablecoins within the same payments and treasury environment.Mollard said the distinction between traditional and digital money matters less than enabling businesses to choose the most suitable system for each payment or treasury operation.\nMastercard,Visa,Stripe Expand Stablecoin Payment Services as Usage Grows\n  CoinDesk\nShare\n \n1.000%\n \nMastercard,Visa,and Stripe are expanding stablecoin payment services as global crypto policy shifts and adoption rises.Stablecoin payments hit$482 billion in the first nine months of 2026,up 45%from 2025.Mastercard launched its Global Money Platform,combining fiat and stablecoin balances.Stripe partnered with Plasma for multi-currency and stablecoin cards."
+      ],
+      "page_text": "Patrick Mollard, co-founder and CEO of Paris-based stablecoin-powered business payments firm Fipto, said companies increasingly want stablecoins integrated into existing financial operations.",
+      "page_text_chars": 4929
+     },
+     {
+      "url": "https://phemex.com/fr/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nAvertissement:Le contenu proposé sur Phemex News est à titre informatif uniquement.Nous ne garantissons pas la qualité,l'exactitude ou l'exhaustivité des informations provenant d'articles tiers.Ce contenu ne constitue pas un conseil financier ou d'investissement.Nous vous recommandons vivement d'effectuer vos propres recherches et de consulter un conseiller financier qualifié avant toute décision d'investissement."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1231
+     },
+     {
+      "url": "https://phemex.com/tr/news/article/circle-targets-expansion-into-40-emerging-markets-as-stablecoin-adoption-accelerates-100140",
+      "title": "Circle Expands to 40 Emerging Markets Amid Rising Stablecoin | Phemex News",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Circle is aggressively expanding into approximately 40 emerging and developing markets across Southeast Asia,Latin America,Africa,and the Middle East.CEO Jeremy Allaire announced the strategic push during the IMF and World Bank meetings in Bangkok,citing growing demand for stablecoins and digital financial services from both individuals and businesses in these regions.\nAllaire stated that blockchain technology is transitioning from early adoption to mainstream scale.Large financial institutions and payment companies are moving beyond pilot programs to utilize stablecoins for cross-border settlements and asset transfers,while machine-to-machine micropayments between AI agents are further driving USDC usage.\nCircle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates\nSorumluluk Reddi:Phemex Haberler'de sunulan içerik yalnızca bilgilendirme amaçlıdır.Üçüncü taraf makalelerden alınan bilgilerin kalitesi,doğruluğu veya eksiksizliğini garanti etmiyoruz.Bu sayfadaki içerik finansal veya yatırım tavsiyesi niteliği taşımaz.Yatırım kararları vermeden önce kendi araştırmanızı yapmanızı ve nitelikli bir finans danışmanına başvurmanızı şiddetle tavsiye ederiz."
+      ],
+      "page_text": "Circle Targets Expansion Into 40 Emerging Markets as Stablecoin Adoption Accelerates",
+      "page_text_chars": 1202
+     },
+     {
+      "url": "https://www.investing.com/news/stock-market-news/stablecoin-issuer-circle-to-push-into-40-new-markets-ceo-says-4953459",
+      "title": "Stablecoin issuer Circle to push into 40 new markets, CEO says By Reuters",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Warsh avoids rate guidance;Tesla’s Roadster turns in air-what’s moving markets\nBy Selena Li\nBANGKOK,Oct 16(Reuters)-Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly,the company’s CEO and chairman Jeremy Allaire told Reuters.\n\"We’re kind of going through an inflection point.a transition right now,and that transition is essentially moving from the early adopter phase of blockchain technology into the mainstream scaling phase,\"said Allaire,who is also co-founder of the New York-listed company.He was speaking on the sidelines of the IMF and World Bank meetings in Bangkok.\nMarkers in regions like Southeast Asia,Latin America,Africa and the Middle East are seeing rising organic demand for stablecoins and digital utility from individual and businesses wanting to part of an internet-based economic system,Allaire said.\nCircle,the world’s largest regulated stablecoin issuer,is accelerating its global expansion,backed by a$400 million acquisition of Tazapay and a$100 million strategic investment from Binance.\nIt holds roughly 25%of the global stablecoin market share,while rival USDT,which is issued by Tether,commands nearly 60%.Stablecoins are cryptocurrencies designed to have a stable value relative to traditional cyrptos.\nTheir increasing adoption is being driven by clearer regulatory frameworks,such as the U.S.Genius Act which is slated to take effect next January.Circle in July became one of the first stablecoin issuers to hold a federal bank charter."
+      ],
+      "page_text": "BANGKOK, Oct 16 (Reuters) - Stablecoin issuer Circle is making a major push to enter about 40 emerging and developing countries around the world as blockchain adoption is expected to scale up significantly, the company’s CEO and chairman Jeremy Allaire told Reuters.",
+      "page_text_chars": 3708
+     }
+    ]
+   }
+  },
+  {
+   "tag": "risks",
+   "params": {
+    "query": "Risks, concerns and criticism of stablecoin adoption",
+    "mode": "balanced",
+    "count": 20,
+    "highlights": true,
+    "page_text": true,
+    "start_date": "2026-09-19",
+    "end_date": "2026-10-19"
+   },
+   "at": "2026-10-19T09:28:04+04:00",
+   "seconds": 0.24,
+   "status": 200,
+   "cost_usd": 0.01,
+   "body": {
+    "cost_usd": 0.01,
+    "usage_count": 20,
+    "service": "Search API",
+    "currency": "USD",
+    "results": [
+     {
+      "url": "https://news.bitcoin.com/interview/why-stablecoins-never-escape-traditional-banking-risks-frgmnt-ceo/",
+      "title": "Why Stablecoins May Never Escape Traditional Banking Risks: Frgmnt CEO",
+      "published_date": "2026-10-17",
+      "highlights": [
+       "“I see private stablecoins and CBDCs as more likely to coexist than simply compete,”Roussel suggested.“A CBDC can provide a sovereign form of digital money,but money is only one part of the financial stack.Users and businesses also need wallets,distribution,liquidity,cross-border connectivity,payments,credit,and treasury infrastructure.”\nIn this dual framework,CBDCs offer a sovereign,base-layer digital unit of account,while private stablecoins and commercial layers drive cross-border connectivity,agile platform integration,and tailored financial products.\n“If CBDCs become widely used,they could actually reinforce the broader transition toward programmable digital money,”sayid Roussel.“Ultimately,I think the market will be less about CBDC versus stablecoin and more about how different forms of digital money interact with the financial infrastructure around them.”\nLayer 2 Scaling and the Shift to Productive Capital\nThe mass migration of stablecoin traffic to Layer 2 networks and high-throughput Layer 1 blockchains has drastically compressed transaction costs.With sub-cent,near-instant settlement now a reality,the basic economics of issuing and managing stablecoins are undergoing a fundamental transformation.\nWhen transaction fees drop toward zero,moving money ceases to be the primary revenue driver.\n“If the transaction itself becomes almost free,issuers and infrastructure providers cannot rely primarily on transaction fees,”Roussel observed.“They will increasingly compete through distribution,liquidity,financial services,treasury products,and the ability to build useful services around the stablecoin.”\nThis fundamental shift aligns directly with Frgmnt’s mission of transforming stablecoins from passive transactional tools into active,programmable assets."
+      ],
+      "page_text": "“Ultimately, I think the market will be less about CBDC versus stablecoin and more about how different forms of digital money interact with the financial infrastructure around them.”",
+      "page_text_chars": 10048
+     },
+     {
+      "url": "https://www.kucoin.com/news/flash/fsb-warns-of-immature-stablecoin-regulations-and-ai-cybersecurity-risks",
+      "title": "FSB Warns of Underdeveloped Stablecoin Regulations and AI Cybersecurity Risks | KuCoin",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "Odaily Planet Daily reports that the Financial Stability Board(FSB)stated that cross-border stablecoin regulation and crisis management mechanisms remain immature or have not yet been established.FSB Chair Andrew Bailey noted that its 2025 review found that only 11 out of 28 jurisdictions surveyed have completed their stablecoin regulatory frameworks.\nThe FSB warns that a stablecoin run could transmit risks to traditional financial markets through forced sales of reserve assets and withdrawals of bank deposits.For multi-issuer stablecoins,redemption demands may concentrate on a single issuer,while reserve assets are distributed across different jurisdictions;ECB President Christine Lagarde has previously highlighted similar risks.\nThe FSB has finalized practices for the responsible adoption of AI in the financial sector,covering organizational governance,AI development and deployment,cybersecurity,and third-party service risks.Andrew Bailey stated that AI-powered sophisticated cyberattacks could undermine the resilience of key financial institutions and market infrastructure,and the FSB has submitted related letters to the G20 meeting of finance ministers and central bank governors.(Cointelegraph)"
+      ],
+      "page_text": "The FSB warns that a stablecoin run could transmit risks to traditional financial markets through forced sales of reserve assets and withdrawals of bank deposits.",
+      "page_text_chars": 1230
+     },
+     {
+      "url": "https://www.fsb.org/2026/10/global-stablecoin-arrangements-cross-border-vulnerabilities-and-financial-stability-monitoring/",
+      "title": "Global Stablecoin Arrangements: Cross-border vulnerabilities and financial stability monitoring - Financial Stability Board",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "Global Stablecoin Arrangements:Cross-border vulnerabilities and financial stability monitoring\n\n12 October 2026|PDF full text(133 KB)\n\nGlobal stablecoins are an inherently cross-border and cross-sectoral issue that may give rise to financial stability vulnerabilities.\n\nGlobal stablecoins have a reach and use across multiple jurisdictions and could become systemically important in one or more of them.These characteristics may limit the ability of a single jurisdiction alone to fully assess or address potential cross-border vulnerabilities.Moreover,the activities involved in operating a global stablecoin may span several types of entities and fall under the oversight of multiple national authorities.\n\nThis note summarises ongoing monitoring work at the FSB on global stablecoin arrangements.In particular,it includes an analysis of the structure of global stablecoin arrangements,the potential propagation of vulnerabilities,and the metrics that could support financial stability monitoring.It also looks at the data currently available for financial stability monitoring of stablecoin activities,assessing the sources as well as the benefits and limitations of these data sources.\n\nContent Type(s):Publications Reports to the G20 Source(s):FSB Policy Area(s):Crypto Assets Data Gaps Financial Innovation\nPress release\n12 October 2026 FSB Chair sets out FSB work on AI and stablecoins\n\nAndrew Bailey delivers note on vulnerabilities and monitoring of global stablecoins and finalised sound practices on AI adoption."
+      ],
+      "page_text": "Moreover, the activities involved in operating a global stablecoin may span several types of entities and fall under the oversight of multiple national authorities.",
+      "page_text_chars": 1537
+     },
+     {
+      "url": "https://www.kucoin.com/news/flash/fsb-warns-of-stablecoin-risks-and-calls-for-cross-border-cooperation",
+      "title": "FSB Warns of Stablecoin Risks and Calls for Cross-Border Cooperation | KuCoin",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "The Financial Stability Board(FSB)warned that stablecoins could expose gaps in cross-border financial rules during a market crisis and remain untested in such a scenario,and called for more cross-border information sharing,monitoring and planning for stablecoin distress or failure.\nThe G20’s financial watchdog said in a report that global stablecoins,crypto tokens whose value is pegged to a fiat currency,have not been tested under severe stress or insolvency,while the national regulatory frameworks are developing at different speeds,raising questions over how holders would recover their funds if an issuer went under.\nThe stablecoin market started 2025 at around$206 billion in capitalization,and has grown to$306 billion.Most of that value is in stablecoins pegged to the U.S.dollar.While much of the value is used mainly to move in and out of crypto investments,the coins could eventually enable faster,cheaper payments,including across borders,the FSB said.\n“Global stablecoin arrangements are inherently cross-border,yet national regulations are taking shape at different speeds and cross-border cooperation in this area is still in its infancy,”Chair Andrew Bailey wrote in an accompanying letter.\nThe report points to higher risks in so-called multi-issuer structures.Affiliated companies can issue the same stablecoin and share liability for it while keeping reserve assets in separate jurisdictions.\nIf holders can redeem with any issuer in the group,demand could pile up on a single entity,while the needed assets sit elsewhere.Moving those reserves may become harder during a crisis,the FSB warned."
+      ],
+      "page_text": "The Financial Stability Board (FSB) warned that stablecoins could expose gaps in cross-border financial rules during a market crisis and remain untested in such a scenario, and called for more cross-border information sharing, monitoring and planning for stablecoin distress or failure.",
+      "page_text_chars": 2983
+     },
+     {
+      "url": "https://www.fsb.org/work-of-the-fsb/financial-innovation-and-structural-change/crypto-assets-and-global-stablecoins/",
+      "title": "Crypto-assets and Global Stablecoins - Financial Stability Board",
+      "published_date": "2026-10-15",
+      "highlights": [
+       "Crypto-assets and Global Stablecoins\n\nCrypto-asset markets,including stablecoins,are increasingly interconnected with the traditional financial system.If they grow substantially,deepen those links,or develop vulnerabilities that amplify shocks,they could transmit stress to the wider financial system and the real economy.Global stablecoins,which have a reach and use across multiple jurisdictions and could become systemically important in one or more of them,require particular attention.If widely used for payments or as a store of value across borders,a loss of confidence could trigger runs and forced sales of their reserve assets.\n\nAt the G20’s request,the FSB has led international work on the financial stability risks of crypto-assets since 2018.In July 2023,it finalised a global regulatory framework made up of two sets of recommendations:one for crypto-asset activities and markets,and a revised one for global stablecoin arrangements.The FSB’s 2025 peer review found welcome progress in putting the framework into practice,but also highlighted significant gaps and inconsistencies across jurisdictions,and called on them to prioritise full and consistent implementation.As stablecoin regulatory frameworks continue to develop,the FSB’s current work focuses on the cross-border vulnerabilities related to global stablecoin arrangements and the data needed to monitor them.\n\nCrypto-assets and stablecoins also raise other policy concerns,such as consumer and investor protection,market integrity,AML/CFT,sanctions compliance,tax evasion,and capital controls,which other authorities and international bodies address."
+      ],
+      "page_text": "At the G20’s request, the FSB has led international work on the financial stability risks of crypto-assets since 2018.",
+      "page_text_chars": 1655
+     },
+     {
+      "url": "https://bitcoinke.io/2026/10/fsb-warns-of-stablecoin-risks/",
+      "title": "STABLECOINS | Financial Stablecoin Board (FSB) Warns of Stablecoin Risks Related to Regulatory Monitoring Gaps – BitKE",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "\nThe letter was accompanied by a report examining vulnerabilities in global stablecoin arrangements and the challenges of monitoring their potential impact on financial stability.\nThe FSB said cross-border stablecoin supervision and crisis-management arrangements remain underdeveloped with its 2025 review finding that only 11 of 28 surveyed jurisdictions had finalised stablecoin regulatory frameworks.\nThe watchdog warned that large-scale stablecoin redemptions could trigger forced sales of reserve assets and withdrawals of bank deposits transmitting stress to traditional financial markets.Multi-issuer arrangements could complicate crisis management when redemption demands concentrate on one issuer while reserves are held across different jurisdictions.\nREGULATION|Federal Reserve Moves to Implement U.S.Stablecoin Law with Reserve,Capital Rules\nThe FSB called for improved monitoring of cross-border vulnerabilities and stronger information-sharing between authorities alongside the implementation of its 2023 recommendations on global stablecoin arrangements.\nBailey also highlighted AI-related risks warning that advances in the technology could increase cyber threats to financial institutions and critical market infrastructure.The FSB has finalised guidance on responsible AI adoption covering governance,development and deployment,cybersecurity,and third-party service-provider risks.\nThe letter also introduces reports on public-sector backstop funding,regulatory and supervisory modernisation,and the implementation of G20 financial reforms.The FSB said responsible AI adoption would remain an important part of its work in 2027.\nThe findings will inform discussions among G20 finance ministers and central bank governors at their October 15 2026 meeting in Bangkok.\nStablecoins:Promise,Risks,and Policy Choices for Emerging Markets – IMF Deputy Managing Director\n"
+      ],
+      "page_text": "The FSB has finalised guidance on responsible AI adoption covering governance, development and deployment, cybersecurity, and third-party service-provider risks.",
+      "page_text_chars": 2246
+     },
+     {
+      "url": "https://www.htx.com/news/global-watchdog-flags-stablecoin-risks-ai-threats-ahead-of-g-4QObrRYV/",
+      "title": "Global watchdog flags stablecoin risks, AI threats ahead of G20 | HTX Insights",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "The Financial Stability Board(FSB),a global financial watchdog,has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.\nIn a letter published Monday,FSB Chair Andrew Bailey warned that cross-border mechanisms for stablecoin oversight and crisis management“remain immature or are not yet developed.”In its 2025 review,the FSB found that 11 of 28 surveyed jurisdictions had finalized stablecoin regulatory frameworks.\nHe also urged G20 members to support the FSB’s newly finalized practices for responsible AI adoption in the financial sector.\n“AI therefore requires our continued close attention alongside careful management by financial institutions,”Bailey wrote.\nThe FSB submitted the letter to Group of Twenty(G20)finance ministers and central bank governors ahead of their Thursday meeting.The G20 brings together the world’s major economies to coordinate financial policy and regulatory priorities.\nStablecoin risks extend to traditional financial markets\nIn a report accompanying the letter,the FSB warned that stablecoin runs could spill into traditional markets through forced sales of reserve assets and withdrawals of bank deposits.The watchdog also identified risks for multi-issuer stablecoins where redemption demand could concentrate on one issuer while reserves are held in different jurisdictions.\nThese concerns echo what regulators have previously raised.In 2025,European Central Bank(ECB)President Christine Lagarde warned of similar redemption risks involving stablecoins issued inside and outside of the European Union.\nAI safeguards target cybersecurity and third-party risks\nThe FSB’s AI practices cover organization-wide governance,AI development and deployment,cybersecurity and third-party service risks."
+      ],
+      "page_text": "The Financial Stability Board (FSB), a global financial watchdog, has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.",
+      "page_text_chars": 2461
+     },
+     {
+      "url": "https://www.weex.com/news/detail/financial-stability-board-highlights-unclear-bankruptcy-laws-for-stablecoin-failures-n3xs5kabki1jhctun2gsv3u6",
+      "title": "Financial Stability Board Highlights Unclear Bankruptcy Laws for Stablecoin Failures | WEEX Crypto News",
+      "published_date": "2026-10-14",
+      "highlights": [
+       "Financial Stability Board Highlights Unclear Bankruptcy Laws for Stablecoin Failures\n  LIGHT\n  FLOW\n  One\nKey Points of This Article  \n-The market capitalization of stablecoins is approximately 47 trillion yen\nRisks and countermeasures are presented\nOrganizing the Vulnerabilities of Stablecoins\nOn the 12th,the Financial Stability Board(FSB)published a report titled\"Global Stablecoins(GSC):Cross-Border Vulnerabilities and Monitoring Financial Stability.\"The report analyzes stablecoins used across multiple jurisdictions from the perspective of monitoring financial stability.\nThe FSB positions global stablecoins as being utilized in multiple jurisdictions,potentially becoming systemically important in any one of those jurisdictions.It points out that vulnerabilities cannot be adequately assessed by the response of a single country and raises the need for cooperation among countries.\nRegarding the current situation,the market capitalization of stablecoins is approximately$300 billion(about 47 trillion yen)as of mid-2026,remaining nearly flat from the previous year,with 99%(in terms of amount)being dollar-pegged.The primary use is for providing liquidity in the cryptocurrency market,but it is suggested that in the future,they may be used for faster and lower-cost domestic and international payments.\nRisks of Global Stablecoins\nAs risks,it is first noted that unlike banks,the issuers of stablecoins may not be able to ascertain who the holders are,where they are located,and where redemption claims arise,due to the anonymous and freely circulating nature of tokens.\nIn a\"multi-issuer\"model where multiple issuers jointly bear the debt of a single stablecoin,if the location of the holders is unknown,it may become unclear to which issuer the debt belongs and what the legal claims of the holders are during times of stress or bankruptcy."
+      ],
+      "page_text": "As risks, it is first noted that unlike banks, the issuers of stablecoins may not be able to ascertain who the holders are, where they are located, and where redemption claims arise, due to the anonymous and freely circulating nature of tokens.",
+      "page_text_chars": 8621
+     },
+     {
+      "url": "https://www.pymnts.com/cryptocurrency/2026/stablecoins-have-10-million-dollar-problem-going-back-bank/",
+      "title": "PYMNTS | Stablecoins' $10 Million Problem: Money Is Going Back to Ban………",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "\nStablecoin payments may have eliminated hours of settlement friction,but they haven’t eliminated the financial infrastructure waiting on the other side.The PYMNTS Intelligence report“Waiting for Certainty:Why Most CFOs Are Holding Back on Crypto and Stablecoins”found in March that 88%of firms receiving stablecoins convert them immediately into U.S.dollars.\nChief financial officers still run payroll through banks,mid-market suppliers still expect conventional currency,and even the most forward-thinking corporate treasurers still need deposits they can invest,borrow against and use to meet obligations today.\nA new Financial Stability Board report,“Global Stablecoin Arrangements:Cross-Border Vulnerabilities and Financial Stability Monitoring,”published Monday(Oct.12)ahead of the G20 finance ministers’meeting,highlights that,for finance teams eyeing stablecoins as a better B2B payment mechanism,it’s becoming crucial to account for what blockchain innovation removes,what it transfers and what it creates.\nSee also:SAP and Samsung Shift Stablecoin Competition From Issuance to Distribution\nThe Stablecoin Payment Isn’t the Whole Transaction\nThe economics of stablecoins are compelling at the point of transfer.A multinational can potentially receive dollar-denominated value from an overseas customer without waiting for conventional correspondent banking processes.Money can move around the clock,across jurisdictions,with greater settlement speed.These possibilities are generating excitement at the highest levels of the payment ecosystem.Mastercard CEO Michael Miebach said Friday(Oct.9),for example,that cross-border payments are proving to be the strongest use case for stablecoins.\nThe PYMNTS Intelligence report“From Asset to Everyday Money:Making Digital Currencies Spendable”found in July that cross-border B2B transfers are already one of the largest use cases for stablecoins and represent the majority of global stablecoin payment volume."
+      ],
+      "page_text": "Stablecoin payments may have eliminated hours of settlement friction, but they haven’t eliminated the financial infrastructure waiting on the other side.",
+      "page_text_chars": 4951
+     },
+     {
+      "url": "https://phemex.com/vi/news/article/fsb-warns-global-stablecoins-remain-untested-under-severe-market-stress-99599",
+      "title": "FSB: Global Stablecoins Untested Under Severe Stress Conditi | Phemex News",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "The Financial Stability Board(FSB)released a report stating that global stablecoins have not yet been tested under severe market stress or insolvency scenarios.The G20 regulatory body highlighted significant cross-border vulnerabilities,noting that multi-issuer structures could concentrate redemption demand on a single entity while reserve assets remain in other jurisdictions.Additionally,the 24/7 trading nature of stablecoins versus limited reserve asset liquidity creates depegging risks during bank runs,potentially transmitting shocks to traditional markets through forced asset sales and deposit outflows.\nThe FSB recommends strengthening cross-border information sharing,improving monitoring data,and establishing advance resolution arrangements for stablecoin distress or failure.The report also notes that regulatory frameworks across countries are advancing at different paces,creating uncertainty regarding applicable insolvency rules when issuers fail.These non-binding recommendations were issued ahead of the October 15 G20 Finance Ministers and Central Bank Governors meeting.\nFSB Warns Global Stablecoins Remain Untested Under Severe Market Stress\n  STABLE-7.00%\nTuyên bố miễn trừ trách nhiệm:Nội dung được cung cấp trên Phemex News chỉ nhằm mục đích cung cấp thông tin.Chúng tôi không đảm bảo chất lượng,độ chính xác hoặc tính đầy đủ của thông tin có nguồn từ các bài viết của bên thứ ba.Nội dung trên trang này không cấu thành lời khuyên về tài chính hoặc đầu tư.Chúng tôi đặc biệt khuyến khích bạn tự tiến hành nghiên cứu và tham khảo ý kiến của cố vấn tài chính đủ tiêu chuẩn trước khi đưa ra bất kỳ quyết định đầu tư nào."
+      ],
+      "page_text": "Additionally, the 24/7 trading nature of stablecoins versus limited reserve asset liquidity creates depegging risks during bank runs, potentially transmitting shocks to traditional markets through forced asset sales and deposit outflows.",
+      "page_text_chars": 1660
+     },
+     {
+      "url": "https://www.techflowpost.com/en-US/newsletter/139630",
+      "title": "FSB Warns of Cross-Border Stablecoin Regulation and AI Risks, Urges G20 to Strengthen Safeguards",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "FSB Warns of Cross-Border Stablecoin Regulation and AI Risks,Urges G20 to Strengthen Safeguards\nTechFlow reports,on October 12,according to Cointelegraph,the Financial Stability Board(FSB)warned in a document submitted to G20 finance ministers and central bank governors that cross-border stablecoin regulation,crisis resolution mechanisms,and AI-related cybersecurity risks still require further improvement.FSB Chair Andrew Bailey stated that current cross-border stablecoin regulation and crisis management mechanisms\"remain immature or have not yet been established.\nThe FSB noted that a stablecoin run could transmit risks to traditional financial markets through forced sales of reserve assets and bank deposit outflows;multi-issuer stablecoins may also face challenges where redemption demands concentrate on a single issuer while reserves are distributed across different jurisdictions.\nFurthermore,the FSB has finalized relevant practices for the responsible adoption of AI by financial institutions,encompassing governance,AI development and deployment,cybersecurity,and third-party service risks,and warned that AI-driven complex cyberattacks could undermine the resilience of critical financial institutions and market infrastructure."
+      ],
+      "page_text": "TechFlow reports, on October 12, according to Cointelegraph, the Financial Stability Board (FSB) warned in a document submitted to G20 finance ministers and central bank governors that cross-border stablecoin regulation, crisis resolution mechanisms, and AI-related cybersecurity risks still require further improvement.",
+      "page_text_chars": 1264
+     },
+     {
+      "url": "https://lcx.com/en/cryptonews/global-watchdog-flags-stablecoin-risks-ai-threats-ahead-of-g20",
+      "title": "Global watchdog flags stablecoin risks, AI threats ahead of G20 | LCX Crypto News | LCX",
+      "published_date": "2026-10-12",
+      "highlights": [
+       "Global watchdog flags stablecoin risks,AI threats ahead of G20\n \nThe Financial Stability Board(FSB),a global financial watchdog,has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.\nIn a letter published Monday,FSB Chair Andrew Bailey warned that cross-border mechanisms for stablecoin oversight and crisis management“remain immature or are not yet developed.”In its 2025 review,the FSB found that 11 of 28 surveyed jurisdictions had finalized stablecoin regulatory frameworks.\nHe also urged G20 members to support the FSB’s newly finalized practices for responsible AI adoption in the financial sector.\n“AI therefore requires our continued close attention alongside careful management by financial institutions,”Bailey wrote.\nThe FSB submitted the letter to Group of Twenty(G20)finance ministers and central bank governors ahead of their Thursday meeting.The G20 brings together the world’s major economies to coordinate financial policy and regulatory priorities.\nStablecoin risks extend to traditional financial markets\nIn a report accompanying the letter,the FSB warned that stablecoin runs could spill into traditional markets through forced sales of reserve assets and withdrawals of bank deposits.The watchdog also identified risks for multi-issuer stablecoins where redemption demand could concentrate on one issuer while reserves are held in different jurisdictions.\nThese concerns echo what regulators have previously raised.In 2025,European Central Bank(ECB)President Christine Lagarde warned of similar redemption risks involving stablecoins issued inside and outside of the European Union.\nAI safeguards target cybersecurity and third-party risks\n"
+      ],
+      "page_text": "The Financial Stability Board (FSB), a global financial watchdog, has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.",
+      "page_text_chars": 2789
+     },
+     {
+      "url": "https://www.digitaltoday.co.kr/en/view/115805/stablecoin-market-grows-to-306-billion-dollars-daily-payment-adoption-still-a-challenge",
+      "title": "Stablecoin market grows to $306 billion, daily payment adoption still a challenge",
+      "published_date": "2026-10-16",
+      "highlights": [
+       "Cointelegraph reported on Oct.16 that tokenisation,stablecoin payments,on-chain trading infrastructure and venture investment exits were presented as key tasks at the Connect event in Singapore.\nAn imbalance between supply and demand was cited as a key issue in the real-world asset(RWA)tokenisation market.Alex Taaffe,chief revenue officer at GSR,said access to pre-IPO shares,commodities and global equities trading is improving.He added that investor demand is not keeping pace with the rise in issuance of fully tokenised RWAs.Another point raised was that liquidity fragmentation is worsening as asset issuers and blockchains increase.Lingling Jiang,a partner at DWF Labs,pointed to the challenge of the same underlying asset being split into different liquidity pools depending on the issuer.\nIn stablecoins,connectivity for everyday payments emerged as a more important task than cross-border remittances.Mike Silagadze,founder and CEO of EtherFi,said stablecoins have made it easier to move money,but their spread depends on whether consumers can actually use them to pay living expenses and bills.He cited Singapore,saying that even if someone holds USDC,they still need local currency to pay bills.\nUser experience and regulatory response were also presented as key conditions.Yvonne Chia,head of communications at USDD,said it should feel so natural that users are not even aware they are using stablecoins.Ashna Vaghela,chief customer officer at Mercuryo,said payments should be completed without leaving the app,like Apple Pay.Ilya Podoinitsyn,co-founder and CEO of Finhaven,explained that infrastructure and compliance systems need to be adjusted to meet different rules in each country."
+      ],
+      "page_text": "Cointelegraph reported on Oct. 16 that tokenisation, stablecoin payments, on-chain trading infrastructure and venture investment exits were presented as key tasks at the Connect event in Singapore.",
+      "page_text_chars": 3194
+     },
+     {
+      "url": "https://cointelegraph.com/news/what-happened-in-crypto-today?rand=x7cnl_1761438411357",
+      "title": "Crypto Today: Aptos encrypted mempools, stablecoin rules, G20 risks",
+      "published_date": "2026-10-13",
+      "highlights": [
+       "US accounting proposal could clear path for corporate stablecoin adoption\nA proposed change to US accounting standards could make it easier for corporations to hold and use stablecoins without compromising their reported cash positions,according to a new report from Stripe-backed blockchain Tempo.\nThe Financial Accounting Standards Board(FASB)is considering allowing qualifying stablecoins to be classified as cash equivalents on corporate balance sheets.Currently,companies may have to report stablecoin holdings as other assets,which can affect liquidity ratios and compliance with loan covenants.\nTempo said the proposed treatment would depend on whether companies have direct redemption rights with stablecoin issuers.This means two companies holding identical USDC tokens could receive different accounting treatment depending on their arrangements with Circle.\nFor example,Coinbase classified USDC and other payment stablecoins as cash equivalents in its 2025 annual report,supported by its direct redemption arrangement with Circle.\nThe proposal follows the passage of the GENIUS Act,which established federal requirements for payment stablecoin issuers.FASB’s separate initiative addresses how businesses account for those assets.\nThe accounting proposal remains open for public comment until Nov.19.\nGlobal watchdog flags stablecoin risks,AI threats ahead of G20\nThe FSB,a global financial watchdog,has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.\nIn a letter published Monday,FSB Chair Andrew Bailey warned that cross-border mechanisms for stablecoin oversight and crisis management“remain immature or are not yet developed.”In its 2025 review,the FSB found that 11 of 28 surveyed jurisdictions had finalized stablecoin regulatory frameworks."
+      ],
+      "page_text": "The FSB, a global financial watchdog, has outlined financial stability risks associated with artificial intelligence and regulatory concerns surrounding stablecoins.",
+      "page_text_chars": 4268
+     },
+     {
+      "url": "https://www.cnbctv18.com/personal-finance/stablecoins-tokenised-assets-explained-investment-impact-20010569.htm",
+      "title": "Stablecoins and tokenised assets explained: What Indian investors should know - CNBC TV18",
+      "published_date": "2026-10-13",
+      "highlights": [
+       "What are stablecoins and how are they used?Stablecoins are digital tokens designed to maintain a relatively stable value against an asset,usually a currency such as the US dollar.They can facilitate transfers between digital-asset platforms and are also being explored for cross-border payments,remittances and business settlements.\nA global management consulting firm McKinsey,in an analysis with blockchain analytics firm Artemis Analytics,estimated that stablecoin payment activity reached around$390 billion in 2025,more than double the previous year's level.\nHowever,this remains small compared with conventional payment networks,and blockchain transaction volumes should not automatically be equated with payments for goods and services.\nVikaas M Sachdeva,CEO of BitDelta India,an independent,India-focused virtual digital asset(VDA)and cryptocurrency trading platform,said blockchain could reduce intermediaries and speed up settlement in certain cross-border transactions.However,he noted that India's existing payment systems,including UPI,IMPS and RTGS,already work efficiently,making it important to assess where the technology offers a genuine advantage.\nA stablecoin is not the same as money held in a bank account.\nIts ability to maintain its value depends on factors such as the assets backing it,the issuer's financial position and redemption arrangements.Risks include inadequate reserves,issuer failure,loss of the intended price peg,cyberattacks and restrictions on withdrawals.\nSachdeva advised investors to examine the issuer,reserve disclosures,custody arrangements and redemption rights rather than relying on the label 'stablecoin'.\nFor Indian users,a dollar-linked stablecoin is not the Indian rupee and should not be assumed to be an RBI-authorised payment instrument."
+      ],
+      "page_text": "A global management consulting firm McKinsey, in an analysis with blockchain analytics firm Artemis Analytics, estimated that stablecoin payment activity reached around $390 billion in 2025, more than double the previous year's level.",
+      "page_text_chars": 5691
+     }
+    ]
+   }
+  }
+ ]
+}
