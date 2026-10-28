@@ -1,0 +1,5 @@
+[
+ {"id":"fake_1","text":"$NVDA $AMD bullish buying calls shortage","url":"https://example.test/1","created_at":"Tue Oct 27 05:20:09 +0000 2026","like_count":80,"view_count":null,"retweet_count":2,"reply_count":1,"is_retweet":false,"user":{"username":"sample_a"}},
+ {"id":"fake_2","text":"$NVDA $AMD sell short","url":"https://example.test/2","created_at":"Tue Oct 27 07:20:09 +0000 2026","like_count":20,"view_count":900,"user":{"username":"sample_b"}},
+ {"id":"fake_3","text":"$NVDA join my group https://t.me/example","created_at":"bad date","like_count":999,"view_count":10000,"user":{"username":"sample_c"}}
+]
