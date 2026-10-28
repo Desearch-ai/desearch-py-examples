@@ -248,7 +248,8 @@ def build_result(claim, ai, x=None, wiki=None):
 
 
 class RateLimiter:
-    """Sliding-window per-IP and global limits, in memory. On serverless hosts this is per warm instance only."""
+    """Sliding-window per-IP and global limits, in memory. Fallback when no shared store is configured.
+    On serverless hosts this copy is per warm instance only."""
 
     def __init__(self, per_ip=5, window=600, per_ip_day=15, global_window=30, clock=time.time):
         self.per_ip, self.window, self.per_ip_day, self.global_window, self.clock = per_ip, window, per_ip_day, global_window, clock
@@ -267,7 +268,8 @@ class RateLimiter:
 
 
 class DailyCap:
-    """Stops paid calls once today's header cost reaches `cap_usd`. Day boundary is UTC. Per process / instance."""
+    """Stops paid calls once today's header cost reaches `cap_usd`. Day boundary is UTC.
+    In-memory fallback when no shared store is configured (per process / instance)."""
 
     def __init__(self, cap_usd=1.0, clock=time.time):
         self.cap, self.clock, self.day, self.spent, self.lock = cap_usd, clock, None, 0.0, threading.Lock()
@@ -285,7 +287,25 @@ class DailyCap:
     def add(self, usd):
         with self.lock:
             self._roll()
-            self.spent += float(usd or 0)
+            self.spent = max(0.0, self.spent + float(usd or 0))
+
+    def reserve(self, amount):
+        with self.lock:
+            self._roll()
+            amount = max(0.0, float(amount))
+            if self.spent + amount > self.cap + 1e-9:
+                return None
+            self.spent += amount
+            return (self.day, amount)
+
+    def settle(self, token, actual):
+        with self.lock:
+            self._roll()
+            if actual is not None and token[0] == self.day:
+                self.spent = max(0.0, self.spent + float(actual) - token[1])
+
+    def release(self, token):
+        self.settle(token, 0)
 
 
 class TTLCache:

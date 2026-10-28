@@ -1,8 +1,12 @@
 """Offline tests (no key, no network): python3 -m pytest -q"""
-import contextlib, io, json, os, pathlib, sys, tempfile, unittest
+import hashlib, io, json, pathlib, sys, time, urllib.error, urllib.request
+import contextlib, os, tempfile, unittest
+import pytest
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import patch
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from factcheck import core
+from factcheck import core, limits
 from factcheck.service import Checker, client_ip, parse_query
 
 KEY = "dsk-test-SECRET-1234567890"
@@ -187,10 +191,11 @@ def test_upstream_500_still_returns_502():
     assert code == 502 and json.loads(body) == {"error": "Search API returned 500. Try again later."}
 
 
-def test_cap_still_trips_when_cost_headers_are_missing():
-    ch = Checker(client=NoCostClient(), live=True, x_enabled=False, cap=core.DailyCap(0.005))
-    assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # one call at 0.005 fallback
-    assert abs(ch.cap.spent - 0.005) < 1e-9
+def test_cap_still_trips_when_cost_headers_are_missing(monkeypatch):
+    monkeypatch.setenv("DEMO_RESERVE_COST_USD", "0.01")
+    ch = Checker(client=NoCostClient(), live=True, x_enabled=False, cap=core.DailyCap(0.01))
+    assert ch.handle({"claim": "Honey never spoils if stored"}, "a")[0] == 200   # one full per-call reservation
+    assert ch.cap.spent == pytest.approx(0.01)
     assert ch.handle({"claim": "Octopuses have three hearts"}, "b")[0] == 503 and ch._client.calls == 1
     assert ch.cap_cost(401, {"cost": 0.0, "cost_known": False}) == 0.0
 
@@ -239,6 +244,233 @@ def test_vercel_files():
     assert "api/check.py" in v["functions"]
     assert (root / "public" / "index.html").is_file() and (root / "api" / "check.py").is_file()
     assert "Made by Desearch" in (root / "public" / "index.html").read_text()
+
+
+NOW = 1700000100
+TOKEN = "super-secret-token"
+SALT = "test-salt"
+
+
+def claim_n(i):
+    return f"Honey never spoils in test case {i}"
+
+
+class FakeRedis:
+    """In-memory stand-in for the Upstash REST transaction endpoint. Speaks the HTTP layer."""
+
+    def __init__(self, fail=None):
+        self.fail, self.values, self.seen = fail, {}, []
+        self.lock = threading.Lock()
+        self.peak = 0.0
+
+    def __call__(self, req, timeout=0):
+        with self.lock:
+            return self.execute(req, timeout)
+
+    def execute(self, req, timeout=0):
+        body = json.loads(req.data.decode())
+        self.seen.append({"url": req.full_url, "body": body, "auth": req.get_header("Authorization")})
+        if self.fail == "network":
+            raise urllib.error.URLError("down")
+        if self.fail == "redis":
+            return io.BytesIO(b'{"error":"ERR down"}')
+        out = []
+        for cmd in body:
+            op = cmd[0].upper()
+            key = cmd[1]
+            if op == "EVAL":
+                script, count, key, *args = cmd[1:]
+                assert count == "1" and all(isinstance(a, str) for a in args)
+                spend = float(self.values.get(key, 0))
+                if script == limits.RESERVE_SCRIPT:
+                    amount, cap = map(float, args)
+                    allowed = spend + amount <= cap + 1e-9
+                    if allowed:
+                        self.values[key] = spend + amount
+                        self.peak = max(self.peak, spend + amount)
+                    result = [int(allowed), str(self.values.get(key, 0))]
+                elif script == limits.SETTLE_SCRIPT:
+                    self.values[key] = max(0, spend + float(args[0]))
+                    result = str(self.values[key])
+                else:
+                    raise AssertionError("unexpected script")
+                out.append({"result": result})
+            elif op == "INCR":
+                self.values[key] = int(self.values.get(key, 0)) + 1
+                out.append({"result": self.values[key]})
+            elif op == "INCRBYFLOAT":
+                self.values[key] = round(float(self.values.get(key, 0) or 0) + float(cmd[2]), 6)
+                out.append({"result": str(self.values[key])})
+            elif op == "GET":
+                out.append({"result": None if key not in self.values else str(self.values[key])})
+            elif op == "EXPIRE":
+                out.append({"result": 1 if key in self.values else 0})
+            else:
+                out.append({"error": "unknown"})
+        return io.BytesIO(json.dumps(out).encode())
+
+
+def use_store(monkeypatch, fake, *, kv=True, **env):
+    limits._warned = False
+    if kv:
+        monkeypatch.setenv("KV_REST_API_URL", "https://kv.example.upstash.io")
+        monkeypatch.setenv("KV_REST_API_TOKEN", TOKEN)
+        monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://other.example.upstash.io")
+        monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", "other-token")
+    else:
+        monkeypatch.delenv("KV_REST_API_URL", raising=False)
+        monkeypatch.delenv("KV_REST_API_TOKEN", raising=False)
+        monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://upstash.example.upstash.io")
+        monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", TOKEN)
+    monkeypatch.setenv("DEMO_IP_SALT", SALT)
+    for k, v in env.items():
+        monkeypatch.setenv(k, str(v))
+    monkeypatch.setattr(urllib.request, "urlopen", fake)
+
+
+def pin(ch, now=NOW):
+    clock = lambda: now
+    ch.limiter.clock = clock
+    ch.cap.clock = clock
+
+
+def test_redis_sixth_request_from_one_ip_is_429(monkeypatch, capsys):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    ch = Checker(client=FakeClient(), live=True)
+    assert limits._warned is False
+    pin(ch)
+    ip, other = "1.2.3.4", "5.6.7.8"
+    for i in range(1, 6):
+        code, _, _ = ch.handle({"claim": claim_n(i)}, ip)
+        assert code == 200
+    assert ch._client.calls == 5
+    code, h, body = ch.handle({"claim": claim_n(6)}, ip)
+    assert code == 429 and h["Cache-Control"] == "no-store" and ch._client.calls == 5
+    assert "Too many checks" in body and TOKEN not in body and ip not in body
+    code_b, _, _ = ch.handle({"claim": claim_n(7)}, other)
+    assert code_b == 200 and ch._client.calls == 6
+
+    hsh = hashlib.sha256(f"{SALT}\n{ip}".encode()).hexdigest()
+    assert limits.ip_hash(ip) == hsh and ip not in hsh
+    start = NOW // 600 * 600
+    day = time.strftime("%Y-%m-%d", time.gmtime(NOW))
+    first = [r["body"] for r in fake.seen[:5]]
+    assert first[0] == [["GET", f"factcheck:usd:{day}"]]
+    assert first[1] == [["INCR", f"factcheck:ip10:{hsh}:{start}"], ["EXPIRE", f"factcheck:ip10:{hsh}:{start}", 600, "NX"]]
+    assert first[2][0][1] == f"factcheck:ipday:{hsh}:{day}" and first[2][1][2:] == [86400, "NX"]
+    assert first[3] == [["INCR", f"factcheck:g10:{start}"], ["EXPIRE", f"factcheck:g10:{start}", 600, "NX"]]
+    assert first[4][0][:3] == ["EVAL", limits.RESERVE_SCRIPT, "1"]
+    blob = json.dumps(fake.seen)
+    assert ip not in blob and other not in blob
+    assert all(r["url"] == "https://kv.example.upstash.io/multi-exec" for r in fake.seen)
+    assert all(r["auth"] == "Bearer " + TOKEN for r in fake.seen)
+    assert all(TOKEN not in r["url"] for r in fake.seen)
+    err = capsys.readouterr().err
+    assert TOKEN not in err and ip not in err and "Honey never spoils" not in err
+
+
+def test_redis_global_limit_and_upstash_env_names(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, kv=False, DEMO_GLOBAL_10MIN=2)
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "10.0.0.1")[0] == 200
+    assert ch.handle({"claim": claim_n(2)}, "10.0.0.2")[0] == 200
+    code, h, body = ch.handle({"claim": claim_n(3)}, "10.0.0.3")
+    assert code == 429 and h["Cache-Control"] == "no-store" and "Too many checks" in body
+    assert ch._client.calls == 2
+    assert fake.seen[0]["url"] == "https://upstash.example.upstash.io/multi-exec"
+    assert any(cmd[0] == "INCR" and cmd[1].startswith("factcheck:g10:") for r in fake.seen for cmd in r["body"])
+
+
+def test_redis_cap_blocks_once_reached(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD="0.004", DEMO_RESERVE_COST_USD="0.004", DEMO_FALLBACK_COST_USD="0.004")
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "1.1.1.1")[0] == 200
+    assert abs(ch.cap.spent - 0.004) < 1e-9
+    before = len(fake.seen)
+    code, h, body = ch.handle({"claim": claim_n(2)}, "2.2.2.2")
+    assert code == 503 and h["Cache-Control"] == "no-store" and "used up" in body and '"sample": "/sample.json"' in body
+    assert ch._client.calls == 1
+    new = fake.seen[before:]
+    assert len(new) == 1 and new[0]["body"][0][0] == "GET"
+
+
+def test_redis_store_error_is_503_like_the_kill_switch(monkeypatch, capsys):
+    for fail in ("network", "redis"):
+        fake = FakeRedis(fail=fail)
+        use_store(monkeypatch, fake)
+        ch = Checker(client=FakeClient(), live=True)
+        code, h, body = ch.handle({"claim": claim_n(1)}, "9.9.9.9")
+        paused = Checker(client=FakeClient(), live=False).handle({"claim": claim_n(1)}, "9.9.9.9")
+        assert code == 503 and h["Cache-Control"] == "no-store" and body == paused[2]
+        assert '"sample": "/sample.json"' in body and ch._client.calls == 0
+        bad, hb, _ = ch.handle({"claim": ""}, "9.9.9.9")
+        assert bad == 400 and hb["Cache-Control"] == "no-store"
+    err = capsys.readouterr().err
+    assert TOKEN not in err and "9.9.9.9" not in err and "Honey never spoils" not in err
+    assert "shared limit store error" in err
+
+
+def test_limits_fallback_to_memory_when_store_unset(monkeypatch, capsys):
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN",
+                 "DEMO_IP_SALT", "VERCEL"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("VERCEL_ENV", "development")  # not production or preview, and VERCEL is unset: local fallback
+    monkeypatch.setenv("DEMO_PER_IP_10MIN", "1")
+    limits._warned = False
+    called = []
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: called.append(1))
+    ch = Checker(client=FakeClient(), live=True)
+    assert isinstance(ch.limiter, core.RateLimiter) and isinstance(ch.cap, core.DailyCap)
+    assert ch.handle({"claim": claim_n(1)}, "8.8.8.8")[0] == 200
+    code, h, _ = ch.handle({"claim": claim_n(2)}, "8.8.8.8")
+    assert code == 429 and h["Cache-Control"] == "no-store" and called == []
+    digest = limits.ip_hash("8.8.8.8")
+    assert digest == hashlib.sha256(f"{limits.FALLBACK_IP_SALT}\n8.8.8.8".encode()).hexdigest()
+    assert "8.8.8.8" not in digest
+    err = capsys.readouterr().err
+    assert "in-memory counters" in err and "8.8.8.8" not in err and TOKEN not in err
+    Checker(client=FakeClient(), live=True)
+    assert "in-memory counters" not in capsys.readouterr().err
+
+
+def test_vercel_without_store_fails_closed(monkeypatch, capsys):
+    from factcheck.service import PAUSED
+    for name in ("KV_REST_API_URL", "KV_REST_API_TOKEN", "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
+        monkeypatch.delenv(name, raising=False)
+    called = []
+    monkeypatch.setattr(urllib.request, "urlopen", lambda *a, **k: called.append(1))
+    for key, val in (("VERCEL", "1"), ("VERCEL_ENV", "production"), ("VERCEL_ENV", "preview")):
+        monkeypatch.delenv("VERCEL", raising=False)
+        monkeypatch.delenv("VERCEL_ENV", raising=False)
+        monkeypatch.setenv(key, val)
+        limits._closed_warned = False
+        ch = Checker(client=FakeClient(), live=True)
+        assert not isinstance(ch.limiter, core.RateLimiter) and not isinstance(ch.cap, core.DailyCap)
+        code, h, body = ch.handle({"claim": claim_n(1)}, "1.2.3.4")
+        assert code == 503 and h["Cache-Control"] == "no-store" and json.loads(body) == PAUSED
+        assert ch._client.calls == 0 and called == []
+        code2, h2, _ = ch.handle({"claim": claim_n(2)}, "9.9.9.9")
+        assert code2 == 503 and h2["Cache-Control"] == "no-store" and ch._client.calls == 0
+        bad, hb, _ = ch.handle({"claim": ""}, "1.2.3.4")
+        assert bad == 400 and hb["Cache-Control"] == "no-store"
+    err = capsys.readouterr().err
+    assert "refusing live checks" in err and "in-memory counters" not in err
+    assert "1.2.3.4" not in err and "9.9.9.9" not in err and "Honey never spoils" not in err and TOKEN not in err
+
+
+def test_vercel_with_store_still_runs(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("VERCEL_ENV", "production")
+    ch = Checker(client=FakeClient(), live=True)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "1.2.3.4")[0] == 200 and ch._client.calls == 1
 
 
 def test_eiffel_berlin_sources_are_neutral():
@@ -446,3 +678,195 @@ def load_tests(loader, tests, pattern):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@pytest.mark.parametrize("wiki,x,jobs", [(False, False, 1), (True, False, 2), (False, True, 2), (True, True, 3)])
+def test_reserved_before_calls_and_refunded(monkeypatch, wiki, x, jobs):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    ch = Checker(client=FakeClient(), live=True, x_enabled=x)
+    pin(ch)
+    original = ch._client.ai_search
+    def inspect(*args):
+        assert ch.cap.spent == pytest.approx(.01 * jobs)
+        return original(*args)
+    ch._client.ai_search = inspect
+    assert ch.handle({"claim": claim_n(1), "wiki": str(wiki)}, "ip")[0] == 200
+    assert ch.cap.spent == pytest.approx(.004 * (1 + wiki) + .0015 * x)
+
+
+@pytest.mark.parametrize("shared", [False, True])
+def test_unknown_cost_keeps_full_reservation(monkeypatch, shared):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, VERCEL=1, DEMO_DAILY_CAP_USD=.02,
+              DEMO_RESERVE_COST_USD=.01, DEMO_FALLBACK_COST_USD=.005)
+    if not shared:
+        for name in ("VERCEL", "VERCEL_ENV", "KV_REST_API_URL", "KV_REST_API_TOKEN",
+                     "UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"):
+            monkeypatch.delenv(name, raising=False)
+    client = NoCostClient()
+    ch = Checker(client=client, live=True, x_enabled=False)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1)}, "10.0.0.1")[0] == 200
+    assert ch.handle({"claim": claim_n(2)}, "10.0.0.2")[0] == 200
+    code, headers, body = ch.handle({"claim": claim_n(3)}, "10.0.0.3")
+    assert code == 503 and headers["Cache-Control"] == "no-store"
+    assert json.loads(body)["sample"] == "/sample.json"
+    assert client.calls == 2
+    assert ch.cap.spent == pytest.approx(.02)
+    if shared:
+        assert float(fake.values[ch.cap._usd_key()]) == pytest.approx(.02)
+    else:
+        assert isinstance(ch.cap, core.DailyCap) and fake.seen == []
+
+
+def test_mixed_parallel_costs_keep_unknown_job_reservation(monkeypatch):
+    class MixedCostClient(NoCostClient):
+        def ai_search(self, payload, tag=""):
+            status, body, rec = super().ai_search(payload, tag)
+            if tag == "check-ai":
+                rec.update(cost=.002, cost_known=True)
+            return status, body, rec
+
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, VERCEL=1, DEMO_DAILY_CAP_USD=.02,
+              DEMO_RESERVE_COST_USD=.01, DEMO_FALLBACK_COST_USD=.005)
+    client = MixedCostClient()
+    ch = Checker(client=client, live=True, x_enabled=False)
+    pin(ch)
+    assert ch.handle({"claim": claim_n(1), "wiki": "1"}, "ip")[0] == 200
+    assert client.calls == 2
+    assert float(fake.values[ch.cap._usd_key()]) == pytest.approx(.002 + .01)
+
+
+@pytest.mark.parametrize("status", [200, 400, 401, 402, 403, 429, 500])
+@pytest.mark.parametrize("known", [False, True])
+def test_cap_cost_status_rules(status, known):
+    ch = mk()
+    expected = .004 if known else (.01 if status < 500 and status != 429 else 0)
+    if status in (401, 402, 403):
+        expected = 0
+    assert ch.cap_cost(status, {"cost": .004, "cost_known": known}) == pytest.approx(expected)
+
+
+def test_refused_reservation(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD=.009)
+    ch = Checker(client=FakeClient(), live=True)
+    code, headers, body = ch.handle({"claim": claim_n(1)}, "ip")
+    assert code == 503 and headers["Cache-Control"] == "no-store"
+    assert json.loads(body)["sample"] == "/sample.json" and ch._client.calls == 0
+
+
+@pytest.mark.parametrize("shared", [False, True])
+def test_cap_settlement_boundaries(monkeypatch, shared):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake)
+    now = [NOW]
+    cap = limits.SharedLimits("https://fake", TOKEN, 100, 100, 100, .01, clock=lambda: now[0]) if shared else core.DailyCap(.01, clock=lambda: now[0])
+    token = cap.reserve(.01)
+    assert token is not None and cap.reserve(.001) is None
+    cap.settle(token, None)
+    assert cap.spent == pytest.approx(.01)
+    cap.settle(token, .004)
+    assert cap.spent == pytest.approx(.004)
+    cap.release(token)
+    assert cap.spent == 0
+    token = cap.reserve(.01)
+    now[0] += 86400
+    new = cap.reserve(.01)
+    cap.release(token)
+    assert cap.ok() is False  # today's reservation is unaffected
+    if shared:
+        assert fake.values[token[0]] == 0
+    cap.release(new)
+
+
+def test_connection_failure_and_partial_billing():
+    ch = mk(x_enabled=True)
+    ch._client.x_search = lambda *a: (_ for _ in ()).throw(OSError("offline"))
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 500
+    assert ch.cap.spent == pytest.approx(.004)
+    ch = mk()
+    ch._client.ai_search = lambda *a: (_ for _ in ()).throw(OSError("offline"))
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 500
+    assert ch.cap.spent == 0
+
+
+def test_settle_error_preserves_success(capsys):
+    ch = mk()
+    def fail(*args):
+        raise limits.StoreError("offline")
+    ch.cap.settle = fail
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 200
+    assert ch.cap.spent == .01
+    assert capsys.readouterr().err.count("[check] shared limit store error on settle") == 1
+
+
+def test_actual_above_reservation(capsys):
+    ch = mk()
+    original = ch._client.ai_search
+    def costly(*args):
+        st, body, rec = original(*args)
+        rec["cost"] = .02
+        return st, body, rec
+    ch._client.ai_search = costly
+    assert ch.handle({"claim": claim_n(1)}, "ip")[0] == 200
+    assert ch.cap.spent == pytest.approx(.02)
+    assert "[check] 0.02 0.01" in capsys.readouterr().err
+
+
+def test_atomic_concurrent_reservations(monkeypatch):
+    fake = FakeRedis()
+    use_store(monkeypatch, fake, DEMO_DAILY_CAP_USD=.03, DEMO_GLOBAL_10MIN=100)
+    gate = threading.Event()
+    clients = []
+    checkers = []
+    for i in range(12):
+        client = FakeClient()
+        original = client.ai_search
+        def blocked(*args, original=original):
+            gate.wait(5)
+            st, body, rec = original(*args)
+            rec["cost"] = .01
+            return st, body, rec
+        client.ai_search = blocked
+        clients.append(client)
+        checkers.append(Checker(client=client, live=True))
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        futures = [pool.submit(ch.handle, {"claim": claim_n(i)}, str(i)) for i, ch in enumerate(checkers)]
+        # Release only after all reservation decisions have reached the fake store.
+        for _ in range(1000):
+            with fake.lock:
+                attempts = sum(cmd[0] == "EVAL" and cmd[1] == limits.RESERVE_SCRIPT for r in fake.seen for cmd in r["body"])
+            if attempts == 12:
+                break
+            time.sleep(.001)
+        gate.set()
+        codes = [f.result()[0] for f in futures]
+    assert fake.peak <= .03 + 1e-9
+    assert sum(c.calls for c in clients) <= 3
+    assert codes.count(200) == 3
+
+
+@pytest.mark.parametrize("raw", [None, [], [1], [2, "0"], [1, "nan"], [1, "bad"], [1, -1]])
+def test_malformed_reservation_result(raw):
+    cap = limits.SharedLimits("https://fake", TOKEN, 1, 1, 1, 1)
+    with patch.object(cap, "_exec", return_value=[raw]):
+        with pytest.raises(limits.StoreError):
+            cap.reserve(.01)
+
+
+@pytest.mark.parametrize("raw", [None, [], "nan", "bad", -1])
+def test_malformed_settlement_result(raw):
+    cap = limits.SharedLimits("https://fake", TOKEN, 1, 1, 1, 1)
+    with patch.object(cap, "_exec", return_value=[raw]):
+        with pytest.raises(limits.StoreError):
+            cap.settle(("day", .01), .004)
+
+
+def test_closed_store_reservations_fail():
+    cap = limits.ClosedStore()
+    for method, args in ((cap.reserve, (.01,)), (cap.settle, (("day", .01), None)), (cap.release, (("day", .01),))):
+        with pytest.raises(limits.StoreError):
+            method(*args)

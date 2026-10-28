@@ -62,15 +62,23 @@ The key is read on the server only (`DESEARCH_API_KEY`), never sent to the brows
 
 - input checks (no call for blank or junk input);
 - a per-IP limit (5 checks per 10 minutes, 15 per day) and a global limit (30 per 10 minutes);
-- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day); if a response carries no cost, the call counts `DEMO_FALLBACK_COST_USD` (default $0.005);
+- a daily spend cap from the `X-Desearch-Cost-Usd` header (`DEMO_DAILY_CAP_USD`, default $1.00, UTC day); unknown 2xx/4xx cost keeps the full per-call reservation (`DEMO_RESERVE_COST_USD`, default $0.01), except 401/402/403 and 429 which count zero;
 - a 6-hour cache: `Cache-Control: public, max-age=0, s-maxage=21600` on result responses, plus an in-memory cache keyed by the normalized claim and the Wikipedia and X settings;
 - a kill switch: `DEMO_LIVE=0` turns off live calls and points to `/sample.json`.
 
-On a serverless host the limit, cap and in-memory cache are per warm instance, so they are best effort; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
+The per-IP limit, the global limit and the daily cap are stored in Upstash Redis when `KV_REST_API_URL` and `KV_REST_API_TOKEN` are set (or `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`), so they hold across Vercel instances. On Vercel, if that store is not configured, `/api/check` returns 503 with the sample pointer and makes no paid call. A local run with no store falls back to in-memory counters and logs a warning once. If the store fails before paid calls, the endpoint returns that same 503. The in-memory result cache is still per warm instance; the CDN cache and the key's balance are the outer limits. See `DEPLOY.md`.
+
+Before paid calls, the checker atomically reserves the worst-case cost in Redis with one Lua `EVAL` through `POST /multi-exec`. It reserves `max(DEMO_RESERVE_COST_USD, DEMO_FALLBACK_COST_USD)` per job: one web call, plus one each for Wikipedia and enabled X. A refused reservation returns 503 with `"sample": "/sample.json"` and `Cache-Control: no-store`, with no paid call. Afterwards it reconciles the reservation to actual cost, never below zero, on the UTC day reserved. Unknown 2xx/4xx cost keeps the full per-call reservation (`DEMO_RESERVE_COST_USD`, default $0.01), except 401/402/403 and 429 which count zero; unknown 5xx cost counts zero, and connection failures before any response release the reservation. The only remaining overshoot is a check whose actual cost exceeds its reservation. If settlement fails after a paid result, the result is returned and the full reservation stays counted.
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `DEMO_RESERVE_COST_USD` | `0.01` | Worst-case reservation per paid call, at least `DEMO_FALLBACK_COST_USD`. |
+| `DEMO_FALLBACK_COST_USD` | `0.005` | Minimum for the reservation per paid call. |
 
 ## Files
 
 - `factcheck/core.py`: input checks, request bodies, source and text cleanup, citation check, X post filters, limiter, cap, cache and report rendering. No network.
+- `factcheck/limits.py`: shared Upstash Redis counters (stdlib urllib). Local runs fall back to the in-memory limiter and cap when no store is configured. On Vercel a missing store fails closed.
 - `factcheck/client.py`: plain HTTP Desearch client (key redaction guard).
 - `factcheck/service.py`: the `/api/check` endpoint logic shared by local and Vercel.
 - `api/check.py`: Vercel Python function. `public/index.html`: the page. `vercel.json`: function settings.
