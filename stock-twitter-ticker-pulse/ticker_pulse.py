@@ -1,5 +1,6 @@
 """Build a small, sampled public X stock ticker board using only the stdlib."""
 import argparse
+import copy
 import socket
 import csv
 from collections import Counter
@@ -249,7 +250,7 @@ def write_csv(path, fields, rows):
 
 
 def anonymized(raw):
-    """Copy report data and replace account names in all report strings."""
+    """Copy report data and replace account names in post-level strings only."""
     labels = {}
 
     def label(username):
@@ -277,7 +278,7 @@ def anonymized(raw):
             if labels:
                 names = '|'.join((re.escape(name) for name in sorted(labels,
                     key=len, reverse=True)))
-                pattern = '(?<![A-Za-z0-9_])(' + names + ')(?![A-Za-z0-9_])'
+                pattern = '(?<![A-Za-z0-9_$])(' + names + ')(?![A-Za-z0-9_])'
                 value = re.sub(pattern, lambda match: labels[match[1].lower()], value, flags=re.I)
             return value
         if isinstance(value, list):
@@ -285,7 +286,16 @@ def anonymized(raw):
         if isinstance(value, dict):
             return {key: replace(item) for key, item in value.items()}
         return value
-    return replace(raw)
+    result = copy.deepcopy(raw)
+    for call in result['calls']:
+        for post in call.get('posts', []):
+            for field in ('text', 'url', 'user'):
+                if field in post:
+                    post[field] = replace(post[field])
+            if isinstance(post.get('entities'), dict):
+                post['entities'] = {key: item if key == 'symbols' else replace(item)
+                    for key, item in post['entities'].items()}
+    return result
 
 
 def board_row(s):
@@ -475,9 +485,14 @@ def main(argv=None, today=None):
     if args.from_raw:
         try:
             raw = json.loads(Path(args.from_raw).read_text(encoding='utf-8'))
+        except Exception as exc:
+            parser.error(f'Could not read raw file: {type(exc).__name__}: {exc}')
+        if not isinstance(raw, dict) or not raw.get('tickers'):
+            parser.error('Raw file has no tickers to render.')
+        try:
             render(raw, args.out, replay=True, anonymize=args.anonymize)
-        except Exception:
-            parser.error('Could not render raw file.')
+        except Exception as exc:
+            parser.error(f'Could not render raw file: {type(exc).__name__}: {exc}')
         return 0
     values = list(args.tickers)
     try:

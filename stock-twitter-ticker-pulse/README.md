@@ -59,7 +59,7 @@ Per-ticker Top window shows the oldest and newest valid created_at among kept To
 
 ## Sample output
 
-`sample-output.md` is produced with `--anonymize` from a real run.
+`sample-output.md` was re-rendered offline with `--from-raw --anonymize` from the raw file of a real run (live run on 2026-10-28).
 
 | Ticker | Returned | Spam | Off-topic | Kept | Latest span (h) | Top post likes | Tilt |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -68,7 +68,7 @@ Per-ticker Top window shows the oldest and newest valid created_at among kept To
 | SOFI | Latest: 20; Top: 20 | 0 (0.0%) | 0 (0.0%) | 40 | 5.5 | 1732 | more bullish words |
 
 ```sh
-python3 ticker_pulse.py NVDA --timeout 60 --anonymize --out sample
+python3 ticker_pulse.py --from-raw output/raw-2026-10-28.json --anonymize --out sample
 ```
 
 ## Cost

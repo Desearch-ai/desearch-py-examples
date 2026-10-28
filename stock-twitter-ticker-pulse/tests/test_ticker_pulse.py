@@ -384,6 +384,81 @@ class PulseTests(unittest.TestCase):
         self.assertEqual(raw['calls'][0]['posts'][0]['user']['username'], POSTS[0]['user']['username'])
         self.assertNotIn('account-1', self.read('raw', 'json'))
 
+    def test_anonymize_username_matching_sort(self):
+        post = dict(POSTS[0], id='top', text='$NVDA Top pick, bullish @Top',
+                    url='https://x.com/Top/status/1', user={'username': 'Top'})
+        raw = {'date': str(DAY), 'params': {'count': 20, 'max_cashtags': 5}, 'tickers': ['NVDA'],
+               'calls': [call(posts=[post]), call('Top', [post])]}
+        original = copy.deepcopy(raw)
+        result = app.anonymized(raw)
+        self.assertEqual(raw, original)
+        self.assertEqual([c['sort'] for c in result['calls']], ['Latest', 'Top'])
+        self.assertEqual(result['calls'][1]['posts'][0]['user']['username'], 'account-1')
+        self.opener.side_effect = lambda *a, **k: response([post])
+        self.run_app('--anonymize')
+        board = self.read('board', 'md')
+        self.assertIn('Latest: 1; Top: 1', board)
+        self.assertIn('Top window (UTC): 2026-10-27T05:20:09+00:00', board)
+        self.assertIn('Top likes among kept posts: min 80, max 80', board)
+        self.assertIn('| NVDA | Top | 200 |', board)
+        self.assertIn('@account-1](https://x.com/account-1/status/1)', board)
+        costs = list(csv.DictReader(io.StringIO(self.read('costs', 'csv'))))
+        self.assertEqual([r['sort'] for r in costs], ['Latest', 'Top'])
+        rows = list(csv.DictReader(io.StringIO(self.read('posts', 'csv'))))
+        self.assertEqual([(r['username'], r['sorts']) for r in rows], [('account-1', 'Latest;Top')])
+        board_row = next(csv.DictReader(io.StringIO(self.read('board', 'csv'))))
+        self.assertEqual((board_row['returned_top'], board_row['top_username']), ('1', 'account-1'))
+
+    def test_anonymize_username_matching_ticker(self):
+        post = dict(POSTS[0], id='nv', text='$NVDA bullish @nvda', url='https://x.com/nvda/status/1',
+                    user={'username': 'nvda'}, entities={'symbols': [{'text': 'NVDA'}]})
+        raw = {'date': str(DAY), 'params': {'count': 20, 'max_cashtags': 5}, 'tickers': ['NVDA'],
+               'calls': [call(posts=[post])]}
+        result = app.anonymized(raw)
+        self.assertEqual(result['tickers'], ['NVDA'])
+        self.assertEqual(result['calls'][0]['ticker'], 'NVDA')
+        anonymous = result['calls'][0]['posts'][0]
+        self.assertEqual(anonymous['entities']['symbols'], [{'text': 'NVDA'}])
+        self.assertEqual(app.spam_reasons(anonymous, 'NVDA'), [])
+        self.opener.side_effect = lambda *a, **k: response([post])
+        self.run_app('--anonymize', '--latest-only')
+        rows = list(csv.DictReader(io.StringIO(self.read('posts', 'csv'))))
+        self.assertEqual([(r['ticker'], r['username'], r['filter_group'], r['cashtags']) for r in rows],
+                         [('NVDA', 'account-1', 'kept', 'NVDA')])
+        self.assertIn('$NVDA bullish @account-1', rows[0]['text'])
+        board = self.read('board', 'md')
+        self.assertIn('## NVDA', board)
+        self.assertIn('| NVDA | Latest: 1 |', board)
+        self.assertIn('@account-1](https://x.com/account-1/status/1)', board)
+        for name in ('posts-%s.csv', 'board-%s.md', 'board-%s.csv'):
+            self.assertNotIn('nvda', (self.out / (name % DAY)).read_text())
+            self.assertNotIn('$account', (self.out / (name % DAY)).read_text())
+
+    def assert_raw_error(self, path, message):
+        with self.assertRaises(SystemExit) as error:
+            app.main(['--from-raw', str(path), '--out', str(self.out / 'replay')])
+        self.assertEqual(error.exception.code, 2)
+        self.assertIn(message, self.stderr.getvalue())
+        self.assertNotIn(KEY, self.stderr.getvalue())
+
+    def test_from_raw_missing_file(self):
+        self.assert_raw_error(self.out / 'missing.json', 'FileNotFoundError')
+
+    def test_from_raw_invalid_json(self):
+        path = self.out / 'bad.json'
+        path.write_text('{not json')
+        self.assert_raw_error(path, 'JSONDecodeError')
+
+    def test_from_raw_empty_tickers(self):
+        path = self.out / 'empty.json'
+        path.write_text(json.dumps({'date': str(DAY), 'params': {}, 'tickers': [], 'calls': []}))
+        self.assert_raw_error(path, 'Raw file has no tickers to render.')
+
+    def test_from_raw_missing_tickers(self):
+        path = self.out / 'nokey.json'
+        path.write_text(json.dumps({'date': str(DAY), 'params': {}, 'calls': []}))
+        self.assert_raw_error(path, 'Raw file has no tickers to render.')
+
     def test_watchlist_comments(self):
         watchlist = self.out / 'watchlist'
         watchlist.write_text('# comment\n$nvda # note\nTSLA\nnvda\n')
