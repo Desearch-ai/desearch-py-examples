@@ -20,9 +20,9 @@ class FakeClock:
 
 
 class FakeClient:
-    def __init__(self, clock, status, body, elapsed, failure=None, known=True):
+    def __init__(self, clock, status, body, elapsed, failure=None, known=True, cost=.002):
         self.clock, self.status, self.body = clock, status, body
-        self.elapsed, self.failure, self.known = elapsed, failure, known
+        self.elapsed, self.failure, self.known, self.cost = elapsed, failure, known, cost
         self.calls = 0
 
     def extract(self, url):
@@ -30,16 +30,16 @@ class FakeClient:
         self.clock.now += self.elapsed
         if self.failure:
             raise self.failure
-        return self.status, self.body, {'cost': .002, 'cost_known': self.known}
+        return self.status, self.body, {'cost': self.cost, 'cost_known': self.known}
 
 
 def dns(host, port, **kwargs):
     return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', ('93.184.216.34', port))]
 
 
-def make(status=200, body=None, elapsed=0, failure=None, known=True):
+def make(status=200, body=None, elapsed=0, failure=None, known=True, cost=.002):
     clock = FakeClock()
-    client = FakeClient(clock, status, body, elapsed, failure, known)
+    client = FakeClient(clock, status, body, elapsed, failure, known, cost)
     service = Converter(client=client, resolver=dns, live=True, clock=clock,
                         limiter=RateLimiter(), cap=DailyCap(), cache=TTLCache())
     service.fallback_cost = .0005
@@ -89,10 +89,9 @@ def test_errors(upstream, elapsed, payload, failure, known, code, status, messag
 
 
 @pytest.mark.parametrize('payload', [
-    {'html': ''}, {'data': {'html': '<html><body></body></html>'}},
-    {'html': '<html><head><script>window.__INITIAL_STATE__ = {"site":"x.com"};</script></head><body><div id="react-root"></div></body></html>'},
+    '', {'markdown': ''}, {'data': {'markdown': ''}},
     None, {}, [], 42, {'content': None}, {'data': None},
-    {'html': '<p>Just a few words</p>'},
+    'Just a few words',
 ])
 def test_empty(payload):
     service, client = make(body=payload)
@@ -244,8 +243,25 @@ def test_validation_dns_failure_and_private_addresses(addresses):
 
 
 def test_successful_content_is_not_unreachable():
-    service, client = make(200, {'html': '<p>DNS connection refused</p>'})
+    service, client = make(200, 'DNS connection refused')
     code, body = response(service)
     assert code == 200
     assert body['status'] == 'empty'
     assert client.calls == 1
+
+
+@pytest.mark.parametrize('upstream,error_code,code,status,message', [
+    (422, 'js_required', 422, 'js_required', 'This page only shows its content after JavaScript runs, and the demo reads pages without it. Try another link.'),
+    (503, 'blocked', 502, 'blocked', 'The site blocked us from reading this page. Try another link.'),
+    (503, 'upstream_timeout', 504, 'timed_out', 'Timed out fetching this page. Try again or use another link.'),
+    (404, 'page_not_found', 404, 'not_found', 'Page not found. Check the link and try again.'),
+    (404, 'no_content', 404, 'empty', 'This page has no readable text. Try another link.'),
+])
+def test_api_error_codes(upstream, error_code, code, status, message):
+    # The API refunds these and sends X-Desearch-Cost-Usd: 0, which the client reports as a known zero cost.
+    service, client = make(upstream, {'detail': 'from the API', 'error_code': error_code, 'cost_usd': 0}, elapsed=10, cost=0)
+    got, body = response(service)
+    assert (got, body['status'], body['message']) == (code, status, message)
+    assert service.cap.spent == 0
+    assert client.calls == 1
+

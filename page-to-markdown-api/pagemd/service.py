@@ -147,6 +147,17 @@ class Converter:
             return sample(400, 'invalid', 'The page redirected to an unsafe address. Try another link.')
         if st in (401, 402, 403):
             return sample(503, 'paused', 'The live demo is paused. See the saved sample below.')
+        error_code = body.get('error_code') if isinstance(body, dict) else None
+        if error_code == 'js_required':
+            return sample(422, 'js_required', 'This page only shows its content after JavaScript runs, and the demo reads pages without it. Try another link.')
+        if error_code == 'blocked':
+            return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
+        if error_code == 'upstream_timeout':
+            return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
+        if error_code == 'page_not_found':
+            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
+        if error_code == 'no_content':
+            return sample(404, 'empty', 'This page has no readable text. Try another link.')
         if st not in (200, 598) and _site_blocked(body):
             return sample(502, 'blocked', 'The site blocked us from reading this page. Try another link.')
         if unreachable:
@@ -161,10 +172,10 @@ class Converter:
         if isinstance(content, dict):
             content = content.get('data', content.get('result', content))
             if isinstance(content, dict):
-                content = content.get('html', content.get('text', content.get('content', '')))
+                content = content.get('markdown', content.get('content', ''))
         if not isinstance(content, str):
             content = ''
-        title, md, _ = core.html_to_markdown(content, url)
+        title, md, _ = core.markdown_parts(content)
         words = core.word_count(md)
         note = '\n\n[Output truncated at 200 KB.]'
         truncated = len(md.encode()) > MAX_MARKDOWN

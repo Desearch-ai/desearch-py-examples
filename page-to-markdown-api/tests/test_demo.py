@@ -15,11 +15,11 @@ def dns(host, port, **kwargs):
     return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', ('93.184.216.34', port))]
 
 
-HTML = '<html><head><title>Reading &amp; gardens</title></head><body><h1>Reading</h1><p>' + 'a lovely garden with books ' * 12 + '</p></body></html>'
+PAGE = '# Reading & gardens\n\n' + 'a lovely garden with books ' * 12 + '\n\n[Read more](https://example.com/more)'
 
 
 class FakeClient:
-    def __init__(self, status=200, body=HTML, rec=None):
+    def __init__(self, status=200, body=PAGE, rec=None):
         self.status, self.body = status, body
         self.rec = rec or {'cost': 0, 'cost_known': False}
         self.calls = 0
@@ -113,9 +113,9 @@ def test_final_private_url_rejected(placement):
     if placement == 'rec':
         client.rec['final_url'] = 'http://10.0.0.5'
     elif placement == 'body':
-        client.body = {'html': HTML, 'final_url': 'http://10.0.0.5'}
+        client.body = {'markdown': PAGE, 'final_url': 'http://10.0.0.5'}
     else:
-        client.body = {'data': {'html': HTML, 'redirect_url': 'http://10.0.0.5'}}
+        client.body = {'data': {'markdown': PAGE, 'redirect_url': 'http://10.0.0.5'}}
     c = make(client)
     assert response(c)[0] == 400 and client.calls == 1
     assert not c.cache.d
@@ -123,12 +123,12 @@ def test_final_private_url_rejected(placement):
 
 def test_title_empty_and_output_cap():
     assert response(make())[1]['title'] == 'Reading & gardens'
-    c = make(FakeClient(body='<div id="root"></div>'))
+    c = make(FakeClient(body=''))
     body = response(c)[1]
     assert body['status'] == 'empty'
     assert body['message'] == 'This page looks empty (JavaScript-heavy). Try another link.'
     assert c._client.calls == 1 and c.cap.spent == .0005
-    body = response(make(FakeClient(body='<p>' + 'café ' * 60000 + '</p>')))[1]
+    body = response(make(FakeClient(body='café ' * 60000)))[1]
     assert body['truncated'] and len(body['markdown'].encode()) <= MAX_MARKDOWN
     assert body['markdown'].endswith('[Output truncated at 200 KB.]')
 
@@ -166,10 +166,10 @@ def test_global_limit():
 
 
 @pytest.mark.parametrize('headers,body,cost', [
-    ({'X-Desearch-Cost-USD': '.002'}, {'html': HTML, 'cost_usd': .003}, .002),
-    ({}, {'html': HTML, 'cost_usd': .003}, .003),
-    ({}, {'html': HTML}, .0005),
-    ({'X-Desearch-Cost-USD': 'NaN'}, {'html': HTML, 'cost_usd': .003}, .003),
+    ({'X-Desearch-Cost-USD': '.002'}, {'markdown': PAGE, 'cost_usd': .003}, .002),
+    ({}, {'markdown': PAGE, 'cost_usd': .003}, .003),
+    ({}, {'markdown': PAGE}, .0005),
+    ({'X-Desearch-Cost-USD': 'NaN'}, {'markdown': PAGE, 'cost_usd': .003}, .003),
 ])
 def test_header_body_fallback_and_daily_cap(headers, body, cost):
     reply = Mock(status=200, headers=headers)
@@ -221,7 +221,7 @@ def test_query_helpers():
 
 def test_public_final_url_dns_checked():
     resolver = Mock(side_effect=dns)
-    c = make(FakeClient(body={'data': {'html': HTML, 'final_url': 'https://other.example/page'}}))
+    c = make(FakeClient(body={'data': {'markdown': PAGE, 'final_url': 'https://other.example/page'}}))
     c.resolver = resolver
     assert response(c)[0] == 200
     assert [call.args[0] for call in resolver.call_args_list] == ['example.com', 'other.example']
