@@ -25,7 +25,7 @@ class Client:
         self.opener = opener or urllib.request.build_opener(NoRedirect()).open
 
     def extract(self, url):
-        query = urllib.parse.urlencode({'url': url, 'format': 'html', 'js': 'false'})
+        query = urllib.parse.urlencode({'url': url, 'format': 'markdown', 'js': 'false'})
         req = urllib.request.Request('https://api.desearch.ai/web/extract?' + query,
                                      headers={'Authorization': self.key, 'User-Agent': 'page-to-markdown/0.1 (+https://desearch.ai)'})
         try:

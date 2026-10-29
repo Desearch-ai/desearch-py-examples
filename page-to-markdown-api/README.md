@@ -2,9 +2,9 @@
 
 Made by Desearch · https://desearch.ai
 
-A small Python CLI and library that turns a list of URLs into clean Markdown files. It calls the Desearch API Extract endpoint (`GET /web/extract`) with `js=false`, converts the returned HTML to Markdown locally, and retries once when a page comes back with no readable text. Every call is logged with its status, latency and the cost from the `X-Desearch-Cost-Usd` response header.
+A small Python CLI and library that turns a list of URLs into clean Markdown files. It calls the Desearch API Extract endpoint (`GET /web/extract`) with `format=markdown` and `js=false`, so the API returns the page as Markdown (headings, links, lists, tables and code), and retries once when a page comes back with no readable text. Every call is logged with its status, latency and the cost from the `X-Desearch-Cost-Usd` response header.
 
-It works on pages whose text is in the HTML the server sends (articles, docs, blogs, reference pages). Pages that build their content in the browser with JavaScript will come back with little or no text in this mode; the tool marks them `EMPTY` and writes no file for them.
+It works on pages whose text is in the HTML the server sends (articles, docs, blogs, reference pages). Pages that build their content in the browser with JavaScript come back as `422` with `error_code` `js_required` in this mode, at no charge; the tool writes no file for them.
 
 ## Demo
 
@@ -31,7 +31,7 @@ python page2md.py https://example.com https://docs.python.org/3/tutorial/introdu
 
 `urls.txt` has one URL per line; lines starting with `#` are skipped. Options:
 
-- `--format html|text`: which Extract format to convert from (default `html`, which keeps headings, lists, links and code blocks)
+- `--format markdown|html|text`: which Extract format to request (default `markdown`, saved as returned; `html` and `text` are converted locally)
 - `--no-retry`: skip the one retry on an empty result
 
 Output in `--out`:
@@ -55,10 +55,10 @@ print(r["markdown"])
 
 - Send a custom `User-Agent` header. The client sets `page-to-markdown/0.1`.
 - Blank or malformed URLs are skipped locally before any call is made.
-- A page that returns an error, or that cannot be reached, comes back as a non-200 status with a short `detail` message; check `summary.md` for those rows.
-- Relative links are resolved against the page URL. Navigation, footers, forms and scripts are dropped.
+- A page that returns an error comes back as a non-200 status with a short `detail` message and an `error_code` (`page_not_found`, `js_required`, `blocked`, ...) and is not charged; check `summary.md` for those rows.
+- Links in the Markdown are absolute. Navigation, footers, forms and scripts are dropped.
 - Tests run offline: `pytest -q`.
 
 ## Files
 
-`page2md.py` (CLI and HTTP client), `core.py` (HTML to Markdown and helpers, no network), `test_page2md.py` (offline tests), `urls.txt` (the 10 URLs used for the sample), `samples/` (sample output), `sample-output.md`.
+`page2md.py` (CLI and HTTP client), `core.py` (Markdown helpers and the local HTML converter for `--format html`, no network), `test_page2md.py` (offline tests), `urls.txt` (the 10 URLs used for the sample), `samples/` (sample output), `sample-output.md`.

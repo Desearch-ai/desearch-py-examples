@@ -92,3 +92,19 @@ def test_blank_or_bad_url_skipped_without_call():
         r = page2md.page_to_markdown(f, u, "x")
         assert r["status"] == "skipped" and r["cost_usd"] == 0.0
     assert f.calls == []
+
+
+def test_markdown_parts_title_and_links():
+    md = "Intro\n\n## [Visiting fees](https://peles.ro/fees)\n\n- Adults: 100 lei\n\n[Buy tickets](https://bilete.peles.ro/) [again](https://bilete.peles.ro/)"
+    title, out, links = core.markdown_parts(md)
+    assert title == "Visiting fees"
+    assert out == md
+    assert links == ["https://peles.ro/fees", "https://bilete.peles.ro/"]
+    assert core.markdown_parts("") == ("", "", [])
+    assert core.markdown_parts("## Open today\n\n# Visiting schedule\n\ntext")[0] == "Visiting schedule"
+
+
+def test_cli_defaults_to_markdown():
+    assert page2md.Client("k").fmt == "markdown"
+    assert page2md.to_markdown("# Title\n\nbody text here", "markdown")[0] == "Title"
+

@@ -82,7 +82,7 @@ def test_valid_request_calls_limiter_once_before_downstream(mode):
         {'status': 'ok'} if mode == 'cache' else None))
     c.cap.ok = Mock(side_effect=lambda: events.append('cap') or mode != 'cap')
     c._client.extract = Mock(side_effect=lambda url: events.append('client') or (
-        200, '<p>hello</p>', {'cost': 0, 'cost_known': True}))
+        200, 'hello', {'cost': 0, 'cost_known': True}))
     c.live = mode != 'paused'
     response(c)
     c.limiter.allow.assert_called_once_with('ip')

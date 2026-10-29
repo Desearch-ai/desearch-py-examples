@@ -25,7 +25,7 @@ def now():
 class Client:
     """One GET /web/extract per call. Logs to calls.jsonl and saves raw responses with the key redacted."""
 
-    def __init__(self, key, out=None, fmt="html", timeout=120):
+    def __init__(self, key, out=None, fmt="markdown", timeout=120):
         self.key, self.out, self.fmt, self.timeout, self.n, self.total = key, out, fmt, timeout, 0, 0.0
         if out:
             (out / "raw").mkdir(parents=True, exist_ok=True)
@@ -60,6 +60,8 @@ class Client:
 
 
 def to_markdown(body, fmt, base=""):
+    if fmt == "markdown":
+        return core.markdown_parts(body)
     if fmt == "html":
         return core.html_to_markdown(body, base)
     return "", core.text_to_markdown(body), []
@@ -91,7 +93,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("urls", nargs="+", help="URLs, or a .txt file with one URL per line")
     ap.add_argument("--out", default="out", help="folder for .md files, calls.jsonl, raw/ and summary.md")
-    ap.add_argument("--format", default="html", choices=["html", "text"], help="Extract format to convert from")
+    ap.add_argument("--format", default="markdown", choices=["markdown", "html", "text"],
+                    help="Extract format: markdown comes back ready to save; html and text are converted locally")
     ap.add_argument("--no-retry", action="store_true", help="skip the one retry on an empty 200")
     a = ap.parse_args(argv)
     urls = []

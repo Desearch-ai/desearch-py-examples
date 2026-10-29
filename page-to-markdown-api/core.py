@@ -110,6 +110,15 @@ def html_to_markdown(html_text, base=""):
     return re.sub(r"\s+", " ", p.title.replace("\u2014", "-")).strip(), md, list(dict.fromkeys(p.links))
 
 
+def markdown_parts(md):
+    """For format=markdown bodies: return (title, markdown, links); the title is the first h1, else the first heading."""
+    md = (md or "").replace("\r\n", "\n").strip()
+    heading = re.search(r"(?m)^#\s+(.+)$", md) or re.search(r"(?m)^#{1,6}\s+(.+)$", md)
+    title = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", heading.group(1)).strip() if heading else ""
+    links = re.findall(r"\]\((https?://[^)\s]+)", md)
+    return title, md, list(dict.fromkeys(links))
+
+
 def text_to_markdown(text):
     """For format=text bodies: keep paragraphs, collapse runs of blank lines."""
     return re.sub(r"\n{3,}", "\n\n", (text or "").replace("\r\n", "\n")).strip()
