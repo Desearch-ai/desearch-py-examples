@@ -55,7 +55,7 @@ See [Sample output](sample-output.md) for a real run.
 
 ## Cost
 
-Measured on 2026-10-29 (cost from the X-Desearch-Cost-Usd response header): an Instagram, TikTok or Facebook profile that is found cost $0.00207 per call; X user posts cost $0.0027 to $0.00285 per found account (18 to 19 posts returned); every not found answer (404) and every TikTok 503 cost $0. Three handles on four networks (12 calls) cost $0.01383 and took about 10 seconds with parallel calls. Use --dry-run to see the planned calls first.
+Measured on 2026-10-29 (cost from the X-Desearch-Cost-Usd response header): an Instagram, TikTok or Facebook profile that is found cost $0.00207 per call; X user posts cost $0.0027 to $0.00285 per found account (18 to 19 posts returned); every not found answer (404) and every TikTok 503 cost $0. Three handles on four networks (12 calls in total) cost $0.02097 and took about 10 seconds with parallel calls. Use --dry-run to see the planned calls first.
 
 ## Known limits
 
