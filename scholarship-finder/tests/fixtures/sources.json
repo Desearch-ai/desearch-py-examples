@@ -1,0 +1,30 @@
+[
+  {
+    "path": "/search",
+    "status": 200,
+    "response_body": {
+      "results": [
+        {
+          "url": "https://fnsna.org/2027-undergraduate-scholarship-application",
+          "title": "2027 Undergraduate Scholarship Application  | FNSNA.ORG",
+          "highlights": [
+            "The 2027-2028 Scholarship Application\nSeptember 8,2026-January 11,2027\n"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "path": "/web",
+    "status": 200,
+    "response_body": {
+      "data": [
+        {
+          "link": "https://www.fnsna.org/2027-undergraduate-scholarship-application",
+          "title": "2027 Undergraduate Scholarship Application | FNSNA.ORG",
+          "snippet": "We cannot provide a description for this page right now"
+        }
+      ]
+    }
+  }
+]
