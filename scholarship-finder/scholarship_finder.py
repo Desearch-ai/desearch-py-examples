@@ -48,6 +48,11 @@ def sentence_window(text, start, end):
     return text[max(left, start - 150):min(right, end + 150)], max(left, start - 150)
 
 
+def date_negated(text, start, end):
+    window, _ = sentence_window(text, start, end)
+    return bool(re.search(r"\bnot\b|\bno longer\b|\bdoes not\b|system-generated|\bplaceholder\b", window, re.I))
+
+
 def normalize_name(value):
     return value.replace("\u2014", "-").replace("\u2013", "-")
 
@@ -55,7 +60,11 @@ def normalize_name(value):
 def derive_name(text, title):
     pattern = r'(?:(?:The|the)\s+)?(?:\$[\d,]+(?:\.\d{2})?\s+)?([A-Z][\w&\'-]*(?:\s+(?:[A-Z][\w&\'-]*|of|the|and|in|for|&)){0,10}\s+Scholarship)\b'
     names = list(re.finditer(pattern, text))
-    return names[0].group(1) if names else title
+    for match in names:
+        name = match.group(1)
+        if not re.fullmatch(r'(?:(?:Award Winner|Save|Apply|Share|Login)\s+)+Scholarship', name, re.I):
+            return name
+    return title
 
 
 def normalized_url(url):
@@ -87,9 +96,13 @@ def extract_rows(item, endpoint, today):
             range_starts.add(first[1])
             range_ends.add(second[1])
     rows = []
+    negated = False
     for date, start, end in parsed:
         if start in range_starts: continue
         if not today <= date <= limit: continue
+        if date_negated(text, start, end):
+            negated = True
+            continue
         window, offset = sentence_window(text, start, end)
         name = derive_name(normalize_name(window), None)
         specific_name = name is not None
@@ -99,6 +112,8 @@ def extract_rows(item, endpoint, today):
         rowflags = flags.copy()
         if start not in range_ends and not KEYWORD.search(text[max(0, start-80):start]): rowflags.append('unclear if deadline')
         rows.append(dict(name=name, specific_name=specific_name, amount=amount, deadline=date.isoformat(), confidence='snippet only', url=url, endpoints=[endpoint], flags=rowflags, aggregator=is_aggregator(url, text)))
+    if negated and not rows:
+        rows.append(dict(name=normalize_name(title), specific_name=False, amount='not stated', deadline='', confidence='snippet only', url=url, endpoints=[endpoint], flags=flags + ['date negated by source'], aggregator=is_aggregator(url, text)))
     return rows
 
 
@@ -178,10 +193,8 @@ class Client:
             obj = payload if isinstance(payload, dict) else {}
             cost = obj.get('cost_usd', lower.get('x-desearch-cost-usd', 0))
             usage = obj.get('usage_count', lower.get('x-desearch-usage-count'))
-            if path == '/web' and status == 503: cost, usage = 0, 0
             self.calls.append(self.clean(dict(method=method, path=path, params=params, status=status, latency_seconds=round(time.monotonic()-start, 6), cost_usd=float(cost or 0), usage_count=usage, response_body=payload)))
             if status in (401, 403): raise AuthenticationError('Authentication failed')
-            if path == '/web' and status == 503: return {'data': []}
             if 200 <= status < 300:
                 if path != '/web/extract' and not isinstance(payload, dict): raise SourceError(path + ': invalid JSON response')
                 return payload
@@ -226,7 +239,11 @@ def rebuild(calls, today):
             if 200 <= call['status'] < 300:
                 row['aggregator'] = row['aggregator'] or is_aggregator(row['url'], str(call['response_body']))
             if not 200 <= call['status'] < 300: row['confidence'] = 'extract failed'
-            elif row['deadline'] in {d.isoformat() for d, _, _ in dates(str(call['response_body']))}: row['confidence'] = 'confirmed on page (js)' if call['params'].get('js') == 'true' else 'confirmed on page'
+            elif row['deadline'] and any(d.isoformat() == row['deadline'] and date_negated(str(call['response_body']), start, end) for d, start, end in dates(str(call['response_body']))):
+                row['deadline'] = ''
+                row['flags'].append('date negated by source')
+                row['confidence'] = 'date negated by source'
+            elif row['deadline'] and row['deadline'] in {d.isoformat() for d, _, _ in dates(str(call['response_body']))}: row['confidence'] = 'confirmed on page (js)' if call['params'].get('js') == 'true' else 'confirmed on page'
             else: row['confidence'] = 'date not found on page'
     return rows
 
@@ -318,18 +335,23 @@ def main(argv=None):
             if not key: raise SourceError('No API key found')
             client = Client(key, args.timeout, no_js=args.no_js)
             success = 0
+            failed = []
             plans = [('POST', '/search', dict(query=query, count=args.count, highlights=True))]
             if not args.no_web: plans.append(('GET', '/web', dict(query=webquery)))
             for method, path, params in plans:
                 try:
                     client.request(method, path, params)
                     success += 1
-                except SourceError as exc: print(str(exc), file=sys.stderr)
-            if not success: raise SourceError('All sources failed')
+                except SourceError as exc:
+                    failed.append(path)
+                    print(f'{path} unavailable: {exc}', file=sys.stderr)
+            if not success:
+                print('All sources failed: ' + ', '.join(failed), file=sys.stderr)
+                return 2
             rows = rebuild(client.calls, args.today)
             urls = []
             for row in sorted(rows, key=lambda r: (r['aggregator'], r['deadline'])):
-                if normalized_url(row['url']) not in {normalized_url(u) for u in urls}: urls.append(row['url'])
+                if row['deadline'] and normalized_url(row['url']) not in {normalized_url(u) for u in urls}: urls.append(row['url'])
             for url in urls[:args.verify]:
                 try: client.request('GET', '/web/extract', dict(url=url, format='text'))
                 except SourceError: pass

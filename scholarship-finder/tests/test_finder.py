@@ -84,6 +84,34 @@ class Parsing(unittest.TestCase):
         self.assertEqual(len(rows('November 8, 2026. January 11, 2027')), 2)
         self.assertEqual(rows('November 8, 2026 to January 11, 2029'), [])
 
+    def test_negated_uab_date(self):
+        text = (Path(__file__).parent / 'fixtures' / 'uab.txt').read_text()
+        result = rows(text, title='SON Scholarship Applications')
+        self.assertEqual(result[0]['deadline'], '')
+        self.assertIn('date negated by source', result[0]['flags'])
+
+    def test_negating_context(self):
+        for phrase in ('is NOT the deadline', 'is not valid', 'is no longer valid',
+                       'does not apply', 'is a placeholder', 'is system-generated'):
+            with self.subTest(phrase=phrase):
+                result = rows('March 15, 2027 ' + phrase)
+                self.assertEqual(result[0]['deadline'], '')
+        result = rows('March 15, 2027 is NOT the deadline. Deadline April 1, 2027.')
+        self.assertEqual([r['deadline'] for r in result], ['2027-04-01'])
+
+    def test_ui_name_fallback(self):
+        for phrase in ('Award Winner Save', 'Save', 'Apply', 'Share', 'Login'):
+            result = rows(phrase + ' Scholarship due November 13, 2026', title='Nursing awards')
+            self.assertEqual(result[0]['name'], 'Nursing awards')
+            self.assertFalse(result[0]['specific_name'])
+
+    def test_extract_negation(self):
+        calls = [call('/search', SEARCH), call('/web/extract',
+            'February 12, 2027 is NOT the deadline.', params={'url': 'https://aid.example/award'})]
+        result = sf.rebuild(calls, TODAY)
+        self.assertEqual(result[0]['deadline'], '')
+        self.assertIn('date negated by source', result[0]['flags'])
+
     def test_sort(self): self.assertEqual(sf.dedupe(rows('due February 12, 2027; due November 13, 2026'))[0]['deadline'], '2026-11-13')
 
     def test_dash_normalization(self):
@@ -126,11 +154,16 @@ class HTTP(unittest.TestCase):
         self.assertEqual(client.calls[0]['cost_usd'], .0005)
         self.assertIn('format=text', http.call_args.args[0].full_url)
     @patch('scholarship_finder.urllib.request.urlopen')
-    def test_503_empty(self, http):
-        http.side_effect = urllib.error.HTTPError('https://api.desearch.ai/web',503,'empty',{},io.BytesIO(b'{}'))
-        client = sf.Client('secret')
-        self.assertEqual(client.request('GET','/web', {'query':'nursing'}), {'data':[]})
-        self.assertEqual(client.calls[0]['cost_usd'], 0)
+    def test_503_unavailable(self, http):
+        for status in (503, 500, 422):
+            with self.subTest(status=status):
+                http.side_effect = urllib.error.HTTPError('https://api.desearch.ai/web', status,
+                    'unavailable', {'X-Desearch-Cost-Usd': '.004'},
+                    io.BytesIO(b'{"cost_usd": 0.003}'))
+                client = sf.Client('secret')
+                with self.assertRaises(sf.SourceError):
+                    client.request('GET', '/web', {'query': 'nursing'})
+                self.assertEqual(client.calls[0]['cost_usd'], .003)
     @patch('scholarship_finder.urllib.request.urlopen')
     def test_authentication(self, http):
         for status in (401,403):
@@ -202,7 +235,31 @@ class CLI(unittest.TestCase):
             key = Path(directory)/'key'; key.write_text('secret')
             code,out,err = self.run_cli(['--field','nursing','--level','undergraduate','--year','2027','--today','2026-10-30','--key-file',str(key),'--out',directory,'--verify','0'])
             self.assertEqual(code,0)
-            self.assertIn('/search: request failed',err)
+            self.assertIn('/search unavailable',err)
+    @patch('scholarship_finder.time.sleep')
+    @patch('scholarship_finder.urllib.request.urlopen')
+    def test_503_sources_and_cost(self, http, sleep):
+        for all_failed in (True, False):
+            with self.subTest(all_failed=all_failed), tempfile.TemporaryDirectory() as directory:
+                def failure(body, headers=None):
+                    return urllib.error.HTTPError('url', 503, 'unavailable', headers or {},
+                                                  io.BytesIO(json.dumps(body).encode()))
+                http.side_effect = ([failure({'cost_usd': .002}), failure({'cost_usd': .003})]
+                                    if all_failed else [response(SEARCH)]) + [failure({}, {'X-Desearch-Cost-Usd': '.004'})]
+                key = Path(directory) / 'key'
+                key.write_text('secret')
+                code, out, err = self.run_cli(['--field', 'nursing', '--level', 'undergraduate',
+                    '--year', '2027', '--today', '2026-10-30', '--key-file', str(key),
+                    '--out', directory, '--verify', '0'])
+                self.assertEqual(code, 2 if all_failed else 0)
+                self.assertIn('/web unavailable', err)
+                self.assertIn('cost: $0.00900' if all_failed else 'cost: $0.01600', err)
+                record = json.loads(next(Path(directory).glob('raw-*.json')).read_text())
+                self.assertEqual(record['requests'][-1]['cost_usd'], .004)
+                if all_failed:
+                    self.assertIn('All sources failed: /search, /web', err)
+                    self.assertNotIn('No open dated candidates', out)
+
     @patch('scholarship_finder.urllib.request.urlopen')
     def test_js_retry_and_no_js(self, http):
         for no_js, retry_body in [(False, EXTRACT), (True, None), (False, None)]:
@@ -240,11 +297,10 @@ class CLI(unittest.TestCase):
 
     @patch('scholarship_finder.urllib.request.urlopen')
     def test_evidence_url_and_window(self, http):
-        evidence = Path(__file__).resolve().parents[2] / 'evidence'
-        record = json.loads(next((evidence / 'smoke-3').glob('raw-*.json')).read_text())
-        sources = [c for c in record['requests'] if c['path'] in ('/search', '/web')]
+        fixtures = Path(__file__).parent / 'fixtures'
+        sources = json.loads((fixtures / 'sources.json').read_text())
         url = 'https://www.fnsna.org/2027-undergraduate-scholarship-application'
-        probe = (evidence / 'probe-extract-js.json').read_text()
+        probe = (fixtures / 'extract.txt').read_text()
         http.side_effect = [response(c['response_body']) for c in sources] + [response(probe)] * 20
         with tempfile.TemporaryDirectory() as directory:
             key = Path(directory) / 'key'
