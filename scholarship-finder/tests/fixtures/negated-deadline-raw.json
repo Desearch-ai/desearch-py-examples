@@ -1,0 +1,25 @@
+{
+  "query": "nursing undergraduate scholarships 2027 application deadline",
+  "requests": [
+    {
+      "path": "/search",
+      "status": 200,
+      "response_body": {
+        "results": [
+          {
+            "url": "https://www.uab.edu/nursing/home/scholarships-financial-aid/son-scholarship-application",
+            "title": "SON Scholarship Applications | School of Nursing",
+            "highlights": [
+              "The School of Nursing scholarship application is open for the entire 2026-2027 academic year,so BSMART will display a system-generated deadline of March 15,2027.However,this is NOT the deadline for Spring 2027 School of Nursing scholarships."
+            ]
+          },
+          {
+            "url": "https://aid.example/dated",
+            "title": "Dated Nursing Award",
+            "highlights": ["Apply by November 13, 2026."]
+          }
+        ]
+      }
+    }
+  ]
+}

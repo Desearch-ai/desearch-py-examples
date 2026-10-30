@@ -294,7 +294,7 @@ def parser():
     p.add_argument('--year', type=int)
     p.add_argument('--count', type=int, choices=[10, 15, 20], default=10)
     p.add_argument('--limit', type=int, default=15, help='Maximum displayed rows; 0 shows all')
-    p.add_argument('--hide-unclear', action='store_true', help='Drop rows flagged unclear if deadline')
+    p.add_argument('--hide-unclear', action='store_true', help='Drop rows with an empty deadline or flagged unclear if deadline or date negated by source')
     p.add_argument('--out', type=Path, default=Path('./out'))
     p.add_argument('--key-file', type=Path, default=Path('~/.desearch_api_key').expanduser())
     p.add_argument('--no-web', action='store_true')
@@ -361,7 +361,8 @@ def main(argv=None):
         record = dict(query=query, run_time=dt.datetime.now().astimezone().isoformat(), today=args.today.isoformat(), requests=calls)
         if client: record = client.clean(record)
         if args.hide_unclear:
-            rows = [r for r in rows if 'unclear if deadline' not in r['flags']]
+            rows = [r for r in rows if r['deadline'] and
+                    not any(flag in r['flags'] for flag in ('unclear if deadline', 'date negated by source'))]
         save(args.out, rows, record, args.limit)
         saved = True
         shown = rows[:args.limit] if args.limit else rows

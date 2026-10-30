@@ -37,7 +37,7 @@ Replay rebuilds results from saved responses without a key or network. It uses t
 | `--year YEAR` | Year to include in the query, required except for replay | None |
 | `--count N` | Search result count: 10, 15, or 20 | 10 |
 | `--limit N` | Maximum rows in stdout and Markdown; 0 shows all | 15 |
-| `--hide-unclear` | Drop rows flagged `unclear if deadline` from all result outputs | Off |
+| `--hide-unclear` | Drop rows with an empty deadline or flagged `unclear if deadline` or `date negated by source` from stdout, Markdown, and CSV | Off |
 | `--out DIR` | Directory for exports and request log | `./out` |
 | `--key-file FILE` | File containing the API key | `~/.desearch_api_key` |
 | `--no-js` | Disable the conditional JavaScript extraction retry | Off |
@@ -89,13 +89,13 @@ Sample run on 2026-10-30 (see sample-output.md): **6 calls, $0.00700 total**:
 
 ## Sample output
 
-Sample run on 2026-10-30, first six result rows. See [the complete sample output](sample-output.md) for the command, all ten displayed rows, and stderr cost line. The UAB row now shows no deadline with the flag `date negated by source`.
+Sample run on 2026-10-30, first six result rows. See [the complete sample output](sample-output.md) for the command, all ten displayed rows, and stderr cost line. Re-rendered from the saved raw response after the `--hide-unclear` fix; the UAB row is excluded.
 
 | Name | Amount | Deadline | Confidence | Source URL | Endpoint | Flags |
 | --- | --- | --- | --- | --- | --- | --- |
-| SON Scholarship Applications \| School of Nursing | not stated |  | snippet only | [source](<https://www.uab.edu/nursing/home/scholarships-financial-aid/son-scholarship-application>) | search | date negated by source |
 | Healthcare Scholarships: Invitation to Apply by Nov 13 \| Health Professions Advising | not stated | 2026-11-13 | confirmed on page | [source](<https://hpa.princeton.edu/news/healthcare-scholarships>) | search |  |
 | 2027 Undergraduate Scholarship Application  \| FNSNA.ORG | not stated | 2027-01-11 | extract failed | [source](<https://www.fnsna.org/2027-undergraduate-scholarship-application>) | search | no publish date |
 | Top 50 Nursing Scholarships in 2026 | $8,000 | 2027-02-02 | date not found on page | [source](<https://scholaroo.com/nursing-scholarships/>) | web | no publish date |
 | Bachelor of Science in Nursing Academic Scholarships 2027 | not stated | 2027-02-11 | snippet only | [source](<https://usascholarships.net/scholarships/bachelor-of-science-in-nursing-academic-scholarships-usa-2027>) | web | no publish date |
 | Jean Andrews Nursing Scholarship | $5,000 | 2027-02-12 | snippet only | [source](<https://www.scholarships.com/financial-aid/college-scholarships/scholarships-by-major/nursing-scholarships>) | web | no publish date |
+| Nursing & Health Scholarships for College Students | not stated | 2027-02-25 | snippet only | [source](<https://scholarshipsclosingsoon.com/for/college/nursing/>) | web | no publish date |

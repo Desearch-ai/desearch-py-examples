@@ -197,6 +197,32 @@ class CLI(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()) as out, contextlib.redirect_stderr(io.StringIO()) as err:
             code = sf.main(args)
         return code, out.getvalue(), err.getvalue()
+
+    @patch('scholarship_finder.urllib.request.urlopen', side_effect=AssertionError('network forbidden'))
+    def test_hide_unclear_replay_negated_deadline(self, http):
+        raw = Path(__file__).parent / 'fixtures' / 'negated-deadline-raw.json'
+        with tempfile.TemporaryDirectory() as directory:
+            for hide in (False, True):
+                with self.subTest(hide_unclear=hide):
+                    dest = Path(directory) / ('filtered' if hide else 'all')
+                    args = ['--from-raw', str(raw), '--today', '2026-10-30', '--out', str(dest)]
+                    if hide:
+                        args.append('--hide-unclear')
+                    code, out, err = self.run_cli(args)
+                    self.assertEqual(code, 0, err)
+                    for output in (out, (dest / 'results.md').read_text(),
+                                   (dest / 'results.csv').read_text()):
+                        self.assertIn('Dated Nursing Award', output)
+                        self.assertIn('2026-11-13', output)
+                        if hide:
+                            self.assertNotIn('SON Scholarship Applications', output)
+                            self.assertNotIn('uab.edu', output)
+                        else:
+                            self.assertIn('SON Scholarship Applications', output)
+                            self.assertIn('uab.edu', output)
+                            self.assertIn('date negated by source', output)
+        http.assert_not_called()
+
     @patch('scholarship_finder.urllib.request.urlopen', side_effect=AssertionError('network forbidden'))
     def test_dry_run(self, http):
         code, out, err = self.run_cli(['--field','nursing','--level','undergraduate','--year','2027','--dry-run'])
