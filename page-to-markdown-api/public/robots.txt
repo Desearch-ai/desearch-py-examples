@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://page-to-markdown.demos.desearch.ai/sitemap.xml

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fact-checker.demos.desearch.ai/sitemap.xml
