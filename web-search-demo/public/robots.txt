@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://web-search.demos.desearch.ai/sitemap.xml
