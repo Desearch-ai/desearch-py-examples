@@ -378,7 +378,29 @@ def test_state_and_guards_match_sibling():
  root=Path(__file__).resolve().parents[1]
  for name in ['state.py','guards.py']:
   assert (root/'articlesum'/name).read_text()==(root.parent/'web-links-search-demo/weblinks'/name).read_text().replace('weblinks','articlesum')
- assert (root/'articlesum/urlguard.py').read_bytes()==(root.parent/'page-to-markdown-api/pagemd/urlguard.py').read_bytes()
+ # Known differences: DNS errors (OSError vs socket.gaierror) and 198.18.0.0/15
+ # classification (pagemd's resolved list raises URLUnreachableError; articlesum
+ # loops over addresses and rejects via is_global).
+ shared=[]
+ for path,dns_except,ip_loop in [
+  (root/'articlesum/urlguard.py',
+   '        except socket.gaierror as e:\n',
+   '        for record in addresses:\n'
+   '            ip = ipaddress.ip_address(record[4][0])\n'),
+  (root.parent/'page-to-markdown-api/pagemd/urlguard.py',
+   '        except OSError as e:\n',
+   '        resolved = [ipaddress.ip_address(record[4][0]) for record in addresses]\n'
+   "        benchmark = ipaddress.ip_network('198.18.0.0/15')\n"
+   '        if any(ip.version == 4 and ip in benchmark for ip in resolved):\n'
+   "            raise URLUnreachableError('Could not resolve hostname')\n"
+   '        for ip in resolved:\n')]:
+  text=path.read_text()
+  assert text.count(dns_except)==1
+  text=text.replace(dns_except,'        <DNS_EXCEPT>\n')
+  assert text.count(ip_loop)==1
+  text=text.replace(ip_loop,'        <IP_LOOP>\n')
+  shared.append(text)
+ assert shared[0]==shared[1]
 
 
 @pytest.mark.parametrize("marker", ["[1]", "[12]", "[4][5][6]", "[a]", "[note 3]", "[citation needed]"])
