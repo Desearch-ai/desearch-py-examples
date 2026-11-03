@@ -100,7 +100,10 @@ def test_failures_sample_cost_and_no_retry(status):
     c = make(FakeClient(status, rec={'cost': .8, 'cost_known': True}))
     code, body = response(c)
     assert code == (503 if status in (401, 402, 403) else 404 if status == 404 else 504 if status == 599 else 502)
-    assert body['markdown'] == c.sample['markdown'] and body['sample'] == '/sample.json'
+    if status == 404:
+        assert body['title'] == body['markdown'] == '' and 'sample' not in body
+    else:
+        assert body['markdown'] == c.sample['markdown'] and body['sample'] == '/sample.json'
     assert c._client.calls == 1
     assert c.cap.spent == (0 if status in (401, 402, 403, 404) else .8)
     if status == 404:
