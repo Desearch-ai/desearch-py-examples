@@ -101,6 +101,11 @@ class Converter:
         def sample(code, status, message):
             return out(code, {**self.sample, 'status': status, 'error': message, 'message': message,
                               'sample': '/sample.json', 'cached': False, 'cost_usd_this_request': 0})
+        def not_found():
+            message = 'Page not found. Check the link and try again.'
+            return out(404, {'title': '', 'markdown': '', 'status': 'not_found',
+                             'error': message, 'message': message, 'calls': 0, 'cost_usd': 0,
+                             'cached': False, 'cost_usd_this_request': 0})
         if query.get('limits') == '1':
             return out(200, {'limits': self.limits})
         try:
@@ -155,7 +160,7 @@ class Converter:
         if error_code == 'upstream_timeout':
             return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
         if error_code == 'page_not_found':
-            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
+            return not_found()
         if error_code == 'no_content':
             return sample(404, 'empty', 'This page has no readable text. Try another link.')
         if st not in (200, 598) and _site_blocked(body):
@@ -165,7 +170,7 @@ class Converter:
         if st in (408, 504, 599) or (st == 404 and elapsed >= FAST_404_SECONDS):
             return sample(504, 'timed_out', 'Timed out fetching this page. Try again or use another link.')
         if st == 404:
-            return sample(404, 'not_found', 'Page not found. Check the link and try again.')
+            return not_found()
         if st != 200:
             return sample(502, 'error', "We couldn't fetch this page right now. Try another link. Here is a saved sample.")
         content = body

@@ -117,11 +117,20 @@ class Summarize:
                 status, text, paid = 599, '', None
             unknown = unknown or paid is None
             cost += paid if paid is not None else 0
-            if 'No content found' not in text:
+            try:
+                payload = json.loads(text)
+            except (ValueError, TypeError):
+                payload = None
+            not_found = status == 404 or (isinstance(payload, dict) and
+                                         payload.get('error_code') == 'page_not_found')
+            if not_found or 'No content found' not in text:
                 break
         cost = max(cost, self.fallback_cost) if unknown else cost
         if cost != self.fallback_cost:
             self.cap.add(cost - self.fallback_cost)
+        if not_found:
+            return self.out(404, {'status': 'not_found',
+                'error': 'Page not found. Check the link and try again.'}, cost)
         if status != 200 or 'No content found' in text:
             return self.out(502, {'status': 'error',
                 'error': 'Desearch could not read this page right now. Try again in a minute.'}, cost)

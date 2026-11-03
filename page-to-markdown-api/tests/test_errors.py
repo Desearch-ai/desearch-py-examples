@@ -265,3 +265,20 @@ def test_api_error_codes(upstream, error_code, code, status, message):
     assert service.cap.spent == 0
     assert client.calls == 1
 
+
+
+@pytest.mark.parametrize('upstream,payload,elapsed', [
+    (404, {}, 0),
+    (404, {'error_code': 'page_not_found'}, 10),
+])
+def test_not_found_has_no_saved_sample(upstream, payload, elapsed):
+    service, client = make(upstream, payload, elapsed, cost=0)
+    code, body = response(service)
+    message = 'Page not found. Check the link and try again.'
+    assert code == 404
+    assert body == {'title': '', 'markdown': '', 'status': 'not_found',
+                    'error': message, 'message': message, 'calls': 0, 'cost_usd': 0,
+                    'cached': False, 'cost_usd_this_request': 0}
+    assert 'A small reading garden' not in json.dumps(body)
+    assert client.calls == 1
+    assert not service.cache.d

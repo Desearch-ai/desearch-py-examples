@@ -248,7 +248,7 @@ def test_unknown_dns(monkeypatch):
 
 @pytest.mark.parametrize('second,expected',[(ARTICLE,200),('No content found.',502)])
 def test_retry_once_and_sum(second,expected):
- client=Mock(extract=Mock(side_effect=[(404,'{"detail":"No content found."}',.0005),(200,second,.0005)]))
+ client=Mock(extract=Mock(side_effect=[(200,'{"detail":"No content found."}',.0005),(200,second,.0005)]))
  service=demo(client=client)
  code,_,body=call(service)
  assert code==expected and client.extract.call_count==2
@@ -256,7 +256,7 @@ def test_retry_once_and_sum(second,expected):
  if code==200: assert body['calls']=={'extract':2}
  else: assert body['status']=='error' and 'sample' not in body
 
-@pytest.mark.parametrize('status',[302,404,500,598,599])
+@pytest.mark.parametrize('status',[302,500,598,599])
 def test_non_200(status):
  service=demo(client=Mock(extract=Mock(return_value=(status,'unavailable',None))))
  code,_,body=call(service)
@@ -465,3 +465,24 @@ def test_long_paragraph_and_case_sensitive_hatnote_check():
 def test_bare_year_with_footnote_still_skipped():
     text = "The software was released to the public in 2026.[12]"
     assert summary.numbers_mentioned(text) == []
+
+
+@pytest.mark.parametrize('status,text', [
+ (404,json.dumps({'detail':'Page not found. The site answered 404.',
+                  'error_code':'page_not_found','cost_usd':0.0})),
+ (404,'No content found.'),
+ (500,json.dumps({'detail':'No content found.', 'error_code':'page_not_found'})),
+ (200,json.dumps({'error_code':'page_not_found'})),
+])
+def test_not_found_is_not_retried_or_cached(status,text):
+ client=Mock(extract=Mock(return_value=(status,text,0.0)))
+ service=demo(client=client)
+ code,_,body=call(service)
+ assert code==404 and body['status']=='not_found'
+ assert body['error']=='Page not found. Check the link and try again.'
+ assert 'Try again in a minute' not in json.dumps(body)
+ assert body['cost_usd_this_request']==0 and service.cap.spent==0
+ client.extract.assert_called_once()
+ assert not service.cache.d
+ call(service)
+ assert client.extract.call_count==2
