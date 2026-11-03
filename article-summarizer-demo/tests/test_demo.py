@@ -382,18 +382,24 @@ def test_state_and_guards_match_sibling():
  # classification (pagemd's resolved list raises URLUnreachableError; articlesum
  # loops over addresses and rejects via is_global).
  shared=[]
- for path,markers in [
-  (root/'articlesum/urlguard.py',('except socket.gaierror as e:', 'for record in addresses:')),
-  (root.parent/'page-to-markdown-api/pagemd/urlguard.py',('except OSError as e:', '198.18.0.0/15'))]:
-  lines=path.read_text().splitlines(keepends=True)
-  starts=[i for i,line in enumerate(lines) if line.startswith('            addresses = resolver(')]
-  ends=[i for i,line in enumerate(lines) if line.startswith('        return urlunsplit(')]
-  assert len(starts)==len(ends)==1
-  start,end=starts[0],ends[0]
-  assert start<end
-  middle=''.join(lines[start:end])
-  assert all(marker in middle for marker in markers)
-  shared.append((''.join(lines[:start]),''.join(lines[end:])))
+ for path,dns_except,ip_loop in [
+  (root/'articlesum/urlguard.py',
+   '        except socket.gaierror as e:\n',
+   '        for record in addresses:\n'
+   '            ip = ipaddress.ip_address(record[4][0])\n'),
+  (root.parent/'page-to-markdown-api/pagemd/urlguard.py',
+   '        except OSError as e:\n',
+   '        resolved = [ipaddress.ip_address(record[4][0]) for record in addresses]\n'
+   "        benchmark = ipaddress.ip_network('198.18.0.0/15')\n"
+   '        if any(ip.version == 4 and ip in benchmark for ip in resolved):\n'
+   "            raise URLUnreachableError('Could not resolve hostname')\n"
+   '        for ip in resolved:\n')]:
+  text=path.read_text()
+  assert text.count(dns_except)==1
+  text=text.replace(dns_except,'        <DNS_EXCEPT>\n')
+  assert text.count(ip_loop)==1
+  text=text.replace(ip_loop,'        <IP_LOOP>\n')
+  shared.append(text)
  assert shared[0]==shared[1]
 
 
