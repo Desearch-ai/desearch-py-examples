@@ -378,7 +378,23 @@ def test_state_and_guards_match_sibling():
  root=Path(__file__).resolve().parents[1]
  for name in ['state.py','guards.py']:
   assert (root/'articlesum'/name).read_text()==(root.parent/'web-links-search-demo/weblinks'/name).read_text().replace('weblinks','articlesum')
- assert (root/'articlesum/urlguard.py').read_bytes()==(root.parent/'page-to-markdown-api/pagemd/urlguard.py').read_bytes()
+ # Known differences: DNS errors (OSError vs socket.gaierror) and 198.18.0.0/15
+ # classification (pagemd's resolved list raises URLUnreachableError; articlesum
+ # loops over addresses and rejects via is_global).
+ shared=[]
+ for path,markers in [
+  (root/'articlesum/urlguard.py',('except socket.gaierror as e:', 'for record in addresses:')),
+  (root.parent/'page-to-markdown-api/pagemd/urlguard.py',('except OSError as e:', '198.18.0.0/15'))]:
+  lines=path.read_text().splitlines(keepends=True)
+  starts=[i for i,line in enumerate(lines) if line.startswith('            addresses = resolver(')]
+  ends=[i for i,line in enumerate(lines) if line.startswith('        return urlunsplit(')]
+  assert len(starts)==len(ends)==1
+  start,end=starts[0],ends[0]
+  assert start<end
+  middle=''.join(lines[start:end])
+  assert all(marker in middle for marker in markers)
+  shared.append((''.join(lines[:start]),''.join(lines[end:])))
+ assert shared[0]==shared[1]
 
 
 @pytest.mark.parametrize("marker", ["[1]", "[12]", "[4][5][6]", "[a]", "[note 3]", "[citation needed]"])
