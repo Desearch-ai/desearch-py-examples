@@ -60,16 +60,19 @@ def page_text(content):
     return ""
 
 
-def undouble(line):
-    """'$10 per user/month$10 per user/month' -> '$10 per user/month' (page shows the price twice)."""
-    half = len(line) // 2
-    if len(line) % 2 == 0 and half and line[:half] == line[half:]:
-        return line[:half].strip()
-    return line
-
-
 def is_price_line(line):
     return bool(re.match(r"^\s*(?:[$€£]\s?\d|Custom\s*$)", line, re.I))
+
+
+def undouble(line):
+    """'$10 per user/month$10 per user/month' -> '$10 per user/month' (page shows the price twice).
+
+    Only a price line whose half is itself a price line is changed; plan names stay as written.
+    """
+    half = len(line) // 2
+    if len(line) % 2 == 0 and half and line[:half] == line[half:] and is_price_line(line[:half]):
+        return line[:half].strip()
+    return line
 
 
 def parse_plans(text):

@@ -44,6 +44,15 @@ def test_undouble_leaves_other_lines():
     assert ps.undouble("$10 per user/month") == "$10 per user/month"
     assert ps.undouble("$5$5") == "$5"
     assert ps.undouble("") == ""
+    assert ps.undouble("GoGo") == "GoGo"
+    assert ps.undouble("99") == "99"
+    assert ps.undouble("CustomCustom") == "Custom"
+
+
+def test_parse_plans_keeps_names_that_look_doubled():
+    plans = ps.parse_plans("GoGo\n$10\nGo\n$20\n99\n$10$10\nEnterprise\nCustomCustom")
+    assert [(p["plan"], p["price"]) for p in plans] == [
+        ("GoGo", "$10"), ("Go", "$20"), ("99", "$10"), ("Enterprise", "Custom")]
 
 
 def test_price_without_name_is_marked():
