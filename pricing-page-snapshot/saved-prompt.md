@@ -10,7 +10,7 @@ Pages:
 - [https://slack.com/pricing]
 
 For each page:
-1. Call the Desearch tool extract with {"url": "<page>", "format": "text", "js": false}.
+1. Call the Desearch tool extract with {"url": "<page>", "format": "text", "js": false, "full_page": true}.
 2. If the text comes back empty or almost empty, wait a few seconds and call extract once more with the same arguments. If it is still empty or has no prices, write "No prices in page text" for that page and move on.
 3. Read the plans in order. If a price appears without a plan name above it, write the plan as "(name not in page text)" rather than borrowing the name of the plan before it.
 4. If two prices are glued together (for example "$8.75$4.38"), check the nearby words. A promo ("50% off for 3 months") means the first number is the normal price and the second is the promo price. Report both and say which is which.
@@ -31,7 +31,7 @@ After the table, add:
 
 # Saved prompt 2: compare with my last table
 
-You are my pricing analyst. Below is the pricing table I saved last time. Re-read the same pages with the Desearch tool extract ({"url": "<page>", "format": "text", "js": false}), build today's table with the same rules as before, then compare.
+You are my pricing analyst. Below is the pricing table I saved last time. Re-read the same pages with the Desearch tool extract ({"url": "<page>", "format": "text", "js": false, "full_page": true}), build today's table with the same rules as before, then compare.
 
 My last table:
 [paste your last table here, including its snapshot date]
