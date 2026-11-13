@@ -1,7 +1,7 @@
 """Pricing Page Snapshot: read pricing pages and save a plan and price table.
 
 Made by Desearch, https://desearch.ai
-Reads each page with the hosted Desearch MCP `extract` tool (text, js false), pulls
+Reads each page with the hosted Desearch MCP `extract` tool (text, js false, full page), pulls
 plan names and prices from the page text, prints a table and can save it as JSON so the
 next run can show what changed.
 """
@@ -35,10 +35,14 @@ def key_fingerprint(key):
 
 
 def build_args(url):
-    """extract arguments: plain text, js false."""
+    """extract arguments: plain text, js false, full page.
+
+    Default text is the page's main content only; pricing cards often sit outside it,
+    so the snapshot asks for the full page text.
+    """
     if not url or not url.startswith(("http://", "https://")):
         raise ValueError(f"not a URL: {url!r}")
-    return {"url": url, "format": "text", "js": False}
+    return {"url": url, "format": "text", "js": False, "full_page": True}
 
 
 def page_text(content):
@@ -60,9 +64,20 @@ def is_price_line(line):
     return bool(re.match(r"^\s*(?:[$€£]\s?\d|Custom\s*$)", line, re.I))
 
 
+def undouble(line):
+    """'$10 per user/month$10 per user/month' -> '$10 per user/month' (page shows the price twice).
+
+    Only a price line whose half is itself a price line is changed; plan names stay as written.
+    """
+    half = len(line) // 2
+    if len(line) % 2 == 0 and half and line[:half] == line[half:] and is_price_line(line[:half]):
+        return line[:half].strip()
+    return line
+
+
 def parse_plans(text):
     """Find 'Plan name' followed by a price line, in page order. First match per plan only."""
-    lines = [l.strip() for l in (text or "").splitlines() if l.strip()]
+    lines = [undouble(l.strip()) for l in (text or "").splitlines() if l.strip()]
     plans, seen = [], set()
     for i, line in enumerate(lines):
         if not is_price_line(line):

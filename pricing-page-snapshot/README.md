@@ -2,11 +2,11 @@
 
 Made by Desearch, https://desearch.ai
 
-Read a few pricing pages and get one table of plans and prices, copied from the page text. Save it, run again next week, and see what changed. A saved prompt for Cursor or Claude does the full job with no code. This folder also has a tiny Python CLI that reads each page with the hosted Desearch MCP `extract` tool (`format: text`, `js: false`).
+Read a few pricing pages and get one table of plans and prices, copied from the page text. Save it, run again next week, and see what changed. A saved prompt for Cursor or Claude does the full job with no code. This folder also has a tiny Python CLI that reads each page with the hosted Desearch MCP `extract` tool (`format: text`, `js: false`, `full_page: true`). `full_page` matters: the default text is the page's main content only, which can leave out the pricing cards.
 
 What the CLI does:
 - reads each page once and tries once more if the text comes back empty
-- finds each price line and the plan name right above it, in page order; a price with no name above it is marked "(name not in page text)"
+- finds each price line and the plan name right above it (a price the page text shows twice in a row, like `$10 per user/month$10 per user/month`, is kept once), in page order; a price with no name above it is marked "(name not in page text)"
 - notes the billing line under the price when the page shows one ("Billed yearly")
 - marks pages with no prices in the text as "No prices in page text"
 - with `--compare`, lists added and removed plans and price changes against an earlier snapshot

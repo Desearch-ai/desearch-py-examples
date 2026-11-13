@@ -11,8 +11,9 @@ import pricing_snapshot as ps  # noqa: E402
 PAGE = open(os.path.join(os.path.dirname(__file__), "fixture_page.txt")).read()
 
 
-def test_build_args_js_false_only():
-    assert ps.build_args("https://linear.app/pricing") == {"url": "https://linear.app/pricing", "format": "text", "js": False}
+def test_build_args_js_false_full_page():
+    assert ps.build_args("https://linear.app/pricing") == {
+        "url": "https://linear.app/pricing", "format": "text", "js": False, "full_page": True}
 
 
 def test_build_args_never_sends_exclude_domains():
@@ -29,6 +30,29 @@ def test_parse_plans_from_saved_page():
     assert [(p["plan"], p["price"]) for p in plans] == [
         ("Free", "$0"), ("Basic", "$10 per user/month"), ("Business", "$16 per user/month"), ("Enterprise", "Custom")]
     assert plans[1]["billing"] == "Billed yearly"
+
+
+def test_parse_plans_keeps_first_of_doubled_price():
+    page = "Basic\n$10 per user/month$10 per user/month\nBilled yearly\nEnterprise\nCustom"
+    plans = ps.parse_plans(page)
+    assert [(p["plan"], p["price"]) for p in plans] == [("Basic", "$10 per user/month"), ("Enterprise", "Custom")]
+    assert plans[0]["billing"] == "Billed yearly"
+
+
+def test_undouble_leaves_other_lines():
+    assert ps.undouble("$0") == "$0"
+    assert ps.undouble("$10 per user/month") == "$10 per user/month"
+    assert ps.undouble("$5$5") == "$5"
+    assert ps.undouble("") == ""
+    assert ps.undouble("GoGo") == "GoGo"
+    assert ps.undouble("99") == "99"
+    assert ps.undouble("CustomCustom") == "Custom"
+
+
+def test_parse_plans_keeps_names_that_look_doubled():
+    plans = ps.parse_plans("GoGo\n$10\nGo\n$20\n99\n$10$10\nEnterprise\nCustomCustom")
+    assert [(p["plan"], p["price"]) for p in plans] == [
+        ("GoGo", "$10"), ("Go", "$20"), ("99", "$10"), ("Enterprise", "Custom")]
 
 
 def test_price_without_name_is_marked():
