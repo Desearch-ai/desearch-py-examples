@@ -339,6 +339,8 @@ def test_parity():
 def test_public_copy_and_js(tmp_path):
  root=Path(__file__).resolve().parents[1]
  for path in [* (root/'public').iterdir(),root/'README.md',root/'DEPLOY.md']:
+  if path.suffix == '.ico':  # Binary assets have no public copy to scan.
+   continue
   text=path.read_text()
   assert '\u2013' not in text and '\u2014' not in text
   assert not re.search(r'(?<![\w/@.])@\w{1,15}\b',text)
