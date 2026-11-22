@@ -14,7 +14,8 @@
 <meta property="og:image" content="https://www.desearch.ai/og-image-v3.jpg">
 <style>
 body{font:15px/1.5 system-ui,sans-serif;max-width:900px;margin:2em auto;padding:0 1em;color:#222}
-input[type=text]{width:100%;max-width:640px;padding:.5em;font:inherit}button{padding:.5em 1em;font:inherit}
+input[type=text]{box-sizing:border-box;width:100%;max-width:640px;padding:.5em;font:inherit}button{padding:.5em 1em;font:inherit}
+.sources{overflow-x:auto}
 table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:.4em;text-align:left;vertical-align:top}
 .s{color:#555;font-size:.9em}.err{color:#b00}
 .ex button{margin:.2em;font-size:.85em}.warn{background:#fff6e0;padding:.6em;border-radius:4px}
@@ -56,8 +57,8 @@ function render(d) {
   if (d.summary.lines.length) h += "<h2>Draft summary (cited lines only)</h2><ul>" + d.summary.lines.map(l => `<li>${esc(l.text)} ` + [...new Set(l.cites)].map((u, i, a) => `<a href="${link(u)}" rel="nofollow noopener">[source${a.length > 1 ? " " + (i + 1) : ""}]</a>`).join(" ") + "</li>").join("") + "</ul>";
   if (d.summary.hidden) h += `<p class=s>${esc(d.summary.hidden)} summary sentence(s) cited no returned source and were hidden.</p>`;
   if (d.summary.verdict_hidden) h += `<p class=s>${esc(d.summary.verdict_hidden)} summary sentence(s) that judged the claim were hidden.</p>`;
-  h += "<h2>Sources</h2><table><tr><th>#</th><th>Source</th><th>Domain</th><th>Snippet</th></tr>" + d.sources.map(s =>
-    `<tr><td>${esc(s.rank)}</td><td><a href="${link(s.url)}" rel="nofollow noopener">${esc(s.title || s.url)}</a></td><td>${esc(s.domain)}</td><td>${esc((s.snippet || "").slice(0, 300))}</td></tr>`).join("") + "</table>";
+  h += "<h2>Sources</h2><div class=sources tabindex=0 role=region aria-label=Sources><table><tr><th>#</th><th>Source</th><th>Domain</th><th>Snippet</th></tr>" + d.sources.map(s =>
+    `<tr><td>${esc(s.rank)}</td><td><a href="${link(s.url)}" rel="nofollow noopener">${esc(s.title || s.url)}</a></td><td>${esc(s.domain)}</td><td>${esc((s.snippet || "").slice(0, 300))}</td></tr>`).join("") + "</table></div>";
   if (d.x_enabled && d.posts?.length) h += `<h2>How it is discussed on X</h2><p class=s>Search: ${esc(d.x_query)}. ${esc(d.posts.length)} of ${esc(d.x_returned)} posts passed the filters.</p><ul>` + d.posts.map(p =>
     `<li>${esc(p.text.slice(0, 400))}<br><span class=s>a user, ${esc(p.created_at)}</span> ${p.url ? `<a href="${link(p.url)}" rel="nofollow noopener">post</a>` : ""}</li>`).join("") + "</ul>";
   h += `<p class=s>${d.cached ? "Served from cache, no cost." : "Cost of this check: $" + esc(d.cost_usd) + " (" + esc(d.calls) + " calls)."}</p>`;
