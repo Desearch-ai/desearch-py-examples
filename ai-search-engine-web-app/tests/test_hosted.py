@@ -177,6 +177,8 @@ def test_public_config():
     assert 'overflow-wrap:anywhere' in page
     from tools.refresh_sample import BANNED
     for p in (ROOT/'public').glob('*'):
+        if p.suffix == '.ico':  # Binary assets have no public copy to scan.
+            continue
         text = p.read_text()
         assert '\u2013' not in text and '\u2014' not in text
         assert not BANNED.search(text)
